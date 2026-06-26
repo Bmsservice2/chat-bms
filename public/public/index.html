@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Chat com Claude + Obsidian</title>
+  <style>
+    body { font-family: Arial, sans-serif; background: #f6f6f6; margin: 0; }
+    .container { max-width: 900px; margin: 0 auto; padding: 24px; }
+    h1 { font-size: 24px; margin-bottom: 8px; }
+    .subtitle { color: #555; margin-bottom: 24px; }
+    .chat { background: white; border: 1px solid #ddd; border-radius: 12px; padding: 16px; min-height: 420px; margin-bottom: 16px; overflow-y: auto; }
+    .message { padding: 12px; border-radius: 8px; margin-bottom: 12px; white-space: pre-wrap; line-height: 1.5; }
+    .user { background: #e8f0ff; }
+    .assistant { background: #f1f1f1; }
+    textarea { width: 100%; min-height: 90px; padding: 12px; border-radius: 8px; border: 1px solid #ccc; font-size: 16px; box-sizing: border-box; }
+    button { margin-top: 12px; padding: 12px 18px; border: 0; border-radius: 8px; background: #111; color: white; font-size: 16px; cursor: pointer; }
+    button:disabled { background: #777; cursor: not-allowed; }
+    .password-box { background: white; border: 1px solid #ddd; border-radius: 12px; padding: 16px; margin-bottom: 16px; }
+    input { padding: 10px; width: 100%; box-sizing: border-box; border-radius: 8px; border: 1px solid #ccc; font-size: 16px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>BMS Service - Assistente Claude</h1>
+    <div class="subtitle">Faça perguntas e o Claude poderá consultar a base de conhecimento técnica e os projetos.</div>
+
+    <div class="password-box">
+      <label>Senha de acesso ao chat</label>
+      <input id="password" type="password" placeholder="Digite a senha do chat" />
+    </div>
+
+    <div id="chat" class="chat"></div>
+
+    <textarea id="input" placeholder="Exemplo: Busque no Obsidian as anotações sobre testes e faça um resumo."></textarea>
+    <button id="send">Enviar</button>
+  </div>
+
+  <script>
+    const chat = document.getElementById("chat");
+    const input = document.getElementById("input");
+    const send = document.getElementById("send");
+    const passwordInput = document.getElementById("password");
+
+    const savedPassword = localStorage.getItem("chat_password");
+    if (savedPassword) passwordInput.value = savedPassword;
+
+    const messages = [];
+
+    function addMessage(role, text) {
+      const div = document.createElement("div");
+      div.className = "message " + role;
+      div.textContent = role === "user" ? "Você:\n" + text : "Claude:\n" + text;
+      chat.appendChild(div);
+      chat.scrollTop = chat.scrollHeight;
+    }
+
+    send.addEventListener("click", async () => {
+      const text = input.value.trim();
+      const password = passwordInput.value.trim();
+
+      if (!password) return alert("Digite a senha de acesso ao chat.");
+      if (!text) return;
+
+      localStorage.setItem("chat_password", password);
+      input.value = "";
+      send.disabled = true;
+      send.textContent = "Pensando...";
+
+      messages.push({ role: "user", content: text });
+      addMessage("user", text);
+
+      try {
+        const response = await fetch("/api/chat", {
+          method: "POST",
+          headers: {
+            "content-type": "application/json",
+            "x-app-password": password
+          },
+          body: JSON.stringify({ messages })
+        });
+
+        const data = await response.json();
+        if (!response.ok) throw new Error(data.error || "Erro no servidor.");
+
+        messages.push({ role: "assistant", content: data.reply });
+        addMessage("assistant", data.reply);
+      } catch (error) {
+        addMessage("assistant", "Erro: " + error.message);
+      } finally {
+        send.disabled = false;
+        send.textContent = "Enviar";
+      }
+    });
+  </script>
+</body>
+</html>
