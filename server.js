@@ -19,8 +19,8 @@ globalThis.fetch = async (url, options) => {
   const urlStr = String(url);
   if (urlStr.includes("127.0.0.1:3005") && process.env.OBSIDIAN_MCP_URL) {
     try {
-      const publicHost = new URL(process.env.OBSIDIAN_MCP_URL).host;
-      const redirectedUrl = urlStr.replace("127.0.0.1:3005", publicHost);
+      const parsed = new URL(process.env.OBSIDIAN_MCP_URL);
+      const redirectedUrl = urlStr.replace("127.0.0.1:3005", parsed.host);
       console.log(`[MCP Router] Redirecionando de ${urlStr} para ${redirectedUrl}`);
       return originalFetch(redirectedUrl, options);
     } catch (e) {
@@ -37,11 +37,17 @@ async function connectMCP() {
   if (mcpClient) return mcpClient;
 
   console.log("=== INICIANDO AUTO-DETECÇÃO DE ENDPOINT MCP ===");
-  const baseUrl = process.env.OBSIDIAN_MCP_URL.endsWith('/') 
-    ? process.env.OBSIDIAN_MCP_URL.slice(0, -1) 
-    : process.env.OBSIDIAN_MCP_URL;
+  
+  let baseUrl = "";
+  try {
+    // Vacina: Extrai estritamente o protocolo e o IP:Porta, eliminando barras ou caminhos digitados por engano
+    const parsed = new URL(process.env.OBSIDIAN_MCP_URL);
+    baseUrl = `${parsed.protocol}//${parsed.host}`;
+  } catch (err) {
+    throw new Error(`URL inválida configurada no OBSIDIAN_MCP_URL: ${process.env.OBSIDIAN_MCP_URL}`);
+  }
 
-  // Matriz de caminhos possíveis para o plugin do Obsidian
+  // Matriz de caminhos agora totalmente limpa e sem duplicações
   const candidatePaths = [
     `${baseUrl}/sse`,
     `${baseUrl}/`,
@@ -60,7 +66,7 @@ async function connectMCP() {
       });
       
       const bodySnippet = await res.text().then(t => t.slice(0, 150)).catch(() => "N/A");
-      diagnosticLog += `\n• Rota: ${url} -> Status: ${res.status} | Server: ${res.headers.get("server") || "Nginx/Obsidian"} | Resposta: ${bodySnippet.replace(/[\n\r]/g, ' ')}`;
+      diagnosticLog += `\n• Rota: ${url} -> Status: ${res.status} | Resposta: ${bodySnippet.replace(/[\n\r]/g, ' ')}`;
       
       if (res.status === 200 || res.headers.get("content-type")?.includes("event-stream")) {
         validUrl = url;
@@ -73,7 +79,7 @@ async function connectMCP() {
   }
 
   if (!validUrl) {
-    throw new Error(`Nenhum endpoint MCP válido respondeu no servidor. Relatório de Varredura:${diagnosticLog}\n\nDica: Certifique-se de que o cofre está aberto na tela da VPS.`);
+    throw new Error(`Nenhum endpoint MCP válido respondeu no servidor. Relatório de Varredura:${diagnosticLog}`);
   }
 
   console.log(`Conectando canal SSE em: ${validUrl}`);
@@ -163,7 +169,7 @@ app.post("/api/chat", async (req, res) => {
     res.json({ reply: response.content.find(c => c.type === "text")?.text || "Processado." });
   } catch (error) {
     console.error("Erro interno detectado:", error);
-    res.status(500).json({ error: `${error.message || error}` });
+    res.status(500).json({ error: `Erro na comunicação MCP com o Obsidian: ${error.message || error}` });
   }
 });
 
