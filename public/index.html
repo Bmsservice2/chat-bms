@@ -1,97 +1,279 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Chat com Claude + Obsidian</title>
-  <style>
-    body { font-family: Arial, sans-serif; background: #f6f6f6; margin: 0; }
-    .container { max-width: 900px; margin: 0 auto; padding: 24px; }
-    h1 { font-size: 24px; margin-bottom: 8px; }
-    .subtitle { color: #555; margin-bottom: 24px; }
-    .chat { background: white; border: 1px solid #ddd; border-radius: 12px; padding: 16px; min-height: 420px; margin-bottom: 16px; overflow-y: auto; }
-    .message { padding: 12px; border-radius: 8px; margin-bottom: 12px; white-space: pre-wrap; line-height: 1.5; }
-    .user { background: #e8f0ff; }
-    .assistant { background: #f1f1f1; }
-    textarea { width: 100%; min-height: 90px; padding: 12px; border-radius: 8px; border: 1px solid #ccc; font-size: 16px; box-sizing: border-box; }
-    button { margin-top: 12px; padding: 12px 18px; border: 0; border-radius: 8px; background: #111; color: white; font-size: 16px; cursor: pointer; }
-    button:disabled { background: #777; cursor: not-allowed; }
-    .password-box { background: white; border: 1px solid #ddd; border-radius: 12px; padding: 16px; margin-bottom: 16px; }
-    input { padding: 10px; width: 100%; box-sizing: border-box; border-radius: 8px; border: 1px solid #ccc; font-size: 16px; }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BMS Service - Centro de Conhecimento Técnico</title>
+    <!-- Tailwind CSS para Estilização Premium -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Ícones Lucide -->
+    <script src="https://unpkg.com/lucide@latest"></script>
 </head>
-<body>
-  <div class="container">
-    <h1>BMS Service - Assistente Claude</h1>
-    <div class="subtitle">Faça perguntas e o Claude poderá consultar a base de conhecimento técnica e os projetos.</div>
+<body class="bg-[#f8fafc] text-slate-800 font-sans h-screen flex flex-col overflow-hidden">
 
-    <div class="password-box">
-      <label>Senha de acesso ao chat</label>
-      <input id="password" type="password" placeholder="Digite a senha do chat" />
+    <!-- 1. CABEÇALHO SUPERIOR (NAVBAR) -->
+    <header class="bg-white border-b border-slate-200 h-16 min-h-16 flex items-center justify-between px-6 z-10">
+        <div class="flex items-center gap-3">
+            <div class="bg-blue-600 p-2 rounded-xl text-white">
+                <i data-lucide="brain-circuit" class="w-6 h-6"></i>
+            </div>
+            <span class="font-bold text-lg tracking-tight text-slate-900">BMS <span class="text-blue-600">Knowledge</span></span>
+        </div>
+        
+        <!-- Barra de Busca Centralizada -->
+        <div class="flex-1 max-w-2xl mx-8 relative">
+            <i data-lucide="search" class="w-5 h-5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2"></i>
+            <input type="text" placeholder="Buscar procedimentos, automações, documentações... (Ctrl K)" 
+                   class="w-full bg-slate-50 border border-slate-200 rounded-xl pl-11 pr-4 py-2 text-sm focus:outline-none focus:border-blue-500 focus:bg-white transition-all">
+        </div>
+
+        <div class="flex items-center gap-3">
+            <button class="bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium px-4 py-2 rounded-xl flex items-center gap-2 transition-colors">
+                <i data-lucide="plus" class="w-4 h-4"></i> Nova Nota
+            </button>
+            <div class="w-px h-6 bg-slate-200 mx-2"></div>
+            <div class="flex items-center gap-2 bg-slate-100 p-1.5 rounded-xl px-3 border border-slate-200">
+                <div class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                <span class="text-xs font-semibold text-slate-600 tracking-wide">SERVER ACTIVE</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- ÁREA PRINCIPAL EM TRÊS COLUNAS -->
+    <div class="flex flex-1 overflow-hidden">
+
+        <!-- COLUNA 1: NAVEGAÇÃO DE ARQUIVOS (ESQUERDA) -->
+        <aside class="w-72 bg-white border-r border-slate-200 flex flex-col overflow-y-auto p-4 gap-4">
+            <div>
+                <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3 px-2">Base de Conhecimento</h3>
+                <div id="notes-list" class="flex flex-col gap-1">
+                    <!-- Inserção dinâmica via JS -->
+                    <div class="text-xs text-slate-400 p-2">Carregando cofre técnico...</div>
+                </div>
+            </div>
+
+            <!-- Card de Consumo (Fundo da Barra Lateral) -->
+            <div class="mt-auto bg-slate-50 border border-slate-200 rounded-2xl p-4">
+                <div class="flex items-center justify-between mb-2">
+                    <span class="text-xs font-bold text-slate-600">Módulos Ativos</span>
+                    <span class="text-[10px] bg-blue-100 text-blue-700 font-bold px-2 py-0.5 rounded-full">MCP Stdio</span>
+                </div>
+                <div class="w-full bg-slate-200 h-2 rounded-full overflow-hidden mb-2">
+                    <div class="bg-blue-600 h-full w-[85%]"></div>
+                </div>
+                <p class="text-[11px] text-slate-500">Conexão física direta com o volume mapeado da VPS.</p>
+            </div>
+        </aside>
+
+        <!-- COLUNA 2: CONTEÚDO DA NOTA & MAPA RELACIONAL (CENTRO) -->
+        <main class="flex-1 flex flex-col overflow-y-auto p-6 gap-6 bg-[#f8fafc]">
+            
+            <!-- Cards de Filtro de Contexto Superior -->
+            <div class="grid grid-cols-4 gap-4">
+                <div class="bg-white border border-slate-200 rounded-2xl p-4 flex items-center gap-4 shadow-xs">
+                    <div class="p-3 bg-blue-50 text-blue-600 rounded-xl"><i data-lucide="layers" class="w-5 h-5"></i></div>
+                    <div><p class="text-xs text-slate-400 font-medium">Ambiente</p><p class="text-sm font-bold text-slate-700">Produção VPS</p></div>
+                </div>
+                <div class="bg-white border border-slate-200 rounded-2xl p-4 flex items-center gap-4 shadow-xs">
+                    <div class="p-3 bg-purple-50 text-purple-600 rounded-xl"><i data-lucide="git-branch" class="w-5 h-5"></i></div>
+                    <div><p class="text-xs text-slate-400 font-medium">Integração</p><p class="text-sm font-bold text-slate-700">n8n / Webhooks</p></div>
+                </div>
+                <div class="bg-white border border-slate-200 rounded-2xl p-4 flex items-center gap-4 shadow-xs">
+                    <div class="p-3 bg-amber-50 text-amber-600 rounded-xl"><i data-lucide="shield-check" class="w-5 h-5"></i></div>
+                    <div><p class="text-xs text-slate-400 font-medium">Segurança</p><p class="text-sm font-bold text-slate-700">Hardening OK</p></div>
+                </div>
+                <div class="bg-white border border-slate-200 rounded-2xl p-4 flex items-center gap-4 shadow-xs">
+                    <div class="p-3 bg-emerald-50 text-emerald-600 rounded-xl"><i data-lucide="database" class="w-5 h-5"></i></div>
+                    <div><p class="text-xs text-slate-400 font-medium">Repositório</p><p class="text-sm font-bold text-slate-700">Obsidian Vault</p></div>
+                </div>
+            </div>
+
+            <!-- Card Central do Documento Selecionado -->
+            <div class="bg-white border border-slate-200 rounded-3xl p-6 shadow-xs flex flex-col flex-1 min-h-[400px]">
+                <div class="flex items-center justify-between border-b border-slate-100 pb-4 mb-4">
+                    <div>
+                        <h2 id="active-note-title" class="text-xl font-bold text-slate-800">Selecione uma nota técnica</h2>
+                        <p class="text-xs text-slate-400 mt-1">Clique em qualquer arquivo na barra lateral para abrir a documentação</p>
+                    </div>
+                    <div class="flex gap-2">
+                        <button class="p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-50 rounded-xl transition-colors"><i data-lucide="download" class="w-5 h-5"></i></button>
+                        <button class="p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-50 rounded-xl transition-colors"><i data-lucide="maximize-2" class="w-5 h-5"></i></button>
+                    </div>
+                </div>
+                <!-- Visualizador de Markdown / Texto -->
+                <div id="note-viewer" class="flex-1 text-sm text-slate-600 leading-relaxed overflow-y-auto whitespace-pre-wrap font-mono bg-slate-50 p-4 rounded-2xl border border-slate-100">
+                    Nenhum documento aberto no momento.
+                </div>
+            </div>
+
+            <!-- Mapa de Inteligência Relacional (Parte Inferior) -->
+            <div class="bg-white border border-slate-200 rounded-3xl p-6 shadow-xs h-64 min-h-64 flex flex-col">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="font-bold text-sm text-slate-800 flex items-center gap-2"><i data-lucide="network" class="w-4 h-4 text-blue-600"></i> Gráfico Técnico de Dependências</h3>
+                    <span class="text-xs text-slate-400">Mapeamento Dinâmico</span>
+                </div>
+                <div class="flex-1 bg-slate-50 border border-dashed border-slate-200 rounded-2xl flex items-center justify-between px-12 relative overflow-hidden">
+                    <!-- Elementos Visuais Simulado de Redes/Fluxos -->
+                    <div class="z-10 bg-blue-600 text-white p-3 rounded-2xl shadow-md flex flex-col items-center gap-1 font-bold text-xs"><i data-lucide="terminal" class="w-4 h-4"></i>Chat App</div>
+                    <div class="h-0.5 bg-blue-300 flex-1 border-t border-dashed border-blue-400 relative"><div class="absolute w-2 h-2 bg-blue-600 rounded-full top-1/2 -translate-y-1/2 animate-ping left-1/2"></div></div>
+                    <div class="z-10 bg-white border border-slate-200 text-slate-700 p-3 rounded-2xl shadow-sm flex flex-col items-center gap-1 font-bold text-xs"><i data-lucide="server" class="w-4 h-4 text-purple-600"></i>MCP local</div>
+                    <div class="h-0.5 bg-purple-300 flex-1 border-t border-dashed border-purple-400"></div>
+                    <div class="z-10 bg-slate-900 text-white p-3 rounded-2xl shadow-md flex flex-col items-center gap-1 font-bold text-xs"><i data-lucide="folder-git" class="w-4 h-4 text-amber-500"></i>Vault Local</div>
+                </div>
+            </div>
+        </main>
+
+        <!-- COLUNA 3: ASSISTENTE CLAUDE (DIREITA) -->
+        <aside class="w-96 bg-white border-l border-slate-200 flex flex-col overflow-hidden shadow-xl">
+            <!-- Topo do Chat -->
+            <div class="p-4 border-b border-slate-100 bg-slate-50 flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center text-white font-bold"><i data-lucide="bot" class="w-5 h-5"></i></div>
+                    <div>
+                        <h3 class="font-bold text-sm text-slate-800">Assistente Claude</h3>
+                        <div class="flex items-center gap-1.5"><div class="w-1.5 h-1.5 bg-green-500 rounded-full"></div><span class="text-[11px] text-slate-400 font-medium">Online e conectado ao cofre</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Login / Senha Persistence -->
+            <div class="p-4 bg-amber-50 border-b border-amber-100 flex flex-col gap-2">
+                <label class="text-[11px] font-bold text-amber-700 uppercase tracking-wider">Chave de Acesso Local</label>
+                <input type="password" id="app-password" placeholder="Insira a senha do chat..." value="sua_senha_aqui"
+                       class="w-full bg-white border border-amber-200 rounded-xl px-3 py-1.5 text-xs font-mono focus:outline-none focus:border-amber-400">
+            </div>
+
+            <!-- Balão de Mensagens -->
+            <div id="chat-messages" class="flex-1 overflow-y-auto p-4 flex flex-col gap-4 bg-[#fafafa]">
+                <div class="bg-white border border-slate-100 rounded-2xl p-4 text-xs text-slate-600 max-w-[85%] self-start shadow-xs">
+                    Olá! Sou o assistente técnico da **BMS Service**. Clique em uma nota ao lado para lê-la ou faça qualquer pergunta sobre as nossas diretrizes técnicas.
+                </div>
+            </div>
+
+            <!-- Input de Envio -->
+            <div class="p-4 border-t border-slate-100 bg-white">
+                <div class="relative flex items-center">
+                    <input type="text" id="chat-input" placeholder="Pergunte ao Claude sobre a base..." 
+                           class="w-full bg-slate-50 border border-slate-200 rounded-2xl pl-4 pr-12 py-3 text-sm focus:outline-none focus:border-blue-500 focus:bg-white transition-all">
+                    <button id="btn-send" class="absolute right-2 p-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl transition-colors shadow-sm">
+                        <i data-lucide="send" class="w-4 h-4"></i>
+                    </button>
+                </div>
+            </div>
+        </aside>
     </div>
 
-    <div id="chat" class="chat"></div>
+    <!-- JAVASCRIPT DE INTEGRAÇÃO OPERACIONAL -->
+    <script>
+        // Inicialização dos ícones Lucide
+        lucide.createIcons();
 
-    <textarea id="input" placeholder="Exemplo: Busque no Obsidian as anotações sobre testes e faça um resumo."></textarea>
-    <button id="send">Enviar</button>
-  </div>
+        const messagesContainer = document.getElementById("chat-messages");
+        const chatInput = document.getElementById("chat-input");
+        const btnSend = document.getElementById("btn-send");
+        const appPassword = document.getElementById("app-password");
+        const notesList = document.getElementById("notes-list");
+        const noteViewer = document.getElementById("note-viewer");
+        const activeNoteTitle = document.getElementById("active-note-title");
 
-  <script>
-    const chat = document.getElementById("chat");
-    const input = document.getElementById("input");
-    const send = document.getElementById("send");
-    const passwordInput = document.getElementById("password");
+        let chatHistory = [];
 
-    const savedPassword = localStorage.getItem("chat_password");
-    if (savedPassword) passwordInput.value = savedPassword;
+        // 1. Carrega a lista de notas do Obsidian automaticamente na inicialização
+        async function loadNotesTree() {
+            try {
+                const res = await fetch("/api/notes");
+                const data = await res.json();
+                if (data.files && data.files.length > 0) {
+                    notesList.innerHTML = "";
+                    data.files.forEach(file => {
+                        const button = document.createElement("button");
+                        button.className = "w-full text-left px-3 py-2 text-xs rounded-xl flex items-center gap-2.5 text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-all font-medium";
+                        button.innerHTML = `<i data-lucide="file-text" class="w-4 h-4 text-slate-400"></i> <span class="truncate">${file.name}</span>`;
+                        button.onclick = () => openNote(file.name);
+                        notesList.appendChild(button);
+                    });
+                    lucide.createIcons();
+                } else {
+                    notesList.innerHTML = `<div class="text-xs text-slate-400 p-2">Nenhuma nota encontrada no volume.</div>`;
+                }
+            } catch (err) {
+                console.error("Erro ao listar notas:", err);
+            }
+        }
 
-    const messages = [];
+        // 2. Simula a abertura e leitura rápida da nota clicada na tela central
+        async function openNote(filename) {
+            activeNoteTitle.innerText = filename;
+            noteViewer.innerText = "Carregando conteúdo da nota local...";
+            
+            // Faz o Claude ler via chat ou simula a requisição local para exibição imediata
+            noteViewer.innerHTML = `<div class="p-2 bg-blue-50 text-blue-700 rounded-xl text-xs flex items-center gap-2 mb-2"><i data-lucide="info" class="w-4 h-4"></i> Nota selecionada. Você pode pedir para o assistente ao lado analisá-la ou editá-la.</div>`;
+            
+            // Adiciona um gancho no chat para facilitar o prompt do usuário
+            chatInput.value = `Analise a nota técnica "${filename}" e resuma seus pontos mais importantes.`;
+            chatInput.focus();
+        }
 
-    function addMessage(role, text) {
-      const div = document.createElement("div");
-      div.className = "message " + role;
-      div.textContent = role === "user" ? "Você:\n" + text : "Claude:\n" + text;
-      chat.appendChild(div);
-      chat.scrollTop = chat.scrollHeight;
-    }
+        // 3. Envio de Mensagens para a API do Claude (/api/chat)
+        async function sendMessage() {
+            const text = chatInput.value.trim();
+            if (!text) return;
 
-    send.addEventListener("click", async () => {
-      const text = input.value.trim();
-      const password = passwordInput.value.trim();
+            // Renderiza mensagem do usuário na tela
+            appendMessage("user", text);
+            chatInput.value = "";
+            chatHistory.push({ role: "user", content: text });
 
-      if (!password) return alert("Digite a senha de acesso ao chat.");
-      if (!text) return;
+            // Balão de digitação temporário do Claude
+            const typingId = appendMessage("assistant", "Processando requisição MCP...");
 
-      localStorage.setItem("chat_password", password);
-      input.value = "";
-      send.disabled = true;
-      send.textContent = "Pensando...";
+            try {
+                const response = await fetch("/api/chat", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "x-app-password": appPassword.value
+                    },
+                    body: JSON.stringify({ messages: chatHistory })
+                });
 
-      messages.push({ role: "user", content: text });
-      addMessage("user", text);
+                const data = await response.json();
+                document.getElementById(typingId).remove();
 
-      try {
-        const response = await fetch("/api/chat", {
-          method: "POST",
-          headers: {
-            "content-type": "application/json",
-            "x-app-password": password
-          },
-          body: JSON.stringify({ messages })
-        });
+                if (data.reply) {
+                    appendMessage("assistant", data.reply);
+                    chatHistory.push({ role: "assistant", content: data.reply });
+                } else if (data.error) {
+                    appendMessage("assistant", `❌ Falha: ${data.error}`);
+                }
+            } catch (err) {
+                document.getElementById(typingId).remove();
+                appendMessage("assistant", `❌ Erro de conexão com o servidor: ${err.message}`);
+            }
+        }
 
-        const data = await response.json();
-        if (!response.ok) throw new Error(data.error || "Erro no servidor.");
+        function appendMessage(role, content) {
+            const id = "msg-" + Date.now();
+            const div = document.createElement("div");
+            
+            if (role === "user") {
+                div.className = "bg-blue-600 text-white rounded-2xl rounded-tr-none p-4 text-xs max-w-[85%] self-end shadow-sm leading-relaxed";
+            } else {
+                div.className = "bg-white border border-slate-200 text-slate-700 rounded-2xl rounded-tl-none p-4 text-xs max-w-[85%] self-start shadow-xs leading-relaxed";
+            }
+            
+            div.id = id;
+            div.innerText = content;
+            messagesContainer.appendChild(div);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            return id;
+        }
 
-        messages.push({ role: "assistant", content: data.reply });
-        addMessage("assistant", data.reply);
-      } catch (error) {
-        addMessage("assistant", "Erro: " + error.message);
-      } finally {
-        send.disabled = false;
-        send.textContent = "Enviar";
-      }
-    });
-  </script>
+        btnSend.onclick = sendMessage;
+        chatInput.onkeydown = (e) => { if (e.key === "Enter") sendMessage(); };
+
+        // Executa a montagem da árvore de arquivos assim que abre a página
+        loadNotesTree();
+    </script>
 </body>
 </html>
