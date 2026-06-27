@@ -5,7 +5,6 @@ import Anthropic from "@anthropic-ai/sdk";
 
 const app = express();
 
-// Configura o parser binário bruto para a rota de upload antes do parser de JSON
 app.use("/api/upload-vault", express.raw({ type: "*/*", limit: "25mb" }));
 app.use(express.json({ limit: "1mb" }));
 app.use(express.static("public"));
@@ -119,7 +118,7 @@ function editNoteLocal(filename, content) {
   const safePath = getSafePath(filename);
   if (!fs.existsSync(safePath)) return { error: `Nota ${filename} não existe para ser editada.` };
   fs.writeFileSync(safePath, content, "utf-8");
-  return { filename, status: "Nota atualizada com sucesso." };
+  return { filename, status: "Nota updated com sucesso." };
 }
 
 function createFolderLocal(foldername) {
@@ -152,16 +151,46 @@ app.get("/api/note-content", (req, res) => {
   }
 });
 
-// Rota de Upload Físico Direto para o Volume Compartilhado do Obsidian
+// Mapeia globalmente a rede neural de links internos do Obsidian
+app.get("/api/graph-data", (req, res) => {
+  try {
+    const check = listNotesLocal();
+    if (check.error || !check.files) return res.json({ nodes: [], edges: [] });
+    
+    const files = check.files;
+    const nodes = files.map(f => ({ id: f, label: f.split('/').pop().replace(/\.md$/, "") }));
+    const edges = [];
+
+    files.forEach(file => {
+      try {
+        const fullContent = fs.readFileSync(getSafePath(file), "utf-8");
+        const linkRegex = /\[\[(.*?)\]\]/g;
+        let match;
+        while ((match = linkRegex.exec(fullContent)) !== null) {
+          const targetLabel = match[1].trim().replace(/\.md$/, "");
+          const targetNode = nodes.find(n => n.label === targetLabel || n.id === match[1].trim());
+          if (targetNode) {
+            edges.push({ source: file, target: targetNode.id });
+          }
+        }
+      } catch (e) {
+        console.error("Erro ao ler mapa da nota:", file, e.message);
+      }
+    });
+
+    res.json({ nodes, edges });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 app.post("/api/upload-vault", (req, res) => {
   const filename = req.query.file;
   if (!filename) return res.status(400).json({ error: "Nome do arquivo não especificado." });
-  
   try {
     const safePath = getSafePath(filename);
     fs.mkdirSync(path.dirname(safePath), { recursive: true });
     fs.writeFileSync(safePath, req.body);
-    console.log(`[BMS Storage] Arquivo gravado com sucesso: ${filename}`);
     res.json({ success: true, message: "Arquivo integrado ao Obsidian." });
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -196,8 +225,6 @@ app.post("/api/chat", async (req, res) => {
       for (const block of response.content) {
         if (block.type === "tool_use") {
           let toolResult = {};
-          console.log(`[BMS Loop Execute] Executando: ${block.name}`);
-          
           try {
             if (block.name === "list_notes") {
               toolResult = listNotesLocal();
@@ -234,7 +261,7 @@ app.post("/api/chat", async (req, res) => {
 
     res.json({ reply: response.content.find(c => c.type === "text")?.text || "Ação concluída com sucesso." });
   } catch (error) {
-    console.error("Erro na execução local do loop:", error);
+    console.error(error);
     res.status(500).json({ error: `Erro na execução do MCP nativo: ${error.message}` });
   }
 });
