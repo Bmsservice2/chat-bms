@@ -9,6 +9,9 @@
 </head>
 <body class="bg-[#f3f4f6] text-slate-800 font-sans h-screen flex flex-col overflow-hidden select-none">
 
+    <input type="file" id="global-vault-upload" class="hidden" />
+    <input type="file" id="chat-context-upload" class="hidden" />
+
     <header class="bg-white border-b border-slate-200 h-16 min-h-16 flex items-center justify-between px-6 z-20 shadow-xs">
         <div class="flex items-center gap-3">
             <div class="bg-blue-600 p-2.5 rounded-xl text-white shadow-sm shadow-blue-300">
@@ -27,8 +30,8 @@
             <button class="bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold px-4 py-2.5 rounded-xl flex items-center gap-2 transition-all shadow-sm shadow-blue-200">
                 <i data-lucide="plus" class="w-4 h-4"></i> Novo Processo
             </button>
-            <button class="border border-slate-200 bg-white text-slate-600 text-xs font-semibold px-4 py-2.5 rounded-xl flex items-center gap-2 hover:bg-slate-50 transition-all">
-                <i data-lucide="upload-cloud" class="w-4 h-4"></i> Upload
+            <button id="btn-vault-upload" class="border border-slate-200 bg-white text-slate-600 text-xs font-semibold px-4 py-2.5 rounded-xl flex items-center gap-2 hover:bg-slate-50 transition-all active:scale-95">
+                <i data-lucide="upload-cloud" class="w-4 h-4"></i> Upload Vault
             </button>
             <div class="w-px h-6 bg-slate-200 mx-1"></div>
             <div class="flex items-center gap-2 bg-emerald-50 px-3 py-2 rounded-xl border border-emerald-100">
@@ -120,7 +123,6 @@
                 </div>
 
                 <div class="flex flex-1 overflow-hidden">
-                    
                     <div id="note-viewer" class="w-3/5 p-5 overflow-y-auto text-xs font-mono leading-relaxed text-slate-600 bg-slate-50/50 border-r border-slate-100 whitespace-pre-wrap select-text">
                         Clique em qualquer nota técnica na barra lateral para carregar a visualização de código e instruções operacionais.
                     </div>
@@ -143,15 +145,11 @@
 
             <div class="bg-white border border-slate-200 rounded-2xl p-4 shadow-xs h-56 min-h-56 flex flex-col">
                 <div class="flex items-center justify-between mb-2">
-                    <h3 class="font-bold text-xs text-slate-800 flex items-center gap-1.5"><i data-lucide="network" class="w-4 h-4 text-blue-600"></i> Mapa de Inteligência Relacional</h3>
-                    <span class="text-[10px] font-bold bg-slate-100 text-slate-500 px-2 py-0.5 rounded-md">Mapeamento em Tempo Real</span>
+                    <h3 class="font-bold text-xs text-slate-800 flex items-center gap-1.5"><i data-lucide="network" class="w-4 h-4 text-blue-600"></i> Mapa de Inteligência Relacional (Graph View)</h3>
+                    <span class="text-[10px] font-bold bg-slate-100 text-slate-500 px-2 py-0.5 rounded-md">Conexões de Hiperlinks Nativas</span>
                 </div>
-                <div class="flex-1 bg-slate-50/60 border border-dashed border-slate-200 rounded-xl flex items-center justify-between px-16 relative overflow-hidden">
-                    <div class="z-10 bg-blue-600 text-white px-4 py-2.5 rounded-xl shadow-md flex flex-col items-center gap-1 font-bold text-[10px] tracking-wide"><i data-lucide="terminal" class="w-4 h-4"></i>Chat App</div>
-                    <div class="h-0.5 bg-blue-300 flex-1 border-t border-dashed border-blue-400 relative mx-2"><div class="absolute w-2 h-2 bg-blue-600 rounded-full top-1/2 -translate-y-1/2 animate-ping left-1/2"></div></div>
-                    <div class="z-10 bg-white border border-slate-200 text-slate-700 px-4 py-2.5 rounded-xl shadow-xs flex flex-col items-center gap-1 font-bold text-[10px] tracking-wide"><i data-lucide="server" class="w-4 h-4 text-purple-600"></i>MCP Core Stdio</div>
-                    <div class="h-0.5 bg-purple-300 flex-1 border-t border-dashed border-purple-400 mx-2"></div>
-                    <div class="z-10 bg-slate-900 text-white px-4 py-2.5 rounded-xl shadow-md flex flex-col items-center gap-1 font-bold text-[10px] tracking-wide"><i data-lucide="folder-git" class="w-4 h-4 text-amber-500"></i>Cofre Real</div>
+                <div id="graph-view-canvas" class="flex-1 bg-slate-50 border border-dashed border-slate-200 rounded-xl relative overflow-hidden flex items-center justify-center">
+                    <div class="text-slate-400 text-xs font-medium italic">Abra uma nota para mapear sua teia de links internos.</div>
                 </div>
             </div>
         </main>
@@ -179,13 +177,26 @@
                 </div>
             </div>
 
+            <div id="chat-attachment-area" class="hidden px-3 py-2 bg-blue-50 border-t border-blue-100 flex items-center justify-between text-[11px] font-bold text-blue-700">
+                <div class="flex items-center gap-1.5 truncate">
+                    <i data-lucide="paperclip" class="w-3.5 h-3.5"></i>
+                    <span id="chat-attachment-name" class="truncate">arquivo.md</span>
+                </div>
+                <button id="btn-remove-attachment" class="text-slate-400 hover:text-red-500"><i data-lucide="x" class="w-4 " ></i></button>
+            </div>
+
             <div class="p-3 border-t border-slate-100 bg-white">
-                <div class="relative flex items-center">
-                    <input type="text" id="chat-input" placeholder="Digite sua instrução para a IA..." 
-                           class="w-full bg-slate-50 border border-slate-200 rounded-xl pl-3 pr-10 py-2.5 text-xs font-medium focus:outline-none focus:border-blue-500 focus:bg-white transition-all text-slate-800">
-                    <button id="btn-send" class="absolute right-1.5 p-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-all shadow-sm">
-                        <i data-lucide="send" class="w-3.5 h-3.5"></i>
+                <div class="relative flex items-center gap-2">
+                    <button id="btn-chat-attach" class="p-2 text-slate-400 hover:text-blue-600 bg-slate-50 hover:bg-blue-50 border border-slate-200 rounded-xl transition-all">
+                        <i data-lucide="paperclip" class="w-4 h-4"></i>
                     </button>
+                    <div class="relative flex-1">
+                        <input type="text" id="chat-input" placeholder="Digite sua instrução para a IA..." 
+                               class="w-full bg-slate-50 border border-slate-200 rounded-xl pl-3 pr-10 py-2.5 text-xs font-medium focus:outline-none focus:border-blue-500 focus:bg-white transition-all text-slate-800">
+                        <button id="btn-send" class="absolute right-1.5 top-1/2 -translate-y-1/2 p-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-all shadow-sm">
+                            <i data-lucide="send" class="w-3.5 h-3.5"></i>
+                        </button>
+                    </div>
                 </div>
             </div>
         </aside>
@@ -204,8 +215,19 @@
         const activeNoteMeta = document.getElementById("active-note-meta");
         const summaryDesc = document.getElementById("summary-desc");
         const summaryPoints = document.getElementById("summary-points");
+        const graphCanvas = document.getElementById("graph-view-canvas");
+
+        // Elementos de Upload
+        const btnVaultUpload = document.getElementById("btn-vault-upload");
+        const globalVaultUpload = document.getElementById("global-vault-upload");
+        const btnChatAttach = document.getElementById("btn-chat-attach");
+        const chatContextUpload = document.getElementById("chat-context-upload");
+        const chatAttachmentArea = document.getElementById("chat-attachment-area");
+        const chatAttachmentName = document.getElementById("chat-attachment-name");
+        const btnRemoveAttachment = document.getElementById("btn-remove-attachment");
 
         let chatHistory = [];
+        let pendingChatAttachment = null;
 
         // 1. Constrói a árvore de arquivos corrigindo o bug de strings
         async function buildNotesTree() {
@@ -215,8 +237,6 @@
                 
                 if (data.files && data.files.length > 0) {
                     fileTree.innerHTML = "";
-                    
-                    // Organiza caminhos planos em estrutura de árvore
                     data.files.forEach(filePath => {
                         const btn = document.createElement("button");
                         btn.className = "w-full text-left px-2.5 py-1.5 rounded-lg flex items-center gap-2 text-slate-600 hover:bg-slate-100 hover:text-slate-900 transition-all truncate";
@@ -224,7 +244,6 @@
                         btn.onclick = () => loadNoteContent(filePath);
                         fileTree.appendChild(btn);
                     });
-                    
                     lucide.createIcons();
                 } else {
                     fileTree.innerHTML = `<div class="text-slate-400 p-2 italic">Cofre vazio ou sem notas .md encontradas.</div>`;
@@ -234,9 +253,77 @@
             }
         }
 
-        // 2. Executa a leitura em tempo real e joga o texto real da VPS na tela central
+        // 2. Renderizador Real do Obsidian Graph View (Gera conexões via links [[Nota]])
+        function renderGraphView(activeName, contentText) {
+            graphCanvas.innerHTML = "";
+            
+            // Regex para capturar padrões de links internos do Obsidian: [[Nome Da Nota]]
+            const linkRegex = /\[\[(.*?)\]\]/g;
+            let matches = [];
+            let match;
+            
+            while ((match = linkRegex.exec(contentText)) !== null) {
+                if (!matches.includes(match[1])) matches.push(match[1]);
+            }
+
+            // Cria o nó principal centralizado
+            const centerNode = document.createElement("div");
+            centerNode.className = "absolute z-10 bg-blue-600 text-white font-bold px-3 py-1.5 rounded-xl shadow-md text-[10px] animate-scale";
+            centerNode.style.left = "calc(50% - 60px)";
+            centerNode.style.top = "calc(50% - 15px)";
+            centerNode.innerHTML = `<div class="flex items-center gap-1"><i data-lucide="file-text" class="w-3 h-3"></i><span class="truncate max-w-[90px]">${activeName}</span></div>`;
+            graphCanvas.appendChild(centerNode);
+
+            if (matches.length === 0) {
+                // Estado padrão se a nota não referenciar ninguém
+                const msg = document.createElement("div");
+                msg.className = "absolute bottom-3 text-[10px] text-slate-400 font-semibold";
+                msg.innerText = "Nenhum link de saída detectado nesta nota.";
+                graphCanvas.appendChild(msg);
+                lucide.createIcons();
+                return;
+            }
+
+            // Renderiza nós satélites distribuídos matematicamente em círculo (Teia de Conexões)
+            const radius = 75; 
+            matches.forEach((linkedNote, index) => {
+                const angle = (index * 2 * Math.PI) / matches.length;
+                const x = Math.cos(angle) * radius;
+                const y = Math.sin(angle) * radius;
+
+                // Cria o nó satélite
+                const satellite = document.createElement("div");
+                satellite.className = "absolute z-10 bg-white border border-slate-200 text-slate-700 px-2 py-1 rounded-lg shadow-xs text-[9px] font-bold max-w-[100px] truncate";
+                satellite.style.left = `calc(50% + ${x}px - 45px)`;
+                satellite.style.top = `calc(50% + ${y}px - 12px)`;
+                satellite.innerText = linkedNote.split(".md")[0];
+                graphCanvas.appendChild(satellite);
+
+                // Linha de transmissão SVG conectando os nós
+                const svgNS = "http://www.w3.org/2000/svg";
+                const svg = document.createElementNS(svgNS, "svg");
+                svg.setAttribute("class", "absolute inset-0 w-full h-full pointer-events-none");
+                
+                const line = document.createElementNS(svgNS, "line");
+                line.setAttribute("x1", "50%");
+                line.setAttribute("y1", "50%");
+                line.setAttribute("x2", `calc(50% + ${x}px)`);
+                line.setAttribute("y2", `calc(50% + ${y}px)`);
+                line.setAttribute("stroke", "#93c5fd");
+                line.setAttribute("stroke-width", "1.5");
+                line.setAttribute("stroke-dasharray", "4,3");
+                
+                svg.appendChild(line);
+                graphCanvas.appendChild(svg);
+            });
+
+            lucide.createIcons();
+        }
+
+        // 3. Executa a leitura em tempo real
         async function loadNoteContent(filename) {
-            activeNoteTitle.innerText = filename.split('/').pop();
+            const shortName = filename.split('/').pop();
+            activeNoteTitle.innerText = shortName;
             activeNoteMeta.innerText = `Localização: BaseConhecimento/${filename}`;
             noteViewer.innerText = "Buscando blocos de dados no disco rígido...";
             
@@ -247,17 +334,16 @@
                 if (data.content) {
                     noteViewer.innerText = data.content;
                     
-                    // Alimenta o painel de resumo dinâmico central de forma automatizada
                     summaryDesc.innerText = `Documento técnico analisado estruturalmente. Contém configurações operacionais ativas e mapeadas pelo sistema corporativo.`;
                     summaryPoints.innerHTML = `
                         <div class="flex items-start gap-2"><i data-lucide="check-circle-2" class="w-3.5 h-3.5 text-green-500 shrink-0"></i> <span>Leitura física concluída</span></div>
                         <div class="flex items-start gap-2"><i data-lucide="check-circle-2" class="w-3.5 h-3.5 text-green-500 shrink-0"></i> <span>Formato Markdown Sincronizado</span></div>
-                        <div class="flex items-start gap-2"><i data-lucide="info" class="w-3.5 h-3.5 text-blue-500 shrink-0"></i> <span>Disponível para comandos na IA</span></div>
                     `;
-                    lucide.createIcons();
-
-                    // Prepara o chat facilitando a ordem do usuário
-                    chatInput.value = `Leia a nota "${filename}" e faça um relatório completo das ações descritas nela.`;
+                    
+                    // Dispara o Obsidian Graph View Dinâmico
+                    renderGraphView(shortName, data.content);
+                    
+                    chatInput.value = `Leia a nota "${filename}" e faça um resumo crítico.`;
                     chatInput.focus();
                 } else {
                     noteViewer.innerText = `Erro: ${data.error || 'Falha ao processar arquivo.'}`;
@@ -267,14 +353,80 @@
             }
         }
 
-        // 3. Mecanismo de Mensageria do Chat com o Claude
-        async function sendChatMessage() {
-            const query = chatInput.value.trim();
-            if (!query) return;
+        // 4. Mecanismo de Upload para a Barra de Ferramentas Superior
+        btnVaultUpload.onclick = () => globalVaultUpload.click();
+        globalVaultUpload.onchange = async (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
 
-            renderMessageBlock("user", query);
+            activeNoteTitle.innerText = "Sincronizando arquivo...";
+            noteViewer.innerText = `Enviando ${file.name} para a VPS...`;
+
+            try {
+                const res = await fetch(`/api/upload-vault?file=${encodeURIComponent(file.name)}`, {
+                    method: "POST",
+                    body: file
+                });
+                const data = await res.json();
+                if (data.success) {
+                    await buildNotesTree();
+                    loadNoteContent(file.name);
+                } else {
+                    alert(`Falha no upload: ${data.error}`);
+                }
+            } catch (err) {
+                alert(`Erro de comunicação: ${err.message}`);
+            }
+        };
+
+        // 5. Mecanismo de Anexo de Contexto para a Conversa do Claude
+        btnChatAttach.onclick = () => chatContextUpload.click();
+        chatContextUpload.onchange = (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = (event) => {
+                pendingChatAttachment = {
+                    name: file.name,
+                    content: event.target.result
+                };
+                chatAttachmentName.innerText = file.name;
+                chatAttachmentArea.classList.remove("hidden");
+            };
+            reader.readAsText(file);
+        };
+
+        btnRemoveAttachment.onclick = () => {
+            pendingChatAttachment = null;
+            chatAttachmentArea.classList.add("hidden");
+            chatContextUpload.value = "";
+        };
+
+        // 6. Envio das Mensagens Injetando o Contexto do Arquivo se Houver
+        async function sendChatMessage() {
+            let query = chatInput.value.trim();
+            if (!query && !pendingChatAttachment) return;
+
+            let contextPrompt = query;
+            
+            // Injeta o arquivo lido na memória do payload do usuário
+            if (pendingChatAttachment) {
+                contextPrompt = `[Contexto Adicional - Arquivo Anexado pelo Usuário: ${pendingChatAttachment.name}]\n` +
+                                `\`\`\`\n${pendingChatAttachment.content}\n\`\`\`\n\n` +
+                                `Instrução do usuário sobre o arquivo: ${query || 'Analise o arquivo anexo.'}`;
+                
+                renderMessageBlock("user", `📎 Envia arquivo: ${pendingChatAttachment.name}\n${query}`);
+                // Reseta anexo
+                pendingChatAttachment = null;
+                chatAttachmentArea.classList.add("hidden");
+                chatContextUpload.value = "";
+            } else {
+                renderMessageBlock("user", query);
+            }
+
             chatInput.value = "";
-            chatHistory.push({ role: "user", content: query });
+            chatHistory.push({ role: "user", content: contextPrompt });
 
             const tempId = renderMessageBlock("assistant", "Executando varredura MCP e gerando resposta...");
 
@@ -294,8 +446,7 @@
                 if (data.reply) {
                     renderMessageBlock("assistant", data.reply);
                     chatHistory.push({ role: "assistant", content: data.reply });
-                    // Recarrega a árvore lateral caso o Claude tenha criado alguma nota ou pasta nova
-                    if (query.toLowerCase().includes("crie") || query.toLowerCase().includes("pasta") || query.toLowerCase().includes("nota")) {
+                    if (query.toLowerCase().includes("crie") || query.toLowerCase().includes("nota") || query.toLowerCase().includes("pasta")) {
                         buildNotesTree();
                     }
                 } else {
@@ -310,13 +461,11 @@
         function renderMessageBlock(role, text) {
             const id = "msg-" + Date.now();
             const bubble = document.createElement("div");
-            
             if (role === "user") {
                 bubble.className = "bg-blue-600 text-white rounded-2xl rounded-tr-none p-3 text-xs max-w-[85%] self-end shadow-xs font-medium leading-relaxed whitespace-pre-wrap";
             } else {
                 bubble.className = "bg-white border border-slate-200 text-slate-700 rounded-2xl rounded-tl-none p-3 text-xs max-w-[90%] self-start shadow-xs leading-relaxed whitespace-pre-wrap";
             }
-            
             bubble.id = id;
             bubble.innerText = text;
             messagesContainer.appendChild(bubble);
@@ -327,7 +476,6 @@
         btnSend.onclick = sendChatMessage;
         chatInput.onkeydown = (e) => { if (e.key === "Enter") sendChatMessage(); };
 
-        // Executa o mapeamento inicial da árvore ao abrir a tela
         buildNotesTree();
     </script>
 </body>
