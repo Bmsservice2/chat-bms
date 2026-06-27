@@ -1,6 +1,4 @@
 import express from "express";
-import { Client } from "@modelcontextprotocol/sdk/client/index.js";
-import { SSEClientTransport } from "@modelcontextprotocol/sdk/client/sse.js";
 import Anthropic from "@anthropic-ai/sdk";
 
 const app = express();
@@ -14,92 +12,33 @@ for (const key of requiredEnv) {
   if (!process.env[key]) missingVars.push(key);
 }
 
-const originalFetch = globalThis.fetch;
-globalThis.fetch = async (url, options) => {
-  const urlStr = String(url);
-  if (urlStr.includes("127.0.0.1:3005") && process.env.OBSIDIAN_MCP_URL) {
-    try {
-      const parsed = new URL(process.env.OBSIDIAN_MCP_URL);
-      const redirectedUrl = urlStr.replace("127.0.0.1:3005", parsed.host);
-      console.log(`[MCP Router] Redirecionando de ${urlStr} para ${redirectedUrl}`);
-      return originalFetch(redirectedUrl, options);
-    } catch (e) {
-      console.error("[MCP Router] Erro no redirecionamento:", e);
-    }
-  }
-  return originalFetch(url, options);
-};
-
 const anthropic = process.env.ANTHROPIC_API_KEY ? new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY }) : null;
-let mcpClient = null;
 
-async function connectMCP() {
-  if (mcpClient) return mcpClient;
+// Função cirúrgica para conversar diretamente com a API JSON que o seu plugin do Obsidian estabeleceu
+async function callObsidianPlugin(method, params = {}) {
+  const baseUrl = process.env.OBSIDIAN_MCP_URL.endsWith('/') 
+    ? process.env.OBSIDIAN_MCP_URL.slice(0, -1) 
+    : process.env.OBSIDIAN_MCP_URL;
 
-  console.log("=== INICIANDO AUTO-DETECÇÃO DE ENDPOINT MCP ===");
-  
-  let baseUrl = "";
-  try {
-    // Vacina: Extrai estritamente o protocolo e o IP:Porta, eliminando barras ou caminhos digitados por engano
-    const parsed = new URL(process.env.OBSIDIAN_MCP_URL);
-    baseUrl = `${parsed.protocol}//${parsed.host}`;
-  } catch (err) {
-    throw new Error(`URL inválida configurada no OBSIDIAN_MCP_URL: ${process.env.OBSIDIAN_MCP_URL}`);
-  }
-
-  // Matriz de caminhos agora totalmente limpa e sem duplicações
-  const candidatePaths = [
-    `${baseUrl}/sse`,
-    `${baseUrl}/`,
-    `${baseUrl}/mcp/sse`
-  ];
-
-  let validUrl = null;
-  let diagnosticLog = "";
-
-  for (const url of candidatePaths) {
-    try {
-      console.log(`Testando endpoint: ${url}`);
-      const res = await originalFetch(url, {
-        method: "GET",
-        headers: { "Authorization": `Bearer ${process.env.OBSIDIAN_API_KEY}` }
-      });
-      
-      const bodySnippet = await res.text().then(t => t.slice(0, 150)).catch(() => "N/A");
-      diagnosticLog += `\n• Rota: ${url} -> Status: ${res.status} | Resposta: ${bodySnippet.replace(/[\n\r]/g, ' ')}`;
-      
-      if (res.status === 200 || res.headers.get("content-type")?.includes("event-stream")) {
-        validUrl = url;
-        console.log(`[SUCESSO] Endpoint funcional detectado: ${validUrl}`);
-        break;
-      }
-    } catch (err) {
-      diagnosticLog += `\n• Rota: ${url} -> Falha de Rede: ${err.message}`;
-    }
-  }
-
-  if (!validUrl) {
-    throw new Error(`Nenhum endpoint MCP válido respondeu no servidor. Relatório de Varredura:${diagnosticLog}`);
-  }
-
-  console.log(`Conectando canal SSE em: ${validUrl}`);
-  const transport = new SSEClientTransport(new URL(validUrl), {
-    eventSourceInit: {
-      headers: { "Authorization": `Bearer ${process.env.OBSIDIAN_API_KEY}` }
+  const response = await fetch(`${baseUrl}/`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${process.env.OBSIDIAN_API_KEY}`
     },
-    requestInit: {
-      headers: { "Authorization": `Bearer ${process.env.OBSIDIAN_API_KEY}` }
-    }
+    body: JSON.stringify({
+      jsonrpc: "2.0",
+      id: Date.now(),
+      method,
+      params
+    })
   });
-  
-  mcpClient = new Client({ name: "chat-client", version: "1.0.0" }, { capabilities: {} });
-  await mcpClient.connect(transport);
-  
-  console.log("Aguardando estabilização da transmissão (2s)...");
-  await new Promise(resolve => setTimeout(resolve, 2000));
-  console.log("Canal MCP verificado e pronto para uso.");
-  
-  return mcpClient;
+
+  if (!response.ok) {
+    throw new Error(`O Obsidian respondeu com status ${response.status}`);
+  }
+
+  return response.json();
 }
 
 app.get("/api/status", (req, res) => {
@@ -116,12 +55,13 @@ app.post("/api/chat", async (req, res) => {
   }
 
   try {
-    const client = await connectMCP();
-    const toolsResponse = await client.listTools();
-    const mcpTools = toolsResponse.tools.map(t => ({
+    console.log("Solicitando lista de ferramentas ao plugin do Obsidian...");
+    const toolsData = await callObsidianPlugin("tools/list");
+    
+    const mcpTools = (toolsData.result?.tools || []).map(t => ({
       name: t.name,
       description: t.description,
-      input_schema: t.inputSchema
+      input_schema: t.inputSchema || t.input_schema
     }));
 
     const userMessages = Array.isArray(req.body.messages) ? req.body.messages : [];
@@ -138,14 +78,16 @@ app.post("/api/chat", async (req, res) => {
     const response = await anthropic.messages.create({
       model: process.env.CLAUDE_MODEL || "claude-3-5-sonnet-20241022",
       max_tokens: Number(process.env.MAX_TOKENS || 3000),
-      system: "Você é um assistente conectado ao Obsidian da empresa via MCP. Consulte as informações internas usando as ferramentas antes de responder.",
+      system: "Você é o Assistente Claude conectado ao Obsidian da BMS Service. Sempre consulte as informações internas usando as ferramentas antes de responder para garantir precisão técnica.",
       messages,
-      tools: mcpTools
+      tools: mcpTools.length > 0 ? mcpTools : undefined
     });
 
     if (response.stop_reason === "tool_use") {
       const toolUse = response.content.find(c => c.type === "tool_use");
-      const toolResult = await client.callTool({
+      console.log(`Claude solicitou o uso da ferramenta: ${toolUse.name}`);
+      
+      const toolResultData = await callObsidianPlugin("tools/call", {
         name: toolUse.name,
         arguments: toolUse.input
       });
@@ -153,14 +95,18 @@ app.post("/api/chat", async (req, res) => {
       messages.push({ role: "assistant", content: response.content });
       messages.push({
         role: "user",
-        content: [{ type: "tool_result", tool_use_id: toolUse.id, content: JSON.stringify(toolResult) }]
+        content: [{ 
+          type: "tool_result", 
+          tool_use_id: toolUse.id, 
+          content: JSON.stringify(toolResultData.result || toolResultData) 
+        }]
       });
 
       const finalResponse = await anthropic.messages.create({
         model: process.env.CLAUDE_MODEL || "claude-3-5-sonnet-20241022",
         max_tokens: Number(process.env.MAX_TOKENS || 3000),
         messages,
-        tools: mcpTools
+        tools: mcpTools.length > 0 ? mcpTools : undefined
       });
       
       return res.json({ reply: finalResponse.content.find(c => c.type === "text")?.text || "" });
@@ -168,8 +114,8 @@ app.post("/api/chat", async (req, res) => {
 
     res.json({ reply: response.content.find(c => c.type === "text")?.text || "Processado." });
   } catch (error) {
-    console.error("Erro interno detectado:", error);
-    res.status(500).json({ error: `Erro na comunicação MCP com o Obsidian: ${error.message || error}` });
+    console.error("Erro na execução:", error);
+    res.status(500).json({ error: `Falha na integração com o Obsidian: ${error.message || error}` });
   }
 });
 
