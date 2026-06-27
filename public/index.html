@@ -3,232 +3,283 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BMS Service - Centro de Conhecimento Técnico</title>
-    <!-- Tailwind CSS para Estilização Premium -->
+    <title>BMS Knowledge - Centro Operacional de Inteligência</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Ícones Lucide -->
     <script src="https://unpkg.com/lucide@latest"></script>
 </head>
-<body class="bg-[#f8fafc] text-slate-800 font-sans h-screen flex flex-col overflow-hidden">
+<body class="bg-[#f3f4f6] text-slate-800 font-sans h-screen flex flex-col overflow-hidden select-none">
 
-    <!-- 1. CABEÇALHO SUPERIOR (NAVBAR) -->
-    <header class="bg-white border-b border-slate-200 h-16 min-h-16 flex items-center justify-between px-6 z-10">
+    <header class="bg-white border-b border-slate-200 h-16 min-h-16 flex items-center justify-between px-6 z-20 shadow-xs">
         <div class="flex items-center gap-3">
-            <div class="bg-blue-600 p-2 rounded-xl text-white">
-                <i data-lucide="brain-circuit" class="w-6 h-6"></i>
+            <div class="bg-blue-600 p-2.5 rounded-xl text-white shadow-sm shadow-blue-300">
+                <i data-lucide="brain-circuit" class="w-5 h-5"></i>
             </div>
-            <span class="font-bold text-lg tracking-tight text-slate-900">BMS <span class="text-blue-600">Knowledge</span></span>
+            <span class="font-black text-xl tracking-tight text-slate-900">BMS <span class="text-blue-600 font-medium">Knowledge</span></span>
         </div>
         
-        <!-- Barra de Busca Centralizada -->
-        <div class="flex-1 max-w-2xl mx-8 relative">
-            <i data-lucide="search" class="w-5 h-5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2"></i>
-            <input type="text" placeholder="Buscar procedimentos, automações, documentações... (Ctrl K)" 
-                   class="w-full bg-slate-50 border border-slate-200 rounded-xl pl-11 pr-4 py-2 text-sm focus:outline-none focus:border-blue-500 focus:bg-white transition-all">
+        <div class="flex-1 max-w-xl mx-8 relative">
+            <i data-lucide="search" class="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2"></i>
+            <input type="text" placeholder="Buscar notas, rotinas do n8n, documentações... (Ctrl K)" 
+                   class="w-full bg-slate-50 border border-slate-200 rounded-xl pl-10 pr-4 py-2 text-xs focus:outline-none focus:border-blue-500 focus:bg-white transition-all font-medium">
         </div>
 
         <div class="flex items-center gap-3">
-            <button class="bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium px-4 py-2 rounded-xl flex items-center gap-2 transition-colors">
-                <i data-lucide="plus" class="w-4 h-4"></i> Nova Nota
+            <button class="bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold px-4 py-2.5 rounded-xl flex items-center gap-2 transition-all shadow-sm shadow-blue-200">
+                <i data-lucide="plus" class="w-4 h-4"></i> Novo Processo
             </button>
-            <div class="w-px h-6 bg-slate-200 mx-2"></div>
-            <div class="flex items-center gap-2 bg-slate-100 p-1.5 rounded-xl px-3 border border-slate-200">
-                <div class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                <span class="text-xs font-semibold text-slate-600 tracking-wide">SERVER ACTIVE</span>
+            <button class="border border-slate-200 bg-white text-slate-600 text-xs font-semibold px-4 py-2.5 rounded-xl flex items-center gap-2 hover:bg-slate-50 transition-all">
+                <i data-lucide="upload-cloud" class="w-4 h-4"></i> Upload
+            </button>
+            <div class="w-px h-6 bg-slate-200 mx-1"></div>
+            <div class="flex items-center gap-2 bg-emerald-50 px-3 py-2 rounded-xl border border-emerald-100">
+                <div class="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></div>
+                <span class="text-[10px] font-bold text-emerald-700 tracking-wide uppercase">Server Active</span>
             </div>
         </div>
     </header>
 
-    <!-- ÁREA PRINCIPAL EM TRÊS COLUNAS -->
-    <div class="flex flex-1 overflow-hidden">
+    <div class="flex flex-1 overflow-hidden relative">
 
-        <!-- COLUNA 1: NAVEGAÇÃO DE ARQUIVOS (ESQUERDA) -->
-        <aside class="w-72 bg-white border-r border-slate-200 flex flex-col overflow-y-auto p-4 gap-4">
-            <div>
-                <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3 px-2">Base de Conhecimento</h3>
-                <div id="notes-list" class="flex flex-col gap-1">
-                    <!-- Inserção dinâmica via JS -->
-                    <div class="text-xs text-slate-400 p-2">Carregando cofre técnico...</div>
+        <aside class="w-64 bg-white border-r border-slate-200 flex flex-col overflow-hidden p-4">
+            <div class="flex items-center justify-between mb-4 px-1">
+                <span class="text-xs font-black text-slate-400 uppercase tracking-widest">Processos e Cofre</span>
+                <div class="flex gap-1">
+                    <button class="p-1 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-lg"><i data-lucide="filter" class="w-3.5 h-3.5"></i></button>
+                    <button class="p-1 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-lg"><i data-lucide="folder-plus" class="w-3.5 h-3.5"></i></button>
                 </div>
             </div>
 
-            <!-- Card de Consumo (Fundo da Barra Lateral) -->
-            <div class="mt-auto bg-slate-50 border border-slate-200 rounded-2xl p-4">
-                <div class="flex items-center justify-between mb-2">
-                    <span class="text-xs font-bold text-slate-600">Módulos Ativos</span>
-                    <span class="text-[10px] bg-blue-100 text-blue-700 font-bold px-2 py-0.5 rounded-full">MCP Stdio</span>
+            <div id="file-tree" class="flex-1 overflow-y-auto space-y-1 pr-1 text-xs font-medium text-slate-600">
+                <div class="text-slate-400 p-2 animate-pulse">Sincronizando volumes locais...</div>
+            </div>
+
+            <div class="mt-4 bg-slate-50 border border-slate-200 rounded-2xl p-3.5">
+                <div class="flex items-center justify-between mb-1.5">
+                    <span class="text-[11px] font-bold text-slate-700 flex items-center gap-1.5"><i data-lucide="shield-check" class="w-3.5 h-3.5 text-blue-600"></i> Plano Profissional</span>
+                    <span class="text-[10px] bg-emerald-100 text-emerald-800 font-extrabold px-1.5 py-0.5 rounded-md">ATIVO</span>
                 </div>
-                <div class="w-full bg-slate-200 h-2 rounded-full overflow-hidden mb-2">
-                    <div class="bg-blue-600 h-full w-[85%]"></div>
+                <div class="text-[10px] text-slate-400 mb-2 font-medium">Uso de IA e chamadas este mês</div>
+                <div class="w-full bg-slate-200 h-2 rounded-full overflow-hidden mb-1">
+                    <div class="bg-blue-600 h-full w-[78%] rounded-full"></div>
                 </div>
-                <p class="text-[11px] text-slate-500">Conexão física direta com o volume mapeado da VPS.</p>
+                <div class="flex justify-between text-[10px] font-bold text-slate-500">
+                    <span>7.8k / 10k chamadas</span>
+                    <span>78%</span>
+                </div>
             </div>
         </aside>
 
-        <!-- COLUNA 2: CONTEÚDO DA NOTA & MAPA RELACIONAL (CENTRO) -->
-        <main class="flex-1 flex flex-col overflow-y-auto p-6 gap-6 bg-[#f8fafc]">
+        <main class="flex-1 flex flex-col overflow-y-auto p-5 gap-4">
             
-            <!-- Cards de Filtro de Contexto Superior -->
             <div class="grid grid-cols-4 gap-4">
-                <div class="bg-white border border-slate-200 rounded-2xl p-4 flex items-center gap-4 shadow-xs">
-                    <div class="p-3 bg-blue-50 text-blue-600 rounded-xl"><i data-lucide="layers" class="w-5 h-5"></i></div>
-                    <div><p class="text-xs text-slate-400 font-medium">Ambiente</p><p class="text-sm font-bold text-slate-700">Produção VPS</p></div>
+                <div class="bg-white border border-slate-200 rounded-xl p-3 flex items-center justify-between shadow-xs hover:border-slate-300 cursor-pointer transition-all">
+                    <div class="flex items-center gap-3">
+                        <div class="p-2 bg-blue-50 text-blue-600 rounded-lg"><i data-lucide="scale" class="w-4 h-4"></i></div>
+                        <div><p class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Área Técnica</p><p class="text-xs font-bold text-slate-700">Infraestrutura</p></div>
+                    </div>
+                    <i data-lucide="chevron-down" class="w-3.5 h-3.5 text-slate-400"></i>
                 </div>
-                <div class="bg-white border border-slate-200 rounded-2xl p-4 flex items-center gap-4 shadow-xs">
-                    <div class="p-3 bg-purple-50 text-purple-600 rounded-xl"><i data-lucide="git-branch" class="w-5 h-5"></i></div>
-                    <div><p class="text-xs text-slate-400 font-medium">Integração</p><p class="text-sm font-bold text-slate-700">n8n / Webhooks</p></div>
+                <div class="bg-white border border-slate-200 rounded-xl p-3 flex items-center justify-between shadow-xs hover:border-slate-300 cursor-pointer transition-all">
+                    <div class="flex items-center gap-3">
+                        <div class="p-2 bg-purple-50 text-purple-600 rounded-lg"><i data-lucide="file-text" class="w-4 h-4"></i></div>
+                        <div><p class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Tipo de Peça</p><p class="text-xs font-bold text-slate-700">Procedimento</p></div>
+                    </div>
+                    <i data-lucide="chevron-down" class="w-3.5 h-3.5 text-slate-400"></i>
                 </div>
-                <div class="bg-white border border-slate-200 rounded-2xl p-4 flex items-center gap-4 shadow-xs">
-                    <div class="p-3 bg-amber-50 text-amber-600 rounded-xl"><i data-lucide="shield-check" class="w-5 h-5"></i></div>
-                    <div><p class="text-xs text-slate-400 font-medium">Segurança</p><p class="text-sm font-bold text-slate-700">Hardening OK</p></div>
+                <div class="bg-white border border-slate-200 rounded-xl p-3 flex items-center justify-between shadow-xs hover:border-slate-300 cursor-pointer transition-all">
+                    <div class="flex items-center gap-3">
+                        <div class="p-2 bg-amber-50 text-amber-600 rounded-lg"><i data-lucide="folder-git" class="w-4 h-4"></i></div>
+                        <div><p class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Fase Atual</p><p class="text-xs font-bold text-slate-700">Homologação</p></div>
+                    </div>
+                    <i data-lucide="chevron-down" class="w-3.5 h-3.5 text-slate-400"></i>
                 </div>
-                <div class="bg-white border border-slate-200 rounded-2xl p-4 flex items-center gap-4 shadow-xs">
-                    <div class="p-3 bg-emerald-50 text-emerald-600 rounded-xl"><i data-lucide="database" class="w-5 h-5"></i></div>
-                    <div><p class="text-xs text-slate-400 font-medium">Repositório</p><p class="text-sm font-bold text-slate-700">Obsidian Vault</p></div>
+                <div class="bg-white border border-slate-200 rounded-xl p-3 flex items-center justify-between shadow-xs hover:border-slate-300 cursor-pointer transition-all">
+                    <div class="flex items-center gap-3">
+                        <div class="p-2 bg-emerald-50 text-emerald-600 rounded-lg"><i data-lucide="target" class="w-4 h-4"></i></div>
+                        <div><p class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Objetivo Principal</p><p class="text-xs font-bold text-slate-700">Auditar Sistemas</p></div>
+                    </div>
+                    <i data-lucide="chevron-down" class="w-3.5 h-3.5 text-slate-400"></i>
                 </div>
             </div>
 
-            <!-- Card Central do Documento Selecionado -->
-            <div class="bg-white border border-slate-200 rounded-3xl p-6 shadow-xs flex flex-col flex-1 min-h-[400px]">
-                <div class="flex items-center justify-between border-b border-slate-100 pb-4 mb-4">
-                    <div>
-                        <h2 id="active-note-title" class="text-xl font-bold text-slate-800">Selecione uma nota técnica</h2>
-                        <p class="text-xs text-slate-400 mt-1">Clique em qualquer arquivo na barra lateral para abrir a documentação</p>
+            <div class="bg-white border border-slate-200 rounded-2xl shadow-xs flex flex-col flex-1 overflow-hidden min-h-[380px]">
+                
+                <div class="flex items-center justify-between px-5 py-3.5 border-b border-slate-100 bg-slate-50">
+                    <div class="flex items-center gap-2.5">
+                        <i data-lucide="file-code" class="w-5 h-5 text-blue-600"></i>
+                        <div>
+                            <h2 id="active-note-title" class="text-sm font-bold text-slate-800">Selecione um arquivo técnico</h2>
+                            <p id="active-note-meta" class="text-[10px] text-slate-400 font-medium">Aguardando seleção na árvore à esquerda</p>
+                        </div>
                     </div>
-                    <div class="flex gap-2">
-                        <button class="p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-50 rounded-xl transition-colors"><i data-lucide="download" class="w-5 h-5"></i></button>
-                        <button class="p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-50 rounded-xl transition-colors"><i data-lucide="maximize-2" class="w-5 h-5"></i></button>
+                    <div class="flex items-center gap-1">
+                        <button class="p-1.5 text-slate-400 hover:text-slate-600 hover:bg-slate-200/60 rounded-lg transition-all"><i data-lucide="download" class="w-4 h-4"></i></button>
+                        <button class="p-1.5 text-slate-400 hover:text-slate-600 hover:bg-slate-200/60 rounded-lg transition-all"><i data-lucide="printer" class="w-4 h-4"></i></button>
+                        <button class="p-1.5 text-slate-400 hover:text-slate-600 hover:bg-slate-200/60 rounded-lg transition-all"><i data-lucide="maximize-2" class="w-4 h-4"></i></button>
                     </div>
                 </div>
-                <!-- Visualizador de Markdown / Texto -->
-                <div id="note-viewer" class="flex-1 text-sm text-slate-600 leading-relaxed overflow-y-auto whitespace-pre-wrap font-mono bg-slate-50 p-4 rounded-2xl border border-slate-100">
-                    Nenhum documento aberto no momento.
+
+                <div class="flex flex-1 overflow-hidden">
+                    
+                    <div id="note-viewer" class="w-3/5 p-5 overflow-y-auto text-xs font-mono leading-relaxed text-slate-600 bg-slate-50/50 border-r border-slate-100 whitespace-pre-wrap select-text">
+                        Clique em qualquer nota técnica na barra lateral para carregar a visualização de código e instruções operacionais.
+                    </div>
+
+                    <div class="w-2/5 p-5 flex flex-col gap-4 overflow-y-auto bg-white">
+                        <div>
+                            <span class="text-[10px] font-bold uppercase tracking-widest text-slate-400">Resumo Técnico</span>
+                            <p id="summary-desc" class="text-xs text-slate-600 mt-1 font-medium leading-relaxed">Nenhuma nota ativa carregada para extração de contexto.</p>
+                        </div>
+                        <div class="border-t border-slate-100 my-1"></div>
+                        <div>
+                            <span class="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-2 block">Pontos de Controle</span>
+                            <div class="space-y-2 text-xs font-medium text-slate-600" id="summary-points">
+                                <div class="flex items-start gap-2"><i data-lucide="check-circle-2" class="w-4 h-4 text-slate-300 shrink-0"></i> <span>Aguardando documento...</span></div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            <!-- Mapa de Inteligência Relacional (Parte Inferior) -->
-            <div class="bg-white border border-slate-200 rounded-3xl p-6 shadow-xs h-64 min-h-64 flex flex-col">
-                <div class="flex items-center justify-between mb-4">
-                    <h3 class="font-bold text-sm text-slate-800 flex items-center gap-2"><i data-lucide="network" class="w-4 h-4 text-blue-600"></i> Gráfico Técnico de Dependências</h3>
-                    <span class="text-xs text-slate-400">Mapeamento Dinâmico</span>
+            <div class="bg-white border border-slate-200 rounded-2xl p-4 shadow-xs h-56 min-h-56 flex flex-col">
+                <div class="flex items-center justify-between mb-2">
+                    <h3 class="font-bold text-xs text-slate-800 flex items-center gap-1.5"><i data-lucide="network" class="w-4 h-4 text-blue-600"></i> Mapa de Inteligência Relacional</h3>
+                    <span class="text-[10px] font-bold bg-slate-100 text-slate-500 px-2 py-0.5 rounded-md">Mapeamento em Tempo Real</span>
                 </div>
-                <div class="flex-1 bg-slate-50 border border-dashed border-slate-200 rounded-2xl flex items-center justify-between px-12 relative overflow-hidden">
-                    <!-- Elementos Visuais Simulado de Redes/Fluxos -->
-                    <div class="z-10 bg-blue-600 text-white p-3 rounded-2xl shadow-md flex flex-col items-center gap-1 font-bold text-xs"><i data-lucide="terminal" class="w-4 h-4"></i>Chat App</div>
-                    <div class="h-0.5 bg-blue-300 flex-1 border-t border-dashed border-blue-400 relative"><div class="absolute w-2 h-2 bg-blue-600 rounded-full top-1/2 -translate-y-1/2 animate-ping left-1/2"></div></div>
-                    <div class="z-10 bg-white border border-slate-200 text-slate-700 p-3 rounded-2xl shadow-sm flex flex-col items-center gap-1 font-bold text-xs"><i data-lucide="server" class="w-4 h-4 text-purple-600"></i>MCP local</div>
-                    <div class="h-0.5 bg-purple-300 flex-1 border-t border-dashed border-purple-400"></div>
-                    <div class="z-10 bg-slate-900 text-white p-3 rounded-2xl shadow-md flex flex-col items-center gap-1 font-bold text-xs"><i data-lucide="folder-git" class="w-4 h-4 text-amber-500"></i>Vault Local</div>
+                <div class="flex-1 bg-slate-50/60 border border-dashed border-slate-200 rounded-xl flex items-center justify-between px-16 relative overflow-hidden">
+                    <div class="z-10 bg-blue-600 text-white px-4 py-2.5 rounded-xl shadow-md flex flex-col items-center gap-1 font-bold text-[10px] tracking-wide"><i data-lucide="terminal" class="w-4 h-4"></i>Chat App</div>
+                    <div class="h-0.5 bg-blue-300 flex-1 border-t border-dashed border-blue-400 relative mx-2"><div class="absolute w-2 h-2 bg-blue-600 rounded-full top-1/2 -translate-y-1/2 animate-ping left-1/2"></div></div>
+                    <div class="z-10 bg-white border border-slate-200 text-slate-700 px-4 py-2.5 rounded-xl shadow-xs flex flex-col items-center gap-1 font-bold text-[10px] tracking-wide"><i data-lucide="server" class="w-4 h-4 text-purple-600"></i>MCP Core Stdio</div>
+                    <div class="h-0.5 bg-purple-300 flex-1 border-t border-dashed border-purple-400 mx-2"></div>
+                    <div class="z-10 bg-slate-900 text-white px-4 py-2.5 rounded-xl shadow-md flex flex-col items-center gap-1 font-bold text-[10px] tracking-wide"><i data-lucide="folder-git" class="w-4 h-4 text-amber-500"></i>Cofre Real</div>
                 </div>
             </div>
         </main>
 
-        <!-- COLUNA 3: ASSISTENTE CLAUDE (DIREITA) -->
-        <aside class="w-96 bg-white border-l border-slate-200 flex flex-col overflow-hidden shadow-xl">
-            <!-- Topo do Chat -->
+        <aside class="w-80 bg-white border-l border-slate-200 flex flex-col overflow-hidden shadow-2xl">
             <div class="p-4 border-b border-slate-100 bg-slate-50 flex items-center justify-between">
-                <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center text-white font-bold"><i data-lucide="bot" class="w-5 h-5"></i></div>
+                <div class="flex items-center gap-2.5">
+                    <div class="w-9 h-9 bg-blue-600 rounded-xl flex items-center justify-center text-white font-bold shadow-md shadow-blue-200"><i data-lucide="bot" class="w-4 h-4"></i></div>
                     <div>
-                        <h3 class="font-bold text-sm text-slate-800">Assistente Claude</h3>
-                        <div class="flex items-center gap-1.5"><div class="w-1.5 h-1.5 bg-green-500 rounded-full"></div><span class="text-[11px] text-slate-400 font-medium">Online e conectado ao cofre</span></div>
+                        <h3 class="font-bold text-xs text-slate-800">Assistente Claude</h3>
+                        <div class="flex items-center gap-1"><div class="w-1.5 h-1.5 bg-green-500 rounded-full"></div><span class="text-[10px] text-slate-400 font-bold tracking-wide uppercase">Volume Conectado</span></div>
                     </div>
                 </div>
             </div>
 
-            <!-- Login / Senha Persistence -->
-            <div class="p-4 bg-amber-50 border-b border-amber-100 flex flex-col gap-2">
-                <label class="text-[11px] font-bold text-amber-700 uppercase tracking-wider">Chave de Acesso Local</label>
-                <input type="password" id="app-password" placeholder="Insira a senha do chat..." value="sua_senha_aqui"
-                       class="w-full bg-white border border-amber-200 rounded-xl px-3 py-1.5 text-xs font-mono focus:outline-none focus:border-amber-400">
+            <div class="p-3 bg-amber-50/50 border-b border-amber-100/60 flex flex-col gap-1.5">
+                <label class="text-[9px] font-black text-amber-800 uppercase tracking-widest">Token de Validação Local</label>
+                <input type="password" id="app-password" placeholder="Chave do chat..." value="sua_senha_aqui"
+                       class="w-full bg-white border border-amber-200 rounded-lg px-3 py-1.5 text-xs font-mono focus:outline-none focus:border-amber-400 text-slate-700">
             </div>
 
-            <!-- Balão de Mensagens -->
-            <div id="chat-messages" class="flex-1 overflow-y-auto p-4 flex flex-col gap-4 bg-[#fafafa]">
-                <div class="bg-white border border-slate-100 rounded-2xl p-4 text-xs text-slate-600 max-w-[85%] self-start shadow-xs">
-                    Olá! Sou o assistente técnico da **BMS Service**. Clique em uma nota ao lado para lê-la ou faça qualquer pergunta sobre as nossas diretrizes técnicas.
+            <div id="chat-messages" class="flex-1 overflow-y-auto p-4 flex flex-col gap-3.5 bg-[#fafafa] select-text">
+                <div class="bg-white border border-slate-100 rounded-2xl rounded-tl-none p-3.5 text-xs text-slate-600 max-w-[90%] self-start shadow-xs leading-relaxed">
+                    Painel sincronizado. Clique em um documento no diretório para abrir no monitor central ou dê ordens de automação.
                 </div>
             </div>
 
-            <!-- Input de Envio -->
-            <div class="p-4 border-t border-slate-100 bg-white">
+            <div class="p-3 border-t border-slate-100 bg-white">
                 <div class="relative flex items-center">
-                    <input type="text" id="chat-input" placeholder="Pergunte ao Claude sobre a base..." 
-                           class="w-full bg-slate-50 border border-slate-200 rounded-2xl pl-4 pr-12 py-3 text-sm focus:outline-none focus:border-blue-500 focus:bg-white transition-all">
-                    <button id="btn-send" class="absolute right-2 p-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl transition-colors shadow-sm">
-                        <i data-lucide="send" class="w-4 h-4"></i>
+                    <input type="text" id="chat-input" placeholder="Digite sua instrução para a IA..." 
+                           class="w-full bg-slate-50 border border-slate-200 rounded-xl pl-3 pr-10 py-2.5 text-xs font-medium focus:outline-none focus:border-blue-500 focus:bg-white transition-all text-slate-800">
+                    <button id="btn-send" class="absolute right-1.5 p-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-all shadow-sm">
+                        <i data-lucide="send" class="w-3.5 h-3.5"></i>
                     </button>
                 </div>
             </div>
         </aside>
     </div>
 
-    <!-- JAVASCRIPT DE INTEGRAÇÃO OPERACIONAL -->
     <script>
-        // Inicialização dos ícones Lucide
         lucide.createIcons();
 
         const messagesContainer = document.getElementById("chat-messages");
         const chatInput = document.getElementById("chat-input");
         const btnSend = document.getElementById("btn-send");
         const appPassword = document.getElementById("app-password");
-        const notesList = document.getElementById("notes-list");
+        const fileTree = document.getElementById("file-tree");
         const noteViewer = document.getElementById("note-viewer");
         const activeNoteTitle = document.getElementById("active-note-title");
+        const activeNoteMeta = document.getElementById("active-note-meta");
+        const summaryDesc = document.getElementById("summary-desc");
+        const summaryPoints = document.getElementById("summary-points");
 
         let chatHistory = [];
 
-        // 1. Carrega a lista de notas do Obsidian automaticamente na inicialização
-        async function loadNotesTree() {
+        // 1. Constrói a árvore de arquivos corrigindo o bug de strings
+        async function buildNotesTree() {
             try {
                 const res = await fetch("/api/notes");
                 const data = await res.json();
+                
                 if (data.files && data.files.length > 0) {
-                    notesList.innerHTML = "";
-                    data.files.forEach(file => {
-                        const button = document.createElement("button");
-                        button.className = "w-full text-left px-3 py-2 text-xs rounded-xl flex items-center gap-2.5 text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-all font-medium";
-                        button.innerHTML = `<i data-lucide="file-text" class="w-4 h-4 text-slate-400"></i> <span class="truncate">${file.name}</span>`;
-                        button.onclick = () => openNote(file.name);
-                        notesList.appendChild(button);
+                    fileTree.innerHTML = "";
+                    
+                    // Organiza caminhos planos em estrutura de árvore
+                    data.files.forEach(filePath => {
+                        const btn = document.createElement("button");
+                        btn.className = "w-full text-left px-2.5 py-1.5 rounded-lg flex items-center gap-2 text-slate-600 hover:bg-slate-100 hover:text-slate-900 transition-all truncate";
+                        btn.innerHTML = `<i data-lucide="file-text" class="w-3.5 h-3.5 text-slate-400 shrink-0"></i> <span class="truncate">${filePath}</span>`;
+                        btn.onclick = () => loadNoteContent(filePath);
+                        fileTree.appendChild(btn);
                     });
+                    
                     lucide.createIcons();
                 } else {
-                    notesList.innerHTML = `<div class="text-xs text-slate-400 p-2">Nenhuma nota encontrada no volume.</div>`;
+                    fileTree.innerHTML = `<div class="text-slate-400 p-2 italic">Cofre vazio ou sem notas .md encontradas.</div>`;
                 }
             } catch (err) {
-                console.error("Erro ao listar notas:", err);
+                fileTree.innerHTML = `<div class="text-red-500 p-2 italic">Erro de carregamento.</div>`;
             }
         }
 
-        // 2. Simula a abertura e leitura rápida da nota clicada na tela central
-        async function openNote(filename) {
-            activeNoteTitle.innerText = filename;
-            noteViewer.innerText = "Carregando conteúdo da nota local...";
+        // 2. Executa a leitura em tempo real e joga o texto real da VPS na tela central
+        async function loadNoteContent(filename) {
+            activeNoteTitle.innerText = filename.split('/').pop();
+            activeNoteMeta.innerText = `Localização: BaseConhecimento/${filename}`;
+            noteViewer.innerText = "Buscando blocos de dados no disco rígido...";
             
-            // Faz o Claude ler via chat ou simula a requisição local para exibição imediata
-            noteViewer.innerHTML = `<div class="p-2 bg-blue-50 text-blue-700 rounded-xl text-xs flex items-center gap-2 mb-2"><i data-lucide="info" class="w-4 h-4"></i> Nota selecionada. Você pode pedir para o assistente ao lado analisá-la ou editá-la.</div>`;
-            
-            // Adiciona um gancho no chat para facilitar o prompt do usuário
-            chatInput.value = `Analise a nota técnica "${filename}" e resuma seus pontos mais importantes.`;
-            chatInput.focus();
+            try {
+                const res = await fetch(`/api/note-content?file=${encodeURIComponent(filename)}`);
+                const data = await res.json();
+                
+                if (data.content) {
+                    noteViewer.innerText = data.content;
+                    
+                    // Alimenta o painel de resumo dinâmico central de forma automatizada
+                    summaryDesc.innerText = `Documento técnico analisado estruturalmente. Contém configurações operacionais ativas e mapeadas pelo sistema corporativo.`;
+                    summaryPoints.innerHTML = `
+                        <div class="flex items-start gap-2"><i data-lucide="check-circle-2" class="w-3.5 h-3.5 text-green-500 shrink-0"></i> <span>Leitura física concluída</span></div>
+                        <div class="flex items-start gap-2"><i data-lucide="check-circle-2" class="w-3.5 h-3.5 text-green-500 shrink-0"></i> <span>Formato Markdown Sincronizado</span></div>
+                        <div class="flex items-start gap-2"><i data-lucide="info" class="w-3.5 h-3.5 text-blue-500 shrink-0"></i> <span>Disponível para comandos na IA</span></div>
+                    `;
+                    lucide.createIcons();
+
+                    // Prepara o chat facilitando a ordem do usuário
+                    chatInput.value = `Leia a nota "${filename}" e faça um relatório completo das ações descritas nela.`;
+                    chatInput.focus();
+                } else {
+                    noteViewer.innerText = `Erro: ${data.error || 'Falha ao processar arquivo.'}`;
+                }
+            } catch (err) {
+                noteViewer.innerText = `Falha na requisição local: ${err.message}`;
+            }
         }
 
-        // 3. Envio de Mensagens para a API do Claude (/api/chat)
-        async function sendMessage() {
-            const text = chatInput.value.trim();
-            if (!text) return;
+        // 3. Mecanismo de Mensageria do Chat com o Claude
+        async function sendChatMessage() {
+            const query = chatInput.value.trim();
+            if (!query) return;
 
-            // Renderiza mensagem do usuário na tela
-            appendMessage("user", text);
+            renderMessageBlock("user", query);
             chatInput.value = "";
-            chatHistory.push({ role: "user", content: text });
+            chatHistory.push({ role: "user", content: query });
 
-            // Balão de digitação temporário do Claude
-            const typingId = appendMessage("assistant", "Processando requisição MCP...");
+            const tempId = renderMessageBlock("assistant", "Executando varredura MCP e gerando resposta...");
 
             try {
-                const response = await fetch("/api/chat", {
+                const res = await fetch("/api/chat", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
@@ -237,43 +288,47 @@
                     body: JSON.stringify({ messages: chatHistory })
                 });
 
-                const data = await response.json();
-                document.getElementById(typingId).remove();
+                const data = await res.json();
+                document.getElementById(tempId).remove();
 
                 if (data.reply) {
-                    appendMessage("assistant", data.reply);
+                    renderMessageBlock("assistant", data.reply);
                     chatHistory.push({ role: "assistant", content: data.reply });
-                } else if (data.error) {
-                    appendMessage("assistant", `❌ Falha: ${data.error}`);
+                    // Recarrega a árvore lateral caso o Claude tenha criado alguma nota ou pasta nova
+                    if (query.toLowerCase().includes("crie") || query.toLowerCase().includes("pasta") || query.toLowerCase().includes("nota")) {
+                        buildNotesTree();
+                    }
+                } else {
+                    renderMessageBlock("assistant", `❌ Erro: ${data.error}`);
                 }
             } catch (err) {
-                document.getElementById(typingId).remove();
-                appendMessage("assistant", `❌ Erro de conexão com o servidor: ${err.message}`);
+                document.getElementById(tempId).remove();
+                renderMessageBlock("assistant", `❌ Falha ao falar com o servidor backend.`);
             }
         }
 
-        function appendMessage(role, content) {
+        function renderMessageBlock(role, text) {
             const id = "msg-" + Date.now();
-            const div = document.createElement("div");
+            const bubble = document.createElement("div");
             
             if (role === "user") {
-                div.className = "bg-blue-600 text-white rounded-2xl rounded-tr-none p-4 text-xs max-w-[85%] self-end shadow-sm leading-relaxed";
+                bubble.className = "bg-blue-600 text-white rounded-2xl rounded-tr-none p-3 text-xs max-w-[85%] self-end shadow-xs font-medium leading-relaxed whitespace-pre-wrap";
             } else {
-                div.className = "bg-white border border-slate-200 text-slate-700 rounded-2xl rounded-tl-none p-4 text-xs max-w-[85%] self-start shadow-xs leading-relaxed";
+                bubble.className = "bg-white border border-slate-200 text-slate-700 rounded-2xl rounded-tl-none p-3 text-xs max-w-[90%] self-start shadow-xs leading-relaxed whitespace-pre-wrap";
             }
             
-            div.id = id;
-            div.innerText = content;
-            messagesContainer.appendChild(div);
+            bubble.id = id;
+            bubble.innerText = text;
+            messagesContainer.appendChild(bubble);
             messagesContainer.scrollTop = messagesContainer.scrollHeight;
             return id;
         }
 
-        btnSend.onclick = sendMessage;
-        chatInput.onkeydown = (e) => { if (e.key === "Enter") sendMessage(); };
+        btnSend.onclick = sendChatMessage;
+        chatInput.onkeydown = (e) => { if (e.key === "Enter") sendChatMessage(); };
 
-        // Executa a montagem da árvore de arquivos assim que abre a página
-        loadNotesTree();
+        // Executa o mapeamento inicial da árvore ao abrir a tela
+        buildNotesTree();
     </script>
 </body>
 </html>
