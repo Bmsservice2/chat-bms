@@ -1,6 +1,4 @@
 import express from "express";
-import { Client } from "@modelcontextprotocol/sdk/client/index.js";
-import { SSEClientTransport } from "@modelcontextprotocol/sdk/client/sse.js";
 import Anthropic from "@anthropic-ai/sdk";
 
 const app = express();
@@ -15,32 +13,32 @@ for (const key of requiredEnv) {
 }
 
 const anthropic = process.env.ANTHROPIC_API_KEY ? new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY }) : null;
-let mcpClient = null;
 
-async function connectMCP() {
-  if (mcpClient) return mcpClient;
-
-  // Endpoint SSE exato do plugin Semantic Notes Vault
+// Comunicação direta via JSON-RPC com o endpoint nativo do Semantic Notes
+async function callSemanticNotes(method, params = {}) {
   const parsed = new URL(process.env.OBSIDIAN_MCP_URL);
-  const targetUrl = `${parsed.protocol}//${parsed.host}/mcp/sse`;
-  
-  console.log(`Conectando canal SSE em: ${targetUrl}`);
-  
-  const transport = new SSEClientTransport(new URL(targetUrl), {
-    eventSourceInit: {
-      headers: { "Authorization": `Bearer ${process.env.OBSIDIAN_API_KEY}` }
+  const targetUrl = `${parsed.protocol}//${parsed.host}/mcp`;
+
+  console.log(`[BMS Router] Enviando comando para: ${targetUrl}`);
+  const response = await fetch(targetUrl, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${process.env.OBSIDIAN_API_KEY}`
     },
-    requestInit: {
-      headers: { "Authorization": `Bearer ${process.env.OBSIDIAN_API_KEY}` }
-    }
+    body: JSON.stringify({
+      jsonrpc: "2.0",
+      id: Date.now(),
+      method,
+      params
+    })
   });
-  
-  mcpClient = new Client({ name: "chat-client", version: "1.0.0" }, { capabilities: {} });
-  await mcpClient.connect(transport);
-  
-  console.log("Aguardando estabilização da transmissão (2s)...");
-  await new Promise(resolve => setTimeout(resolve, 2000));
-  return mcpClient;
+
+  if (!response.ok) {
+    throw new Error(`Servidor Obsidian respondeu com código ${response.status}`);
+  }
+
+  return response.json();
 }
 
 app.get("/api/status", (req, res) => {
@@ -52,12 +50,13 @@ app.post("/api/chat", async (req, res) => {
   if (req.headers["x-app-password"] !== process.env.APP_PASSWORD) return res.status(401).json({ error: "Senha inválida." });
 
   try {
-    const client = await connectMCP();
-    const toolsResponse = await client.listTools();
-    const mcpTools = toolsResponse.tools.map(t => ({
+    console.log("Listando ferramentas do Semantic Notes...");
+    const toolsData = await callSemanticNotes("tools/list");
+    
+    const mcpTools = (toolsData.result?.tools || toolsData.tools || []).map(t => ({
       name: t.name,
       description: t.description,
-      input_schema: t.inputSchema
+      input_schema: t.inputSchema || t.input_schema
     }));
 
     const userMessages = Array.isArray(req.body.messages) ? req.body.messages : [];
@@ -66,20 +65,34 @@ app.post("/api/chat", async (req, res) => {
       .slice(-20)
       .map(msg => ({ role: msg.role, content: String(msg.content || "") }));
 
+    if (messages.length === 0) return res.status(400).json({ error: "Mensagem vazia." });
+
     const response = await anthropic.messages.create({
       model: process.env.CLAUDE_MODEL || "claude-3-5-sonnet-20241022",
       max_tokens: Number(process.env.MAX_TOKENS || 3000),
-      system: "Você é o assistente conectado ao Obsidian da BMS Service. Consulte as informações internas usando as ferramentas antes de responder.",
+      system: "Você é o assistente conectado ao Obsidian da BMS Service. Sempre consulte os dados internos usando as ferramentas antes de responder.",
       messages,
       tools: mcpTools.length > 0 ? mcpTools : undefined
     });
 
     if (response.stop_reason === "tool_use") {
       const toolUse = response.content.find(c => c.type === "tool_use");
-      const toolResult = await client.callTool({ name: toolUse.name, arguments: toolUse.input });
+      console.log(`Executando a ferramenta técnica: ${toolUse.name}`);
+      
+      const toolResultData = await callSemanticNotes("tools/call", {
+        name: toolUse.name,
+        arguments: toolUse.input
+      });
       
       messages.push({ role: "assistant", content: response.content });
-      messages.push({ role: "user", content: [{ type: "tool_result", tool_use_id: toolUse.id, content: JSON.stringify(toolResult) }] });
+      messages.push({
+        role: "user",
+        content: [{ 
+          type: "tool_result", 
+          tool_use_id: toolUse.id, 
+          content: JSON.stringify(toolResultData.result || toolResultData) 
+        }]
+      });
 
       const finalResponse = await anthropic.messages.create({
         model: process.env.CLAUDE_MODEL || "claude-3-5-sonnet-20241022",
@@ -87,13 +100,14 @@ app.post("/api/chat", async (req, res) => {
         messages,
         tools: mcpTools
       });
+      
       return res.json({ reply: finalResponse.content.find(c => c.type === "text")?.text || "" });
     }
 
     res.json({ reply: response.content.find(c => c.type === "text")?.text || "Processado." });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: `Erro na comunicação MCP: ${error.message}` });
+    res.status(500).json({ error: `Falha na comunicação direta: ${error.message}` });
   }
 });
 
