@@ -8,21 +8,21 @@ app.use(express.json({ limit: "1mb" }));
 app.use(express.static("public"));
 
 const requiredEnv = ["ANTHROPIC_API_KEY", "OBSIDIAN_MCP_URL", "OBSIDIAN_API_KEY", "APP_PASSWORD"];
+let missingVars = [];
+
+// Verifica as variáveis sem derrubar o servidor
 for (const key of requiredEnv) {
   if (!process.env[key]) {
-    console.error(`Variável obrigatória ausente: ${key}`);
-    process.exit(1);
+    missingVars.push(key);
   }
 }
 
-const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
+// Inicializa a API da Anthropic de forma segura
+const anthropic = process.env.ANTHROPIC_API_KEY ? new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY }) : null;
 let mcpClient = null;
 
 async function connectMCP() {
   if (!mcpClient) {
-    console.log("Conectando ao MCP via SSE em:", process.env.OBSIDIAN_MCP_URL);
-    
-    // Injeta a API Key do Obsidian direto nos cabeçalhos da conexão
     const transport = new SSEClientTransport(new URL(process.env.OBSIDIAN_MCP_URL), {
       eventSourceInit: {
         headers: { "Authorization": `Bearer ${process.env.OBSIDIAN_API_KEY}` }
@@ -34,12 +34,27 @@ async function connectMCP() {
     
     mcpClient = new Client({ name: "chat-client", version: "1.0.0" }, { capabilities: {} });
     await mcpClient.connect(transport);
-    console.log("MCP Conectado com sucesso!");
   }
   return mcpClient;
 }
 
+// Rota de diagnóstico para validar o estado do contêiner
+app.get("/api/status", (req, res) => {
+  res.json({
+    status: missingVars.length === 0 ? "OK" : "CONFIG_INCOMPLETA",
+    variablesMissing: missingVars,
+    loadedEnv: Object.keys(process.env).filter(k => requiredEnv.includes(k))
+  });
+});
+
 app.post("/api/chat", async (req, res) => {
+  // Se houver variáveis em falta, exibe o erro diretamente no chat do utilizador
+  if (missingVars.length > 0) {
+    return res.status(500).json({ 
+      error: `Configuração Incompleta na VPS. Variáveis ausentes no Coolify: ${missingVars.join(", ")}` 
+    });
+  }
+
   if (req.headers["x-app-password"] !== process.env.APP_PASSWORD) {
     return res.status(401).json({ error: "Senha inválida." });
   }
@@ -74,8 +89,6 @@ app.post("/api/chat", async (req, res) => {
 
     if (response.stop_reason === "tool_use") {
       const toolUse = response.content.find(c => c.type === "tool_use");
-      console.log("Ferramenta acionada:", toolUse.name);
-      
       const toolResult = await client.callTool({
         name: toolUse.name,
         arguments: toolUse.input
@@ -104,8 +117,11 @@ app.post("/api/chat", async (req, res) => {
     res.json({ reply: response.content.find(c => c.type === "text")?.text || "Resposta processada." });
   } catch (error) {
     console.error("Erro interno:", error);
-    res.status(500).json({ error: "Erro interno no servidor." });
+    res.status(500).json({ error: `Erro na comunicação MCP com o Obsidian: ${error.message || error}` });
   }
 });
 
-app.listen(3000, () => console.log("Chat rodando na porta 3000"));
+// Garante que o servidor web liga sempre, prevenindo o erro 502
+app.listen(3000, () => {
+  console.log("Servidor persistente ativo na porta 3000.");
+});
