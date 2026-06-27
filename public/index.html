@@ -12,6 +12,7 @@
     <input type="file" id="global-vault-upload" class="hidden" />
     <input type="file" id="chat-context-upload" class="hidden" />
 
+    <!-- BARRA SUPERIOR DE MANDOS (HEADER) -->
     <header class="bg-white border-b border-slate-200 h-16 min-h-16 flex items-center justify-between px-6 z-20 shadow-xs">
         <div class="flex items-center gap-3">
             <div class="bg-blue-600 p-2.5 rounded-xl text-white shadow-sm shadow-blue-300">
@@ -41,8 +42,10 @@
         </div>
     </header>
 
+    <!-- CONTAINER DAS TRES COLUNAS -->
     <div class="flex flex-1 overflow-hidden relative">
 
+        <!-- COLUNA 1: GESTÃO E DIRETÓRIO DE PASTAS (ESQUERDA) -->
         <aside class="w-64 bg-white border-r border-slate-200 flex flex-col overflow-hidden p-4">
             <div class="flex items-center justify-between mb-4 px-1">
                 <span class="text-xs font-black text-slate-400 uppercase tracking-widest">Processos e Cofre</span>
@@ -72,6 +75,7 @@
             </div>
         </aside>
 
+        <!-- COLUNA 2: MONITOR CENTRAL -->
         <main class="flex-1 flex flex-col overflow-y-auto p-5 gap-4">
             
             <div class="grid grid-cols-4 gap-4">
@@ -105,8 +109,8 @@
                 </div>
             </div>
 
-            <div class="bg-white border border-slate-200 rounded-2xl shadow-xs flex flex-col flex-1 overflow-hidden min-h-[380px]">
-                
+            <!-- CONTAINER CENTRAL: VISUALIZADOR DE DOCUMENTOS -->
+            <div class="bg-white border border-slate-200 rounded-2xl shadow-xs flex flex-col flex-1 overflow-hidden min-h-[350px]">
                 <div class="flex items-center justify-between px-5 py-3.5 border-b border-slate-100 bg-slate-50">
                     <div class="flex items-center gap-2.5">
                         <i data-lucide="file-code" class="w-5 h-5 text-blue-600"></i>
@@ -143,17 +147,20 @@
                 </div>
             </div>
 
-            <div class="bg-white border border-slate-200 rounded-2xl p-4 shadow-xs h-56 min-h-56 flex flex-col">
+            <!-- QUADRO INFERIOR: INTERACTIVE GRAPH VIEW (FIEL AO OBSIDIAN) -->
+            <div class="bg-white border border-slate-200 rounded-2xl p-4 shadow-xs h-72 min-h-72 flex flex-col relative">
                 <div class="flex items-center justify-between mb-2">
-                    <h3 class="font-bold text-xs text-slate-800 flex items-center gap-1.5"><i data-lucide="network" class="w-4 h-4 text-blue-600"></i> Mapa de Inteligência Relacional (Graph View)</h3>
-                    <span class="text-[10px] font-bold bg-slate-100 text-slate-500 px-2 py-0.5 rounded-md">Conexões de Hiperlinks Nativas</span>
+                    <h3 class="font-bold text-xs text-slate-800 flex items-center gap-1.5"><i data-lucide="network" class="w-4 h-4 text-slate-500"></i> Visualização em Gráfico (Rede de Conexões)</h3>
+                    <span class="text-[9px] font-bold bg-slate-100 text-slate-400 px-2 py-0.5 rounded-md uppercase tracking-wider">Física de Partículas</span>
                 </div>
-                <div id="graph-view-canvas" class="flex-1 bg-slate-50 border border-dashed border-slate-200 rounded-xl relative overflow-hidden flex items-center justify-center">
-                    <div class="text-slate-400 text-xs font-medium italic">Abra uma nota para mapear sua teia de links internos.</div>
+                <!-- Canvas de alta performance para renderizar as conexões orgânicas -->
+                <div class="flex-1 bg-white border border-slate-100 rounded-xl overflow-hidden relative">
+                    <canvas id="graph-canvas" class="w-full h-full block cursor-grab active:cursor-grabbing"></canvas>
                 </div>
             </div>
         </main>
 
+        <!-- COLUNA 3: CONSOLE OPERACIONAL DO ASSISTENTE CLAUDE -->
         <aside class="w-80 bg-white border-l border-slate-200 flex flex-col overflow-hidden shadow-2xl">
             <div class="p-4 border-b border-slate-100 bg-slate-50 flex items-center justify-between">
                 <div class="flex items-center gap-2.5">
@@ -182,7 +189,7 @@
                     <i data-lucide="paperclip" class="w-3.5 h-3.5"></i>
                     <span id="chat-attachment-name" class="truncate">arquivo.md</span>
                 </div>
-                <button id="btn-remove-attachment" class="text-slate-400 hover:text-red-500"><i data-lucide="x" class="w-4 " ></i></button>
+                <button id="btn-remove-attachment" class="text-slate-400 hover:text-red-500"><i data-lucide="x" class="w-4 h-4" ></i></button>
             </div>
 
             <div class="p-3 border-t border-slate-100 bg-white">
@@ -202,6 +209,7 @@
         </aside>
     </div>
 
+    <!-- ENGINE DE MAPEAMENTO LOGICO E MOTOR DE FISICA EM CANVAS -->
     <script>
         lucide.createIcons();
 
@@ -215,7 +223,6 @@
         const activeNoteMeta = document.getElementById("active-note-meta");
         const summaryDesc = document.getElementById("summary-desc");
         const summaryPoints = document.getElementById("summary-points");
-        const graphCanvas = document.getElementById("graph-view-canvas");
 
         // Elementos de Upload
         const btnVaultUpload = document.getElementById("btn-vault-upload");
@@ -226,10 +233,199 @@
         const chatAttachmentName = document.getElementById("chat-attachment-name");
         const btnRemoveAttachment = document.getElementById("btn-remove-attachment");
 
+        // Configurações do Canvas do Gráfico
+        const canvas = document.getElementById("graph-canvas");
+        const ctx = canvas.getContext("2d");
+
         let chatHistory = [];
         let pendingChatAttachment = null;
+        let selectedFileId = null;
 
-        // 1. Constrói a árvore de arquivos corrigindo o bug de strings
+        // Estrutura de dados global da rede neural
+        let graphData = { nodes: [], edges: [] };
+        let draggedNode = null;
+
+        // Ajusta a resolução nativa do Canvas
+        function resizeCanvas() {
+            canvas.width = canvas.parentElement.clientWidth;
+            canvas.height = canvas.parentElement.clientHeight;
+        }
+        window.addEventListener("resize", resizeCanvas);
+        resizeCanvas();
+
+        // 1. Motor de Física de Força-Direcionada (Force-Directed Graph Engine) em Pure JS
+        function initPhysicsNodes(data) {
+            const width = canvas.width;
+            const height = canvas.height;
+            
+            // Preserva nós existentes para não perder a inércia na atualização
+            const existingNodesMap = new Map(graphData.nodes.map(n => [n.id, n]));
+            
+            graphData.nodes = data.nodes.map(n => {
+                const old = existingNodesMap.get(n.id);
+                return {
+                    id: n.id,
+                    label: n.label,
+                    x: old ? old.x : width / 2 + (Math.random() - 0.5) * 120,
+                    y: old ? old.y : height / 2 + (Math.random() - 0.5) * 120,
+                    vx: old ? old.vx : 0,
+                    vy: old ? old.vy : 0,
+                    radius: 4.5
+                };
+            });
+
+            graphData.edges = data.edges.map(e => ({
+                sourceNode: graphData.nodes.find(n => n.id === e.source),
+                targetNode: graphData.nodes.find(n => n.id === e.target)
+            })).filter(e => e.sourceNode && e.targetNode);
+        }
+
+        function updatePhysics() {
+            const kRepulsion = 380;   // Força de afastamento entre nós (rede neural)
+            const kAttraction = 0.04;  // Força elástica dos links [[Links]]
+            const gravity = 0.015;     // Atração magnética centralizada para não dispersar
+            const damping = 0.85;      // Coeficiente de atrito/desaceleração
+
+            const centerX = canvas.width / 2;
+            const centerY = canvas.height / 2;
+
+            // A. Força de Repulsão entre todos os nós (Estilo elétron)
+            for (let i = 0; i < graphData.nodes.length; i++) {
+                let n1 = graphData.nodes[i];
+                for (let j = i + 1; j < graphData.nodes.length; j++) {
+                    let n2 = graphData.nodes[j];
+                    let dx = n2.x - n1.x;
+                    let dy = n2.y - n1.y;
+                    if (dx === 0) dx = 0.1; // Evita divisão por zero catastrófica
+                    let dist = Math.sqrt(dx * dx + dy * dy);
+                    
+                    if (dist < 280) {
+                        let force = kRepulsion / (dist * dist + 10);
+                        let fx = (dx / dist) * force;
+                        let fy = (dy / dist) * force;
+                        
+                        if (n1 !== draggedNode) { n1.vx -= fx; n1.vy -= fy; }
+                        if (n2 !== draggedNode) { n2.vx += fx; n2.vy += fy; }
+                    }
+                }
+            }
+
+            // B. Força de Atração Magnética por Vínculos (Hiperlinks)
+            graphData.edges.forEach(edge => {
+                let n1 = edge.sourceNode;
+                let n2 = edge.targetNode;
+                let dx = n2.x - n1.x;
+                let dy = n2.y - n1.y;
+                let dist = Math.sqrt(dx * dx + dy * dy);
+                
+                if (dist > 0) {
+                    let force = kAttraction * dist;
+                    let fx = (dx / dist) * force;
+                    let fy = (dy / dist) * force;
+                    
+                    if (n1 !== draggedNode) { n1.vx += fx; n1.vy += fy; }
+                    if (n2 !== draggedNode) { n2.vx -= fx; n2.vy -= fy; }
+                }
+            });
+
+            // C. Gravidade Central e Atualização de Vetores de Deslocamento
+            graphData.nodes.forEach(node => {
+                if (node === draggedNode) return;
+
+                let dx = centerX - node.x;
+                let dy = centerY - node.y;
+                node.vx += dx * gravity;
+                node.vy += dy * gravity;
+
+                node.x += node.vx;
+                node.y += node.vy;
+                
+                node.vx *= damping;
+                node.vy *= damping;
+            });
+        }
+
+        // Renderizador Gráfico em Alta Performance (Canvas Draw Loop)
+        function drawGraph() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // 1. Desenha as Teias de Conexões (Linhas finas cinzas idênticas ao Obsidian)
+            ctx.lineWidth = 1;
+            ctx.strokeStyle = "#e5e5e5";
+            graphData.edges.forEach(edge => {
+                ctx.beginPath();
+                ctx.moveTo(edge.sourceNode.x, edge.sourceNode.y);
+                ctx.lineTo(edge.targetNode.x, edge.targetNode.y);
+                ctx.stroke();
+            });
+
+            // 2. Desenha as Partículas (Nós) e os Textos
+            graphData.nodes.forEach(node => {
+                const isActive = (node.id === selectedFileId);
+                
+                // Desenha a bolinha (Nó)
+                ctx.beginPath();
+                ctx.arc(node.x, node.y, isActive ? 6 : node.radius, 0, 2 * Math.PI);
+                ctx.fillStyle = isActive ? "#2563eb" : "#5b6672"; // Azul se selecionado, senão cinza-grafite
+                ctx.fill();
+
+                // Desenha o rótulo textual posicionado logo abaixo (Estilo Cérebro Jurídico / Obsidian)
+                ctx.font = isActive ? "bold 10px sans-serif" : "10px sans-serif";
+                ctx.fillStyle = isActive ? "#1e293b" : "#64748b";
+                ctx.textAlign = "center";
+                ctx.fillText(node.label, node.x, node.y + 16);
+            });
+        }
+
+        // Loop contínuo da animação de estabilização física
+        function animationLoop() {
+            updatePhysics();
+            drawGraph();
+            requestAnimationFrame(animationLoop);
+        }
+        requestAnimationFrame(animationLoop);
+
+        // Captura e controle de arrastar nós com o mouse (Drag and Drop Interaction)
+        canvas.addEventListener("mousedown", (e) => {
+            const rect = canvas.getBoundingClientRect();
+            const mouseX = e.clientX - rect.left;
+            const mouseY = e.clientY - rect.top;
+
+            // Busca se o clique atingiu o raio de algum nó
+            for (let node of graphData.nodes) {
+                let dist = Math.sqrt((node.x - mouseX)**2 + (node.y - mouseY)**2);
+                if (dist < 18) {
+                    draggedNode = node;
+                    break;
+                }
+            }
+        });
+
+        canvas.addEventListener("mousemove", (e) => {
+            if (!draggedNode) return;
+            const rect = canvas.getBoundingClientRect();
+            draggedNode.x = e.clientX - rect.left;
+            draggedNode.y = e.clientY - rect.top;
+            draggedNode.vx = 0;
+            draggedNode.vy = 0;
+        });
+
+        window.addEventListener("mouseup", () => {
+            draggedNode = null;
+        });
+
+        // Sincroniza os dados do backend e atualiza a teia em tempo real
+        async function reloadGlobalGraph() {
+            try {
+                const res = await fetch("/api/graph-data");
+                const data = await res.json();
+                initPhysicsNodes(data);
+            } catch (err) {
+                console.error("Falha ao sincronizar mapa relacional:", err);
+            }
+        }
+
+        // 2. Sincroniza o Painel do Diretório de Arquivos à Esquerda
         async function buildNotesTree() {
             try {
                 const res = await fetch("/api/notes");
@@ -239,7 +435,7 @@
                     fileTree.innerHTML = "";
                     data.files.forEach(filePath => {
                         const btn = document.createElement("button");
-                        btn.className = "w-full text-left px-2.5 py-1.5 rounded-lg flex items-center gap-2 text-slate-600 hover:bg-slate-100 hover:text-slate-900 transition-all truncate";
+                        btn.className = "w-full text-left px-2.5 py-1.5 rounded-lg flex items-center gap-2 text-slate-600 hover:bg-slate-100 hover:text-slate-900 transition-all truncate font-semibold text-xs";
                         btn.innerHTML = `<i data-lucide="file-text" class="w-3.5 h-3.5 text-slate-400 shrink-0"></i> <span class="truncate">${filePath}</span>`;
                         btn.onclick = () => loadNoteContent(filePath);
                         fileTree.appendChild(btn);
@@ -253,75 +449,9 @@
             }
         }
 
-        // 2. Renderizador Real do Obsidian Graph View (Gera conexões via links [[Nota]])
-        function renderGraphView(activeName, contentText) {
-            graphCanvas.innerHTML = "";
-            
-            // Regex para capturar padrões de links internos do Obsidian: [[Nome Da Nota]]
-            const linkRegex = /\[\[(.*?)\]\]/g;
-            let matches = [];
-            let match;
-            
-            while ((match = linkRegex.exec(contentText)) !== null) {
-                if (!matches.includes(match[1])) matches.push(match[1]);
-            }
-
-            // Cria o nó principal centralizado
-            const centerNode = document.createElement("div");
-            centerNode.className = "absolute z-10 bg-blue-600 text-white font-bold px-3 py-1.5 rounded-xl shadow-md text-[10px] animate-scale";
-            centerNode.style.left = "calc(50% - 60px)";
-            centerNode.style.top = "calc(50% - 15px)";
-            centerNode.innerHTML = `<div class="flex items-center gap-1"><i data-lucide="file-text" class="w-3 h-3"></i><span class="truncate max-w-[90px]">${activeName}</span></div>`;
-            graphCanvas.appendChild(centerNode);
-
-            if (matches.length === 0) {
-                // Estado padrão se a nota não referenciar ninguém
-                const msg = document.createElement("div");
-                msg.className = "absolute bottom-3 text-[10px] text-slate-400 font-semibold";
-                msg.innerText = "Nenhum link de saída detectado nesta nota.";
-                graphCanvas.appendChild(msg);
-                lucide.createIcons();
-                return;
-            }
-
-            // Renderiza nós satélites distribuídos matematicamente em círculo (Teia de Conexões)
-            const radius = 75; 
-            matches.forEach((linkedNote, index) => {
-                const angle = (index * 2 * Math.PI) / matches.length;
-                const x = Math.cos(angle) * radius;
-                const y = Math.sin(angle) * radius;
-
-                // Cria o nó satélite
-                const satellite = document.createElement("div");
-                satellite.className = "absolute z-10 bg-white border border-slate-200 text-slate-700 px-2 py-1 rounded-lg shadow-xs text-[9px] font-bold max-w-[100px] truncate";
-                satellite.style.left = `calc(50% + ${x}px - 45px)`;
-                satellite.style.top = `calc(50% + ${y}px - 12px)`;
-                satellite.innerText = linkedNote.split(".md")[0];
-                graphCanvas.appendChild(satellite);
-
-                // Linha de transmissão SVG conectando os nós
-                const svgNS = "http://www.w3.org/2000/svg";
-                const svg = document.createElementNS(svgNS, "svg");
-                svg.setAttribute("class", "absolute inset-0 w-full h-full pointer-events-none");
-                
-                const line = document.createElementNS(svgNS, "line");
-                line.setAttribute("x1", "50%");
-                line.setAttribute("y1", "50%");
-                line.setAttribute("x2", `calc(50% + ${x}px)`);
-                line.setAttribute("y2", `calc(50% + ${y}px)`);
-                line.setAttribute("stroke", "#93c5fd");
-                line.setAttribute("stroke-width", "1.5");
-                line.setAttribute("stroke-dasharray", "4,3");
-                
-                svg.appendChild(line);
-                graphCanvas.appendChild(svg);
-            });
-
-            lucide.createIcons();
-        }
-
-        // 3. Executa a leitura em tempo real
+        // 3. Executa a leitura em tempo real e joga o texto da VPS na tela
         async function loadNoteContent(filename) {
+            selectedFileId = filename; // Marca a nota ativa no canvas
             const shortName = filename.split('/').pop();
             activeNoteTitle.innerText = shortName;
             activeNoteMeta.innerText = `Localização: BaseConhecimento/${filename}`;
@@ -338,10 +468,9 @@
                     summaryPoints.innerHTML = `
                         <div class="flex items-start gap-2"><i data-lucide="check-circle-2" class="w-3.5 h-3.5 text-green-500 shrink-0"></i> <span>Leitura física concluída</span></div>
                         <div class="flex items-start gap-2"><i data-lucide="check-circle-2" class="w-3.5 h-3.5 text-green-500 shrink-0"></i> <span>Formato Markdown Sincronizado</span></div>
+                        <div class="flex items-start gap-2"><i data-lucide="network" class="w-3.5 h-3.5 text-blue-500 shrink-0"></i> <span>Conexões mapeadas no Gráfico</span></div>
                     `;
-                    
-                    // Dispara o Obsidian Graph View Dinâmico
-                    renderGraphView(shortName, data.content);
+                    lucide.createIcons();
                     
                     chatInput.value = `Leia a nota "${filename}" e faça um resumo crítico.`;
                     chatInput.focus();
@@ -370,6 +499,7 @@
                 const data = await res.json();
                 if (data.success) {
                     await buildNotesTree();
+                    await reloadGlobalGraph(); // Atualiza a malha neural do gráfico automaticamente
                     loadNoteContent(file.name);
                 } else {
                     alert(`Falha no upload: ${data.error}`);
@@ -403,21 +533,19 @@
             chatContextUpload.value = "";
         };
 
-        // 6. Envio das Mensagens Injetando o Contexto do Arquivo se Houver
+        // 6. Mensageria Estruturada do Chat
         async function sendChatMessage() {
             let query = chatInput.value.trim();
             if (!query && !pendingChatAttachment) return;
 
             let contextPrompt = query;
             
-            // Injeta o arquivo lido na memória do payload do usuário
             if (pendingChatAttachment) {
                 contextPrompt = `[Contexto Adicional - Arquivo Anexado pelo Usuário: ${pendingChatAttachment.name}]\n` +
                                 `\`\`\`\n${pendingChatAttachment.content}\n\`\`\`\n\n` +
                                 `Instrução do usuário sobre o arquivo: ${query || 'Analise o arquivo anexo.'}`;
                 
                 renderMessageBlock("user", `📎 Envia arquivo: ${pendingChatAttachment.name}\n${query}`);
-                // Reseta anexo
                 pendingChatAttachment = null;
                 chatAttachmentArea.classList.add("hidden");
                 chatContextUpload.value = "";
@@ -447,7 +575,8 @@
                     renderMessageBlock("assistant", data.reply);
                     chatHistory.push({ role: "assistant", content: data.reply });
                     if (query.toLowerCase().includes("crie") || query.toLowerCase().includes("nota") || query.toLowerCase().includes("pasta")) {
-                        buildNotesTree();
+                        await buildNotesTree();
+                        await reloadGlobalGraph(); // Sincroniza o gráfico em tempo de execução
                     }
                 } else {
                     renderMessageBlock("assistant", `❌ Erro: ${data.error}`);
@@ -476,7 +605,9 @@
         btnSend.onclick = sendChatMessage;
         chatInput.onkeydown = (e) => { if (e.key === "Enter") sendChatMessage(); };
 
+        // Inicialização em Lote das APIs locais do Servidor
         buildNotesTree();
+        reloadGlobalGraph();
     </script>
 </body>
 </html>
