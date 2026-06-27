@@ -46,6 +46,7 @@ function listNotesLocal() {
   return { files: files.filter(f => !f.startsWith('.')) };
 }
 
+// Garante caminhos seguros evitando Path Traversal
 function readNoteLocal(filename) {
   const safePath = path.join(VAULT_PATH, path.basename(filename));
   if (!fs.existsSync(safePath)) {
@@ -55,10 +56,36 @@ function readNoteLocal(filename) {
   return { filename, content };
 }
 
+// Rota de status da aplicação
 app.get("/api/status", (req, res) => {
   res.json({ status: missingVars.length === 0 ? "OK" : "CONFIG_INCOMPLETA" });
 });
 
+// Rota dinâmica para alimentar a árvore de arquivos do painel esquerdo
+app.get("/api/notes", (req, res) => {
+  if (!fs.existsSync(VAULT_PATH)) return res.json({ files: [] });
+  try {
+    const files = fs.readdirSync(VAULT_PATH)
+      .filter(f => f.endsWith(".md") || f.endsWith(".txt"))
+      .map(f => ({ name: f, size: fs.statSync(path.join(VAULT_PATH, f)).size }));
+    res.json({ files });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// Rota opcional para o front-end ler o conteúdo do arquivo clicado se necessário
+app.get("/api/notes/:filename", (req, res) => {
+  try {
+    const result = readNoteLocal(req.params.filename);
+    if (result.error) return res.status(404).json(result);
+    res.json(result);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// Rota de chat operacional integrada com as ferramentas locais
 app.post("/api/chat", async (req, res) => {
   if (missingVars.length > 0) return res.status(500).json({ error: "Configuração incompleta nas variáveis." });
   if (req.headers["x-app-password"] !== process.env.APP_PASSWORD) return res.status(401).json({ error: "Senha inválida." });
