@@ -30,7 +30,7 @@ const localTools = [
     input_schema: {
       type: "object",
       properties: {
-        filename: { type: "string", description: "Nome do arquivo com extensão (ex: projetos.md ou subpasta/nota.md)" }
+        filename: { type: "string", description: "Nome do arquivo com extensão .md (ex: projetos.md ou subpasta/nota.md)" }
       },
       required: ["filename"]
     }
@@ -145,14 +145,16 @@ app.post("/api/chat", async (req, res) => {
 
   try {
     const userMessages = Array.isArray(req.body.messages) ? req.body.messages : [];
+    // Mantém a integridade estrutural das mensagens (suporta objetos e arrays de blocos)
     const messages = userMessages
       .filter(msg => msg && ["user", "assistant"].includes(msg.role))
       .slice(-20)
-      .map(msg => ({ role: msg.role, content: String(msg.content || "") }));
+      .map(msg => ({ role: msg.role, content: msg.content }));
 
     if (messages.length === 0) return res.status(400).json({ error: "Mensagem vazia." });
 
-    const response = await anthropic.messages.create({
+    // Chamada inicial ao Claude
+    let response = await anthropic.messages.create({
       model: process.env.CLAUDE_MODEL || "claude-3-5-sonnet-20241022",
       max_tokens: Number(process.env.MAX_TOKENS || 3000),
       system: "Você é o Assistente Claude conectado de forma nativa aos arquivos do Obsidian da BMS Service. Você possui ferramentas completas para listar, ler, criar e editar notas ou pastas. Execute as ações solicitadas imediatamente e retorne a confirmação.",
@@ -160,47 +162,55 @@ app.post("/api/chat", async (req, res) => {
       tools: localTools
     });
 
-    if (response.stop_reason === "tool_use") {
-      const toolUse = response.content.find(c => c.type === "tool_use");
-      let toolResult = {};
-
-      console.log(`[BMS Execute] Operação local acionada: ${toolUse.name}`);
+    // Laço robusto que resolve chamadas em paralelo (Multi-Tool Execution)
+    while (response.stop_reason === "tool_use") {
+      messages.push({ role: "assistant", content: response.content });
       
-      try {
-        if (toolUse.name === "list_notes") {
-          toolResult = listNotesLocal();
-        } else if (toolUse.name === "read_note") {
-          toolResult = readNoteLocal(toolUse.input.filename);
-        } else if (toolUse.name === "create_note") {
-          toolResult = createNoteLocal(toolUse.input.filename, toolUse.input.content);
-        } else if (toolUse.name === "edit_note") {
-          toolResult = editNoteLocal(toolUse.input.filename, toolUse.input.content);
-        } else if (toolUse.name === "create_folder") {
-          toolResult = createFolderLocal(toolUse.input.foldername);
+      const toolResults = [];
+
+      for (const block of response.content) {
+        if (block.type === "tool_use") {
+          let toolResult = {};
+          console.log(`[BMS Loop Execute] Executando: ${block.name}`);
+          
+          try {
+            if (block.name === "list_notes") {
+              toolResult = listNotesLocal();
+            } else if (block.name === "read_note") {
+              toolResult = readNoteLocal(block.input.filename);
+            } else if (block.name === "create_note") {
+              toolResult = createNoteLocal(block.input.filename, block.input.content);
+            } else if (block.name === "edit_note") {
+              toolResult = editNoteLocal(block.input.filename, block.input.content);
+            } else if (block.name === "create_folder") {
+              toolResult = createFolderLocal(block.input.foldername);
+            }
+          } catch (err) {
+            toolResult = { error: err.message };
+          }
+
+          toolResults.push({
+            type: "tool_result",
+            tool_use_id: block.id,
+            content: JSON.stringify(toolResult)
+          });
         }
-      } catch (err) {
-        toolResult = { error: err.message };
       }
 
-      messages.push({ role: "assistant", content: response.content });
-      messages.push({
-        role: "user",
-        content: [{ type: "tool_result", tool_use_id: toolUse.id, content: JSON.stringify(toolResult) }]
-      });
+      messages.push({ role: "user", content: toolResults });
 
-      const finalResponse = await anthropic.messages.create({
+      // Reavalia o status com o lote completo de respostas injetado
+      response = await anthropic.messages.create({
         model: process.env.CLAUDE_MODEL || "claude-3-5-sonnet-20241022",
         max_tokens: Number(process.env.MAX_TOKENS || 3000),
         messages,
         tools: localTools
       });
-      
-      return res.json({ reply: finalResponse.content.find(c => c.type === "text")?.text || "" });
     }
 
-    res.json({ reply: response.content.find(c => c.type === "text")?.text || "Processado." });
+    res.json({ reply: response.content.find(c => c.type === "text")?.text || "Ação concluída com sucesso." });
   } catch (error) {
-    console.error("Erro na execução local:", error);
+    console.error("Erro na execução local do loop:", error);
     res.status(500).json({ error: `Erro na execução do MCP nativo: ${error.message}` });
   }
 });
