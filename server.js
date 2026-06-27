@@ -1,13 +1,13 @@
 import express from "express";
 import { Client } from "@modelcontextprotocol/sdk/client/index.js";
-import { SSEClientTransport } from "@modelcontextprotocol/sdk/client/sse.js";
+import { StdioClientTransport } from "@modelcontextprotocol/sdk/client/stdio.js";
 import Anthropic from "@anthropic-ai/sdk";
 
 const app = express();
 app.use(express.json({ limit: "1mb" }));
 app.use(express.static("public"));
 
-const requiredEnv = ["ANTHROPIC_API_KEY", "OBSIDIAN_MCP_URL", "APP_PASSWORD"];
+const requiredEnv = ["ANTHROPIC_API_KEY", "OBSIDIAN_HOST", "OBSIDIAN_API_KEY", "APP_PASSWORD"];
 for (const key of requiredEnv) {
   if (!process.env[key]) {
     console.error(`Variável obrigatória ausente: ${key}`);
@@ -20,7 +20,15 @@ let mcpClient = null;
 
 async function connectMCP() {
   if (!mcpClient) {
-    const transport = new SSEClientTransport(new URL(process.env.OBSIDIAN_MCP_URL));
+    const transport = new StdioClientTransport({
+      command: "npx",
+      args: ["-y", "@modelcontextprotocol/server-obsidian"],
+      env: {
+        ...process.env,
+        OBSIDIAN_API_KEY: process.env.OBSIDIAN_API_KEY,
+        OBSIDIAN_HOST: process.env.OBSIDIAN_HOST
+      }
+    });
     mcpClient = new Client({ name: "chat-client", version: "1.0.0" }, { capabilities: {} });
     await mcpClient.connect(transport);
   }
