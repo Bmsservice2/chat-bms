@@ -17,7 +17,7 @@ for (const key of requiredEnv) {
 const anthropic = process.env.ANTHROPIC_API_KEY ? new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY }) : null;
 const VAULT_PATH = "/app/obsidian_vault";
 
-// Definição manual e nativa das ferramentas para evitar dependência do SDK quebrado
+// Barramento expandido de ferramentas locais com capacidades de escrita e estruturação
 const localTools = [
   {
     name: "list_notes",
@@ -30,62 +30,115 @@ const localTools = [
     input_schema: {
       type: "object",
       properties: {
-        filename: { type: "string", description: "Nome do arquivo com extensão (ex: projetos.md ou n8n_workflow.md)" }
+        filename: { type: "string", description: "Nome do arquivo com extensão (ex: projetos.md ou subpasta/nota.md)" }
       },
       required: ["filename"]
+    }
+  },
+  {
+    name: "create_note",
+    description: "Cria uma nova nota (.md) no cofre do Obsidian com o conteúdo técnico fornecido.",
+    input_schema: {
+      type: "object",
+      properties: {
+        filename: { type: "string", description: "Nome do arquivo com extensão .md (ex: automacao_n8n.md ou 01 Oficios/documento.md)" },
+        content: { type: "string", description: "Conteúdo completo estruturado em formato Markdown." }
+      },
+      required: ["filename", "content"]
+    }
+  },
+  {
+    name: "edit_note",
+    description: "Edita ou sobrescreve completamente uma nota existente no cofre para atualizar procedimentos técnicos.",
+    input_schema: {
+      type: "object",
+      properties: {
+        filename: { type: "string", description: "Nome do arquivo existente com extensão (ex: projetos.md)" },
+        content: { type: "string", description: "Novo conteúdo atualizado completo da nota." }
+      },
+      required: ["filename", "content"]
+    }
+  },
+  {
+    name: "create_folder",
+    description: "Cria uma nova pasta organizacional dentro do cofre do Obsidian.",
+    input_schema: {
+      type: "object",
+      properties: {
+        foldername: { type: "string", description: "Caminho ou nome da pasta a ser criada (ex: 08 Provas)" }
+      },
+      required: ["foldername"]
     }
   }
 ];
 
-// Funções locais de leitura de disco usando o core nativo do Node.js
+// Validador de segurança para mitigar falhas de Path Traversal fora do volume
+function getSafePath(targetPath) {
+  const resolvedPath = path.resolve(VAULT_PATH, targetPath);
+  if (!resolvedPath.startsWith(VAULT_PATH)) {
+    throw new Error("Acesso negado: Tentativa de manipulação fora do cofre corporativo.");
+  }
+  return resolvedPath;
+}
+
 function listNotesLocal() {
-  if (!fs.existsSync(VAULT_PATH)) {
-    return { error: `Pasta ${VAULT_PATH} não encontrada. Verifique o Storage no Coolify.` };
-  }
-  const files = fs.readdirSync(VAULT_PATH);
-  return { files: files.filter(f => !f.startsWith('.')) };
+  if (!fs.existsSync(VAULT_PATH)) return { error: `Pasta ${VAULT_PATH} não encontrada.` };
+  const getFilesRecursively = (dir) => {
+    let results = [];
+    const list = fs.readdirSync(dir);
+    list.forEach(file => {
+      if (file.startsWith('.')) return;
+      const fullPath = path.join(dir, file);
+      const stat = fs.statSync(fullPath);
+      if (stat && stat.isDirectory()) {
+        results = results.concat(getFilesRecursively(fullPath));
+      } else if (file.endsWith('.md') || file.endsWith('.txt')) {
+        results.push(path.relative(VAULT_PATH, fullPath));
+      }
+    });
+    return results;
+  };
+  return { files: getFilesRecursively(VAULT_PATH) };
 }
 
-// Garante caminhos seguros evitando Path Traversal
 function readNoteLocal(filename) {
-  const safePath = path.join(VAULT_PATH, path.basename(filename));
-  if (!fs.existsSync(safePath)) {
-    return { error: `Arquivo ${filename} não encontrado no cofre corporativo.` };
-  }
-  const content = fs.readFileSync(safePath, "utf-8");
-  return { filename, content };
+  const safePath = getSafePath(filename);
+  if (!fs.existsSync(safePath)) return { error: `Arquivo ${filename} não encontrado.` };
+  return { filename, content: fs.readFileSync(safePath, "utf-8") };
 }
 
-// Rota de status da aplicação
+function createNoteLocal(filename, content) {
+  const safePath = getSafePath(filename);
+  fs.mkdirSync(path.dirname(safePath), { recursive: true });
+  fs.writeFileSync(safePath, content, "utf-8");
+  return { filename, status: "Nota criada com sucesso no sistema." };
+}
+
+function editNoteLocal(filename, content) {
+  const safePath = getSafePath(filename);
+  if (!fs.existsSync(safePath)) return { error: `Nota ${filename} não existe para ser editada.` };
+  fs.writeFileSync(safePath, content, "utf-8");
+  return { filename, status: "Nota atualizada com sucesso." };
+}
+
+function createFolderLocal(foldername) {
+  const safePath = getSafePath(foldername);
+  fs.mkdirSync(safePath, { recursive: true });
+  return { foldername, status: "Diretório organizacional criado com sucesso." };
+}
+
 app.get("/api/status", (req, res) => {
   res.json({ status: missingVars.length === 0 ? "OK" : "CONFIG_INCOMPLETA" });
 });
 
-// Rota dinâmica para alimentar a árvore de arquivos do painel esquerdo
 app.get("/api/notes", (req, res) => {
-  if (!fs.existsSync(VAULT_PATH)) return res.json({ files: [] });
   try {
-    const files = fs.readdirSync(VAULT_PATH)
-      .filter(f => f.endsWith(".md") || f.endsWith(".txt"))
-      .map(f => ({ name: f, size: fs.statSync(path.join(VAULT_PATH, f)).size }));
-    res.json({ files });
+    res.json(listNotesLocal());
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 });
 
-// Rota opcional para o front-end ler o conteúdo do arquivo clicado se necessário
-app.get("/api/notes/:filename", (req, res) => {
-  try {
-    const result = readNoteLocal(req.params.filename);
-    if (result.error) return res.status(404).json(result);
-    res.json(result);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
-
-// Rota de chat operacional integrada com as ferramentas locais
 app.post("/api/chat", async (req, res) => {
   if (missingVars.length > 0) return res.status(500).json({ error: "Configuração incompleta nas variáveis." });
   if (req.headers["x-app-password"] !== process.env.APP_PASSWORD) return res.status(401).json({ error: "Senha inválida." });
@@ -99,26 +152,34 @@ app.post("/api/chat", async (req, res) => {
 
     if (messages.length === 0) return res.status(400).json({ error: "Mensagem vazia." });
 
-    // Chamada inicial para o Claude com a especificação das ferramentas locais
     const response = await anthropic.messages.create({
       model: process.env.CLAUDE_MODEL || "claude-3-5-sonnet-20241022",
       max_tokens: Number(process.env.MAX_TOKENS || 3000),
-      system: "Você é o Assistente Claude conectado de forma nativa aos arquivos do Obsidian da BMS Service. Sempre use as ferramentas disponíveis para listar e ler as notas técnicas antes de responder ao usuário.",
+      system: "Você é o Assistente Claude conectado de forma nativa aos arquivos do Obsidian da BMS Service. Você possui ferramentas completas para listar, ler, criar e editar notas ou pastas. Execute as ações solicitadas imediatamente e retorne a confirmação.",
       messages,
       tools: localTools
     });
 
-    // Se o Claude decidir usar alguma ferramenta para ler seu cofre
     if (response.stop_reason === "tool_use") {
       const toolUse = response.content.find(c => c.type === "tool_use");
       let toolResult = {};
 
-      console.log(`[BMS Execute] Claude chamou a ferramenta local: ${toolUse.name}`);
+      console.log(`[BMS Execute] Operação local acionada: ${toolUse.name}`);
       
-      if (toolUse.name === "list_notes") {
-        toolResult = listNotesLocal();
-      } else if (toolUse.name === "read_note") {
-        toolResult = readNoteLocal(toolUse.input.filename);
+      try {
+        if (toolUse.name === "list_notes") {
+          toolResult = listNotesLocal();
+        } else if (toolUse.name === "read_note") {
+          toolResult = readNoteLocal(toolUse.input.filename);
+        } else if (toolUse.name === "create_note") {
+          toolResult = createNoteLocal(toolUse.input.filename, toolUse.input.content);
+        } else if (toolUse.name === "edit_note") {
+          toolResult = editNoteLocal(toolUse.input.filename, toolUse.input.content);
+        } else if (toolUse.name === "create_folder") {
+          toolResult = createFolderLocal(toolUse.input.foldername);
+        }
+      } catch (err) {
+        toolResult = { error: err.message };
       }
 
       messages.push({ role: "assistant", content: response.content });
@@ -127,7 +188,6 @@ app.post("/api/chat", async (req, res) => {
         content: [{ type: "tool_result", tool_use_id: toolUse.id, content: JSON.stringify(toolResult) }]
       });
 
-      // Segunda chamada enviando o conteúdo lido do disco para o Claude formular a resposta técnica
       const finalResponse = await anthropic.messages.create({
         model: process.env.CLAUDE_MODEL || "claude-3-5-sonnet-20241022",
         max_tokens: Number(process.env.MAX_TOKENS || 3000),
