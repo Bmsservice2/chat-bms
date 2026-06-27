@@ -15,7 +15,9 @@ for (const key of requiredEnv) {
 }
 
 const anthropic = process.env.ANTHROPIC_API_KEY ? new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY }) : null;
-const VAULT_PATH = "/app/obsidian_vault";
+
+// CORREÇÃO CIRÚRGICA: Aponta diretamente para a pasta interna do cofre ativo no Obsidian
+const VAULT_PATH = "/app/obsidian_vault/BaseConhecimento";
 
 // Barramento expandido de ferramentas locais com capacidades de escrita e estruturação
 const localTools = [
@@ -41,7 +43,7 @@ const localTools = [
     input_schema: {
       type: "object",
       properties: {
-        filename: { type: "string", description: "Nome do arquivo com extensão .md (ex: automacao_n8n.md ou 01 Oficios/documento.md)" },
+        filename: { type: "string", description: "Nome do arquivo com extensão .md (ex: automacao_n8n.md ou subpasta/documento.md)" },
         content: { type: "string", description: "Conteúdo completo estruturado em formato Markdown." }
       },
       required: ["filename", "content"]
@@ -65,7 +67,7 @@ const localTools = [
     input_schema: {
       type: "object",
       properties: {
-        foldername: { type: "string", description: "Caminho ou nome da pasta a ser criada (ex: 08 Provas)" }
+        foldername: { type: "string", description: "Caminho ou nome da pasta a ser criada (ex: NovaPasta)" }
       },
       required: ["foldername"]
     }
@@ -145,7 +147,6 @@ app.post("/api/chat", async (req, res) => {
 
   try {
     const userMessages = Array.isArray(req.body.messages) ? req.body.messages : [];
-    // Mantém a integridade estrutural das mensagens (suporta objetos e arrays de blocos)
     const messages = userMessages
       .filter(msg => msg && ["user", "assistant"].includes(msg.role))
       .slice(-20)
@@ -153,7 +154,6 @@ app.post("/api/chat", async (req, res) => {
 
     if (messages.length === 0) return res.status(400).json({ error: "Mensagem vazia." });
 
-    // Chamada inicial ao Claude
     let response = await anthropic.messages.create({
       model: process.env.CLAUDE_MODEL || "claude-3-5-sonnet-20241022",
       max_tokens: Number(process.env.MAX_TOKENS || 3000),
@@ -162,10 +162,8 @@ app.post("/api/chat", async (req, res) => {
       tools: localTools
     });
 
-    // Laço robusto que resolve chamadas em paralelo (Multi-Tool Execution)
     while (response.stop_reason === "tool_use") {
       messages.push({ role: "assistant", content: response.content });
-      
       const toolResults = [];
 
       for (const block of response.content) {
@@ -199,7 +197,6 @@ app.post("/api/chat", async (req, res) => {
 
       messages.push({ role: "user", content: toolResults });
 
-      // Reavalia o status com o lote completo de respostas injetado
       response = await anthropic.messages.create({
         model: process.env.CLAUDE_MODEL || "claude-3-5-sonnet-20241022",
         max_tokens: Number(process.env.MAX_TOKENS || 3000),
