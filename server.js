@@ -4,6 +4,9 @@ import path from "path";
 import Anthropic from "@anthropic-ai/sdk";
 
 const app = express();
+
+// Configura o parser binário bruto para a rota de upload antes do parser de JSON
+app.use("/api/upload-vault", express.raw({ type: "*/*", limit: "25mb" }));
 app.use(express.json({ limit: "1mb" }));
 app.use(express.static("public"));
 
@@ -17,7 +20,6 @@ for (const key of requiredEnv) {
 const anthropic = process.env.ANTHROPIC_API_KEY ? new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY }) : null;
 const VAULT_PATH = "/app/obsidian_vault/BaseConhecimento";
 
-// Barramento expandido de ferramentas locais com capacidades de escrita e estruturação
 const localTools = [
   {
     name: "list_notes",
@@ -41,7 +43,7 @@ const localTools = [
     input_schema: {
       type: "object",
       properties: {
-        filename: { type: "string", description: "Nome do arquivo com extensão .md (ex: automacao_n8n.md ou subpasta/documento.md)" },
+        filename: { type: "string", description: "Nome do arquivo com extensão .md (ex: automacao_n8n.md)" },
         content: { type: "string", description: "Conteúdo completo estruturado em formato Markdown." }
       },
       required: ["filename", "content"]
@@ -72,7 +74,6 @@ const localTools = [
   }
 ];
 
-// Validador de segurança para mitigar falhas de Path Traversal fora do volume
 function getSafePath(targetPath) {
   const resolvedPath = path.resolve(VAULT_PATH, targetPath);
   if (!resolvedPath.startsWith(VAULT_PATH)) {
@@ -131,7 +132,6 @@ app.get("/api/status", (req, res) => {
   res.json({ status: missingVars.length === 0 ? "OK" : "CONFIG_INCOMPLETA" });
 });
 
-// Fornece a árvore bruta de arquivos para montagem dinâmica de subpastas no HTML
 app.get("/api/notes", (req, res) => {
   try {
     res.json(listNotesLocal());
@@ -140,7 +140,6 @@ app.get("/api/notes", (req, res) => {
   }
 });
 
-// Rota de visualização direta para o painel central do front-end
 app.get("/api/note-content", (req, res) => {
   const filename = req.query.file;
   if (!filename) return res.status(400).json({ error: "Parâmetro 'file' obrigatório." });
@@ -148,6 +147,22 @@ app.get("/api/note-content", (req, res) => {
     const result = readNoteLocal(filename);
     if (result.error) return res.status(404).json(result);
     res.json(result);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// Rota de Upload Físico Direto para o Volume Compartilhado do Obsidian
+app.post("/api/upload-vault", (req, res) => {
+  const filename = req.query.file;
+  if (!filename) return res.status(400).json({ error: "Nome do arquivo não especificado." });
+  
+  try {
+    const safePath = getSafePath(filename);
+    fs.mkdirSync(path.dirname(safePath), { recursive: true });
+    fs.writeFileSync(safePath, req.body);
+    console.log(`[BMS Storage] Arquivo gravado com sucesso: ${filename}`);
+    res.json({ success: true, message: "Arquivo integrado ao Obsidian." });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
