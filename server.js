@@ -1,13 +1,13 @@
 import express from "express";
 import { Client } from "@modelcontextprotocol/sdk/client/index.js";
-import { SSEClientTransport } from "@modelcontextprotocol/sdk/client/sse.js";
+import { StdioClientTransport } from "@modelcontextprotocol/sdk/client/stdio.js";
 import Anthropic from "@anthropic-ai/sdk";
 
 const app = express();
 app.use(express.json({ limit: "1mb" }));
 app.use(express.static("public"));
 
-const requiredEnv = ["ANTHROPIC_API_KEY", "OBSIDIAN_MCP_URL", "OBSIDIAN_API_KEY", "APP_PASSWORD"];
+const requiredEnv = ["ANTHROPIC_API_KEY", "APP_PASSWORD"];
 let missingVars = [];
 
 for (const key of requiredEnv) {
@@ -20,26 +20,18 @@ let mcpClient = null;
 async function connectMCP() {
   if (mcpClient) return mcpClient;
 
-  const parsed = new URL(process.env.OBSIDIAN_MCP_URL);
-  // Aponta exatamente para o barramento do plugin validado pelo seu log
-  const targetUrl = `${parsed.protocol}//${parsed.host}/mcp`;
+  console.log("Iniciando Servidor MCP nativo via Stdio...");
   
-  console.log(`Conectando cliente MCP oficial em: ${targetUrl}`);
-  
-  const transport = new SSEClientTransport(new URL(targetUrl), {
-    eventSourceInit: {
-      headers: { "Authorization": `Bearer ${process.env.OBSIDIAN_API_KEY}` }
-    },
-    requestInit: {
-      headers: { "Authorization": `Bearer ${process.env.OBSIDIAN_API_KEY}` }
-    }
+  // Executa o motor MCP diretamente sobre a pasta mapeada do Obsidian
+  const transport = new StdioClientTransport({
+    command: "node",
+    args: ["./node_modules/@modelcontextprotocol/server-filesystem/dist/index.js", "/app/obsidian_vault"]
   });
-  
+
   mcpClient = new Client({ name: "chat-client", version: "1.0.0" }, { capabilities: {} });
   await mcpClient.connect(transport);
   
-  console.log("Aguardando estabilização do canal de streaming (2s)...");
-  await new Promise(resolve => setTimeout(resolve, 2000));
+  console.log("Conexão com a base de conhecimento estabelecida localmente via Stdio.");
   return mcpClient;
 }
 
@@ -48,7 +40,7 @@ app.get("/api/status", (req, res) => {
 });
 
 app.post("/api/chat", async (req, res) => {
-  if (missingVars.length > 0) return res.status(500).json({ error: "Configuração incompleta." });
+  if (missingVars.length > 0) return res.status(500).json({ error: "Configuração incompleta nas variáveis." });
   if (req.headers["x-app-password"] !== process.env.APP_PASSWORD) return res.status(401).json({ error: "Senha inválida." });
 
   try {
@@ -71,7 +63,7 @@ app.post("/api/chat", async (req, res) => {
     const response = await anthropic.messages.create({
       model: process.env.CLAUDE_MODEL || "claude-3-5-sonnet-20241022",
       max_tokens: Number(process.env.MAX_TOKENS || 3000),
-      system: "Você é o assistente conectado ao Obsidian da BMS Service. Consulte as informações internas usando as ferramentas antes de responder.",
+      system: "Você é o assistente Claude conectado à base de conhecimento da BMS Service. Sempre consulte os arquivos locais usando as ferramentas disponíveis antes de responder.",
       messages,
       tools: mcpTools.length > 0 ? mcpTools : undefined
     });
@@ -95,7 +87,7 @@ app.post("/api/chat", async (req, res) => {
     res.json({ reply: response.content.find(c => c.type === "text")?.text || "Processado." });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: `Erro na comunicação MCP: ${error.message}` });
+    res.status(500).json({ error: `Erro na execução do MCP local: ${error.message}` });
   }
 });
 
