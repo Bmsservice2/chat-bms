@@ -20,11 +20,11 @@ let mcpClient = null;
 async function connectMCP() {
   if (mcpClient) return mcpClient;
 
-  // Rota nativa do Semantic Notes Vault MCP passando pelo proxy
+  // Endpoint SSE exato do plugin Semantic Notes Vault
   const parsed = new URL(process.env.OBSIDIAN_MCP_URL);
-  const targetUrl = `${parsed.protocol}//${parsed.host}/mcp/mcp/sse`;
+  const targetUrl = `${parsed.protocol}//${parsed.host}/mcp/sse`;
   
-  console.log(`Conectando canal SSE Semantic Notes em: ${targetUrl}`);
+  console.log(`Conectando canal SSE em: ${targetUrl}`);
   
   const transport = new SSEClientTransport(new URL(targetUrl), {
     eventSourceInit: {
@@ -38,7 +38,7 @@ async function connectMCP() {
   mcpClient = new Client({ name: "chat-client", version: "1.0.0" }, { capabilities: {} });
   await mcpClient.connect(transport);
   
-  console.log("Aguardando estabilização (2s)...");
+  console.log("Aguardando estabilização da transmissão (2s)...");
   await new Promise(resolve => setTimeout(resolve, 2000));
   return mcpClient;
 }
@@ -67,9 +67,9 @@ app.post("/api/chat", async (req, res) => {
       .map(msg => ({ role: msg.role, content: String(msg.content || "") }));
 
     const response = await anthropic.messages.create({
-      model: process.env.CLALE_MODEL || "claude-3-5-sonnet-20241022",
+      model: process.env.CLAUDE_MODEL || "claude-3-5-sonnet-20241022",
       max_tokens: Number(process.env.MAX_TOKENS || 3000),
-      system: "Você é o assistente conectado ao Obsidian da BMS Service. Consulte a base usando as ferramentas disponíveis.",
+      system: "Você é o assistente conectado ao Obsidian da BMS Service. Consulte as informações internas usando as ferramentas antes de responder.",
       messages,
       tools: mcpTools.length > 0 ? mcpTools : undefined
     });
