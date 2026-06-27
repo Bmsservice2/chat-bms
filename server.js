@@ -13,29 +13,73 @@ for (const key of requiredEnv) {
 }
 
 const anthropic = process.env.ANTHROPIC_API_KEY ? new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY }) : null;
+let discoveredEndpoint = null;
 
-// Função cirúrgica para conversar diretamente com a API JSON que o seu plugin do Obsidian estabeleceu
+// Realiza uma varredura para identificar a rota exata de POST aceita pelo seu plugin
+async function findValidEndpoint(baseUrl) {
+  if (discoveredEndpoint) return discoveredEndpoint;
+
+  const candidatePaths = ["/mcp", "/api/mcp", "/"];
+  let finalLog = "";
+
+  for (const path of candidatePaths) {
+    const testUrl = `${baseUrl}${path}`;
+    try {
+      console.log(`Verificando rota POST: ${testUrl}`);
+      const res = await fetch(testUrl, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${process.env.OBSIDIAN_API_KEY}`
+        },
+        body: JSON.stringify({ jsonrpc: "2.0", id: 1, method: "tools/list", params: {} })
+      });
+
+      if (res.status === 200) {
+        const data = await res.json();
+        // Se a estrutura JSON retornar ferramentas ou o protocolo RPC válido, a rota está certa
+        if (data.result || data.error?.code !== -32601) {
+          discoveredEndpoint = testUrl;
+          console.log(`[SUCESSO] Rota MCP identificada: ${discoveredEndpoint}`);
+          return discoveredEndpoint;
+        }
+      }
+      finalLog += `\n• ${testUrl} -> Status HTTP ${res.status}`;
+    } catch (e) {
+      finalLog += `\n• ${testUrl} -> Erro de rede: ${e.message}`;
+    }
+  }
+
+  // Fallback de autodescoberta: Tenta mapear o índice do plugin via GET
+  try {
+    const getRes = await fetch(`${baseUrl}/`, {
+      method: "GET",
+      headers: { "Authorization": `Bearer ${process.env.OBSIDIAN_API_KEY}` }
+    });
+    const getText = await getRes.text();
+    finalLog += `\n• Raiz GET / -> Status ${getRes.status} | Resposta: ${getText.slice(0, 100)}`;
+  } catch (e) {}
+
+  throw new Error(`O Obsidian rejeitou todas as rotas de comunicação padrão.${finalLog}`);
+}
+
 async function callObsidianPlugin(method, params = {}) {
-  const baseUrl = process.env.OBSIDIAN_MCP_URL.endsWith('/') 
-    ? process.env.OBSIDIAN_MCP_URL.slice(0, -1) 
-    : process.env.OBSIDIAN_MCP_URL;
+  const parsed = new URL(process.env.OBSIDIAN_MCP_URL);
+  const baseUrl = `${parsed.protocol}//${parsed.host}`;
+  
+  const targetUrl = await findValidEndpoint(baseUrl);
 
-  const response = await fetch(`${baseUrl}/`, {
+  const response = await fetch(targetUrl, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
       "Authorization": `Bearer ${process.env.OBSIDIAN_API_KEY}`
     },
-    body: JSON.stringify({
-      jsonrpc: "2.0",
-      id: Date.now(),
-      method,
-      params
-    })
+    body: JSON.stringify({ jsonrpc: "2.0", id: Date.now(), method, params })
   });
 
   if (!response.ok) {
-    throw new Error(`O Obsidian respondeu com status ${response.status}`);
+    throw new Error(`Erro na rota ${targetUrl} (Status ${response.status})`);
   }
 
   return response.json();
@@ -47,7 +91,7 @@ app.get("/api/status", (req, res) => {
 
 app.post("/api/chat", async (req, res) => {
   if (missingVars.length > 0) {
-    return res.status(500).json({ error: `Variáveis ausentes no Coolify: ${missingVars.join(", ")}` });
+    return res.status(500).json({ error: `Variáveis ausentes: ${missingVars.join(", ")}` });
   }
 
   if (req.headers["x-app-password"] !== process.env.APP_PASSWORD) {
@@ -55,10 +99,10 @@ app.post("/api/chat", async (req, res) => {
   }
 
   try {
-    console.log("Solicitando lista de ferramentas ao plugin do Obsidian...");
+    console.log("Sincronizando ambiente com o Obsidian...");
     const toolsData = await callObsidianPlugin("tools/list");
     
-    const mcpTools = (toolsData.result?.tools || []).map(t => ({
+    const mcpTools = (toolsData.result?.tools || toolsData.tools || []).map(t => ({
       name: t.name,
       description: t.description,
       input_schema: t.inputSchema || t.input_schema
@@ -78,14 +122,13 @@ app.post("/api/chat", async (req, res) => {
     const response = await anthropic.messages.create({
       model: process.env.CLAUDE_MODEL || "claude-3-5-sonnet-20241022",
       max_tokens: Number(process.env.MAX_TOKENS || 3000),
-      system: "Você é o Assistente Claude conectado ao Obsidian da BMS Service. Sempre consulte as informações internas usando as ferramentas antes de responder para garantir precisão técnica.",
+      system: "Você é o Assistente Claude conectado ao Obsidian corporativo da BMS Service. Consulte as informações internas usando as ferramentas antes de responder.",
       messages,
       tools: mcpTools.length > 0 ? mcpTools : undefined
     });
 
     if (response.stop_reason === "tool_use") {
       const toolUse = response.content.find(c => c.type === "tool_use");
-      console.log(`Claude solicitou o uso da ferramenta: ${toolUse.name}`);
       
       const toolResultData = await callObsidianPlugin("tools/call", {
         name: toolUse.name,
