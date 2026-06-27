@@ -1,6 +1,6 @@
 import express from "express";
-import { Client } from "@modelcontextprotocol/sdk/client/index.js";
-import { StdioClientTransport } from "@modelcontextprotocol/sdk/client/stdio.js";
+import fs from "fs";
+import path from "path";
 import Anthropic from "@anthropic-ai/sdk";
 
 const app = express();
@@ -15,24 +15,44 @@ for (const key of requiredEnv) {
 }
 
 const anthropic = process.env.ANTHROPIC_API_KEY ? new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY }) : null;
-let mcpClient = null;
+const VAULT_PATH = "/app/obsidian_vault";
 
-async function connectMCP() {
-  if (mcpClient) return mcpClient;
+// Definição manual e nativa das ferramentas para evitar dependência do SDK quebrado
+const localTools = [
+  {
+    name: "list_notes",
+    description: "Lista todas as notas e arquivos disponíveis na base de conhecimento técnica do Obsidian.",
+    input_schema: { type: "object", properties: {} }
+  },
+  {
+    name: "read_note",
+    description: "Lê o conteúdo completo de uma nota específica do Obsidian para extrair procedimentos ou informações técnicas.",
+    input_schema: {
+      type: "object",
+      properties: {
+        filename: { type: "string", description: "Nome do arquivo com extensão (ex: projetos.md ou n8n_workflow.md)" }
+      },
+      required: ["filename"]
+    }
+  }
+];
 
-  console.log("Iniciando Servidor MCP nativo via Stdio...");
-  
-  // Executa o motor MCP diretamente sobre a pasta mapeada do Obsidian
-  const transport = new StdioClientTransport({
-    command: "node",
-    args: ["./node_modules/@modelcontextprotocol/server-filesystem/dist/index.js", "/app/obsidian_vault"]
-  });
+// Funções locais de leitura de disco usando o core nativo do Node.js
+function listNotesLocal() {
+  if (!fs.existsSync(VAULT_PATH)) {
+    return { error: `Pasta ${VAULT_PATH} não encontrada. Verifique o Storage no Coolify.` };
+  }
+  const files = fs.readdirSync(VAULT_PATH);
+  return { files: files.filter(f => !f.startsWith('.')) };
+}
 
-  mcpClient = new Client({ name: "chat-client", version: "1.0.0" }, { capabilities: {} });
-  await mcpClient.connect(transport);
-  
-  console.log("Conexão com a base de conhecimento estabelecida localmente via Stdio.");
-  return mcpClient;
+function readNoteLocal(filename) {
+  const safePath = path.join(VAULT_PATH, path.basename(filename));
+  if (!fs.existsSync(safePath)) {
+    return { error: `Arquivo ${filename} não encontrado no cofre corporativo.` };
+  }
+  const content = fs.readFileSync(safePath, "utf-8");
+  return { filename, content };
 }
 
 app.get("/api/status", (req, res) => {
@@ -44,14 +64,6 @@ app.post("/api/chat", async (req, res) => {
   if (req.headers["x-app-password"] !== process.env.APP_PASSWORD) return res.status(401).json({ error: "Senha inválida." });
 
   try {
-    const client = await connectMCP();
-    const toolsResponse = await client.listTools();
-    const mcpTools = toolsResponse.tools.map(t => ({
-      name: t.name,
-      description: t.description,
-      input_schema: t.inputSchema
-    }));
-
     const userMessages = Array.isArray(req.body.messages) ? req.body.messages : [];
     const messages = userMessages
       .filter(msg => msg && ["user", "assistant"].includes(msg.role))
@@ -60,35 +72,50 @@ app.post("/api/chat", async (req, res) => {
 
     if (messages.length === 0) return res.status(400).json({ error: "Mensagem vazia." });
 
+    // Chamada inicial para o Claude com a especificação das ferramentas locais
     const response = await anthropic.messages.create({
       model: process.env.CLAUDE_MODEL || "claude-3-5-sonnet-20241022",
       max_tokens: Number(process.env.MAX_TOKENS || 3000),
-      system: "Você é o assistente Claude conectado à base de conhecimento da BMS Service. Sempre consulte os arquivos locais usando as ferramentas disponíveis antes de responder.",
+      system: "Você é o Assistente Claude conectado de forma nativa aos arquivos do Obsidian da BMS Service. Sempre use as ferramentas disponíveis para listar e ler as notas técnicas antes de responder ao usuário.",
       messages,
-      tools: mcpTools.length > 0 ? mcpTools : undefined
+      tools: localTools
     });
 
+    // Se o Claude decidir usar alguma ferramenta para ler seu cofre
     if (response.stop_reason === "tool_use") {
       const toolUse = response.content.find(c => c.type === "tool_use");
-      const toolResult = await client.callTool({ name: toolUse.name, arguments: toolUse.input });
-      
-      messages.push({ role: "assistant", content: response.content });
-      messages.push({ role: "user", content: [{ type: "tool_result", tool_use_id: toolUse.id, content: JSON.stringify(toolResult) }] });
+      let toolResult = {};
 
+      console.log(`[BMS Execute] Claude chamou a ferramenta local: ${toolUse.name}`);
+      
+      if (toolUse.name === "list_notes") {
+        toolResult = listNotesLocal();
+      } else if (toolUse.name === "read_note") {
+        toolResult = readNoteLocal(toolUse.input.filename);
+      }
+
+      messages.push({ role: "assistant", content: response.content });
+      messages.push({
+        role: "user",
+        content: [{ type: "tool_result", tool_use_id: toolUse.id, content: JSON.stringify(toolResult) }]
+      });
+
+      // Segunda chamada enviando o conteúdo lido do disco para o Claude formular a resposta técnica
       const finalResponse = await anthropic.messages.create({
         model: process.env.CLAUDE_MODEL || "claude-3-5-sonnet-20241022",
         max_tokens: Number(process.env.MAX_TOKENS || 3000),
         messages,
-        tools: mcpTools
+        tools: localTools
       });
+      
       return res.json({ reply: finalResponse.content.find(c => c.type === "text")?.text || "" });
     }
 
     res.json({ reply: response.content.find(c => c.type === "text")?.text || "Processado." });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: `Erro na execução do MCP local: ${error.message}` });
+    console.error("Erro na execução local:", error);
+    res.status(500).json({ error: `Erro na execução do MCP nativo: ${error.message}` });
   }
 });
 
-app.listen(3000, () => console.log("Servidor ativo na porta 3000."));
+app.listen(3000, () => console.log("Servidor ativo e consolidado na porta 3000."));
