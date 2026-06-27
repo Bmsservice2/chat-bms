@@ -15,8 +15,6 @@ for (const key of requiredEnv) {
 }
 
 const anthropic = process.env.ANTHROPIC_API_KEY ? new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY }) : null;
-
-// CORREÇÃO CIRÚRGICA: Aponta diretamente para a pasta interna do cofre ativo no Obsidian
 const VAULT_PATH = "/app/obsidian_vault/BaseConhecimento";
 
 // Barramento expandido de ferramentas locais com capacidades de escrita e estruturação
@@ -133,9 +131,23 @@ app.get("/api/status", (req, res) => {
   res.json({ status: missingVars.length === 0 ? "OK" : "CONFIG_INCOMPLETA" });
 });
 
+// Fornece a árvore bruta de arquivos para montagem dinâmica de subpastas no HTML
 app.get("/api/notes", (req, res) => {
   try {
     res.json(listNotesLocal());
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// Rota de visualização direta para o painel central do front-end
+app.get("/api/note-content", (req, res) => {
+  const filename = req.query.file;
+  if (!filename) return res.status(400).json({ error: "Parâmetro 'file' obrigatório." });
+  try {
+    const result = readNoteLocal(filename);
+    if (result.error) return res.status(404).json(result);
+    res.json(result);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
