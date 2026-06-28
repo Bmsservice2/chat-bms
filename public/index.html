@@ -7,9 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <script>
-        tailwind.config = {
-            darkMode: 'class'
-        }
+        tailwind.config = { darkMode: 'class' };
         if (!localStorage.getItem("theme") || localStorage.getItem("theme") === "dark") {
             document.documentElement.classList.add("dark");
             localStorage.setItem("theme", "dark");
@@ -45,9 +43,7 @@
 
     <header class="bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 h-16 min-h-16 flex items-center justify-between px-6 z-20 shadow-xs">
         <div class="flex items-center gap-3">
-            <div class="bg-blue-600 p-2.5 rounded-xl text-white shadow-sm shadow-blue-300 dark:shadow-none">
-                <i data-lucide="brain-circuit" class="w-5 h-5"></i>
-            </div>
+            <div class="bg-blue-600 p-2.5 rounded-xl text-white shadow-sm shadow-blue-300 dark:shadow-none"><i data-lucide="brain-circuit" class="w-5 h-5"></i></div>
             <span class="font-black text-xl tracking-tight text-slate-900 dark:text-white">BMS <span class="text-blue-600 font-medium">Knowledge</span></span>
         </div>
         
@@ -210,11 +206,11 @@
 
             <div class="p-3 bg-amber-50/50 dark:bg-slate-800/30 border-b border-amber-100/60 dark:border-slate-800 flex flex-col gap-1.5">
                 <label class="text-[9px] font-black text-amber-800 dark:text-amber-400 uppercase tracking-widest">Token de Validação Local</label>
-                <input type="password" id="app-password" value="" placeholder="Insira a chave operacional do cofre..." class="w-full bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-lg px-3 py-1.5 text-xs font-mono text-slate-700 dark:text-slate-300 focus:outline-none">
+                <input type="password" id="app-password" value="" placeholder="Insira a chave operacional..." class="w-full bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-lg px-3 py-1.5 text-xs font-mono text-slate-700 dark:text-slate-300 focus:outline-none">
             </div>
 
             <div id="chat-messages" class="flex-1 overflow-y-auto p-4 flex flex-col gap-4 bg-[#fafafa] dark:bg-slate-950 select-text no-scrollbar">
-                <div class="w-full flex justify-start">
+                <div class="w-full flex justify-start shrink-0">
                     <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 rounded-2xl rounded-tl-none p-3.5 text-xs max-w-[90%] shadow-xs leading-relaxed">
                         Sincronização efetuada. Selecione uma pasta ou peça do **Cofre** para iniciar a auditoria ou envie instruções estruturadas abaixo.
                     </div>
@@ -259,20 +255,12 @@
         const viewRaw = document.getElementById("view-raw");
         const activeNoteTitle = document.getElementById("active-note-title");
         const activeNoteMeta = document.getElementById("active-note-meta");
-        const metaSummary = document.getElementById("meta-summary");
-        const metaPoints = document.getElementById("meta-points");
-        const circleProgress = document.getElementById("circle-progress");
-        const circleText = document.getElementById("circle-text");
-        const analysisStatusDesc = document.getElementById("analysis-status-desc");
         const favoriteStarBtn = document.getElementById("btn-favorite-star");
 
-        const btnVaultUpload = document.getElementById("btn-vault-upload");
         const globalVaultUpload = document.getElementById("global-vault-upload");
-        const btnChatAttach = document.getElementById("btn-chat-attach");
         const chatContextUpload = document.getElementById("chat-context-upload");
         const chatAttachmentArea = document.getElementById("chat-attachment-area");
         const chatAttachmentName = document.getElementById("chat-attachment-name");
-        const btnRemoveAttachment = document.getElementById("btn-remove-attachment");
 
         const canvas = document.getElementById("graph-canvas");
         const ctx = canvas.getContext("2d");
@@ -286,10 +274,10 @@
         let rawContentBuffer = "";
         let contextMenuSelectedPath = null;
         
-        let favoriteItems = JSON.parse(localStorage.getItem("bms_favorites") || "{}");
-        let collapsedFolders = JSON.parse(localStorage.getItem("bms_collapsed") || "{}");
+        let favoriteItems = JSON.parse(localStorage.getItem("bms_favorites_map") || "{}");
+        let collapsedFolders = JSON.parse(localStorage.getItem("bms_collapsed_folders") || "{}");
 
-        // LÓGICA DOS RESIZERS (ARRASTAR COLUNAS)
+        // LÓGICA DOS RESIZERS
         const sidebarLeft = document.getElementById('sidebar-left');
         const sidebarRight = document.getElementById('sidebar-right');
         const resizerLeft = document.getElementById('resizer-left');
@@ -314,15 +302,11 @@
             if (!isResizingLeft && !isResizingRight) return;
             if (isResizingLeft) {
                 const newWidth = e.clientX;
-                if (newWidth > 180 && newWidth < window.innerWidth * 0.5) {
-                    sidebarLeft.style.width = `${newWidth}px`;
-                }
+                if (newWidth > 180 && newWidth < window.innerWidth * 0.5) sidebarLeft.style.width = `${newWidth}px`;
             }
             if (isResizingRight) {
                 const newWidth = window.innerWidth - e.clientX;
-                if (newWidth > 220 && newWidth < window.innerWidth * 0.5) {
-                    sidebarRight.style.width = `${newWidth}px`;
-                }
+                if (newWidth > 220 && newWidth < window.innerWidth * 0.5) sidebarRight.style.width = `${newWidth}px`;
             }
             if (canvas) resizeCanvas();
         });
@@ -378,7 +362,7 @@
                 rawContentBuffer = "";
                 viewDoc.innerHTML = `<div class="text-center text-slate-400 my-20 dark:text-slate-500">Raiz selecionada. Novos diretórios e uploads serão gravados na pasta principal.</div>`;
                 updateFavoriteStarUI();
-                highlightSelectedRow(null);
+                buildNotesTree();
             }
         }
 
@@ -390,7 +374,7 @@
             } else {
                 favoriteItems[cleanPath] = true;
             }
-            localStorage.setItem("bms_favorites", JSON.stringify(favoriteItems));
+            localStorage.setItem("bms_favorites_map", JSON.stringify(favoriteItems));
             updateFavoriteStarUI();
             buildNotesTree();
         }
@@ -419,7 +403,7 @@
             const blob = new Blob([rawContentBuffer], { type: "text/markdown;charset=utf-8" });
             const link = document.createElement("a");
             link.href = URL.createObjectURL(blob);
-            link.download = selectedFileId.split('/').pop();
+            link.download = selectedFileId.replace(/\/$/, "").split('/').pop();
             link.click();
         }
 
@@ -484,7 +468,7 @@
             document.getElementById("modal-title").innerText = "Renomear / Mover Item";
             document.getElementById("modal-body-content").innerHTML = `
                 <p class="mb-1">Insira o novo caminho completo do registro:</p>
-                <input type="text" id="modal-input-field" value="${contextMenuSelectedPath}" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-2 text-xs font-semibold focus:outline-none text-slate-800 dark:text-white">
+                <input type="text" id="modal-input-field" value="${contextMenuSelectedPath.replace(/\/$/, "")}" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-2 text-xs font-semibold focus:outline-none text-slate-800 dark:text-white">
             `;
             modal.classList.remove("hidden");
             document.getElementById("modal-confirm-btn").onclick = async () => {
@@ -500,7 +484,7 @@
             document.getElementById("custom-context-menu").classList.add("hidden");
             const modal = document.getElementById("custom-dialog-modal");
             document.getElementById("modal-title").innerText = "Confirmar Exclusão";
-            document.getElementById("modal-body-content").innerHTML = `<p>Tem certeza que deseja apagar permanentemente o item <strong>${contextMenuSelectedPath}</strong> do cofre?</p>`;
+            document.getElementById("modal-body-content").innerHTML = `<p>Tem certeza que deseja apagar permanentemente o item <strong>${contextMenuSelectedPath.replace(/\/$/, "")}</strong> do cofre?</p>`;
             modal.classList.remove("hidden");
             document.getElementById("modal-confirm-btn").onclick = async () => {
                 await deleteItem(contextMenuSelectedPath);
@@ -590,23 +574,7 @@
             }
         }
 
-        function highlightSelectedRow(targetFilename) {
-            document.querySelectorAll(".tree-row-container").forEach(row => {
-                if (!targetFilename) {
-                    row.className = "tree-row-container group flex items-center justify-between w-full rounded-xl p-0.5 border border-transparent hover:bg-slate-100 dark:hover:bg-slate-800 transition-all text-left text-slate-600 dark:text-slate-300";
-                    return;
-                }
-                const rowPath = row.getAttribute("data-path").replace(/\/$/, "");
-                const cleanTarget = targetFilename.replace(/\/$/, "");
-                if (rowPath === cleanTarget) {
-                    row.className = "tree-row-container group flex items-center justify-between w-full rounded-xl p-0.5 border transition-all text-left bg-blue-50/50 dark:bg-blue-950/30 border-blue-500 dark:border-blue-400 text-blue-600 dark:text-blue-400 shadow-xs";
-                } else {
-                    row.className = "tree-row-container group flex items-center justify-between w-full rounded-xl p-0.5 border border-transparent hover:bg-slate-100 dark:hover:bg-slate-800 transition-all text-left text-slate-600 dark:text-slate-300";
-                }
-            });
-        }
-
-        // Lógica de GAVETAS (Collapsible Folders) implementada no construtor
+        // Lógica da Árvore de Diretórios (Gavetas e Seleção Exata)
         async function buildNotesTree() {
             try {
                 const res = await fetch("/api/notes");
@@ -615,17 +583,17 @@
                     fileTree.innerHTML = "";
                     let items = data.items;
                     
-                    // Ordena alfabeticamente garantindo hierarquia
                     items.sort((a, b) => a.path.localeCompare(b.path));
 
                     if (currentFilterType === "md") items = items.filter(i => i.type === "directory" || i.path.endsWith(".md"));
                     if (currentFilterType === "pdf") items = items.filter(i => i.type === "directory" || i.path.endsWith(".pdf"));
 
                     items.forEach(item => {
-                        // Verifica se este item está dentro de uma gaveta fechada (collapsed)
                         let pathParts = item.path.split('/');
                         let isHidden = false;
                         let currentPathCheck = "";
+                        
+                        // Checa as gavetas
                         for (let i = 0; i < pathParts.length - 1; i++) {
                             currentPathCheck += (i === 0 ? "" : "/") + pathParts[i];
                             if (collapsedFolders[currentPathCheck]) {
@@ -634,9 +602,14 @@
                             }
                         }
 
-                        if (isHidden) return; // Se a gaveta pai estiver fechada, não renderiza
+                        if (isHidden) return;
 
                         const row = document.createElement("div");
+                        const cleanItemPath = item.path.replace(/\/$/, "");
+                        const cleanSelectedPath = selectedFileId ? selectedFileId.replace(/\/$/, "") : "";
+                        const isSelected = (cleanItemPath === cleanSelectedPath);
+                        
+                        row.className = `tree-row-container group flex items-center justify-between w-full rounded-xl p-0.5 border transition-all text-left ${isSelected ? 'bg-blue-50/50 dark:bg-blue-950/30 border-blue-500 dark:border-blue-400 text-blue-600 dark:text-blue-400 shadow-xs' : 'border-transparent hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300'}`;
                         row.setAttribute("data-path", item.path);
 
                         const btn = document.createElement("button");
@@ -647,14 +620,12 @@
                         btn.style.paddingLeft = `${depth * 14 + 4}px`;
                         
                         const icon = isDir ? "folder" : (item.path.endsWith('.pdf') ? "file-text" : "file");
-                        const iconColor = isDir ? "text-amber-500" : (item.path.endsWith('.pdf') ? "text-red-400" : "text-slate-400");
+                        const iconColor = isDir ? "text-amber-500" : (item.path.endsWith('.pdf') ? "text-red-400" : (isSelected ? "text-blue-500" : "text-slate-400"));
                         
-                        const cleanPath = item.path.replace(/\/$/, "");
-                        const hasStar = !!favoriteItems[cleanPath];
+                        const hasStar = !!favoriteItems[cleanItemPath];
                         const starBadge = hasStar ? `<i data-lucide="star" class="w-3 h-3 text-amber-500 fill-amber-500 inline shrink-0 ml-1"></i>` : "";
 
-                        // REQUISITO: Ícone da Gaveta
-                        const isCollapsed = !!collapsedFolders[cleanPath];
+                        const isCollapsed = !!collapsedFolders[cleanItemPath];
                         const chevronIcon = isDir ? `<i data-lucide="${isCollapsed ? 'chevron-right' : 'chevron-down'}" class="w-3.5 h-3.5 text-slate-400 shrink-0"></i>` : `<div class="w-3.5 shrink-0"></div>`;
 
                         const displayName = isDir ? item.path.slice(0, -1).split('/').pop() : item.path.split('/').pop();
@@ -662,19 +633,20 @@
                         btn.innerHTML = `${chevronIcon}<i data-lucide="${icon}" class="w-3.5 h-3.5 ${iconColor} shrink-0"></i> <span class="truncate">${displayName}</span> ${starBadge}`;
                         
                         if (!isDir) {
-                            btn.onclick = (e) => { e.stopPropagation(); loadNoteContent(item.path); };
+                            btn.onclick = (e) => { 
+                                e.stopPropagation(); 
+                                loadNoteContent(item.path); 
+                            };
                         } else {
                             btn.onclick = (e) => { 
                                 e.stopPropagation(); 
-                                // Alterna a Gaveta
-                                collapsedFolders[cleanPath] = !collapsedFolders[cleanPath];
-                                localStorage.setItem("bms_collapsed", JSON.stringify(collapsedFolders));
+                                collapsedFolders[cleanItemPath] = !collapsedFolders[cleanItemPath];
+                                localStorage.setItem("bms_collapsed_folders", JSON.stringify(collapsedFolders));
 
                                 selectedFileId = item.path; 
                                 activeNoteTitle.innerText = displayName;
-                                activeNoteMeta.innerText = `Pasta ativa: BaseConhecimento/${item.path}`;
+                                activeNoteMeta.innerText = `Pasta ativa: BaseConhecimento/${cleanItemPath}`;
                                 updateFavoriteStarUI();
-                                highlightSelectedRow(selectedFileId);
                                 buildNotesTree();
                             };
                         }
@@ -689,7 +661,6 @@
                         fileTree.appendChild(row);
                     });
                     lucide.createIcons();
-                    if (selectedFileId) highlightSelectedRow(selectedFileId);
                 }
             } catch (err) { console.error(err); }
         }
@@ -741,10 +712,8 @@
                 let dist = Math.sqrt(dx*dx + dy*dy);
                 if (dist > 0) {
                     let force = 0.025 * dist;
-                    let fx = (dx / dist) * force;
-                    let fy = (dy / dist) * force;
-                    if (edge.sourceNode !== draggedNode) { edge.sourceNode.vx += fx; edge.sourceNode.vy += fy; }
-                    if (edge.targetNode !== draggedNode) { edge.targetNode.vx -= fx; edge.targetNode.vy -= fy; }
+                    if (edge.sourceNode !== draggedNode) { edge.sourceNode.vx += (dx / dist) * force; edge.sourceNode.vy += (dy / dist) * force; }
+                    if (edge.targetNode !== draggedNode) { edge.targetNode.vx -= (dx / dist) * force; edge.targetNode.vy -= (dy / dist) * force; }
                 }
             });
             graphData.nodes.forEach(node => {
@@ -799,8 +768,8 @@
             const rect = canvas.getBoundingClientRect(); 
             const mx = e.clientX - rect.left; 
             const my = e.clientY - rect.top;
-            for (let node of graphData.nodes) { 
-                if (Math.sqrt((node.x - mx)**2 + (node.y - mouseY)**2) < 18) { draggedNode = node; break; } 
+            for (let n of graphData.nodes) { 
+                if (Math.sqrt((n.x - mx)**2 + (n.y - my)**2) < 18) { draggedNode = n; break; } 
             }
         });
         canvas.addEventListener("mousemove", (e) => { 
@@ -820,6 +789,7 @@
             } catch(e){} 
         }
 
+        // Função Limpa de Indexação de Conteúdo de Documento
         async function loadNoteContent(filename) {
             selectedFileId = filename;
             const shortName = filename.split('/').pop();
@@ -833,7 +803,7 @@
             switchTab('doc');
             
             updateFavoriteStarUI();
-            highlightSelectedRow(filename);
+            buildNotesTree();
 
             if (filename.toLowerCase().endsWith('.pdf')) {
                 viewDoc.innerHTML = `<iframe src="/api/note-raw?file=${encodeURIComponent(filename)}" class="w-full h-[380px] border-0 rounded-xl bg-white"></iframe>`;
@@ -847,7 +817,7 @@
 
             try {
                 const res = await fetch(`/api/note-content?file=${encodeURIComponent(filename)}`);
-                if (!res.ok) throw new Error(`Erro HTTP: ${res.status}`);
+                if (!res.ok) throw new Error(`Status de erro HTTP: ${res.status}`);
                 const data = await res.json();
                 
                 if (data.error) throw new Error(data.error);
@@ -862,7 +832,7 @@
                             <h3 class="font-bold text-sm tracking-wide uppercase text-slate-800 dark:text-white">BMS SERVICE - PARECER JURÍDICO</h3>
                             <p class="text-[10px] text-slate-400 mt-0.5">Identificador de Volume: Cofre/${filename}</p>
                         </div>
-                        <div class="space-y-3 text-[11px] text-slate-700 dark:text-slate-300 whitespace-pre-wrap">${fileContent || 'Este documento não possui registros textuais.'}</div>
+                        <div class="space-y-3 text-[11px] text-slate-700 dark:text-slate-300 whitespace-pre-wrap">${fileContent || 'Este documento não possui registros textuais escritos.'}</div>
                     </div>
                 `;
 
@@ -872,13 +842,13 @@
                 document.getElementById("analysis-status-desc").innerText = "Análise documental ok.";
             } catch (err) {
                 console.error(err);
-                viewDoc.innerHTML = `<div class="text-center text-red-500 my-20 font-bold">Erro ao abrir visualização: ${err.message}</div>`;
-                viewRaw.innerText = `Falha: ${err.message}`;
+                viewDoc.innerHTML = `<div class="text-center text-red-500 my-20 font-bold">Falha ao abrir visualização: ${err.message}</div>`;
+                viewRaw.innerText = `Erro Crítico: ${err.message}`;
             }
         }
 
-        btnVaultUpload.onclick = () => globalVaultUpload.click();
-        globalVaultUpload.onchange = async (e) => {
+        document.getElementById("btn-vault-upload").onclick = () => document.getElementById("global-vault-upload").click();
+        document.getElementById("global-vault-upload").onchange = async (e) => {
             const file = e.target.files[0]; if (!file) return;
             let folder = "";
             if (selectedFileId && selectedFileId.endsWith("/")) folder = selectedFileId;
@@ -895,22 +865,22 @@
             } catch(err){}
         };
 
-        btnChatAttach.onclick = () => chatContextUpload.click();
-        chatContextUpload.onchange = (e) => {
+        document.getElementById("btn-chat-attach").onclick = () => document.getElementById("chat-context-upload").click();
+        document.getElementById("chat-context-upload").onchange = (e) => {
             const file = e.target.files[0]; if (!file) return;
             const reader = new FileReader();
             reader.onload = (event) => {
                 pendingChatAttachment = { name: file.name, content: event.target.result };
-                chatAttachmentName.innerText = file.name;
-                chatAttachmentArea.classList.remove("hidden");
+                document.getElementById("chat-attachment-name").innerText = file.name;
+                document.getElementById("chat-attachment-area").classList.remove("hidden");
             };
             reader.readAsText(file);
         };
 
-        btnRemoveAttachment.onclick = () => {
+        document.getElementById("btn-remove-attachment").onclick = () => {
             pendingChatAttachment = null;
-            chatAttachmentArea.classList.add("hidden");
-            chatContextUpload.value = "";
+            document.getElementById("chat-attachment-area").classList.add("hidden");
+            document.getElementById("chat-context-upload").value = "";
         };
 
         async function sendChatMessage() {
@@ -945,17 +915,18 @@
             }
         }
 
+        // Fix CSS nas mensagens de chat (Impedir que sumam)
         function renderMessageBlock(role, text) {
             const id = "msg-" + Date.now();
             const wrapper = document.createElement("div");
-            wrapper.className = `w-full flex ${role === 'user' ? 'justify-end' : 'justify-start'}`;
+            wrapper.className = `w-full flex shrink-0 ${role === 'user' ? 'justify-end' : 'justify-start'}`;
             wrapper.id = id;
             
             const bubble = document.createElement("div");
             if (role === "user") {
-                bubble.className = "bg-blue-600 text-white rounded-2xl rounded-tr-none p-3 text-xs max-w-[85%] font-semibold leading-relaxed whitespace-pre-wrap shadow-xs select-text text-left";
+                bubble.className = "bg-blue-600 text-white rounded-2xl rounded-tr-none p-3 text-xs max-w-[85%] font-semibold leading-relaxed whitespace-pre-wrap shadow-xs select-text text-left break-words";
             } else {
-                bubble.className = "bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 rounded-2xl rounded-tl-none p-3 text-xs max-w-[85%] shadow-xs leading-relaxed whitespace-pre-wrap select-text text-left";
+                bubble.className = "bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 rounded-2xl rounded-tl-none p-3 text-xs max-w-[85%] shadow-xs leading-relaxed whitespace-pre-wrap select-text text-left break-words";
             }
             bubble.innerText = text;
             wrapper.appendChild(bubble);
