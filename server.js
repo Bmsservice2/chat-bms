@@ -66,10 +66,9 @@ function getSafePath(targetPath) {
   return resolvedPath;
 }
 
-// Leitura inteligente de arquivos E PASTAS (Pastas retornam com uma "/" no final)
 function listNotesLocal() {
   if (!fs.existsSync(VAULT_PATH)) return { error: `Cofre não localizado.` };
-  const files = [];
+  const items = [];
   const scanDir = (dir) => {
     const list = fs.readdirSync(dir);
     list.forEach(file => {
@@ -78,15 +77,15 @@ function listNotesLocal() {
       const relativePath = path.relative(VAULT_PATH, fullPath).replace(/\\/g, '/');
       const stat = fs.statSync(fullPath);
       if (stat && stat.isDirectory()) {
-        files.push(relativePath + "/"); // Identificador de pasta
+        items.push({ path: relativePath + "/", type: "directory" });
         scanDir(fullPath);
       } else if (file.endsWith('.md') || file.endsWith('.txt') || file.endsWith('.pdf')) {
-        files.push(relativePath);
+        items.push({ path: relativePath, type: "file" });
       }
     });
   };
   scanDir(VAULT_PATH);
-  return { files };
+  return { items };
 }
 
 function readNoteLocal(filename) {
@@ -124,7 +123,6 @@ app.get("/api/note-raw", (req, res) => {
   } catch (err) { res.status(500).json({ error: err.message }); }
 });
 
-// ROTAS OPERACIONAIS DOS TRÊS PONTOS (Faltava isso no seu servidor antigo)
 app.post("/api/create-folder", (req, res) => {
   try {
     const safePath = getSafePath(req.body.foldername);
@@ -160,22 +158,22 @@ app.post("/api/rename-item", (req, res) => {
 app.get("/api/graph-data", (req, res) => {
   try {
     const check = listNotesLocal();
-    if (check.error || !check.files) return res.json({ nodes: [], edges: [] });
+    if (check.error || !check.items) return res.json({ nodes: [], edges: [] });
     
-    const files = check.files.filter(f => !f.endsWith("/")); // Filtra pastas
-    const nodes = files.map(f => ({ id: f, label: f.split('/').pop().replace(/\.(md|pdf|txt)$/i, "") }));
+    const files = check.items.filter(i => i.type === "file");
+    const nodes = files.map(f => ({ id: f.path, label: f.path.split('/').pop().replace(/\.(md|pdf|txt)$/i, "") }));
     const edges = [];
 
     files.forEach(file => {
-      if (file.toLowerCase().endsWith('.pdf')) return;
+      if (file.path.toLowerCase().endsWith('.pdf')) return;
       try {
-        const fullContent = fs.readFileSync(getSafePath(file), "utf-8");
+        const fullContent = fs.readFileSync(getSafePath(file.path), "utf-8");
         const linkRegex = /\[\[(.*?)\]\]/g;
         let match;
         while ((match = linkRegex.exec(fullContent)) !== null) {
           const targetLabel = match[1].trim().replace(/\.(md|pdf|txt)$/i, "");
           const targetNode = nodes.find(n => n.label === targetLabel || n.id === match[1].trim());
-          if (targetNode) edges.push({ source: file, target: targetNode.id });
+          if (targetNode) edges.push({ source: file.path, target: targetNode.id });
         }
       } catch (e) {}
     });
