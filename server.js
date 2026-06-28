@@ -19,18 +19,19 @@ for (const key of requiredEnv) {
 const anthropic = process.env.ANTHROPIC_API_KEY ? new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY }) : null;
 const VAULT_PATH = "/app/obsidian_vault/BaseConhecimento";
 
+// FERRAMENTAS DO MODO DEUS (Todas as permissões ativas)
 const localTools = [
   {
     name: "list_notes",
-    description: "Lista processos e documentos jurídicos do Cofre.",
+    description: "Lista processos, pastas e documentos jurídicos do Cofre.",
     input_schema: { type: "object", properties: {} }
   },
   {
     name: "read_note",
-    description: "Lê o conteúdo completo de uma peça processual do Cofre.",
+    description: "Lê o conteúdo completo de um documento do Cofre.",
     input_schema: {
       type: "object",
-      properties: { filename: { type: "string", description: "Nome do arquivo com extensão" } },
+      properties: { filename: { type: "string", description: "Caminho do arquivo" } },
       required: ["filename"]
     }
   },
@@ -39,43 +40,56 @@ const localTools = [
     description: "Cria um novo documento no Cofre.",
     input_schema: {
       type: "object",
-      properties: {
-        filename: { type: "string" },
-        content: { type: "string" }
-      },
+      properties: { filename: { type: "string" }, content: { type: "string" } },
       required: ["filename", "content"]
     }
   },
   {
     name: "edit_note",
-    description: "Edita uma peça existente no Cofre.",
+    description: "Edita e sobrescreve uma peça existente no Cofre.",
     input_schema: {
       type: "object",
-      properties: {
-        filename: { type: "string" },
-        content: { type: "string" }
-      },
+      properties: { filename: { type: "string" }, content: { type: "string" } },
       required: ["filename", "content"]
     }
   },
   {
     name: "delete_item",
-    description: "Exclui permanentemente um arquivo ou pasta do Cofre a pedido do usuário.",
+    description: "Exclui permanentemente um arquivo ou pasta do Cofre.",
     input_schema: {
       type: "object",
-      properties: {
-        targetPath: { type: "string", description: "Caminho exato do arquivo ou pasta" }
-      },
+      properties: { targetPath: { type: "string", description: "Caminho do arquivo ou pasta" } },
       required: ["targetPath"]
+    }
+  },
+  {
+    name: "rename_item",
+    description: "Renomeia ou move um arquivo ou pasta.",
+    input_schema: {
+      type: "object",
+      properties: { oldPath: { type: "string" }, newPath: { type: "string" } },
+      required: ["oldPath", "newPath"]
+    }
+  },
+  {
+    name: "create_folder",
+    description: "Cria uma nova pasta no Cofre.",
+    input_schema: {
+      type: "object",
+      properties: { foldername: { type: "string" } },
+      required: ["foldername"]
     }
   }
 ];
 
 function getSafePath(targetPath) {
   const resolvedPath = path.resolve(VAULT_PATH, targetPath);
-  if (!resolvedPath.startsWith(VAULT_PATH)) throw new Error("Acesso negado.");
+  if (!resolvedPath.startsWith(VAULT_PATH)) throw new Error("Acesso negado de segurança.");
   return resolvedPath;
 }
+
+// Filtro blindado que corrige os caminhos malucos que a IA pode tentar usar
+const cleanPath = (p) => p.replace(/^(Cofre\/|BaseConhecimento\/)/i, '').trim();
 
 function listNotesLocal() {
   if (!fs.existsSync(VAULT_PATH)) return { error: `Cofre não localizado.` };
@@ -100,8 +114,8 @@ function listNotesLocal() {
 }
 
 function readNoteLocal(filename) {
-  const safePath = getSafePath(filename);
-  if (!fs.existsSync(safePath)) return { error: `Documento não encontrado.` };
+  const safePath = getSafePath(cleanPath(filename));
+  if (!fs.existsSync(safePath)) return { error: `O documento ${filename} não foi encontrado no servidor.` };
   return { filename, content: fs.readFileSync(safePath, "utf-8") };
 }
 
@@ -128,7 +142,7 @@ app.get("/api/note-content", (req, res) => {
 app.get("/api/note-raw", (req, res) => {
   const filename = req.query.file;
   try {
-    const safePath = getSafePath(filename);
+    const safePath = getSafePath(cleanPath(filename));
     if (!fs.existsSync(safePath)) return res.status(404).json({ error: "Não encontrado." });
     res.sendFile(safePath);
   } catch (err) { res.status(500).json({ error: err.message }); }
@@ -136,7 +150,7 @@ app.get("/api/note-raw", (req, res) => {
 
 app.post("/api/create-folder", (req, res) => {
   try {
-    const safePath = getSafePath(req.body.foldername);
+    const safePath = getSafePath(cleanPath(req.body.foldername));
     fs.mkdirSync(safePath, { recursive: true });
     res.json({ success: true });
   } catch (err) { res.status(500).json({ error: err.message }); }
@@ -144,7 +158,7 @@ app.post("/api/create-folder", (req, res) => {
 
 app.post("/api/delete-item", (req, res) => {
   try {
-    const safePath = getSafePath(req.body.targetPath);
+    const safePath = getSafePath(cleanPath(req.body.targetPath));
     if (fs.existsSync(safePath)) {
       const stat = fs.statSync(safePath);
       if (stat.isDirectory()) fs.rmSync(safePath, { recursive: true, force: true });
@@ -156,8 +170,8 @@ app.post("/api/delete-item", (req, res) => {
 
 app.post("/api/rename-item", (req, res) => {
   try {
-    const safeOld = getSafePath(req.body.oldPath);
-    const safeNew = getSafePath(req.body.newPath);
+    const safeOld = getSafePath(cleanPath(req.body.oldPath));
+    const safeNew = getSafePath(cleanPath(req.body.newPath));
     if (fs.existsSync(safeOld)) {
       fs.mkdirSync(path.dirname(safeNew), { recursive: true });
       fs.renameSync(safeOld, safeNew);
@@ -194,7 +208,7 @@ app.get("/api/graph-data", (req, res) => {
 
 app.post("/api/upload-vault", (req, res) => {
   try {
-    const safePath = getSafePath(req.query.file);
+    const safePath = getSafePath(cleanPath(req.query.file));
     fs.mkdirSync(path.dirname(safePath), { recursive: true });
     fs.writeFileSync(safePath, req.body);
     res.json({ success: true });
@@ -210,10 +224,11 @@ app.post("/api/chat", async (req, res) => {
     const messages = userMessages.filter(msg => msg && ["user", "assistant"].includes(msg.role)).slice(-20);
     if (messages.length === 0) return res.status(400).json({ error: "Mensagem vazia." });
 
+    // SYSTEM PROMPT MODO DEUS: IA agora sabe que pode apagar e editar TUDO.
     let response = await anthropic.messages.create({
       model: process.env.CLAUDE_MODEL || "claude-3-5-sonnet-20241022",
       max_tokens: 3000,
-      system: "Você é o Assistente BMS, uma inteligência corporativa e jurídica. NUNCA cite marcas como Claude ou Anthropic. Chame o sistema de 'Cofre'. Você PODE ler, criar, editar e EXCLUIR arquivos e pastas quando o usuário solicitar. Você tem autonomia total nas ferramentas locais.",
+      system: "Você é o Assistente BMS, uma inteligência corporativa com ACESSO ROOT e MODO DEUS ativado. Você possui TODAS as permissões possíveis (Criar, Ler, Editar, Atualizar, Apagar, Renomear e Mover arquivos e pastas do sistema local). NUNCA diga que não tem permissão. Se o usuário pedir para excluir ou alterar um arquivo ativo, não faça perguntas desnecessárias, apenas execute a ferramenta. ATENÇÃO: NUNCA coloque o prefixo 'Cofre/' ou 'BaseConhecimento/' nos parâmetros das ferramentas, use apenas o nome exato. NUNCA cite marcas como Claude ou Anthropic.",
       messages,
       tools: localTools
     });
@@ -229,26 +244,42 @@ app.post("/api/chat", async (req, res) => {
             if (block.name === "list_notes") toolResult = listNotesLocal();
             else if (block.name === "read_note") toolResult = readNoteLocal(block.input.filename);
             else if (block.name === "create_note") {
-              const sp = getSafePath(block.input.filename);
+              const sp = getSafePath(cleanPath(block.input.filename));
               fs.mkdirSync(path.dirname(sp), { recursive: true });
               fs.writeFileSync(sp, block.input.content, "utf-8");
-              toolResult = { status: "OK" };
+              toolResult = { status: "Documento criado com sucesso." };
             }
             else if (block.name === "edit_note") {
-              const sp = getSafePath(block.input.filename);
+              const sp = getSafePath(cleanPath(block.input.filename));
               fs.writeFileSync(sp, block.input.content, "utf-8");
-              toolResult = { status: "OK" };
+              toolResult = { status: "Documento editado com sucesso." };
             }
             else if (block.name === "delete_item") {
-              const sp = getSafePath(block.input.targetPath);
+              const sp = getSafePath(cleanPath(block.input.targetPath));
               if (fs.existsSync(sp)) {
                 const stat = fs.statSync(sp);
                 if (stat.isDirectory()) fs.rmSync(sp, { recursive: true, force: true });
                 else fs.unlinkSync(sp);
-                toolResult = { status: "Arquivo ou pasta excluído com sucesso." };
+                toolResult = { status: "Arquivo/Pasta EXCLUÍDO permanentemente com sucesso." };
               } else {
-                toolResult = { error: "O item especificado não existe." };
+                toolResult = { error: "O item especificado não existe neste caminho." };
               }
+            }
+            else if (block.name === "rename_item") {
+              const oldP = getSafePath(cleanPath(block.input.oldPath));
+              const newP = getSafePath(cleanPath(block.input.newPath));
+              if (fs.existsSync(oldP)) {
+                fs.mkdirSync(path.dirname(newP), { recursive: true });
+                fs.renameSync(oldP, newP);
+                toolResult = { status: "Arquivo/Pasta renomeado e movido com sucesso." };
+              } else {
+                toolResult = { error: "O arquivo de origem não foi encontrado." };
+              }
+            }
+            else if (block.name === "create_folder") {
+              const sp = getSafePath(cleanPath(block.input.foldername));
+              fs.mkdirSync(sp, { recursive: true });
+              toolResult = { status: "Pasta criada com sucesso." };
             }
           } catch (err) { toolResult = { error: err.message }; }
           toolResults.push({ type: "tool_result", tool_use_id: block.id, content: JSON.stringify(toolResult) });
@@ -257,8 +288,8 @@ app.post("/api/chat", async (req, res) => {
       messages.push({ role: "user", content: toolResults });
       response = await anthropic.messages.create({ model: process.env.CLAUDE_MODEL || "claude-3-5-sonnet-20241022", max_tokens: 3000, messages, tools: localTools });
     }
-    res.json({ reply: response.content.find(c => c.type === "text")?.text || "OK." });
+    res.json({ reply: response.content.find(c => c.type === "text")?.text || "Operação executada em Modo Deus." });
   } catch (error) { res.status(500).json({ error: "Falha de IA." }); }
 });
 
-app.listen(3000, () => console.log("Servidor ativo."));
+app.listen(3000, () => console.log("Servidor ativo com MODO DEUS ligado."));
