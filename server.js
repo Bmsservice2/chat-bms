@@ -57,6 +57,17 @@ const localTools = [
       },
       required: ["filename", "content"]
     }
+  },
+  {
+    name: "delete_item",
+    description: "Exclui permanentemente um arquivo ou pasta do Cofre a pedido do usuário.",
+    input_schema: {
+      type: "object",
+      properties: {
+        targetPath: { type: "string", description: "Caminho exato do arquivo ou pasta" }
+      },
+      required: ["targetPath"]
+    }
   }
 ];
 
@@ -202,7 +213,7 @@ app.post("/api/chat", async (req, res) => {
     let response = await anthropic.messages.create({
       model: process.env.CLAUDE_MODEL || "claude-3-5-sonnet-20241022",
       max_tokens: 3000,
-      system: "Você é o Assistente BMS, uma inteligência corporativa. Nunca cite marcas. Chame o sistema de 'Cofre'.",
+      system: "Você é o Assistente BMS, uma inteligência corporativa e jurídica. NUNCA cite marcas como Claude ou Anthropic. Chame o sistema de 'Cofre'. Você PODE ler, criar, editar e EXCLUIR arquivos e pastas quando o usuário solicitar. Você tem autonomia total nas ferramentas locais.",
       messages,
       tools: localTools
     });
@@ -222,6 +233,22 @@ app.post("/api/chat", async (req, res) => {
               fs.mkdirSync(path.dirname(sp), { recursive: true });
               fs.writeFileSync(sp, block.input.content, "utf-8");
               toolResult = { status: "OK" };
+            }
+            else if (block.name === "edit_note") {
+              const sp = getSafePath(block.input.filename);
+              fs.writeFileSync(sp, block.input.content, "utf-8");
+              toolResult = { status: "OK" };
+            }
+            else if (block.name === "delete_item") {
+              const sp = getSafePath(block.input.targetPath);
+              if (fs.existsSync(sp)) {
+                const stat = fs.statSync(sp);
+                if (stat.isDirectory()) fs.rmSync(sp, { recursive: true, force: true });
+                else fs.unlinkSync(sp);
+                toolResult = { status: "Arquivo ou pasta excluído com sucesso." };
+              } else {
+                toolResult = { error: "O item especificado não existe." };
+              }
             }
           } catch (err) { toolResult = { error: err.message }; }
           toolResults.push({ type: "tool_result", tool_use_id: block.id, content: JSON.stringify(toolResult) });
