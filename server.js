@@ -67,7 +67,7 @@ const localTools = [
   },
   {
     name: "rename_item",
-    description: "Renomeia, MOVE ou TRANSFERE um arquivo ou pasta para outro local.",
+    description: "Renomeia ou move um arquivo ou pasta.",
     input_schema: {
       type: "object",
       properties: { oldPath: { type: "string" }, newPath: { type: "string" } },
@@ -243,7 +243,16 @@ app.post("/api/chat", async (req, res) => {
 
   try {
     const userMessages = Array.isArray(req.body.messages) ? req.body.messages : [];
-    const messages = userMessages.filter(msg => msg && ["user", "assistant"].includes(msg.role)).slice(-20);
+    
+    // Limita às últimas 20 mensagens para economizar tokens
+    let messages = userMessages.filter(msg => msg && ["user", "assistant"].includes(msg.role)).slice(-20);
+    
+    // CORREÇÃO CRÍTICA: A API da Anthropic EXIGE que a primeira mensagem seja sempre do usuário.
+    // Se o corte caiu em uma mensagem do assistente, removemos ela para iniciar com a do usuário.
+    if (messages.length > 0 && messages[0].role === "assistant") {
+        messages.shift();
+    }
+
     if (messages.length === 0) return res.status(400).json({ error: "Mensagem vazia." });
 
     let citedFiles = new Set(); 
@@ -325,7 +334,11 @@ app.post("/api/chat", async (req, res) => {
         citedFiles: Array.from(citedFiles)
     });
 
-  } catch (error) { res.status(500).json({ error: "Falha de IA." }); }
+  } catch (error) { 
+    // Log detalhado para o servidor em caso de erros reais (ex: falta de créditos)
+    console.error("ERRO CRÍTICO NA IA:", error);
+    res.status(500).json({ error: error.message || "Falha na conexão com a API da Anthropic." }); 
+  }
 });
 
-app.listen(3000, () => console.log("Servidor ativo com Custo Zero para Análises Locais."));
+app.listen(3000, () => console.log("Servidor ativo com Prevenção de Falha de Histórico."));
