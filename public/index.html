@@ -126,7 +126,6 @@
                 </div>
 
                 <div class="flex flex-1 overflow-hidden">
-                    
                     <div class="w-3/5 p-5 bg-[#fafafa] border-r border-slate-100 flex flex-col overflow-hidden">
                         <div id="view-doc" class="flex-1 bg-white border border-slate-200 rounded-xl shadow-xs overflow-y-auto p-6 font-sans text-xs text-slate-700 leading-relaxed select-text">
                             <div class="text-center text-slate-400 my-20">Nenhum documento carregado no monitor operacional.</div>
@@ -244,7 +243,6 @@
         const appPassword = document.getElementById("app-password");
         const fileTree = document.getElementById("file-tree");
         
-        // Elementos Dinâmicos das Abas Centrais
         const viewDoc = document.getElementById("view-doc");
         const viewRaw = document.getElementById("view-raw");
         const activeNoteTitle = document.getElementById("active-note-title");
@@ -256,7 +254,6 @@
         const circleText = document.getElementById("circle-text");
         const analysisStatusDesc = document.getElementById("analysis-status-desc");
 
-        // Elementos de Upload
         const btnVaultUpload = document.getElementById("btn-vault-upload");
         const globalVaultUpload = document.getElementById("global-vault-upload");
         const btnChatAttach = document.getElementById("btn-chat-attach");
@@ -281,7 +278,6 @@
         window.addEventListener("resize", resizeCanvas);
         resizeCanvas();
 
-        // Alternador de Abas Lógicas (Documento vs Markdown)
         function switchTab(type) {
             const tabDoc = document.getElementById("tab-doc");
             const tabRaw = document.getElementById("tab-raw");
@@ -298,7 +294,6 @@
             }
         }
 
-        // Motor de Física de Força-Direcionada do Gráfico
         function initPhysicsNodes(data) {
             const width = canvas.width;
             const height = canvas.height;
@@ -453,7 +448,8 @@
                     data.files.forEach(filePath => {
                         const btn = document.createElement("button");
                         btn.className = "w-full text-left px-2.5 py-1.5 rounded-lg flex items-center gap-2 text-slate-600 hover:bg-slate-100 hover:text-slate-900 transition-all truncate font-semibold text-xs";
-                        btn.innerHTML = `<i data-lucide="file-text" class="w-3.5 h-3.5 text-slate-400 shrink-0"></i> <span class="truncate">${filePath}</span>`;
+                        const isPdf = filePath.toLowerCase().endsWith('.pdf');
+                        btn.innerHTML = `<i data-lucide="file-text" class="w-3.5 h-3.5 ${isPdf ? 'text-red-400' : 'text-slate-400'} shrink-0"></i> <span class="truncate">${filePath}</span>`;
                         btn.onclick = () => loadNoteContent(filePath);
                         fileTree.appendChild(btn);
                     });
@@ -464,16 +460,38 @@
             }
         }
 
-        // Carrega o documento e preenche dinamicamente os cartões laterais 100% igual ao exemplo
         async function loadNoteContent(filename) {
             selectedFileId = filename;
             const shortName = filename.split('/').pop();
-            activeNoteTitle.innerText = shortName.replace(/\.md$/, "");
+            activeNoteTitle.innerText = shortName.replace(/\.(md|pdf|txt)$/i, "");
             activeNoteMeta.innerText = `Localização: BaseConhecimento/${filename}`;
             
             viewDoc.innerHTML = `<div class="text-center text-slate-400 my-20 animate-pulse">Indexando bloco documental...</div>`;
             viewRaw.innerText = "Buscando texto bruto...";
 
+            switchTab('doc');
+
+            // Renderizador Exclusivo para PDFs via Stream Direto de iFrame
+            if (filename.toLowerCase().endsWith('.pdf')) {
+                viewDoc.innerHTML = `<iframe src="/api/note-raw?file=${encodeURIComponent(filename)}" class="w-full h-[400px] min-h-[350px] border-0 rounded-xl"></iframe>`;
+                viewRaw.innerText = "[Arquivo Binário PDF - Use a aba 'Documento Original' para visualização]";
+                
+                metaSummary.innerText = `Documento PDF gravado e indexado localmente. Pronto para auditoria operacional do Claude.`;
+                metaPoints.innerHTML = `
+                    <div class="flex items-start gap-2"><i data-lucide="check-circle-2" class="w-3.5 h-3.5 text-green-500 shrink-0"></i> <span>Leitura de binários estruturada</span></div>
+                    <div class="flex items-start gap-2"><i data-lucide="check-circle-2" class="w-3.5 h-3.5 text-green-500 shrink-0"></i> <span>Visualização em iFrame nativa</span></div>
+                `;
+                metaRelated.innerHTML = `<div class="text-[11px] text-slate-400 font-medium italic">PDFs não possuem hyperlinks markdown de saída.</div>`;
+                circleProgress.setAttribute("stroke-dasharray", "100, 100");
+                circleText.innerText = "100%";
+                analysisStatusDesc.innerText = "Pronto para análise visual.";
+                lucide.createIcons();
+                chatInput.value = `Analise o arquivo PDF "${filename}" e resuma o conteúdo técnico.`;
+                chatInput.focus();
+                return;
+            }
+
+            // Renderizador para Notas de Texto (.md / .txt)
             try {
                 const res = await fetch(`/api/note-content?file=${encodeURIComponent(filename)}`);
                 const data = await res.json();
@@ -481,7 +499,6 @@
                 if (data.content) {
                     viewRaw.innerText = data.content;
                     
-                    // Renderização de Documento Formal Estilizado (Painel Esquerdo do Modelo)
                     viewDoc.innerHTML = `
                         <div class="border border-slate-200 rounded-lg p-5 bg-white shadow-xs max-w-xl mx-auto font-serif">
                             <div class="text-center border-b border-slate-200 pb-3 mb-4">
@@ -492,16 +509,13 @@
                         </div>
                     `;
 
-                    // Parse e Injeção Dinâmica dos Cartões Laterais (Painel Direito do Modelo)
                     metaSummary.innerText = `Nota técnica indexada com sucesso na VPS. Contém dados estruturais e procedimentos operacionais vinculados ao ecossistema de automação corporativa.`;
-                    
                     metaPoints.innerHTML = `
                         <div class="flex items-start gap-2"><i data-lucide="check-circle-2" class="w-3.5 h-3.5 text-green-500 shrink-0"></i> <span>Leitura e consistência de volume OK</span></div>
                         <div class="flex items-start gap-2"><i data-lucide="check-circle-2" class="w-3.5 h-3.5 text-green-500 shrink-0"></i> <span>Sincronização com o repositório concluída</span></div>
                         <div class="flex items-start gap-2"><i data-lucide="check-circle-2" class="w-3.5 h-3.5 text-green-500 shrink-0"></i> <span>Mapeamento de links internos ativo</span></div>
                     `;
 
-                    // Extrai links internos [[Nota]] para preencher "Documentos Relacionados"
                     const linkRegex = /\[\[(.*?)\]\]/g;
                     let matches = [];
                     let match;
@@ -518,7 +532,6 @@
                             metaRelated.appendChild(item);
                         });
                         
-                        // Atualiza Gráfico de Progresso Circular (Ex: 78% se houver links)
                         circleProgress.setAttribute("stroke-dasharray", "78, 100");
                         circleText.innerText = "78%";
                         analysisStatusDesc.innerText = `${matches.length} referências cruzadas conectadas.`;
