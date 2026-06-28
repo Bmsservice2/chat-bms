@@ -158,33 +158,6 @@ app.get("/api/note-raw", (req, res) => {
   } catch (err) { res.status(500).json({ error: err.message }); }
 });
 
-// NOVA ROTA: Análise Jurídica Automática
-app.post("/api/analyze-note", async (req, res) => {
-  if (req.headers["x-app-password"] !== process.env.APP_PASSWORD) return res.status(401).json({ error: "Senha inválida." });
-  try {
-    const { filename, content } = req.body;
-    if (!content) return res.json({ summary: "Documento sem texto.", points: [] });
-
-    const prompt = `Analise o documento jurídico '${filename}' e retorne APENAS um JSON válido. Formato exigido: {"summary": "Resumo em até 3 linhas", "points": ["Ponto 1", "Ponto 2", "Ponto 3"]}.\n\nDocumento:\n${content.substring(0, 10000)}`;
-
-    const response = await anthropic.messages.create({
-      model: "claude-3-haiku-20240307",
-      max_tokens: 500,
-      system: "Você é um auditor de peças jurídicas. Responda ESTRITAMENTE em formato JSON, sem marcações ou texto adicional.",
-      messages: [{ role: "user", content: prompt }]
-    });
-
-    const jsonMatch = response.content[0].text.match(/\{[\s\S]*\}/);
-    if (jsonMatch) {
-        res.json(JSON.parse(jsonMatch[0]));
-    } else {
-        res.status(500).json({ error: "Falha na estrutura do JSON." });
-    }
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
-
 app.post("/api/create-folder", (req, res) => {
   try {
     const safePath = getSafePath(cleanPath(req.body.foldername));
@@ -262,7 +235,7 @@ app.post("/api/chat", async (req, res) => {
     const messages = userMessages.filter(msg => msg && ["user", "assistant"].includes(msg.role)).slice(-20);
     if (messages.length === 0) return res.status(400).json({ error: "Mensagem vazia." });
 
-    let citedFiles = new Set(); // Rastreia quais arquivos a IA leu
+    let citedFiles = new Set(); 
 
     let response = await anthropic.messages.create({
       model: process.env.CLAUDE_MODEL || "claude-3-5-sonnet-20241022",
@@ -336,7 +309,6 @@ app.post("/api/chat", async (req, res) => {
       response = await anthropic.messages.create({ model: process.env.CLAUDE_MODEL || "claude-3-5-sonnet-20241022", max_tokens: 4000, messages, tools: localTools });
     }
     
-    // Retorna a mensagem E os arquivos citados!
     res.json({ 
         reply: response.content.find(c => c.type === "text")?.text || "Operação executada.",
         citedFiles: Array.from(citedFiles)
@@ -345,4 +317,4 @@ app.post("/api/chat", async (req, res) => {
   } catch (error) { res.status(500).json({ error: "Falha de IA." }); }
 });
 
-app.listen(3000, () => console.log("Servidor ativo com Citações e Motor de Links."));
+app.listen(3000, () => console.log("Servidor ativo com Custo Zero para Análises Locais."));
