@@ -7,21 +7,15 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <script>
-        // Configuração inicial rigorosa do tema nativo
+        // Inicialização rápida do tema
         if (localStorage.getItem("theme") === "dark" || (!("theme" in localStorage) && window.matchMedia("(prefers-color-scheme: dark)").matches)) {
             document.documentElement.classList.add("dark");
         } else {
             document.documentElement.classList.remove("dark");
         }
     </script>
-    <style>
-        /* Transições suaves e desativação de scrollbars feias */
-        * { transition: background-color 0.15s ease, border-color 0.15s ease; }
-        .no-scrollbar::-webkit-scrollbar { display: none; }
-        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-    </style>
 </head>
-<body class="bg-[#f3f4f6] dark:bg-slate-950 text-slate-800 dark:text-slate-100 font-sans h-screen flex flex-col overflow-hidden select-none">
+<body class="bg-[#f3f4f6] dark:bg-slate-950 text-slate-800 dark:text-slate-100 font-sans h-screen flex flex-col overflow-hidden select-none transition-colors duration-200">
 
     <input type="file" id="global-vault-upload" class="hidden" />
     <input type="file" id="chat-context-upload" class="hidden" />
@@ -42,8 +36,8 @@
 
         <div class="flex items-center gap-3">
             <button onclick="toggleDarkMode()" class="p-2.5 border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-700 transition-all shadow-xs active:scale-95">
-                <i id="theme-icon-moon" data-lucide="moon" class="w-4 h-4 dark:hidden"></i>
-                <i id="theme-icon-sun" data-lucide="sun" class="w-4 h-4 hidden dark:block"></i>
+                <i data-lucide="moon" class="w-4 h-4 dark:hidden"></i>
+                <i data-lucide="sun" class="w-4 h-4 hidden dark:block"></i>
             </button>
 
             <button id="btn-vault-upload" class="border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 text-xs font-bold px-4 py-2.5 rounded-xl flex items-center gap-2 hover:bg-slate-50 dark:hover:bg-slate-700 transition-all active:scale-95 shadow-xs">
@@ -78,6 +72,21 @@
             <div id="file-tree" class="flex-1 overflow-y-auto space-y-0.5 pr-1 text-xs font-semibold text-slate-600 dark:text-slate-300 no-scrollbar">
                 <div class="text-slate-400 p-2 animate-pulse">Sincronizando volumes do cofre...</div>
             </div>
+
+            <div class="mt-4 bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-800 rounded-2xl p-3.5">
+                <div class="flex items-center justify-between mb-1.5">
+                    <span class="text-[11px] font-bold text-slate-700 dark:text-slate-300 flex items-center gap-1.5"><i data-lucide="shield-check" class="w-3.5 h-3.5 text-blue-600"></i> Plano Profissional</span>
+                    <span class="text-[10px] bg-emerald-100 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-300 font-extrabold px-1.5 py-0.5 rounded-md">ATIVO</span>
+                </div>
+                <div class="text-[10px] text-slate-400 dark:text-slate-500 mb-2 font-medium">Uso de IA e chamadas este mês</div>
+                <div class="w-full bg-slate-200 dark:bg-slate-700 h-2 rounded-full overflow-hidden mb-1">
+                    <div class="bg-blue-600 h-full w-[78%] rounded-full"></div>
+                </div>
+                <div class="flex justify-between text-[10px] font-bold text-slate-500 dark:text-slate-400">
+                    <span>7.8k / 10k chamadas</span>
+                    <span>78%</span>
+                </div>
+            </div>
         </aside>
 
         <main class="flex-1 flex flex-col overflow-y-auto p-5 gap-4 no-scrollbar">
@@ -92,11 +101,11 @@
                 </div>
                 <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-3 flex items-center shadow-xs">
                     <div class="p-2 bg-amber-50 dark:bg-slate-800 text-amber-600 dark:text-amber-400 rounded-lg mr-3"><i data-lucide="folder-git" class="w-4 h-4"></i></div>
-                    <div><p class="text-[10px] text-slate-400 dark:text-slate-500 font-bold uppercase tracking-wider">Fase</p><p class="text-xs font-bold text-slate-700 dark:text-white">Análise Inicial</p></div>
+                    <div><p class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Fase</p><p class="text-xs font-bold text-slate-700 dark:text-white">Análise Inicial</p></div>
                 </div>
                 <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-3 flex items-center shadow-xs">
                     <div class="p-2 bg-emerald-50 dark:bg-slate-800 text-emerald-600 dark:text-emerald-400 rounded-lg mr-3"><i data-lucide="target" class="w-4 h-4"></i></div>
-                    <div><p class="text-[10px] text-slate-400 dark:text-slate-500 font-bold uppercase tracking-wider">Foco</p><p class="text-xs font-bold text-slate-700 dark:text-white">Auditar Peças</p></div>
+                    <div><p class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Foco</p><p class="text-xs font-bold text-slate-700 dark:text-white">Auditar Peças</p></div>
                 </div>
             </div>
 
@@ -110,6 +119,13 @@
                             </button>
                         </div>
                         <p id="active-note-meta" class="text-[10px] text-slate-400 dark:text-slate-500 font-medium mt-0.5">Nenhum item ativo no momento</p>
+                    </div>
+                    
+                    <div class="flex items-center gap-1">
+                        <button class="p-1.5 text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-all"><i data-lucide="download" class="w-4 h-4"></i></button>
+                        <button class="p-1.5 text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-all"><i data-lucide="printer" class="w-4 h-4"></i></button>
+                        <button class="p-1.5 text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-all"><i data-lucide="maximize-2" class="w-4 h-4"></i></button>
+                        <button class="p-1.5 text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-all"><i data-lucide="more-horizontal" class="w-4 h-4"></i></button>
                     </div>
                 </div>
 
@@ -161,8 +177,8 @@
 
             <div class="bg-white border border-slate-200 rounded-2xl p-4 shadow-xs h-64 min-h-64 flex flex-col relative dark:bg-slate-900 dark:border-slate-800">
                 <div class="flex items-center justify-between mb-2">
-                    <h3 class="font-bold text-xs text-slate-800 dark:text-white flex items-center gap-1.5"><i data-lucide="network" class="w-4 h-4 text-blue-600"></i> Gráfico de Conexões de Processos</h3>
-                    <span class="text-[9px] font-bold bg-slate-100 dark:bg-slate-800 text-slate-400 dark:text-slate-500 px-2 py-0.5 rounded-md uppercase tracking-wider">Malha Neural Dinâmica</span>
+                    <h3 class="font-bold text-xs text-slate-800 dark:text-white flex items-center gap-1.5"><i data-lucide="network" class="w-4 h-4 text-blue-600"></i> Malha de Conexões</h3>
+                    <span class="text-[9px] font-bold bg-slate-100 dark:bg-slate-800 text-slate-400 dark:text-slate-500 px-2 py-0.5 rounded-md uppercase tracking-wider">Malha Neural Orgânica</span>
                 </div>
                 <div class="flex-1 bg-slate-50 dark:bg-slate-950 border border-slate-100 dark:border-slate-850 rounded-xl overflow-hidden relative">
                     <canvas id="graph-canvas" class="w-full h-full block cursor-grab active:cursor-grabbing"></canvas>
@@ -182,12 +198,13 @@
             </div>
 
             <div class="p-3 bg-amber-50/50 dark:bg-slate-800/30 border-b border-amber-100/60 dark:border-slate-800 flex flex-col gap-1.5">
+                <label class="text-[9px] font-black text-amber-800 dark:text-amber-400 uppercase tracking-widest">Token de Validação Local</label>
                 <input type="password" id="app-password" value="sua_senha_aqui" class="w-full bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-lg px-3 py-1.5 text-xs font-mono text-slate-700 dark:text-slate-300 focus:outline-none">
             </div>
 
             <div id="chat-messages" class="flex-1 overflow-y-auto p-4 flex flex-col gap-4 bg-[#fafafa] dark:bg-slate-950 select-text no-scrollbar">
                 <div class="w-full flex justify-start">
-                    <div class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 rounded-2xl rounded-tl-none p-3.5 text-xs max-w-[90%] shadow-xs leading-relaxed">
+                    <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 rounded-2xl rounded-tl-none p-3.5 text-xs max-w-[90%] shadow-xs leading-relaxed">
                         Sincronização efetuada. Selecione uma pasta ou peça do **Cofre** para iniciar a auditoria ou envie instruções estruturadas abaixo.
                     </div>
                 </div>
@@ -254,10 +271,9 @@
         let draggedNode = null;
         let currentFilterType = "all";
         
-        // Memória local de favoritos persistente
         let favoriteItems = JSON.parse(localStorage.getItem("favorites_map") || "{}");
 
-        // REQUISITO 3: Alternador de Modo Escuro Perfeito sem Quebra Visual
+        // REQUISITO 1: Alternador de Modo Escuro / Claro Corrigido por completo
         function toggleDarkMode() {
             if (document.documentElement.classList.contains("dark")) {
                 document.documentElement.classList.remove("dark");
@@ -266,7 +282,7 @@
                 document.documentElement.classList.add("dark");
                 localStorage.setItem("theme", "dark");
             }
-            drawGraph(); // Redesenha instantaneamente as paletas de cores do canvas
+            drawGraph(); 
         }
 
         function closeAllDropdownsMenu() {
@@ -284,18 +300,16 @@
             buildNotesTree();
         }
 
-        // REQUISITO 4: Limpa a seleção ativa ao clicar em uma área vazia do menu lateral esquerdo
         function clearTreeSelection(e) {
             if (e.target.id === "file-tree" || e.target.tagName === "ASIDE") {
                 selectedFileId = null;
                 activeNoteTitle.innerText = "Selecione um arquivo do cofre";
                 activeNoteMeta.innerText = "Raiz do Cofre Ativa";
-                viewDoc.innerHTML = `<div class="text-center text-slate-400 my-20">Raiz selecionada. Novos diretórios e uploads serão gravados na pasta principal.</div>`;
-                buildNotesTree(); // Atualiza os realces visuais
+                viewDoc.innerHTML = `<div class="text-center text-slate-400 my-20 dark:text-slate-500">Raiz selecionada. Novos diretórios e uploads serão gravados na pasta principal.</div>`;
+                buildNotesTree();
             }
         }
 
-        // REQUISITO 1: Sistema de favoritos funcional integrado
         function toggleActiveFileFavorite() {
             if (!selectedFileId) return;
             if (favoriteItems[selectedFileId]) {
@@ -305,7 +319,7 @@
             }
             localStorage.setItem("favorites_map", JSON.stringify(favoriteItems));
             updateFavoriteStarUI();
-            buildNotesTree(); // Força realce da estrela na árvore lateral
+            buildNotesTree();
         }
 
         function updateFavoriteStarUI() {
@@ -348,22 +362,6 @@
             });
         }
 
-        function switchTab(type) {
-            const tabDoc = document.getElementById("tab-doc");
-            const tabRaw = document.getElementById("tab-raw");
-            if (type === 'doc') {
-                viewDoc.classList.remove("hidden");
-                viewRaw.classList.add("hidden");
-                tabDoc.className = "text-xs font-bold px-4 py-1.5 bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400 rounded-lg transition-all";
-                tabRaw.className = "text-xs font-bold px-4 py-1.5 text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg transition-all";
-            } else {
-                viewDoc.classList.add("hidden");
-                viewRaw.classList.remove("hidden");
-                tabRaw.className = "text-xs font-bold px-4 py-1.5 bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400 rounded-lg transition-all";
-                tabDoc.className = "text-xs font-bold px-4 py-1.5 text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg transition-all";
-            }
-        }
-
         async function createFolderOnVPS(name) {
             try {
                 const res = await fetch("/api/create-folder", {
@@ -384,7 +382,7 @@
             if (selectedFileId && selectedFileId.endsWith("/")) context = selectedFileId;
             else if (selectedFileId && selectedFileId.includes("/")) context = selectedFileId.substring(0, selectedFileId.lastIndexOf("/")) + "/";
             
-            const name = prompt(context ? `Criar subpasta dentro de [Cofre/${context}]:` : "Criar pasta na raiz do cofre:");
+            const name = prompt(context ? `Criar subpasta dentro de ${context}:` : "Criar pasta na raiz do cofre:");
             if (name && name.trim()) {
                 createFolderOnVPS(context + name.trim());
             }
@@ -421,7 +419,6 @@
             } catch (err) { console.error(err); }
         }
 
-        // Árvore de Diretórios com realce e suporte a favoritos
         async function buildNotesTree() {
             try {
                 const res = await fetch("/api/notes");
@@ -491,12 +488,15 @@
             } catch (err) { console.error(err); }
         }
 
-        // REQUISITO 2: Motor de Física de Partículas do Gráfico Corrigido (Sem bugs de string)
+        // REQUISITO 2: Motor de Física de Partículas do Gráfico Corrigido (Sem bugs de string e achatamento)
         function initPhysicsNodes(data) {
-            const width = canvas.width || 500; 
-            const height = canvas.height || 250;
+            // Garante leitura correta do contêiner físico para evitar nós achatados
+            const width = canvas.parentElement.clientWidth || 500; 
+            const height = canvas.parentElement.clientHeight || 230;
+            canvas.width = width;
+            canvas.height = height;
+
             const existingNodesMap = new Map(graphData.nodes.map(n => [n.id, n]));
-            
             graphData.nodes = data.nodes.map(n => {
                 const old = existingNodesMap.get(n.id);
                 return { 
@@ -629,7 +629,7 @@
 
             switchTab('doc');
             updateFavoriteStarUI();
-            buildNotesTree(); // Realça o item ativo na árvore esquerda
+            buildNotesTree();
 
             if (filename.toLowerCase().endsWith('.pdf')) {
                 viewDoc.innerHTML = `<iframe src="/api/note-raw?file=${encodeURIComponent(filename)}" class="w-full h-[380px] border-0 rounded-xl bg-white"></iframe>`;
@@ -688,7 +688,6 @@
             chatContextUpload.value = "";
         };
 
-        // REQUISITO 2: Chat blindado e mensagens enviadas renderizadas perfeitamente
         async function sendChatMessage() {
             let query = chatInput.value.trim();
             if (!query) return;
@@ -713,8 +712,6 @@
                 if (data.reply) {
                     renderMessageBlock("assistant", data.reply);
                     chatHistory.push({ role: "assistant", content: data.reply });
-                } else {
-                    renderMessageBlock("assistant", "❌ Resposta nula recebida da IA local.");
                 }
             } catch (err) {
                 const loaderBlock = document.getElementById(tempId);
