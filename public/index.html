@@ -7,7 +7,12 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <script>
-        // Inicialização rápida do tema
+        // REQUISITO 1: Configuração obrigatória do Tailwind CDN para suportar a alternância de classe .dark
+        tailwind.config = {
+            darkMode: 'class'
+        }
+        
+        // Inicialização rápida do tema salvo
         if (localStorage.getItem("theme") === "dark" || (!("theme" in localStorage) && window.matchMedia("(prefers-color-scheme: dark)").matches)) {
             document.documentElement.classList.add("dark");
         } else {
@@ -69,7 +74,7 @@
                 </div>
             </div>
 
-            <div id="file-tree" class="flex-1 overflow-y-auto space-y-0.5 pr-1 text-xs font-semibold text-slate-600 dark:text-slate-300 no-scrollbar">
+            <div id="file-tree" class="flex-1 overflow-y-auto space-y-0.5 pr-1 text-xs font-semibold text-slate-600 dark:text-slate-300 scrollbar-none">
                 <div class="text-slate-400 p-2 animate-pulse">Sincronizando volumes do cofre...</div>
             </div>
 
@@ -89,7 +94,7 @@
             </div>
         </aside>
 
-        <main class="flex-1 flex flex-col overflow-y-auto p-5 gap-4 no-scrollbar">
+        <main class="flex-1 flex flex-col overflow-y-auto p-5 gap-4 scrollbar-none">
             <div class="grid grid-cols-4 gap-4">
                 <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-3 flex items-center shadow-xs">
                     <div class="p-2 bg-blue-50 dark:bg-slate-800 text-blue-600 dark:text-blue-400 rounded-lg mr-3"><i data-lucide="scale" class="w-4 h-4"></i></div>
@@ -101,15 +106,15 @@
                 </div>
                 <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-3 flex items-center shadow-xs">
                     <div class="p-2 bg-amber-50 dark:bg-slate-800 text-amber-600 dark:text-amber-400 rounded-lg mr-3"><i data-lucide="folder-git" class="w-4 h-4"></i></div>
-                    <div><p class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Fase</p><p class="text-xs font-bold text-slate-700 dark:text-white">Análise Inicial</p></div>
+                    <div><p class="text-[10px] text-slate-400 dark:text-slate-500 font-bold uppercase tracking-wider">Fase</p><p class="text-xs font-bold text-slate-700 dark:text-white">Análise Inicial</p></div>
                 </div>
                 <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-3 flex items-center shadow-xs">
                     <div class="p-2 bg-emerald-50 dark:bg-slate-800 text-emerald-600 dark:text-emerald-400 rounded-lg mr-3"><i data-lucide="target" class="w-4 h-4"></i></div>
-                    <div><p class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Foco</p><p class="text-xs font-bold text-slate-700 dark:text-white">Auditar Peças</p></div>
+                    <div><p class="text-[10px] text-slate-400 dark:text-slate-500 font-bold uppercase tracking-wider">Foco</p><p class="text-xs font-bold text-slate-700 dark:text-white">Auditar Peças</p></div>
                 </div>
             </div>
 
-            <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-xs flex flex-col flex-1 overflow-hidden min-h-[350px]">
+            <div id="center-preview-container" class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-xs flex flex-col flex-1 overflow-hidden min-h-[350px]">
                 <div class="flex items-center justify-between px-5 py-3.5 border-b border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900">
                     <div>
                         <div class="flex items-center gap-2.5">
@@ -121,16 +126,15 @@
                         <p id="active-note-meta" class="text-[10px] text-slate-400 dark:text-slate-500 font-medium mt-0.5">Nenhum item ativo no momento</p>
                     </div>
                     
-                    <div class="flex items-center gap-1">
-                        <button class="p-1.5 text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-all"><i data-lucide="download" class="w-4 h-4"></i></button>
-                        <button class="p-1.5 text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-all"><i data-lucide="printer" class="w-4 h-4"></i></button>
-                        <button class="p-1.5 text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-all"><i data-lucide="maximize-2" class="w-4 h-4"></i></button>
-                        <button class="p-1.5 text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-all"><i data-lucide="more-horizontal" class="w-4 h-4"></i></button>
+                    <div class="flex items-center gap-1.5">
+                        <button onclick="downloadActiveFile()" class="p-1.5 text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-all" title="Fazer Download"><i data-lucide="download" class="w-4 h-4"></i></button>
+                        <button onclick="printActiveFile()" class="p-1.5 text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-all" title="Imprimir Documento"><i data-lucide="printer" class="w-4 h-4"></i></button>
+                        <button onclick="fullscreenActiveFile()" class="p-1.5 text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-all" title="Alternar Tela Cheia"><i data-lucide="maximize-2" class="w-4 h-4"></i></button>
                     </div>
                 </div>
 
                 <div class="flex gap-2 px-5 border-b border-slate-100 dark:border-slate-800 pb-2 bg-white dark:bg-slate-900">
-                    <button id="tab-doc" onclick="switchTab('doc')" class="text-xs font-bold px-4 py-1.5 bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400 rounded-lg transition-all">Documento Original</button>
+                    <button id="tab-doc" onclick="switchTab('doc')" class="text-xs font-bold px-4 py-1.5 bg-blue-50 text-blue-600 dark:text-blue-400 rounded-lg transition-all">Documento Original</button>
                     <button id="tab-raw" onclick="switchTab('raw')" class="text-xs font-bold px-4 py-1.5 text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg transition-all">Resumo Markdown</button>
                 </div>
 
@@ -270,10 +274,11 @@
         let graphData = { nodes: [], edges: [] };
         let draggedNode = null;
         let currentFilterType = "all";
+        let rawContentBuffer = ""; // Armazena texto limpo para funções de impressão/download
         
         let favoriteItems = JSON.parse(localStorage.getItem("favorites_map") || "{}");
 
-        // REQUISITO 1: Alternador de Modo Escuro / Claro Corrigido por completo
+        // REQUISITO 1: Alternador de Modo Escuro Total Corrigido
         function toggleDarkMode() {
             if (document.documentElement.classList.contains("dark")) {
                 document.documentElement.classList.remove("dark");
@@ -300,16 +305,20 @@
             buildNotesTree();
         }
 
+        // REQUISITO 4: Tratamento de cliques vazios para desmarcar arquivos e voltar à raiz
         function clearTreeSelection(e) {
             if (e.target.id === "file-tree" || e.target.tagName === "ASIDE") {
                 selectedFileId = null;
                 activeNoteTitle.innerText = "Selecione um arquivo do cofre";
                 activeNoteMeta.innerText = "Raiz do Cofre Ativa";
+                rawContentBuffer = "";
                 viewDoc.innerHTML = `<div class="text-center text-slate-400 my-20 dark:text-slate-500">Raiz selecionada. Novos diretórios e uploads serão gravados na pasta principal.</div>`;
+                updateFavoriteStarUI();
                 buildNotesTree();
             }
         }
 
+        // REQUISITO 1: Sistema de favoritos reativo
         function toggleActiveFileFavorite() {
             if (!selectedFileId) return;
             if (favoriteItems[selectedFileId]) {
@@ -333,7 +342,41 @@
             lucide.createIcons();
         }
 
-        // Monitor de Redes do Servidor Real
+        // REQUISITO 3: Função Operacional Real de Download de Arquivo
+        function downloadActiveFile() {
+            if (!selectedFileId || !rawContentBuffer) return alert("Nenhum arquivo ativo para download.");
+            const blob = new Blob([rawContentBuffer], { type: "text/markdown;charset=utf-8" });
+            const link = document.createElement("a");
+            link.href = URL.createObjectURL(blob);
+            link.download = selectedFileId.split('/').pop();
+            link.click();
+        }
+
+        // REQUISITO 3: Função Operacional Real de Impressão de Peça Escopo Isolado
+        function printActiveFile() {
+            if (!selectedFileId) return alert("Nenhuma peça selecionada para impressão.");
+            const printWindow = window.open("", "_blank");
+            printWindow.document.write(`
+                <html>
+                <head><title>Imprimir - BMS Knowledge</title><style>body{font-family:serif;padding:40px;line-height:1.6;color:#1a1a1a;}pre{white-space:pre-wrap;font-family:monospace;background:#f4f4f4;padding:15px;border-radius:8px;}</style></head>
+                <body><h2>${activeNoteTitle.innerText}</h2><hr/><p>${viewDoc.innerText}</p></body>
+                </html>
+            `);
+            printWindow.document.close();
+            printWindow.print();
+        }
+
+        // REQUISITO 3: Função Operacional Real de Tela Cheia do Painel Central
+        function fullscreenActiveFile() {
+            const container = document.getElementById("center-preview-container");
+            if (!document.fullscreenElement) {
+                container.requestFullscreen().catch(err => console.error(err));
+            } else {
+                document.exitFullscreen();
+            }
+        }
+
+        // Monitor de Status Real do Servidor
         async function checkRealServerStatus() {
             try {
                 const res = await fetch("/api/status");
@@ -441,7 +484,7 @@
                         const isDir = item.type === "directory";
                         const depth = (item.path.match(/\//g) || []).length;
                         
-                        btn.className = "flex-1 text-left py-1 flex items-center gap-1.5 font-bold truncate text-xs";
+                        btn.className = "flex-1 text-left py-1 flex items-center gap-1.5 font-bold truncate text-xs focus:outline-none";
                         btn.style.paddingLeft = `${depth * 12 + 4}px`;
                         
                         const icon = isDir ? "folder" : (item.path.endsWith(".pdf") ? "file-text" : "file");
@@ -488,9 +531,8 @@
             } catch (err) { console.error(err); }
         }
 
-        // REQUISITO 2: Motor de Física de Partículas do Gráfico Corrigido (Sem bugs de string e achatamento)
+        // REQUISITO 2: Motor de Física de Força-Direcionada do Gráfico Restaurado e Estabilizado
         function initPhysicsNodes(data) {
-            // Garante leitura correta do contêiner físico para evitar nós achatados
             const width = canvas.parentElement.clientWidth || 500; 
             const height = canvas.parentElement.clientHeight || 230;
             canvas.width = width;
@@ -554,6 +596,7 @@
             });
         }
 
+        // Correção de Erros de Sintaxe na Renderização do Gráfico
         function drawGraph() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             const isDark = document.documentElement.classList.contains("dark");
@@ -617,6 +660,7 @@
             } catch(e){} 
         }
 
+        // REQUISITO 4: Função de Leitura e Pré-visualização Consertada (JS Engine Ativo)
         async function loadNoteContent(filename) {
             selectedFileId = filename;
             const shortName = filename.split('/').pop();
@@ -634,6 +678,7 @@
             if (filename.toLowerCase().endsWith('.pdf')) {
                 viewDoc.innerHTML = `<iframe src="/api/note-raw?file=${encodeURIComponent(filename)}" class="w-full h-[380px] border-0 rounded-xl bg-white"></iframe>`;
                 viewRaw.innerText = "[Visualização de arquivo PDF ativa]";
+                rawContentBuffer = "[Arquivo Binário PDF]";
                 circleProgress.setAttribute("stroke-dasharray", "100, 100");
                 circleText.innerText = "100%";
                 analysisStatusDesc.innerText = "Pronto para conferência.";
@@ -643,17 +688,24 @@
             try {
                 const res = await fetch(`/api/note-content?file=${encodeURIComponent(filename)}`);
                 const data = await res.json();
-                viewRaw.innerText = data.content || "";
+                
+                const fileContent = (data && data.content !== undefined) ? data.content : "";
+                rawContentBuffer = fileContent; // Buffer ativo para download
+                viewRaw.innerText = fileContent || "[Arquivo de texto vazio]";
+                
                 viewDoc.innerHTML = `
                     <div class="border border-slate-200 dark:border-slate-700 rounded-lg p-5 bg-white dark:bg-slate-900 max-w-xl mx-auto font-serif shadow-xs">
-                        <div class="text-slate-800 dark:text-slate-200 text-xs whitespace-pre-wrap leading-relaxed">${data.content || 'Sem registros textuais.'}</div>
+                        <div class="text-slate-800 dark:text-slate-200 text-xs whitespace-pre-wrap leading-relaxed">${fileContent || 'Este documento não possui registros textuais.'}</div>
                     </div>
                 `;
+
                 metaSummary.innerText = "Peça arquivada mapeada de forma íntegra no cofre local corporativo.";
                 circleProgress.setAttribute("stroke-dasharray", "100, 100");
                 circleText.innerText = "100%";
                 analysisStatusDesc.innerText = "Análise documental ok.";
-            } catch (err) {}
+            } catch (err) {
+                console.error("Erro ao renderizar:", err);
+            }
         }
 
         btnVaultUpload.onclick = () => globalVaultUpload.click();
