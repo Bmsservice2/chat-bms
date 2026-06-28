@@ -42,7 +42,7 @@ const localTools = [
     input_schema: {
       type: "object",
       properties: {
-        filename: { type: "string", description: "Nome do arquivo com extensão .md (ex: 01 Oficios/documento.md)" },
+        filename: { type: "string", description: "Nome do arquivo com extensão .md (ex: subpasta/documento.md)" },
         content: { type: "string", description: "Conteúdo estruturado completo." }
       },
       required: ["filename", "content"]
@@ -81,24 +81,27 @@ function getSafePath(targetPath) {
   return resolvedPath;
 }
 
+// Lista arquivos e pastas vazias recursivamente
 function listNotesLocal() {
   if (!fs.existsSync(VAULT_PATH)) return { error: `Cofre de dados não localizado na VPS.` };
-  const getFilesRecursively = (dir) => {
-    let results = [];
+  const items = [];
+  const scanDir = (dir) => {
     const list = fs.readdirSync(dir);
     list.forEach(file => {
       if (file.startsWith('.')) return;
       const fullPath = path.join(dir, file);
+      const relativePath = path.relative(VAULT_PATH, fullPath);
       const stat = fs.statSync(fullPath);
       if (stat && stat.isDirectory()) {
-        results = results.concat(getFilesRecursively(fullPath));
+        items.push({ path: relativePath, type: "directory" });
+        scanDir(fullPath);
       } else if (file.endsWith('.md') || file.endsWith('.txt') || file.endsWith('.pdf')) {
-        results.push(path.relative(VAULT_PATH, fullPath));
+        items.push({ path: relativePath, type: "file" });
       }
     });
-    return results;
   };
-  return { files: getFilesRecursively(VAULT_PATH) };
+  scanDir(VAULT_PATH);
+  return { items };
 }
 
 function readNoteLocal(filename) {
@@ -107,27 +110,7 @@ function readNoteLocal(filename) {
   return { filename, content: fs.readFileSync(safePath, "utf-8") };
 }
 
-function createNoteLocal(filename, content) {
-  const safePath = getSafePath(filename);
-  fs.mkdirSync(path.dirname(safePath), { recursive: true });
-  fs.writeFileSync(safePath, content, "utf-8");
-  return { filename, status: "Documento integrado com sucesso." };
-}
-
-function editNoteLocal(filename, content) {
-  const safePath = getSafePath(filename);
-  if (!fs.existsSync(safePath)) return { error: `Documento não localizado para edição.` };
-  fs.writeFileSync(safePath, content, "utf-8");
-  return { filename, status: "Peça processual atualizada." };
-}
-
-function createFolderLocal(foldername) {
-  const safePath = getSafePath(foldername);
-  fs.mkdirSync(safePath, { recursive: true });
-  return { foldername, status: "Diretório estrutural criado." };
-}
-
-// Verifica de verdade a integridade física da pasta compartilhada
+// Rota de status real
 app.get("/api/status", (req, res) => {
   if (missingVars.length > 0 || !fs.existsSync(VAULT_PATH)) {
     return res.status(500).json({ status: "ERRO" });
@@ -167,13 +150,54 @@ app.get("/api/note-raw", (req, res) => {
   }
 });
 
-// Endpoint direto para manipulação manual de pastas pelo front-end
 app.post("/api/create-folder", (req, res) => {
   const { foldername } = req.body;
-  if (!foldername) return res.status(400).json({ error: "Nome do diretório ausente." });
+  if (!foldername) return res.status(400).json({ error: "Nome ausente." });
   try {
-    const result = createFolderLocal(foldername);
-    res.json(result);
+    const safePath = getSafePath(foldername);
+    fs.mkdirSync(safePath, { recursive: true });
+    res.json({ success: true });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// Nova rota para deletar arquivos e pastas
+app.post("/api/delete-item", (req, res) => {
+  const { targetPath } = req.body;
+  if (!targetPath) return res.status(400).json({ error: "Caminho ausente." });
+  try {
+    const safePath = getSafePath(targetPath);
+    if (fs.existsSync(safePath)) {
+      const stat = fs.statSync(safePath);
+      if (stat.isDirectory()) {
+        fs.rmSync(safePath, { recursive: true, force: true });
+      } else {
+        fs.unlinkSync(safePath);
+      }
+      res.json({ success: true });
+    } else {
+      res.status(404).json({ error: "Item não encontrado." });
+    }
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// Nova rota para renomear arquivos e pastas
+app.post("/api/rename-item", (req, res) => {
+  const { oldPath, newPath } = req.body;
+  if (!oldPath || !newPath) return res.status(400).json({ error: "Caminhos ausentes." });
+  try {
+    const safeOldPath = getSafePath(oldPath);
+    const safeNewPath = getSafePath(newPath);
+    if (fs.existsSync(safeOldPath)) {
+      fs.mkdirSync(path.dirname(safeNewPath), { recursive: true });
+      fs.renameSync(safeOldPath, safeNewPath);
+      res.json({ success: true });
+    } else {
+      res.status(404).json({ error: "Item não encontrado." });
+    }
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -182,23 +206,23 @@ app.post("/api/create-folder", (req, res) => {
 app.get("/api/graph-data", (req, res) => {
   try {
     const check = listNotesLocal();
-    if (check.error || !check.files) return res.json({ nodes: [], edges: [] });
+    if (check.error || !check.items) return res.json({ nodes: [], edges: [] });
     
-    const files = check.files;
-    const nodes = files.map(f => ({ id: f, label: f.split('/').pop().replace(/\.(md|pdf|txt)$/i, "") }));
+    const files = check.items.filter(i => i.type === "file");
+    const nodes = files.map(f => ({ id: f.path, label: f.path.split('/').pop().replace(/\.(md|pdf|txt)$/i, "") }));
     const edges = [];
 
     files.forEach(file => {
-      if (file.toLowerCase().endsWith('.pdf')) return;
+      if (file.path.toLowerCase().endsWith('.pdf')) return;
       try {
-        const fullContent = fs.readFileSync(getSafePath(file), "utf-8");
+        const fullContent = fs.readFileSync(getSafePath(file.path), "utf-8");
         const linkRegex = /\[\[(.*?)\]\]/g;
         let match;
         while ((match = linkRegex.exec(fullContent)) !== null) {
           const targetLabel = match[1].trim().replace(/\.(md|pdf|txt)$/i, "");
           const targetNode = nodes.find(n => n.label === targetLabel || n.id === match[1].trim());
           if (targetNode) {
-            edges.push({ source: file, target: targetNode.id });
+            edges.push({ source: file.path, target: targetNode.id });
           }
         }
       } catch (e) {
@@ -214,7 +238,7 @@ app.get("/api/graph-data", (req, res) => {
 
 app.post("/api/upload-vault", (req, res) => {
   const filename = req.query.file;
-  if (!filename) return res.status(400).json({ error: "Caminho de gravação inválido." });
+  if (!filename) return res.status(400).json({ error: "Nome inválido." });
   try {
     const safePath = getSafePath(filename);
     fs.mkdirSync(path.dirname(safePath), { recursive: true });
@@ -238,11 +262,10 @@ app.post("/api/chat", async (req, res) => {
 
     if (messages.length === 0) return res.status(400).json({ error: "Mensagem vazia." });
 
-    // REQUISITO 1: Restrição absoluta de identidade da IA corporativa
     let response = await anthropic.messages.create({
       model: process.env.CLAUDE_MODEL || "claude-3-5-sonnet-20241022",
       max_tokens: Number(process.env.MAX_TOKENS || 3000),
-      system: "Você é o Assistente BMS, uma inteligência especializada e copiloto de alta performance conectado de forma nativa ao Cofre de documentos e processos jurídicos da empresa. Em hipótese alguma mencione marcas como Claude ou Anthropic. Nunca utilize o termo 'Obsidian', chame a base local exclusivamente de 'Cofre'. Use as ferramentas disponíveis para listar, ler, criar e alterar arquivos sempre que necessário.",
+      system: "Você é o Assistente BMS, uma inteligência artificial corporativa especializada no auxílio de profissionais do direito. Você está conectado ao cofre seguro de arquivos. Sob nenhuma hipótese mencione marcas como Claude, Anthropic ou Obsidian. Trate a base de conhecimento estritamente pelo nome de 'Cofre'. Use suas ferramentas para ler, criar ou modificar o acervo jurídico quando solicitado.",
       messages,
       tools: localTools
     });
@@ -264,7 +287,9 @@ app.post("/api/chat", async (req, res) => {
             } else if (block.name === "edit_note") {
               toolResult = editNoteLocal(block.input.filename, block.input.content);
             } else if (block.name === "create_folder") {
-              toolResult = createFolderLocal(block.input.foldername);
+              const safePath = getSafePath(block.input.foldername);
+              fs.mkdirSync(safePath, { recursive: true });
+              toolResult = { foldername: block.input.foldername, status: "Diretório criado." };
             }
           } catch (err) {
             toolResult = { error: err.message };
@@ -291,12 +316,8 @@ app.post("/api/chat", async (req, res) => {
     res.json({ reply: response.content.find(c => c.type === "text")?.text || "Processado com sucesso." });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: `Falha crítica no barramento local.` });
+    res.status(500).json({ error: `Falha interna no processamento do modelo.` });
   }
 });
 
-app.use((err, req, res, next) => {
-  res.status(500).json({ error: "Erro interno no servidor do cofre." });
-});
-
-app.listen(3000, () => console.log("Servidor ativo e consolidado na porta 3000."));
+app.listen(3000, () => console.log("Servidor operacional na porta 3000."));
