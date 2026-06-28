@@ -7,12 +7,12 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <script>
-        // Configuração do Tailwind CDN para suportar a alternância de classe escura
+        // Configuração do Tailwind CDN para suportar a classe dark
         tailwind.config = {
             darkMode: 'class'
         }
         
-        // REQUISITO 3: Modo Escuro definido como padrão principal absoluto do ecossistema
+        // Modo Escuro definido como padrão principal absoluto
         if (!localStorage.getItem("theme") || localStorage.getItem("theme") === "dark") {
             document.documentElement.classList.add("dark");
             localStorage.setItem("theme", "dark");
@@ -434,7 +434,6 @@
             document.getElementById("custom-dialog-modal").classList.add("hidden");
         }
 
-        // Modais flutuantes nativos do app vinculados aos botões reais do modal
         function openRenameModal() {
             document.getElementById("custom-context-menu").classList.add("hidden");
             const modal = document.getElementById("custom-dialog-modal");
@@ -603,11 +602,12 @@
                         fileTree.appendChild(row);
                     });
                     lucide.createIcons();
+                    if (selectedFileId) highlightSelectedRow(selectedFileId);
                 }
             } catch (err) { console.error(err); }
         }
 
-        // MOTOR DE FISICA LIMPO E DEPURADO SEM ERROS DE SINTAXE
+        // MOTOR DE FISICA LIMPO E CORRIGIDO - REMOÇÃO ABSOLUTA DA LINHA QUEBRADA
         function initPhysicsNodes(data) {
             const width = canvas.parentElement.clientWidth || 500; 
             const height = canvas.parentElement.clientHeight || 230;
@@ -754,7 +754,7 @@
 
             if (filename.toLowerCase().endsWith('.pdf')) {
                 viewDoc.innerHTML = `<iframe src="/api/note-raw?file=${encodeURIComponent(filename)}" class="w-full h-[380px] border-0 rounded-xl bg-white"></iframe>`;
-                viewRaw.innerText = "[Visualização de arquivo PDF activa]";
+                viewRaw.innerText = "[Visualização de arquivo PDF ativa]";
                 rawContentBuffer = "[Arquivo Binário PDF]";
                 circleProgress.setAttribute("stroke-dasharray", "100, 100");
                 circleText.innerText = "100%";
@@ -774,7 +774,7 @@
                 viewRaw.innerText = fileContent || "[Arquivo de texto vazio]";
                 
                 viewDoc.innerHTML = `
-                    <div class="border border-slate-200 dark:border-slate-700 rounded-lg p-5 bg-white dark:bg-slate-900 max-w-xl mx-auto font-serif shadow-xs">
+                    <div class="border border-slate-200 dark:border-slate-700 rounded-lg p-5 bg-white dark:bg-slate-800 shadow-xs max-w-xl mx-auto font-serif shadow-xs">
                         <div class="text-slate-800 dark:text-slate-200 text-xs whitespace-pre-wrap leading-relaxed">${fileContent || 'Este documento não possui registros textuais.'}</div>
                     </div>
                 `;
