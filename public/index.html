@@ -94,6 +94,7 @@
                     <span class="text-[11px] font-bold text-slate-700 dark:text-slate-300 flex items-center gap-1.5"><i data-lucide="shield-check" class="w-3.5 h-3.5 text-blue-600"></i> Plano Profissional</span>
                     <span class="text-[10px] bg-emerald-100 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-300 font-extrabold px-1.5 py-0.5 rounded-md">ATIVO</span>
                 </div>
+                <div class="text-[10px] text-slate-400 dark:text-slate-500 mb-2 font-medium">Uso de IA e chamadas este mês</div>
                 <div class="w-full bg-slate-200 dark:bg-slate-700 h-2 rounded-full overflow-hidden mb-1"><div class="bg-blue-600 h-full w-[78%] rounded-full"></div></div>
             </div>
         </aside>
@@ -103,68 +104,90 @@
         <main id="center-panel" class="flex-1 flex flex-col min-w-[300px] overflow-y-auto p-5 gap-4 no-scrollbar">
             
             <div class="grid grid-cols-4 gap-4">
-                <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-3 flex items-center shadow-xs">
+                
+                <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-3 flex items-center shadow-xs relative cursor-pointer" onclick="toggleCustomDropdown('dropdown-area', event)">
                     <div class="p-2 bg-blue-50 dark:bg-slate-800 text-blue-600 dark:text-blue-400 rounded-lg mr-3"><i data-lucide="scale" class="w-4 h-4"></i></div>
-                    <div class="flex-1">
+                    <div class="flex-1 min-w-0">
                         <p class="text-[10px] text-slate-400 dark:text-slate-500 font-bold uppercase tracking-wider mb-0.5">Área Jurídica</p>
-                        <select id="ctx-area" class="w-full bg-transparent text-xs font-bold text-slate-700 dark:text-white outline-none cursor-pointer">
-                            <option value="Geral/Nenhuma">Geral (Misto)</option>
-                            <option value="Direito Trabalhista">Direito Trabalhista</option>
-                            <option value="Direito Cível">Direito Cível</option>
-                            <option value="Direito Penal">Direito Penal</option>
-                            <option value="Direito Tributário">Direito Tributário</option>
-                            <option value="Direito Empresarial">Direito Empresarial</option>
-                            <option value="Direito de Família">Direito de Família</option>
-                            <option value="Direito Administrativo">Direito Administrativo</option>
-                        </select>
+                        <div class="flex items-center justify-between">
+                            <span id="label-ctx-area" class="text-xs font-bold text-slate-700 dark:text-white truncate">Geral (Misto)</span>
+                            <i data-lucide="chevron-down" class="w-3.5 h-3.5 text-slate-400 shrink-0"></i>
+                        </div>
+                    </div>
+                    <input type="hidden" id="ctx-area" value="Geral/Nenhuma">
+                    <div id="dropdown-area" class="hidden absolute top-[105%] left-0 mt-1 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl shadow-2xl py-1.5 w-full z-50 flex flex-col max-h-48 overflow-y-auto no-scrollbar text-xs font-bold text-slate-600 dark:text-slate-300">
+                        <button onclick="selectOption('area', 'Geral/Nenhuma', 'Geral (Misto)', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 truncate">Geral (Misto)</button>
+                        <button onclick="selectOption('area', 'Direito Trabalhista', 'Direito Trabalhista', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 truncate">Direito Trabalhista</button>
+                        <button onclick="selectOption('area', 'Direito Cível', 'Direito Cível', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 truncate">Direito Cível</button>
+                        <button onclick="selectOption('area', 'Direito Penal', 'Direito Penal', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 truncate">Direito Penal</button>
+                        <button onclick="selectOption('area', 'Direito Tributário', 'Direito Tributário', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 truncate">Direito Tributário</button>
+                        <button onclick="selectOption('area', 'Direito Empresarial', 'Direito Empresarial', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 truncate">Direito Empresarial</button>
+                        <button onclick="selectOption('area', 'Direito de Família', 'Direito de Família', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 truncate">Direito de Família</button>
+                        <button onclick="selectOption('area', 'Direito Administrativo', 'Direito Administrativo', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 truncate">Direito Administrativo</button>
                     </div>
                 </div>
 
-                <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-3 flex items-center shadow-xs">
+                <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-3 flex items-center shadow-xs relative cursor-pointer" onclick="toggleCustomDropdown('dropdown-type', event)">
                     <div class="p-2 bg-purple-50 dark:bg-slate-800 text-purple-600 dark:text-purple-400 rounded-lg mr-3"><i data-lucide="file-text" class="w-4 h-4"></i></div>
-                    <div class="flex-1">
+                    <div class="flex-1 min-w-0">
                         <p class="text-[10px] text-slate-400 dark:text-slate-500 font-bold uppercase tracking-wider mb-0.5">Tipo de Peça</p>
-                        <select id="ctx-type" class="w-full bg-transparent text-xs font-bold text-slate-700 dark:text-white outline-none cursor-pointer">
-                            <option value="Análise/Documento">Análise Interna</option>
-                            <option value="Petição Inicial">Petição Inicial</option>
-                            <option value="Contestação">Contestação</option>
-                            <option value="Recurso">Recurso (Apelação/RO)</option>
-                            <option value="Alegações Finais">Alegações Finais</option>
-                            <option value="Contrato/Acordo">Contrato / Acordo</option>
-                            <option value="Parecer Jurídico">Parecer Jurídico</option>
-                        </select>
+                        <div class="flex items-center justify-between">
+                            <span id="label-ctx-type" class="text-xs font-bold text-slate-700 dark:text-white truncate">Análise Interna</span>
+                            <i data-lucide="chevron-down" class="w-3.5 h-3.5 text-slate-400 shrink-0"></i>
+                        </div>
+                    </div>
+                    <input type="hidden" id="ctx-type" value="Análise/Documento">
+                    <div id="dropdown-type" class="hidden absolute top-[105%] left-0 mt-1 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl shadow-2xl py-1.5 w-full z-50 flex flex-col max-h-48 overflow-y-auto no-scrollbar text-xs font-bold text-slate-600 dark:text-slate-300">
+                        <button onclick="selectOption('type', 'Análise/Documento', 'Análise Interna', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 truncate">Análise Interna</button>
+                        <button onclick="selectOption('type', 'Petição Inicial', 'Petição Inicial', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 truncate">Petição Inicial</button>
+                        <button onclick="selectOption('type', 'Contestação', 'Contestação', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 truncate">Contestação</button>
+                        <button onclick="selectOption('type', 'Recurso', 'Recurso (Apelação/RO)', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 truncate">Recurso (Apelação/RO)</button>
+                        <button onclick="selectOption('type', 'Alegações Finais', 'Alegações Finais', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 truncate">Alegações Finais</button>
+                        <button onclick="selectOption('type', 'Contrato/Acordo', 'Contrato / Acordo', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 truncate">Contrato / Acordo</button>
+                        <button onclick="selectOption('type', 'Parecer Jurídico', 'Parecer Jurídico', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 truncate">Parecer Jurídico</button>
                     </div>
                 </div>
 
-                <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-3 flex items-center shadow-xs">
+                <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-3 flex items-center shadow-xs relative cursor-pointer" onclick="toggleCustomDropdown('dropdown-phase', event)">
                     <div class="p-2 bg-amber-50 dark:bg-slate-800 text-amber-600 dark:text-amber-400 rounded-lg mr-3"><i data-lucide="folder-git" class="w-4 h-4"></i></div>
-                    <div class="flex-1">
+                    <div class="flex-1 min-w-0">
                         <p class="text-[10px] text-slate-400 dark:text-slate-500 font-bold uppercase tracking-wider mb-0.5">Fase Atual</p>
-                        <select id="ctx-phase" class="w-full bg-transparent text-xs font-bold text-slate-700 dark:text-white outline-none cursor-pointer">
-                            <option value="Fase de Estudo">Fase de Estudo</option>
-                            <option value="Fase de Conhecimento">Fase de Conhecimento</option>
-                            <option value="Fase de Instrução/Provas">Fase de Instrução</option>
-                            <option value="Fase Recursal">Fase Recursal</option>
-                            <option value="Fase de Execução">Fase de Execução</option>
-                            <option value="Acordo ou Mediação">Acordo/Mediação</option>
-                        </select>
+                        <div class="flex items-center justify-between">
+                            <span id="label-ctx-phase" class="text-xs font-bold text-slate-700 dark:text-white truncate">Fase de Estudo</span>
+                            <i data-lucide="chevron-down" class="w-3.5 h-3.5 text-slate-400 shrink-0"></i>
+                        </div>
+                    </div>
+                    <input type="hidden" id="ctx-phase" value="Fase de Estudo">
+                    <div id="dropdown-phase" class="hidden absolute top-[105%] left-0 mt-1 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl shadow-2xl py-1.5 w-full z-50 flex flex-col max-h-48 overflow-y-auto no-scrollbar text-xs font-bold text-slate-600 dark:text-slate-300">
+                        <button onclick="selectOption('phase', 'Fase de Estudo', 'Fase de Estudo', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 truncate">Fase de Estudo</button>
+                        <button onclick="selectOption('phase', 'Fase de Conhecimento', 'Fase de Conhecimento', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 truncate">Fase de Conhecimento</button>
+                        <button onclick="selectOption('phase', 'Fase de Instrução/Provas', 'Fase de Instrução', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 truncate">Fase de Instrução</button>
+                        <button onclick="selectOption('phase', 'Fase Recursal', 'Fase Recursal', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 truncate">Fase Recursal</button>
+                        <button onclick="selectOption('phase', 'Fase de Execução', 'Fase de Execução', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 truncate">Fase de Execução</button>
+                        <button onclick="selectOption('phase', 'Acordo ou Mediação', 'Acordo/Mediação', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 truncate">Acordo/Mediação</button>
                     </div>
                 </div>
 
-                <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-3 flex items-center shadow-xs">
+                <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-3 flex items-center shadow-xs relative cursor-pointer" onclick="toggleCustomDropdown('dropdown-obj', event)">
                     <div class="p-2 bg-emerald-50 dark:bg-slate-800 text-emerald-600 dark:text-emerald-400 rounded-lg mr-3"><i data-lucide="target" class="w-4 h-4"></i></div>
-                    <div class="flex-1">
-                        <p class="text-[10px] text-slate-400 dark:text-slate-500 font-bold uppercase tracking-wider mb-0.5">Objetivo Direto</p>
-                        <select id="ctx-obj" class="w-full bg-transparent text-xs font-bold text-slate-700 dark:text-white outline-none cursor-pointer">
-                            <option value="Auditar/Resumir">Auditoria Geral</option>
-                            <option value="Encontrar Contradições">Achar Contradições</option>
-                            <option value="Elaborar Minuta">Elaborar Minuta</option>
-                            <option value="Análise de Risco Jurídico">Análise de Risco</option>
-                            <option value="Pesquisa Jurisprudencial">Levantar Jurisprudência</option>
-                            <option value="Sistematizar Fatos">Resumir Fatos/Prazos</option>
-                        </select>
+                    <div class="flex-1 min-w-0">
+                        <p class="text-[10px] text-slate-400 dark:text-slate-500 font-bold uppercase tracking-wider mb-0.5">Foco Atual</p>
+                        <div class="flex items-center justify-between">
+                            <span id="label-ctx-obj" class="text-xs font-bold text-slate-700 dark:text-white truncate">Auditoria Geral</span>
+                            <i data-lucide="chevron-down" class="w-3.5 h-3.5 text-slate-400 shrink-0"></i>
+                        </div>
+                    </div>
+                    <input type="hidden" id="ctx-obj" value="Auditar/Resumir">
+                    <div id="dropdown-obj" class="hidden absolute top-[105%] left-0 mt-1 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl shadow-2xl py-1.5 w-full z-50 flex flex-col max-h-48 overflow-y-auto no-scrollbar text-xs font-bold text-slate-600 dark:text-slate-300">
+                        <button onclick="selectOption('obj', 'Auditar/Resumir', 'Auditoria Geral', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 truncate">Auditoria Geral</button>
+                        <button onclick="selectOption('obj', 'Encontrar Contradições', 'Achar Contradições', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 truncate">Achar Contradições</button>
+                        <button onclick="selectOption('obj', 'Elaborar Minuta', 'Elaborar Minuta', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 truncate">Elaborar Minuta</button>
+                        <button onclick="selectOption('obj', 'Análise de Risco Jurídico', 'Análise de Risco', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 truncate">Análise de Risco</button>
+                        <button onclick="selectOption('obj', 'Pesquisa Jurisprudencial', 'Levantar Jurisprudência', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 truncate">Levantar Jurisprudência</button>
+                        <button onclick="selectOption('obj', 'Sistematizar Fatos', 'Resumir Fatos/Prazos', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 truncate">Resumir Fatos/Prazos</button>
                     </div>
                 </div>
+
             </div>
 
             <div id="center-preview-container" class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-xs flex flex-col flex-1 overflow-hidden min-h-[350px]">
@@ -210,7 +233,8 @@
                                 <div class="flex items-start gap-2 text-slate-400 font-medium"><i data-lucide="minus" class="w-4 h-4 shrink-0"></i> <span>Aguardando arquivo...</span></div>
                             </div>
                         </div>
-                        <div class="border-t border-slate-100 dark:border-slate-800 pt-3 mt-1">
+                        <div>
+                            <span class="text-[10px] font-black uppercase tracking-widest text-slate-400 dark:text-slate-500 block mb-2">Conclusão da Peça</span>
                             <div class="flex items-center gap-4 bg-slate-50 dark:bg-slate-800 p-3 rounded-xl border border-slate-100 dark:border-slate-700">
                                 <div class="relative w-14 h-14 flex items-center justify-center shrink-0">
                                     <svg class="w-full h-full transform -rotate-90" viewBox="0 0 36 36">
@@ -330,6 +354,7 @@
         let favoriteItems = JSON.parse(localStorage.getItem("bms_favorites_map") || "{}");
         let collapsedFolders = JSON.parse(localStorage.getItem("bms_collapsed_folders") || "{}");
 
+        // RESIZERS
         const sidebarLeft = document.getElementById('sidebar-left');
         const sidebarRight = document.getElementById('sidebar-right');
         const resizerLeft = document.getElementById('resizer-left');
@@ -390,14 +415,35 @@
             drawGraph(); 
         }
 
+        // LÓGICA DOS NOVOS MENUS DROPDOWN (Área, Peça, etc.)
         function closeAllDropdownsMenu() {
             filterDropdown.classList.add("hidden");
             document.getElementById("custom-context-menu").classList.add("hidden");
+            document.getElementById("dropdown-area")?.classList.add("hidden");
+            document.getElementById("dropdown-type")?.classList.add("hidden");
+            document.getElementById("dropdown-phase")?.classList.add("hidden");
+            document.getElementById("dropdown-obj")?.classList.add("hidden");
         }
 
         function toggleFilterDropdown(e) {
             e.stopPropagation();
-            filterDropdown.classList.toggle("hidden");
+            closeAllDropdownsMenu();
+            filterDropdown.classList.remove("hidden");
+        }
+
+        function toggleCustomDropdown(id, e) {
+            e.stopPropagation();
+            const el = document.getElementById(id);
+            const isHidden = el.classList.contains("hidden");
+            closeAllDropdownsMenu(); // fecha todos
+            if (isHidden) el.classList.remove("hidden");
+        }
+
+        function selectOption(category, value, label, e) {
+            e.stopPropagation();
+            document.getElementById(`ctx-${category}`).value = value;
+            document.getElementById(`label-ctx-${category}`).innerText = label;
+            document.getElementById(`dropdown-${category}`).classList.add("hidden");
         }
 
         function changeFilter(type) {
@@ -505,6 +551,7 @@
             e.stopPropagation();
             contextMenuSelectedPath = path;
             const menu = document.getElementById("custom-context-menu");
+            closeAllDropdownsMenu();
             menu.classList.remove("hidden");
             menu.style.left = `${e.clientX - 160}px`;
             menu.style.top = `${e.clientY + 10}px`;
@@ -866,7 +913,7 @@
 
             try {
                 const res = await fetch(`/api/note-content?file=${encodeURIComponent(filename)}`);
-                if (!res.ok) throw new Error(`Erro HTTP: ${res.status}`);
+                if (!res.ok) throw new Error(`Erro de Conexão com o Servidor (HTTP ${res.status})`);
                 const data = await res.json();
                 
                 if (data.error) throw new Error(data.error);
@@ -932,7 +979,6 @@
             document.getElementById("chat-context-upload").value = "";
         };
 
-        // REQUISITO 1: Injetando as diretrizes dos Menus de Seleção Superiores (Área, Fase, etc.) para guiar o Claude
         async function sendChatMessage() {
             let query = chatInput.value.trim();
             if (!query) return;
@@ -946,7 +992,6 @@
             renderMessageBlock("user", query);
             chatInput.value = "";
             
-            // Injeção do Contexto Sistêmico dos Menus Dropdown Superiores
             const ctxArea = document.getElementById("ctx-area").value;
             const ctxType = document.getElementById("ctx-type").value;
             const ctxPhase = document.getElementById("ctx-phase").value;
