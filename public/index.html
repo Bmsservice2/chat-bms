@@ -7,9 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <script>
-        tailwind.config = {
-            darkMode: 'class'
-        }
+        tailwind.config = { darkMode: 'class' };
         if (!localStorage.getItem("theme") || localStorage.getItem("theme") === "dark") {
             document.documentElement.classList.add("dark");
             localStorage.setItem("theme", "dark");
@@ -45,9 +43,7 @@
 
     <header class="bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 h-16 min-h-16 flex items-center justify-between px-6 z-20 shadow-xs">
         <div class="flex items-center gap-3">
-            <div class="bg-blue-600 p-2.5 rounded-xl text-white shadow-sm shadow-blue-300 dark:shadow-none">
-                <i data-lucide="brain-circuit" class="w-5 h-5"></i>
-            </div>
+            <div class="bg-blue-600 p-2.5 rounded-xl text-white shadow-sm shadow-blue-300 dark:shadow-none"><i data-lucide="brain-circuit" class="w-5 h-5"></i></div>
             <span class="font-black text-xl tracking-tight text-slate-900 dark:text-white">BMS <span class="text-blue-600 font-medium">Knowledge</span></span>
         </div>
         
@@ -76,7 +72,6 @@
     </header>
 
     <div class="flex flex-1 overflow-hidden relative" onclick="closeAllDropdownsMenu()">
-
         <aside id="sidebar-left" class="w-64 bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 flex flex-col overflow-hidden p-4 relative flex-shrink-0" onclick="clearTreeSelection(event)">
             <div class="flex items-center justify-between mb-4 px-1">
                 <span class="text-xs font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest">Processos e Cofre</span>
@@ -92,46 +87,26 @@
                 </div>
             </div>
 
-            <div id="file-tree" class="flex-1 overflow-y-auto space-y-0.5 pr-1 text-xs font-semibold text-slate-600 dark:text-slate-300 no-scrollbar">
-                <div class="text-slate-400 p-2 animate-pulse">Sincronizando volumes do cofre...</div>
-            </div>
+            <div id="file-tree" class="flex-1 overflow-y-auto space-y-0.5 pr-1 text-xs font-semibold text-slate-600 dark:text-slate-300 no-scrollbar"></div>
 
             <div class="mt-4 bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-800 rounded-2xl p-3.5">
                 <div class="flex items-center justify-between mb-1.5">
                     <span class="text-[11px] font-bold text-slate-700 dark:text-slate-300 flex items-center gap-1.5"><i data-lucide="shield-check" class="w-3.5 h-3.5 text-blue-600"></i> Plano Profissional</span>
                     <span class="text-[10px] bg-emerald-100 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-300 font-extrabold px-1.5 py-0.5 rounded-md">ATIVO</span>
                 </div>
-                <div class="text-[10px] text-slate-400 dark:text-slate-500 mb-2 font-medium">Uso de IA e chamadas este mês</div>
-                <div class="w-full bg-slate-200 dark:bg-slate-700 h-2 rounded-full overflow-hidden mb-1">
-                    <div class="bg-blue-600 h-full w-[78%] rounded-full"></div>
-                </div>
-                <div class="flex justify-between text-[10px] font-bold text-slate-500 dark:text-slate-400">
-                    <span>7.8k / 10k chamadas</span>
-                    <span>78%</span>
-                </div>
+                <div class="w-full bg-slate-200 dark:bg-slate-700 h-2 rounded-full overflow-hidden mb-1"><div class="bg-blue-600 h-full w-[78%] rounded-full"></div></div>
             </div>
         </aside>
 
+        <!-- RESIZER 1 -->
         <div id="resizer-left" class="w-1.5 bg-transparent hover:bg-blue-500 cursor-col-resize z-10 flex-shrink-0 transition-colors"></div>
 
         <main id="center-panel" class="flex-1 flex flex-col min-w-[300px] overflow-y-auto p-5 gap-4 no-scrollbar">
             <div class="grid grid-cols-4 gap-4">
-                <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-3 flex items-center shadow-xs">
-                    <div class="p-2 bg-blue-50 dark:bg-slate-800 text-blue-600 dark:text-blue-400 rounded-lg mr-3"><i data-lucide="scale" class="w-4 h-4"></i></div>
-                    <div><p class="text-[10px] text-slate-400 dark:text-slate-500 font-bold uppercase tracking-wider">Área</p><p class="text-xs font-bold text-slate-700 dark:text-white">Jurisprudência</p></div>
-                </div>
-                <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-3 flex items-center shadow-xs">
-                    <div class="p-2 bg-purple-50 dark:bg-slate-800 text-purple-600 dark:text-purple-400 rounded-lg mr-3"><i data-lucide="file-text" class="w-4 h-4"></i></div>
-                    <div><p class="text-[10px] text-slate-400 dark:text-slate-500 font-bold uppercase tracking-wider">Tipo</p><p class="text-xs font-bold text-slate-700 dark:text-white">Petição Inicial</p></div>
-                </div>
-                <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-3 flex items-center shadow-xs">
-                    <div class="p-2 bg-amber-50 dark:bg-slate-800 text-amber-600 dark:text-amber-400 rounded-lg mr-3"><i data-lucide="folder-git" class="w-4 h-4"></i></div>
-                    <div><p class="text-[10px] text-slate-400 dark:text-slate-500 font-bold uppercase tracking-wider">Fase</p><p class="text-xs font-bold text-slate-700 dark:text-white">Análise Inicial</p></div>
-                </div>
-                <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-3 flex items-center shadow-xs">
-                    <div class="p-2 bg-emerald-50 dark:bg-slate-800 text-emerald-600 dark:text-emerald-400 rounded-lg mr-3"><i data-lucide="target" class="w-4 h-4"></i></div>
-                    <div><p class="text-[10px] text-slate-400 dark:text-slate-500 font-bold uppercase tracking-wider">Foco</p><p class="text-xs font-bold text-slate-700 dark:text-white">Auditar Peças</p></div>
-                </div>
+                <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-3 flex items-center shadow-xs"><div class="p-2 bg-blue-50 dark:bg-slate-800 text-blue-600 dark:text-blue-400 rounded-lg mr-3"><i data-lucide="scale" class="w-4 h-4"></i></div><div><p class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Área</p><p class="text-xs font-bold text-slate-700 dark:text-white">Jurisprudência</p></div></div>
+                <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-3 flex items-center shadow-xs"><div class="p-2 bg-purple-50 dark:bg-slate-800 text-purple-600 dark:text-purple-400 rounded-lg mr-3"><i data-lucide="file-text" class="w-4 h-4"></i></div><div><p class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Tipo</p><p class="text-xs font-bold text-slate-700 dark:text-white">Petição Inicial</p></div></div>
+                <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-3 flex items-center shadow-xs"><div class="p-2 bg-amber-50 dark:bg-slate-800 text-amber-600 dark:text-amber-400 rounded-lg mr-3"><i data-lucide="folder-git" class="w-4 h-4"></i></div><div><p class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Fase</p><p class="text-xs font-bold text-slate-700 dark:text-white">Análise Inicial</p></div></div>
+                <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-3 flex items-center shadow-xs"><div class="p-2 bg-emerald-50 dark:bg-slate-800 text-emerald-600 dark:text-emerald-400 rounded-lg mr-3"><i data-lucide="target" class="w-4 h-4"></i></div><div><p class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Foco</p><p class="text-xs font-bold text-slate-700 dark:text-white">Auditar Peças</p></div></div>
             </div>
 
             <div id="center-preview-container" class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-xs flex flex-col flex-1 overflow-hidden min-h-[350px]">
@@ -139,9 +114,7 @@
                     <div>
                         <div class="flex items-center gap-2.5">
                             <h2 id="active-note-title" class="text-sm font-bold text-slate-800 dark:text-white">Selecione um arquivo do cofre</h2>
-                            <button id="btn-favorite-star" onclick="toggleActiveFileFavorite()" class="text-slate-300 dark:text-slate-600 hover:text-amber-500 dark:hover:text-amber-400 transition-colors focus:outline-none">
-                                <i data-lucide="star" class="w-4 h-4"></i>
-                            </button>
+                            <button id="btn-favorite-star" onclick="toggleActiveFileFavorite()" class="text-slate-300 dark:text-slate-600 hover:text-amber-500 dark:hover:text-amber-400 transition-colors focus:outline-none"><i data-lucide="star" class="w-4 h-4"></i></button>
                         </div>
                         <p id="active-note-meta" class="text-[10px] text-slate-400 dark:text-slate-500 font-medium mt-0.5">Nenhum item ativo no momento</p>
                     </div>
@@ -209,8 +182,10 @@
             </div>
         </main>
 
+        <!-- RESIZER 2 -->
         <div id="resizer-right" class="w-1.5 bg-transparent hover:bg-blue-500 cursor-col-resize z-10 flex-shrink-0 transition-colors"></div>
 
+        <!-- COLUNA 3: CHAT (DIREITA) -->
         <aside id="sidebar-right" class="w-80 bg-white dark:bg-slate-900 border-l border-slate-200 dark:border-slate-800 flex flex-col overflow-hidden shadow-2xl flex-shrink-0">
             <div class="p-4 border-b border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-900 flex items-center justify-between">
                 <div class="flex items-center gap-2.5">
@@ -224,7 +199,7 @@
 
             <div class="p-3 bg-amber-50/50 dark:bg-slate-800/30 border-b border-amber-100/60 dark:border-slate-800 flex flex-col gap-1.5">
                 <label class="text-[9px] font-black text-amber-800 dark:text-amber-400 uppercase tracking-widest">Token de Validação Local</label>
-                <input type="password" id="app-password" value="" placeholder="Insira a chave operacional do cofre..." class="w-full bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-lg px-3 py-1.5 text-xs font-mono text-slate-700 dark:text-slate-300 focus:outline-none">
+                <input type="password" id="app-password" value="" placeholder="Insira a chave operacional..." class="w-full bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-lg px-3 py-1.5 text-xs font-mono text-slate-700 dark:text-slate-300 focus:outline-none">
             </div>
 
             <div id="chat-messages" class="flex-1 overflow-y-auto p-4 flex flex-col gap-4 bg-[#fafafa] dark:bg-slate-950 select-text no-scrollbar">
@@ -254,6 +229,7 @@
         </aside>
     </div>
 
+    <!-- ENGINE LOGICO OPERACIONAL -->
     <script>
         lucide.createIcons();
 
@@ -301,7 +277,7 @@
         let favoriteItems = JSON.parse(localStorage.getItem("bms_favorites_map") || "{}");
         let collapsedFolders = JSON.parse(localStorage.getItem("bms_collapsed_folders") || "{}");
 
-        // LÓGICA DE RESIZE
+        // LÓGICA DOS RESIZERS
         const sidebarLeft = document.getElementById('sidebar-left');
         const sidebarRight = document.getElementById('sidebar-right');
         const resizerLeft = document.getElementById('resizer-left');
@@ -598,6 +574,22 @@
             }
         }
 
+        function highlightSelectedRow(targetFilename) {
+            document.querySelectorAll(".tree-row-container").forEach(row => {
+                if (!targetFilename) {
+                    row.className = "tree-row-container group flex items-center justify-between w-full rounded-xl p-0.5 border border-transparent hover:bg-slate-100 dark:hover:bg-slate-800 transition-all text-left text-slate-600 dark:text-slate-300";
+                    return;
+                }
+                const rowPath = row.getAttribute("data-path").replace(/\/$/, "");
+                const cleanTarget = targetFilename.replace(/\/$/, "");
+                if (rowPath === cleanTarget) {
+                    row.className = "tree-row-container group flex items-center justify-between w-full rounded-xl p-0.5 border transition-all text-left bg-blue-50/50 dark:bg-blue-950/30 border-blue-500 dark:border-blue-400 text-blue-600 dark:text-blue-400 shadow-xs";
+                } else {
+                    row.className = "tree-row-container group flex items-center justify-between w-full rounded-xl p-0.5 border border-transparent hover:bg-slate-100 dark:hover:bg-slate-800 transition-all text-left text-slate-600 dark:text-slate-300";
+                }
+            });
+        }
+
         async function buildNotesTree() {
             try {
                 const res = await fetch("/api/notes");
@@ -824,7 +816,7 @@
             switchTab('doc');
             
             updateFavoriteStarUI();
-            buildNotesTree();
+            buildNotesTree(); 
 
             if (filename.toLowerCase().endsWith('.pdf')) {
                 viewDoc.innerHTML = `<iframe src="/api/note-raw?file=${encodeURIComponent(filename)}" class="w-full h-[380px] border-0 rounded-xl bg-white"></iframe>`;
@@ -838,7 +830,7 @@
 
             try {
                 const res = await fetch(`/api/note-content?file=${encodeURIComponent(filename)}`);
-                if (!res.ok) throw new Error(`Erro HTTP: ${res.status}`);
+                if (!res.ok) throw new Error(`Erro de Conexão com o Servidor (HTTP ${res.status})`);
                 const data = await res.json();
                 
                 if (data.error) throw new Error(data.error);
@@ -863,8 +855,8 @@
                 document.getElementById("analysis-status-desc").innerText = "Análise documental ok.";
             } catch (err) {
                 console.error(err);
-                viewDoc.innerHTML = `<div class="text-center text-red-500 my-20 font-bold">Erro ao abrir visualização: ${err.message}</div>`;
-                viewRaw.innerText = `Falha: ${err.message}`;
+                viewDoc.innerHTML = `<div class="text-center text-red-500 my-20 font-bold text-sm bg-red-50 dark:bg-red-900/30 p-4 rounded-xl border border-red-200 dark:border-red-900 mx-10">Erro ao abrir visualização: ${err.message}</div>`;
+                viewRaw.innerText = `Falha Crítica do Servidor: ${err.message}`;
             }
         }
 
@@ -918,7 +910,7 @@
             chatInput.value = "";
             
             let sysContext = "";
-            if (selectedFileId) sysContext += `[Arquivo ativo no momento pelo usuário na interface: Cofre/${selectedFileId}]\n`;
+            if (selectedFileId) sysContext += `[O usuário está visualizando este arquivo exato: ${selectedFileId.replace(/\/$/, "")}. Se ele pedir para excluí-lo ou editá-lo, use este caminho.]\n`;
             if (pendingChatAttachment) {
                 sysContext += `[Arquivo anexado nesta mensagem: ${pendingChatAttachment.name}]\nConteúdo:\n${pendingChatAttachment.content}\n\n`;
                 document.getElementById("chat-attachment-area").classList.add("hidden");
@@ -957,7 +949,6 @@
             }
         }
 
-        // REQUISITO: FIX ABSOLUTO PARA MENSAGENS NÃO SUMIREM USANDO msgCounter EXCLUSIVO E SHRINK-0
         function renderMessageBlock(role, text) {
             msgCounter++;
             const id = "msg-" + Date.now() + "-" + msgCounter;
