@@ -16,6 +16,9 @@
         }
     </script>
     <style>
+        /* REQUISITO: Reduz a escala raiz para exatos 80%. Isso encolhe toda a plataforma sem quebrar os cliques/arrastes! */
+        html { font-size: 12.8px; } 
+
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
     </style>
@@ -335,7 +338,6 @@
     <script>
         lucide.createIcons();
 
-        // REQUISITO 1: ATALHO CTRL+K PARA PESQUISA NATIVA DO APP
         document.addEventListener('keydown', (e) => {
             if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
                 e.preventDefault();
@@ -385,9 +387,8 @@
         
         let favoriteItems = JSON.parse(localStorage.getItem("bms_favorites_map") || "{}");
         let collapsedFolders = JSON.parse(localStorage.getItem("bms_collapsed_folders") || "{}");
-        let highlightedNodes = []; // Usado para piscar os nós na malha quando a IA os citar
+        let highlightedNodes = []; 
 
-        // LÓGICA DE RESIZE
         const sidebarLeft = document.getElementById('sidebar-left');
         const sidebarRight = document.getElementById('sidebar-right');
         const resizerLeft = document.getElementById('resizer-left');
@@ -448,7 +449,6 @@
             drawGraph(); 
         }
 
-        // Dropdowns Elegantes
         function closeAllDropdownsMenu() {
             filterDropdown.classList.add("hidden");
             document.getElementById("custom-context-menu").classList.add("hidden");
@@ -795,7 +795,7 @@
             } catch (err) { console.error(err); }
         }
 
-        // REQUISITO 2: Motor de Física com Swirl Suave e Contínuo para a Malha
+        // REQUISITO 1: FÍSICA BROWNIANA LENTA E ORGÂNICA (PASSEIO SUAVE)
         function initPhysicsNodes(data) {
             const width = canvas.parentElement.clientWidth || 500; 
             const height = canvas.parentElement.clientHeight || 230;
@@ -830,10 +830,12 @@
                     let dy = n2.y - n1.y; 
                     if (dx === 0) dx = 0.1;
                     let dist = Math.sqrt(dx*dx + dy*dy);
-                    if (dist < 180) {
-                        let force = 400 / (dist * dist + 20); // Suavizado
-                        if (n1 !== draggedNode) { n1.vx -= (dx/dist)*force; n1.vy -= (dy/dist)*force; }
-                        if (n2 !== draggedNode) { n2.vx += (dx/dist)*force; n2.vy += (dy/dist)*force; }
+                    if (dist < 200) {
+                        let force = 300 / (dist * dist + 10);
+                        let fx = (dx / dist) * force;
+                        let fy = (dy / dist) * force;
+                        if (n1 !== draggedNode) { n1.vx -= fx; n1.vy -= fy; }
+                        if (n2 !== draggedNode) { n2.vx += fx; n2.vy += fy; }
                     }
                 }
             }
@@ -842,7 +844,7 @@
                 let dy = edge.targetNode.y - edge.sourceNode.y;
                 let dist = Math.sqrt(dx*dx + dy*dy);
                 if (dist > 0) {
-                    let force = 0.005 * dist; // Fricção elástica menor
+                    let force = 0.015 * dist; 
                     if (edge.sourceNode !== draggedNode) { edge.sourceNode.vx += (dx / dist) * force; edge.sourceNode.vy += (dy / dist) * force; }
                     if (edge.targetNode !== draggedNode) { edge.targetNode.vx -= (dx / dist) * force; edge.targetNode.vy -= (dy / dist) * force; }
                 }
@@ -850,16 +852,20 @@
             graphData.nodes.forEach(node => {
                 if (node === draggedNode) return;
                 
-                // Puxada suave pro centro e rotação contínua em vórtice (Swirl animado)
-                node.vx += (centerX - node.x) * 0.002; 
-                node.vy += (centerY - node.y) * 0.002;
-                node.vx += (node.y - centerY) * 0.0005;
-                node.vy += (centerX - node.x) * 0.0005;
+                // Gravidade central muito suave para não fugirem da tela
+                node.vx += (centerX - node.x) * 0.0005;
+                node.vy += (centerY - node.y) * 0.0005;
+
+                // Movimento aleatório (passeio browniano)
+                node.vx += (Math.random() - 0.5) * 0.08;
+                node.vy += (Math.random() - 0.5) * 0.08;
 
                 node.x += node.vx; 
                 node.y += node.vy; 
-                node.vx *= 0.90; // Deslizamento suave
-                node.vy *= 0.90;
+                
+                // Deslizamento (Fricção)
+                node.vx *= 0.92; 
+                node.vy *= 0.92;
             });
         }
 
@@ -879,30 +885,29 @@
             graphData.nodes.forEach(node => {
                 const cleanNodeId = node.id.replace(/\/$/, "");
                 const cleanSelectedId = selectedFileId ? selectedFileId.replace(/\/$/, "") : "";
-                
-                const isSelected = (cleanSelectedId === cleanNodeId);
-                const isHighlighted = highlightedNodes.includes(cleanNodeId); 
+                const act = (cleanSelectedId === cleanNodeId);
+                const isHighlighted = highlightedNodes.includes(cleanNodeId);
                 
                 ctx.beginPath(); 
                 let radius = 4.5;
-                if (isSelected) radius = 6.5;
+                if (act) radius = 6.5;
                 if (isHighlighted) radius = 9.0;
                 
                 ctx.arc(node.x, node.y, radius, 0, 2*Math.PI);
                 
                 if (isHighlighted) {
                     ctx.fillStyle = "#f59e0b"; 
-                } else if (isSelected) {
+                } else if (act) {
                     ctx.fillStyle = "#2563eb"; 
                 } else {
                     ctx.fillStyle = isDark ? "#64748b" : "#94a3b8"; 
                 }
                 ctx.fill();
                 
-                ctx.font = (isSelected || isHighlighted) ? "bold 11px sans-serif" : "10px sans-serif"; 
+                ctx.font = (act || isHighlighted) ? "bold 11px sans-serif" : "10px sans-serif"; 
                 ctx.fillStyle = isDark ? "#cbd5e1" : "#334155";
                 ctx.textAlign = "center"; 
-                ctx.fillText(node.label, node.x, node.y + 16);
+                ctx.fillText(node.label, node.x, node.y + 15);
             });
         }
 
@@ -966,7 +971,6 @@
             } catch(e){} 
         }
 
-        // REQUISITO 4: Função de Heurística Local JS para Análise (0 Tokens API)
         function generateLocalAnalysis(text) {
             if (!text || text.trim() === "") return { summary: "Documento sem conteúdo para análise estrutural.", points: ["Nenhum dado legível identificado."] };
 
@@ -1045,7 +1049,6 @@
                     </div>
                 `;
 
-                // REQUISITO 4: Chama Análise Local a Custo Zero
                 const analysis = generateLocalAnalysis(fileContent);
                 document.getElementById("meta-summary").innerText = analysis.summary;
                 document.getElementById("meta-points").innerHTML = analysis.points.map(p => `<div class="flex items-start gap-2 text-slate-600 dark:text-slate-400 font-medium"><i data-lucide="check-circle" class="w-3.5 h-3.5 shrink-0 text-emerald-500"></i> <span>${p}</span></div>`).join('');
