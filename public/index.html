@@ -7,23 +7,45 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <script>
-        // REQUISITO 1: Configuração obrigatória do Tailwind CDN para suportar a alternância de classe .dark
+        // Configuração do Tailwind CDN para escopo de classe escura
         tailwind.config = {
             darkMode: 'class'
         }
         
-        // Inicialização rápida do tema salvo
-        if (localStorage.getItem("theme") === "dark" || (!("theme" in localStorage) && window.matchMedia("(prefers-color-scheme: dark)").matches)) {
+        // REQUISITO 3: Modo Escuro definido como a opção principal/padrão do ecossistema
+        if (!localStorage.getItem("theme") || localStorage.getItem("theme") === "dark") {
             document.documentElement.classList.add("dark");
+            localStorage.setItem("theme", "dark");
         } else {
             document.documentElement.classList.remove("dark");
         }
     </script>
+    <style>
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
 </head>
 <body class="bg-[#f3f4f6] dark:bg-slate-950 text-slate-800 dark:text-slate-100 font-sans h-screen flex flex-col overflow-hidden select-none transition-colors duration-200">
 
     <input type="file" id="global-vault-upload" class="hidden" />
     <input type="file" id="chat-context-upload" class="hidden" />
+
+    <div id="custom-context-menu" class="hidden absolute bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl shadow-2xl py-1.5 w-44 z-50 text-xs font-bold text-slate-600 dark:text-slate-300">
+        <button onclick="openRenameModal()" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 flex items-center gap-2"><i data-lucide="edit-2" class="w-3.5 h-3.5 text-blue-500"></i> Renomear / Mover</button>
+        <button onclick="openDeleteModal()" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 text-red-600 dark:text-red-400 flex items-center gap-2"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i> Apagar Registro</button>
+    </div>
+
+    <div id="custom-dialog-modal" class="hidden fixed inset-0 bg-slate-950/40 backdrop-blur-xs flex items-center justify-center z-50">
+        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-2xl p-5 w-80 max-w-full flex flex-col gap-4">
+            <h3 id="modal-title" class="text-sm font-black text-slate-800 dark:text-white">Ação do Cofre</h3>
+            <div id="modal-body-content" class="flex flex-col gap-2 text-xs font-semibold text-slate-600 dark:text-slate-400">
+                </div>
+            <div class="flex justify-end gap-2 text-xs font-bold mt-2">
+                <button onclick="closeCustomModal()" class="px-3 py-2 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 rounded-xl hover:bg-slate-200/60 dark:hover:bg-slate-700 transition-all">Cancelar</button>
+                <button id="modal-confirm-btn" class="px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl transition-all">Confirmar</button>
+            </div>
+        </div>
+    </div>
 
     <header class="bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 h-16 min-h-16 flex items-center justify-between px-6 z-20 shadow-xs">
         <div class="flex items-center gap-3">
@@ -74,7 +96,7 @@
                 </div>
             </div>
 
-            <div id="file-tree" class="flex-1 overflow-y-auto space-y-0.5 pr-1 text-xs font-semibold text-slate-600 dark:text-slate-300 scrollbar-none">
+            <div id="file-tree" class="flex-1 overflow-y-auto space-y-0.5 pr-1 text-xs font-semibold text-slate-600 dark:text-slate-300 no-scrollbar">
                 <div class="text-slate-400 p-2 animate-pulse">Sincronizando volumes do cofre...</div>
             </div>
 
@@ -94,7 +116,7 @@
             </div>
         </aside>
 
-        <main class="flex-1 flex flex-col overflow-y-auto p-5 gap-4 scrollbar-none">
+        <main class="flex-1 flex flex-col overflow-y-auto p-5 gap-4 no-scrollbar">
             <div class="grid grid-cols-4 gap-4">
                 <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-3 flex items-center shadow-xs">
                     <div class="p-2 bg-blue-50 dark:bg-slate-800 text-blue-600 dark:text-blue-400 rounded-lg mr-3"><i data-lucide="scale" class="w-4 h-4"></i></div>
@@ -106,7 +128,7 @@
                 </div>
                 <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-3 flex items-center shadow-xs">
                     <div class="p-2 bg-amber-50 dark:bg-slate-800 text-amber-600 dark:text-amber-400 rounded-lg mr-3"><i data-lucide="folder-git" class="w-4 h-4"></i></div>
-                    <div><p class="text-[10px] text-slate-400 dark:text-slate-500 font-bold uppercase tracking-wider">Fase</p><p class="text-xs font-bold text-slate-700 dark:text-white">Análise Inicial</p></div>
+                    <div><p class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Fase</p><p class="text-xs font-bold text-slate-700 dark:text-white">Análise Inicial</p></div>
                 </div>
                 <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-3 flex items-center shadow-xs">
                     <div class="p-2 bg-emerald-50 dark:bg-slate-800 text-emerald-600 dark:text-emerald-400 rounded-lg mr-3"><i data-lucide="target" class="w-4 h-4"></i></div>
@@ -123,13 +145,13 @@
                                 <i data-lucide="star" class="w-4 h-4"></i>
                             </button>
                         </div>
-                        <p id="active-note-meta" class="text-[10px] text-slate-400 dark:text-slate-500 font-medium mt-0.5">Nenhum item ativo no momento</p>
+                        <p id="active-note-meta" class="text-[10px] text-slate-400 dark:text-slate-500 font-medium mt-0.5">Aguardando seleção na árvore à esquerda</p>
                     </div>
                     
                     <div class="flex items-center gap-1.5">
-                        <button onclick="downloadActiveFile()" class="p-1.5 text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-all" title="Fazer Download"><i data-lucide="download" class="w-4 h-4"></i></button>
-                        <button onclick="printActiveFile()" class="p-1.5 text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-all" title="Imprimir Documento"><i data-lucide="printer" class="w-4 h-4"></i></button>
-                        <button onclick="fullscreenActiveFile()" class="p-1.5 text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-all" title="Alternar Tela Cheia"><i data-lucide="maximize-2" class="w-4 h-4"></i></button>
+                        <button onclick="downloadActiveFile()" class="p-1.5 text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-all" title="Download"><i data-lucide="download" class="w-4 h-4"></i></button>
+                        <button onclick="printActiveFile()" class="p-1.5 text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-all" title="Imprimir"><i data-lucide="printer" class="w-4 h-4"></i></button>
+                        <button onclick="fullscreenActiveFile()" class="p-1.5 text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-all" title="Tela Cheia"><i data-lucide="maximize-2" class="w-4 h-4"></i></button>
                     </div>
                 </div>
 
@@ -203,7 +225,7 @@
 
             <div class="p-3 bg-amber-50/50 dark:bg-slate-800/30 border-b border-amber-100/60 dark:border-slate-800 flex flex-col gap-1.5">
                 <label class="text-[9px] font-black text-amber-800 dark:text-amber-400 uppercase tracking-widest">Token de Validação Local</label>
-                <input type="password" id="app-password" value="sua_senha_aqui" class="w-full bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-lg px-3 py-1.5 text-xs font-mono text-slate-700 dark:text-slate-300 focus:outline-none">
+                <input type="password" id="app-password" value="" placeholder="Insira a chave operacional do cofre..." class="w-full bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-lg px-3 py-1.5 text-xs font-mono text-slate-700 dark:text-slate-300 focus:outline-none">
             </div>
 
             <div id="chat-messages" class="flex-1 overflow-y-auto p-4 flex flex-col gap-4 bg-[#fafafa] dark:bg-slate-950 select-text no-scrollbar">
@@ -274,11 +296,12 @@
         let graphData = { nodes: [], edges: [] };
         let draggedNode = null;
         let currentFilterType = "all";
-        let rawContentBuffer = ""; // Armazena texto limpo para funções de impressão/download
+        let rawContentBuffer = "";
+        let contextMenuSelectedPath = null;
         
         let favoriteItems = JSON.parse(localStorage.getItem("favorites_map") || "{}");
 
-        // REQUISITO 1: Alternador de Modo Escuro Total Corrigido
+        // REQUISITO 1: Alternador de Modo Escuro / Claro Corrigido Completo
         function toggleDarkMode() {
             if (document.documentElement.classList.contains("dark")) {
                 document.documentElement.classList.remove("dark");
@@ -292,6 +315,7 @@
 
         function closeAllDropdownsMenu() {
             filterDropdown.classList.add("hidden");
+            document.getElementById("custom-context-menu").classList.add("hidden");
         }
 
         function toggleFilterDropdown(e) {
@@ -305,7 +329,6 @@
             buildNotesTree();
         }
 
-        // REQUISITO 4: Tratamento de cliques vazios para desmarcar arquivos e voltar à raiz
         function clearTreeSelection(e) {
             if (e.target.id === "file-tree" || e.target.tagName === "ASIDE") {
                 selectedFileId = null;
@@ -318,7 +341,6 @@
             }
         }
 
-        // REQUISITO 1: Sistema de favoritos reativo
         function toggleActiveFileFavorite() {
             if (!selectedFileId) return;
             if (favoriteItems[selectedFileId]) {
@@ -342,9 +364,9 @@
             lucide.createIcons();
         }
 
-        // REQUISITO 3: Função Operacional Real de Download de Arquivo
+        // REQUISITO 3: Download, Impressão e Tela Cheia operacionais
         function downloadActiveFile() {
-            if (!selectedFileId || !rawContentBuffer) return alert("Nenhum arquivo ativo para download.");
+            if (!selectedFileId || !rawContentBuffer) return;
             const blob = new Blob([rawContentBuffer], { type: "text/markdown;charset=utf-8" });
             const link = document.createElement("a");
             link.href = URL.createObjectURL(blob);
@@ -352,28 +374,18 @@
             link.click();
         }
 
-        // REQUISITO 3: Função Operacional Real de Impressão de Peça Escopo Isolado
         function printActiveFile() {
-            if (!selectedFileId) return alert("Nenhuma peça selecionada para impressão.");
+            if (!selectedFileId) return;
             const printWindow = window.open("", "_blank");
-            printWindow.document.write(`
-                <html>
-                <head><title>Imprimir - BMS Knowledge</title><style>body{font-family:serif;padding:40px;line-height:1.6;color:#1a1a1a;}pre{white-space:pre-wrap;font-family:monospace;background:#f4f4f4;padding:15px;border-radius:8px;}</style></head>
-                <body><h2>${activeNoteTitle.innerText}</h2><hr/><p>${viewDoc.innerText}</p></body>
-                </html>
-            `);
+            printWindow.document.write(`<html><head><title>BMS - Imprimir</title></head><body style="font-family:serif;padding:30px;line-height:1.6;">${viewDoc.innerHTML}</body></html>`);
             printWindow.document.close();
             printWindow.print();
         }
 
-        // REQUISITO 3: Função Operacional Real de Tela Cheia do Painel Central
         function fullscreenActiveFile() {
             const container = document.getElementById("center-preview-container");
-            if (!document.fullscreenElement) {
-                container.requestFullscreen().catch(err => console.error(err));
-            } else {
-                document.exitFullscreen();
-            }
+            if (!document.fullscreenElement) container.requestFullscreen().catch(err => console.error(err));
+            else document.exitFullscreen();
         }
 
         // Monitor de Status Real do Servidor
@@ -405,6 +417,50 @@
             });
         }
 
+        // REQUISITO 1: Menu de Contexto Customizado Flutuante Interno do Próprio App (3 pontos)
+        function triggerInlineContextMenu(e, path) {
+            e.stopPropagation();
+            contextMenuSelectedPath = path;
+            const menu = document.getElementById("custom-context-menu");
+            menu.classList.remove("hidden");
+            menu.style.left = `${e.clientX - 160}px`;
+            menu.style.top = `${e.clientY + 10}px`;
+        }
+
+        function closeCustomModal() {
+            document.getElementById("custom-dialog-modal").classList.add("hidden");
+        }
+
+        function openRenameModal() {
+            document.getElementById("custom-context-menu").classList.add("hidden");
+            const modal = document.getElementById("custom-dialog-modal");
+            document.getElementById("modal-title").innerText = "Renomear / Mover Arquivo";
+            document.getElementById("modal-body-content").innerHTML = `
+                <p class="mb-1">Insira o novo caminho completo do registro:</p>
+                <input type="text" id="modal-input-field" value="${contextMenuSelectedPath}" class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl p-2 text-xs font-semibold focus:outline-none text-slate-800 dark:text-white">
+            `;
+            modal.classList.remove("hidden");
+            document.getElementById("modal-confirm-btn").onclick = async () => {
+                const newPath = document.getElementById("modal-input-field").value.trim();
+                if (newPath) {
+                    await renameItem(contextMenuSelectedPath, newPath);
+                    closeCustomModal();
+                }
+            };
+        }
+
+        function openDeleteModal() {
+            document.getElementById("custom-context-menu").classList.add("hidden");
+            const modal = document.getElementById("custom-dialog-modal");
+            document.getElementById("modal-title").innerText = "Confirmar Exclusão";
+            document.getElementById("modal-body-content").innerHTML = `<p>Tem certeza que deseja apagar permanentemente o arquivo <strong>${contextMenuSelectedPath}</strong> do cofre local?</p>`;
+            modal.classList.remove("hidden");
+            document.getElementById("modal-confirm-btn").onclick = async () => {
+                await deleteItem(contextMenuSelectedPath);
+                closeCustomModal();
+            };
+        }
+
         async function createFolderOnVPS(name) {
             try {
                 const res = await fetch("/api/create-folder", {
@@ -425,41 +481,20 @@
             if (selectedFileId && selectedFileId.endsWith("/")) context = selectedFileId;
             else if (selectedFileId && selectedFileId.includes("/")) context = selectedFileId.substring(0, selectedFileId.lastIndexOf("/")) + "/";
             
-            const name = prompt(context ? `Criar subpasta dentro de ${context}:` : "Criar pasta na raiz do cofre:");
-            if (name && name.trim()) {
-                createFolderOnVPS(context + name.trim());
-            }
-        }
-
-        async function deleteItem(p) {
-            if (!confirm(`Excluir permanentemente: ${p}?`)) return;
-            try {
-                const res = await fetch("/api/delete-item", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ targetPath: p })
-                });
-                if (res.ok) {
-                    if(selectedFileId === p) selectedFileId = null;
-                    buildNotesTree();
-                    reloadGlobalGraph();
+            const modal = document.getElementById("custom-dialog-modal");
+            document.getElementById("modal-title").innerText = "Criar Nova Pasta";
+            document.getElementById("modal-body-content").innerHTML = `
+                <p class="mb-1">${context ? 'Subpasta em ' + context : 'Pasta na raiz do cofre:'}</p>
+                <input type="text" id="modal-input-field" placeholder="Nome do diretório..." class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl p-2 text-xs font-semibold focus:outline-none text-slate-800 dark:text-white">
+            `;
+            modal.classList.remove("hidden");
+            document.getElementById("modal-confirm-btn").onclick = async () => {
+                const name = document.getElementById("modal-input-field").value.trim();
+                if (name) {
+                    await createFolderOnVPS(context + name);
+                    closeCustomModal();
                 }
-            } catch (err) { console.error(err); }
-        }
-
-        async function renameItem(oldP, newP) {
-            try {
-                const res = await fetch("/api/rename-item", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ oldPath: oldP, newPath: newP })
-                });
-                if (res.ok) {
-                    if(selectedFileId === oldP) selectedFileId = newP;
-                    buildNotesTree();
-                    reloadGlobalGraph();
-                }
-            } catch (err) { console.error(err); }
+            };
         }
 
         async function buildNotesTree() {
@@ -468,7 +503,6 @@
                 const data = await res.json();
                 if (data.items) {
                     fileTree.innerHTML = "";
-
                     let items = data.items;
                     if (currentFilterType === "md") items = items.filter(i => i.type === "directory" || i.path.endsWith(".md"));
                     if (currentFilterType === "pdf") items = items.filter(i => i.type === "directory" || i.path.endsWith(".pdf"));
@@ -508,19 +542,11 @@
                             };
                         }
 
+                        // REQUISITO 1: Menu de três pontos embutido em camada na própria plataforma
                         const menuBtn = document.createElement("button");
                         menuBtn.className = "opacity-0 group-hover:opacity-100 p-1 text-slate-400 hover:text-blue-500 rounded transition-all focus:outline-none";
                         menuBtn.innerHTML = `<i data-lucide="more-horizontal" class="w-3.5 h-3.5"></i>`;
-                        menuBtn.onclick = (e) => {
-                            e.stopPropagation();
-                            const act = prompt(`Gerenciar item [${item.path}]:\n[1] Renomear / Mover\n[2] Apagar permanentemente\nDigite o número da ação:`);
-                            if (act === "1") {
-                                const newPath = prompt("Digite o novo caminho completo do arquivo ou pasta:", item.path);
-                                if (newPath && newPath.trim()) renameItem(item.path, newPath.trim());
-                            } else if (act === "2") {
-                                deleteItem(item.path);
-                            }
-                        };
+                        menuBtn.onclick = (e) => { triggerInlineContextMenu(e, item.path); };
 
                         row.appendChild(btn);
                         row.appendChild(menuBtn);
@@ -531,7 +557,7 @@
             } catch (err) { console.error(err); }
         }
 
-        // REQUISITO 2: Motor de Física de Força-Direcionada do Gráfico Restaurado e Estabilizado
+        // REQUISITO 2: Motor de Física Redesenhado sem erros de sintaxe (Correção do congelamento)
         function initPhysicsNodes(data) {
             const width = canvas.parentElement.clientWidth || 500; 
             const height = canvas.parentElement.clientHeight || 230;
@@ -596,7 +622,6 @@
             });
         }
 
-        // Correção de Erros de Sintaxe na Renderização do Gráfico
         function drawGraph() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             const isDark = document.documentElement.classList.contains("dark");
@@ -660,7 +685,7 @@
             } catch(e){} 
         }
 
-        // REQUISITO 4: Função de Leitura e Pré-visualização Consertada (JS Engine Ativo)
+        // REQUISITO 4: Função de Pré-visualização Corrigida e Rodando estavelmente
         async function loadNoteContent(filename) {
             selectedFileId = filename;
             const shortName = filename.split('/').pop();
@@ -690,7 +715,7 @@
                 const data = await res.json();
                 
                 const fileContent = (data && data.content !== undefined) ? data.content : "";
-                rawContentBuffer = fileContent; // Buffer ativo para download
+                rawContentBuffer = fileContent;
                 viewRaw.innerText = fileContent || "[Arquivo de texto vazio]";
                 
                 viewDoc.innerHTML = `
@@ -704,7 +729,7 @@
                 circleText.innerText = "100%";
                 analysisStatusDesc.innerText = "Análise documental ok.";
             } catch (err) {
-                console.error("Erro ao renderizar:", err);
+                console.error(err);
             }
         }
 
