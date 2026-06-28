@@ -7,12 +7,12 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <script>
-        // Configuração do Tailwind CDN para escopo de classe escura
+        // Configuração do Tailwind CDN para suportar a alternância de classe escura
         tailwind.config = {
             darkMode: 'class'
         }
         
-        // REQUISITO 3: Modo Escuro definido como a opção principal/padrão do ecossistema
+        // REQUISITO 3: Modo Escuro definido como padrão principal
         if (!localStorage.getItem("theme") || localStorage.getItem("theme") === "dark") {
             document.documentElement.classList.add("dark");
             localStorage.setItem("theme", "dark");
@@ -35,7 +35,7 @@
         <button onclick="openDeleteModal()" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 text-red-600 dark:text-red-400 flex items-center gap-2"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i> Apagar Registro</button>
     </div>
 
-    <div id="custom-dialog-modal" class="hidden fixed inset-0 bg-slate-950/40 backdrop-blur-xs flex items-center justify-center z-50">
+    <div id="custom-dialog-modal" class="hidden fixed inset-0 bg-slate-950/40 dark:bg-slate-950/60 backdrop-blur-xs flex items-center justify-center z-50">
         <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-2xl p-5 w-80 max-w-full flex flex-col gap-4">
             <h3 id="modal-title" class="text-sm font-black text-slate-800 dark:text-white">Ação do Cofre</h3>
             <div id="modal-body-content" class="flex flex-col gap-2 text-xs font-semibold text-slate-600 dark:text-slate-400">
@@ -128,7 +128,7 @@
                 </div>
                 <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-3 flex items-center shadow-xs">
                     <div class="p-2 bg-amber-50 dark:bg-slate-800 text-amber-600 dark:text-amber-400 rounded-lg mr-3"><i data-lucide="folder-git" class="w-4 h-4"></i></div>
-                    <div><p class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Fase</p><p class="text-xs font-bold text-slate-700 dark:text-white">Análise Inicial</p></div>
+                    <div><p class="text-[10px] text-slate-400 dark:text-slate-500 font-bold uppercase tracking-wider">Fase</p><p class="text-xs font-bold text-slate-700 dark:text-white">Análise Inicial</p></div>
                 </div>
                 <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-3 flex items-center shadow-xs">
                     <div class="p-2 bg-emerald-50 dark:bg-slate-800 text-emerald-600 dark:text-emerald-400 rounded-lg mr-3"><i data-lucide="target" class="w-4 h-4"></i></div>
@@ -145,7 +145,7 @@
                                 <i data-lucide="star" class="w-4 h-4"></i>
                             </button>
                         </div>
-                        <p id="active-note-meta" class="text-[10px] text-slate-400 dark:text-slate-500 font-medium mt-0.5">Aguardando seleção na árvore à esquerda</p>
+                        <p id="active-note-meta" class="text-[10px] text-slate-400 dark:text-slate-500 font-medium mt-0.5">Nenhum item ativo no momento</p>
                     </div>
                     
                     <div class="flex items-center gap-1.5">
@@ -301,7 +301,6 @@
         
         let favoriteItems = JSON.parse(localStorage.getItem("favorites_map") || "{}");
 
-        // REQUISITO 1: Alternador de Modo Escuro / Claro Corrigido Completo
         function toggleDarkMode() {
             if (document.documentElement.classList.contains("dark")) {
                 document.documentElement.classList.remove("dark");
@@ -364,7 +363,6 @@
             lucide.createIcons();
         }
 
-        // REQUISITO 3: Download, Impressão e Tela Cheia operacionais
         function downloadActiveFile() {
             if (!selectedFileId || !rawContentBuffer) return;
             const blob = new Blob([rawContentBuffer], { type: "text/markdown;charset=utf-8" });
@@ -388,7 +386,6 @@
             else document.exitFullscreen();
         }
 
-        // Monitor de Status Real do Servidor
         async function checkRealServerStatus() {
             try {
                 const res = await fetch("/api/status");
@@ -417,7 +414,7 @@
             });
         }
 
-        // REQUISITO 1: Menu de Contexto Customizado Flutuante Interno do Próprio App (3 pontos)
+        // REQUISITO 1: Menu de Opções (...) Interno Customizado
         function triggerInlineContextMenu(e, path) {
             e.stopPropagation();
             contextMenuSelectedPath = path;
@@ -453,7 +450,7 @@
             document.getElementById("custom-context-menu").classList.add("hidden");
             const modal = document.getElementById("custom-dialog-modal");
             document.getElementById("modal-title").innerText = "Confirmar Exclusão";
-            document.getElementById("modal-body-content").innerHTML = `<p>Tem certeza que deseja apagar permanentemente o arquivo <strong>${contextMenuSelectedPath}</strong> do cofre local?</p>`;
+            document.getElementById("modal-body-content").innerHTML = `<p>Tem certeza que deseja apagar permanentemente o arquivo <strong>${contextMenuSelectedPath}</strong> do cofre?</p>`;
             modal.classList.remove("hidden");
             document.getElementById("modal-confirm-btn").onclick = async () => {
                 await deleteItem(contextMenuSelectedPath);
@@ -497,6 +494,37 @@
             };
         }
 
+        async function deleteItem(p) {
+            try {
+                const res = await fetch("/api/delete-item", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ targetPath: p })
+                });
+                if (res.ok) {
+                    if(selectedFileId === p) selectedFileId = null;
+                    buildNotesTree();
+                    reloadGlobalGraph();
+                }
+            } catch (err) { console.error(err); }
+        }
+
+        async function renameItem(oldP, newP) {
+            try {
+                const res = await fetch("/api/rename-item", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ oldPath: oldP, newPath: newP })
+                });
+                if (res.ok) {
+                    if(selectedFileId === oldP) selectedFileId = newP;
+                    buildNotesTree();
+                    reloadGlobalGraph();
+                }
+            } catch (err) { console.error(err); }
+        }
+
+        // REQUISITO 4: Árvore com realce e contorno em azul de alta visibilidade ao selecionar item
         async function buildNotesTree() {
             try {
                 const res = await fetch("/api/notes");
@@ -511,14 +539,15 @@
                         const row = document.createElement("div");
                         const isSelected = (selectedFileId === item.path || selectedFileId === item.path + "/");
                         
-                        row.className = `tree-row-container group flex items-center justify-between w-full rounded-lg p-0.5 transition-all text-left ${isSelected ? 'bg-blue-50 dark:bg-blue-950/40 text-blue-600 dark:text-blue-400' : 'hover:bg-slate-100 dark:hover:bg-slate-800'}`;
+                        // REQUISITO 4: Adicionado contorno/borda (border-blue-500) e fundo azul leve ao selecionar
+                        row.className = `tree-row-container group flex items-center justify-between w-full rounded-xl p-0.5 border transition-all text-left ${isSelected ? 'bg-blue-50/50 dark:bg-blue-950/30 border-blue-500 dark:border-blue-400 text-blue-600 dark:text-blue-400' : 'border-transparent hover:bg-slate-100 dark:hover:bg-slate-800'}`;
                         row.setAttribute("data-path", item.path);
 
                         const btn = document.createElement("button");
                         const isDir = item.type === "directory";
                         const depth = (item.path.match(/\//g) || []).length;
                         
-                        btn.className = "flex-1 text-left py-1 flex items-center gap-1.5 font-bold truncate text-xs focus:outline-none";
+                        btn.className = "flex-1 text-left py-1.5 flex items-center gap-1.5 font-bold truncate text-xs focus:outline-none";
                         btn.style.paddingLeft = `${depth * 12 + 4}px`;
                         
                         const icon = isDir ? "folder" : (item.path.endsWith(".pdf") ? "file-text" : "file");
@@ -542,7 +571,6 @@
                             };
                         }
 
-                        // REQUISITO 1: Menu de três pontos embutido em camada na própria plataforma
                         const menuBtn = document.createElement("button");
                         menuBtn.className = "opacity-0 group-hover:opacity-100 p-1 text-slate-400 hover:text-blue-500 rounded transition-all focus:outline-none";
                         menuBtn.innerHTML = `<i data-lucide="more-horizontal" class="w-3.5 h-3.5"></i>`;
@@ -557,7 +585,7 @@
             } catch (err) { console.error(err); }
         }
 
-        // REQUISITO 2: Motor de Física Redesenhado sem erros de sintaxe (Correção do congelamento)
+        // REQUISITO 2: Física do Gráfico sem erros de sintaxe (Correção do travamento de tela)
         function initPhysicsNodes(data) {
             const width = canvas.parentElement.clientWidth || 500; 
             const height = canvas.parentElement.clientHeight || 230;
@@ -685,7 +713,7 @@
             } catch(e){} 
         }
 
-        // REQUISITO 4: Função de Pré-visualização Corrigida e Rodando estavelmente
+        // REQUISITO 2: Pré-visualização Descongelada (Código limpo sem travas de runtime)
         async function loadNoteContent(filename) {
             selectedFileId = filename;
             const shortName = filename.split('/').pop();
@@ -697,6 +725,7 @@
             viewRaw.innerText = "Buscando texto bruto...";
 
             switchTab('doc');
+            // REQUISITO 3 e 4: Atualiza a estrela e re-renderiza o contorno da árvore lateral instantaneamente
             updateFavoriteStarUI();
             buildNotesTree();
 
