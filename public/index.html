@@ -41,6 +41,28 @@
         </div>
     </div>
 
+    <div id="account-settings-modal" class="hidden fixed inset-0 bg-slate-950/40 dark:bg-slate-950/60 backdrop-blur-xs flex items-center justify-center z-50">
+        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-2xl p-6 w-[400px] max-w-full flex flex-col gap-4">
+            <div class="flex items-center gap-3 border-b border-slate-100 dark:border-slate-800 pb-4">
+                <div class="w-12 h-12 bg-blue-100 dark:bg-blue-900/50 rounded-full flex items-center justify-center text-blue-600 dark:text-blue-400 font-bold text-xl">
+                    TS
+                </div>
+                <div>
+                    <h3 class="font-bold text-slate-800 dark:text-white">Ambiente de Testes</h3>
+                    <p class="text-[10px] text-slate-400 font-medium">BETA V1.0 - BMS Service</p>
+                </div>
+            </div>
+            <div class="flex flex-col gap-2 text-xs font-semibold text-slate-600 dark:text-slate-400">
+                <div class="flex justify-between p-2 bg-slate-50 dark:bg-slate-800/50 rounded-lg"><span>Plano Habilitado:</span> <span class="text-emerald-600 dark:text-emerald-400">Profissional (Ilimitado)</span></div>
+                <div class="flex justify-between p-2 bg-slate-50 dark:bg-slate-800/50 rounded-lg"><span>Tokens Restantes:</span> <span>Infinitos (Local Mode)</span></div>
+                <div class="flex justify-between p-2 bg-slate-50 dark:bg-slate-800/50 rounded-lg"><span>Status da VPS:</span> <span class="text-blue-500">Conectado / Alta Prioridade</span></div>
+            </div>
+            <div class="flex justify-end gap-2 text-xs font-bold mt-2 pt-4 border-t border-slate-100 dark:border-slate-800">
+                <button onclick="document.getElementById('account-settings-modal').classList.add('hidden')" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl transition-all w-full">Fechar Painel</button>
+            </div>
+        </div>
+    </div>
+
     <header class="bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 h-16 min-h-16 flex items-center justify-between px-6 z-20 shadow-xs">
         <div class="flex items-center gap-3">
             <div class="bg-blue-600 p-2.5 rounded-xl text-white shadow-sm shadow-blue-300 dark:shadow-none"><i data-lucide="brain-circuit" class="w-5 h-5"></i></div>
@@ -89,12 +111,17 @@
 
             <div id="file-tree" class="flex-1 overflow-y-auto space-y-0.5 pr-1 text-xs font-semibold text-slate-600 dark:text-slate-300 no-scrollbar"></div>
 
-            <div class="mt-4 bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-800 rounded-2xl p-3.5">
+            <div onclick="document.getElementById('account-settings-modal').classList.remove('hidden')" class="mt-4 bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-800 rounded-2xl p-3.5 cursor-pointer hover:ring-2 hover:ring-blue-500/50 transition-all">
                 <div class="flex items-center justify-between mb-1.5">
                     <span class="text-[11px] font-bold text-slate-700 dark:text-slate-300 flex items-center gap-1.5"><i data-lucide="shield-check" class="w-3.5 h-3.5 text-blue-600"></i> Plano Profissional</span>
-                    <span class="text-[10px] bg-emerald-100 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-300 font-extrabold px-1.5 py-0.5 rounded-md">ATIVO</span>
+                    <span class="text-[10px] bg-emerald-100 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-300 font-extrabold px-1.5 py-0.5 rounded-md">TESTE</span>
                 </div>
-                <div class="w-full bg-slate-200 dark:bg-slate-700 h-2 rounded-full overflow-hidden mb-1"><div class="bg-blue-600 h-full w-[78%] rounded-full"></div></div>
+                <div class="text-[10px] text-slate-400 dark:text-slate-500 mb-2 font-medium">Uso do Assistente BMS este mês</div>
+                <div class="w-full bg-slate-200 dark:bg-slate-700 h-2 rounded-full overflow-hidden mb-1"><div class="bg-blue-600 h-full w-[10%] rounded-full"></div></div>
+                <div class="flex justify-between text-[10px] font-bold text-slate-500 dark:text-slate-400">
+                    <span>120 / Ilimitado</span>
+                    <span>1%</span>
+                </div>
             </div>
         </aside>
 
@@ -221,11 +248,11 @@
 
                     <div class="w-2/5 p-5 flex flex-col gap-4 overflow-y-auto bg-white dark:bg-slate-900 border-l border-slate-50 dark:border-slate-800">
                         <div>
-                            <span class="text-[10px] font-black uppercase tracking-widest text-slate-400 dark:text-slate-500">Análise Jurídica</span>
+                            <span class="text-[10px] font-black uppercase tracking-widest text-slate-400 dark:text-slate-500">Análise Jurídica Automática</span>
                             <p id="meta-summary" class="text-xs text-slate-600 dark:text-slate-400 mt-1 font-medium leading-relaxed transition-all">Selecione um arquivo para compilar a análise gerencial.</p>
                         </div>
                         <div class="border-t border-slate-100 dark:border-slate-800 pt-3">
-                            <span class="text-[10px] font-black uppercase tracking-widest text-slate-400 dark:text-slate-500 block mb-2">Pontos Relevantes</span>
+                            <span class="text-[10px] font-black uppercase tracking-widest text-slate-400 dark:text-slate-500 block mb-2">Pontos Relevantes Extraídos</span>
                             <div id="meta-points" class="space-y-2 text-xs font-semibold text-slate-600 dark:text-slate-400 transition-all">
                                 <div class="flex items-start gap-2 text-slate-400 font-medium"><i data-lucide="minus" class="w-4 h-4 shrink-0"></i> <span>Aguardando arquivo...</span></div>
                             </div>
@@ -240,8 +267,8 @@
                                     <span id="circle-text" class="absolute text-[11px] font-black text-slate-700 dark:text-white">0%</span>
                                 </div>
                                 <div>
-                                    <p class="text-xs font-bold text-slate-700 dark:text-white">Varredura de Links</p>
-                                    <p id="analysis-status-desc" class="text-[10px] text-slate-400 dark:text-slate-500 font-medium">Aguardando indexação.</p>
+                                    <p class="text-xs font-bold text-slate-700 dark:text-white">Motor de Indexação</p>
+                                    <p id="analysis-status-desc" class="text-[10px] text-slate-400 dark:text-slate-500 font-medium">Aguardando arquivo local.</p>
                                 </div>
                             </div>
                         </div>
@@ -255,7 +282,7 @@
                     <span class="text-[9px] font-bold bg-slate-100 dark:bg-slate-800 text-slate-400 dark:text-slate-500 px-2 py-0.5 rounded-md uppercase tracking-wider">Malha Neural Orgânica</span>
                 </div>
                 <div class="flex-1 bg-slate-50 dark:bg-slate-950 border border-slate-100 dark:border-slate-850 rounded-xl overflow-hidden relative">
-                    <canvas id="graph-canvas" class="w-full h-full block"></canvas>
+                    <canvas id="graph-canvas" class="w-full h-full block cursor-grab active:cursor-grabbing"></canvas>
                 </div>
             </div>
         </main>
@@ -305,11 +332,10 @@
         </aside>
     </div>
 
-    <!-- ENGINE LOGICO OPERACIONAL -->
     <script>
         lucide.createIcons();
 
-        // ATALHO CTRL+K PARA PESQUISA
+        // REQUISITO 1: ATALHO CTRL+K PARA PESQUISA NATIVA DO APP
         document.addEventListener('keydown', (e) => {
             if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
                 e.preventDefault();
@@ -361,6 +387,7 @@
         let collapsedFolders = JSON.parse(localStorage.getItem("bms_collapsed_folders") || "{}");
         let highlightedNodes = []; // Usado para piscar os nós na malha quando a IA os citar
 
+        // LÓGICA DE RESIZE
         const sidebarLeft = document.getElementById('sidebar-left');
         const sidebarRight = document.getElementById('sidebar-right');
         const resizerLeft = document.getElementById('resizer-left');
@@ -421,6 +448,7 @@
             drawGraph(); 
         }
 
+        // Dropdowns Elegantes
         function closeAllDropdownsMenu() {
             filterDropdown.classList.add("hidden");
             document.getElementById("custom-context-menu").classList.add("hidden");
@@ -767,6 +795,7 @@
             } catch (err) { console.error(err); }
         }
 
+        // REQUISITO 2: Motor de Física com Swirl Suave e Contínuo para a Malha
         function initPhysicsNodes(data) {
             const width = canvas.parentElement.clientWidth || 500; 
             const height = canvas.parentElement.clientHeight || 230;
@@ -802,7 +831,7 @@
                     if (dx === 0) dx = 0.1;
                     let dist = Math.sqrt(dx*dx + dy*dy);
                     if (dist < 180) {
-                        let force = 340 / (dist * dist + 12);
+                        let force = 400 / (dist * dist + 20); // Suavizado
                         if (n1 !== draggedNode) { n1.vx -= (dx/dist)*force; n1.vy -= (dy/dist)*force; }
                         if (n2 !== draggedNode) { n2.vx += (dx/dist)*force; n2.vy += (dy/dist)*force; }
                     }
@@ -813,23 +842,27 @@
                 let dy = edge.targetNode.y - edge.sourceNode.y;
                 let dist = Math.sqrt(dx*dx + dy*dy);
                 if (dist > 0) {
-                    let force = 0.025 * dist;
+                    let force = 0.005 * dist; // Fricção elástica menor
                     if (edge.sourceNode !== draggedNode) { edge.sourceNode.vx += (dx / dist) * force; edge.sourceNode.vy += (dy / dist) * force; }
                     if (edge.targetNode !== draggedNode) { edge.targetNode.vx -= (dx / dist) * force; edge.targetNode.vy -= (dy / dist) * force; }
                 }
             });
             graphData.nodes.forEach(node => {
                 if (node === draggedNode) return;
-                node.vx += (centerX - node.x) * 0.01; 
-                node.vy += (centerY - node.y) * 0.01;
+                
+                // Puxada suave pro centro e rotação contínua em vórtice (Swirl animado)
+                node.vx += (centerX - node.x) * 0.002; 
+                node.vy += (centerY - node.y) * 0.002;
+                node.vx += (node.y - centerY) * 0.0005;
+                node.vy += (centerX - node.x) * 0.0005;
+
                 node.x += node.vx; 
                 node.y += node.vy; 
-                node.vx *= 0.82; 
-                node.vy *= 0.82;
+                node.vx *= 0.90; // Deslizamento suave
+                node.vy *= 0.90;
             });
         }
 
-        // DESENHADOR DO GRÁFICO (AGORA DESTACA ARQUIVOS CITADOS PELA IA)
         function drawGraph() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             const isDark = document.documentElement.classList.contains("dark");
@@ -848,11 +881,9 @@
                 const cleanSelectedId = selectedFileId ? selectedFileId.replace(/\/$/, "") : "";
                 
                 const isSelected = (cleanSelectedId === cleanNodeId);
-                const isHighlighted = highlightedNodes.includes(cleanNodeId); // Citado pelo Claude
+                const isHighlighted = highlightedNodes.includes(cleanNodeId); 
                 
                 ctx.beginPath(); 
-                
-                // Se o Claude citou, fica MAIOR e Âmbar. Se tiver apenas selecionado, fica azul.
                 let radius = 4.5;
                 if (isSelected) radius = 6.5;
                 if (isHighlighted) radius = 9.0;
@@ -860,13 +891,12 @@
                 ctx.arc(node.x, node.y, radius, 0, 2*Math.PI);
                 
                 if (isHighlighted) {
-                    ctx.fillStyle = "#f59e0b"; // Laranja/Âmbar para arquivos lidos pela IA
+                    ctx.fillStyle = "#f59e0b"; 
                 } else if (isSelected) {
-                    ctx.fillStyle = "#2563eb"; // Azul padrão para seleção do usuário
+                    ctx.fillStyle = "#2563eb"; 
                 } else {
-                    ctx.fillStyle = isDark ? "#64748b" : "#94a3b8"; // Cinza
+                    ctx.fillStyle = isDark ? "#64748b" : "#94a3b8"; 
                 }
-                
                 ctx.fill();
                 
                 ctx.font = (isSelected || isHighlighted) ? "bold 11px sans-serif" : "10px sans-serif"; 
@@ -936,7 +966,37 @@
             } catch(e){} 
         }
 
-        // CARREGAMENTO COM ANÁLISE JURÍDICA AUTOMÁTICA DE IA (ROTA NOVA)
+        // REQUISITO 4: Função de Heurística Local JS para Análise (0 Tokens API)
+        function generateLocalAnalysis(text) {
+            if (!text || text.trim() === "") return { summary: "Documento sem conteúdo para análise estrutural.", points: ["Nenhum dado legível identificado."] };
+
+            const cleanText = text.replace(/\[\[(.*?)\]\]/g, '$1').replace(/[#*`>]/g, '').trim();
+            const sentences = cleanText.split(/(?<=[.!?])\s+/).filter(s => s.length > 15);
+
+            if (sentences.length === 0) return { summary: "Conteúdo insuficiente para gerar uma síntese jurídica compreensível.", points: ["Texto excessivamente curto ou vazio."] };
+
+            let summary = sentences.slice(0, 2).join(' ');
+            if (summary.length > 180) summary = summary.substring(0, 177) + "...";
+
+            const keywords = ["prazo", "valor", "artigo", "lei", "juiz", "decisão", "recurso", "testemunha", "alega", "direito", "dever", "cita", "importante", "urgente", "pedido", "condena", "prova", "jurisprudência"];
+            let points = [];
+
+            for (let sentence of sentences) {
+                const lower = sentence.toLowerCase();
+                if (keywords.some(kw => lower.includes(kw))) {
+                    points.push(sentence.length > 90 ? sentence.substring(0, 87) + "..." : sentence);
+                }
+                if (points.length >= 3) break;
+            }
+
+            if (points.length === 0) {
+                points = sentences.slice(1, 4).map(s => s.length > 90 ? s.substring(0, 87) + "..." : s);
+            }
+            if (points.length === 0) points = ["Nenhum ponto de destaque específico detectado."];
+
+            return { summary, points };
+        }
+
         async function loadNoteContent(filename) {
             selectedFileId = filename;
             const shortName = filename.split('/').pop();
@@ -946,8 +1006,7 @@
             viewDoc.innerHTML = `<div class="text-center text-slate-400 my-20 animate-pulse">Indexando bloco documental...</div>`;
             viewRaw.innerText = "Buscando texto bruto...";
             
-            // Reseta UI de Análise
-            document.getElementById("meta-summary").innerText = "Sincronizando Análise Jurídica com a IA...";
+            document.getElementById("meta-summary").innerText = "Processando varredura local da peça...";
             document.getElementById("meta-points").innerHTML = `<div class="text-[11px] text-slate-400 font-medium animate-pulse">Aguarde...</div>`;
 
             switchTab('doc');
@@ -959,7 +1018,10 @@
                 viewRaw.innerText = "[Visualização de arquivo PDF ativa]";
                 rawContentBuffer = "[Arquivo Binário PDF]";
                 document.getElementById("meta-summary").innerText = "Arquivos PDF aguardando OCR externo. Análise não disponível no momento.";
-                document.getElementById("meta-points").innerHTML = `<div class="text-[11px] text-amber-500 font-medium italic">Arquivo binário.</div>`;
+                document.getElementById("meta-points").innerHTML = `<div class="text-[11px] text-amber-500 font-medium italic">Arquivo binário impenetrável sem IA Visual.</div>`;
+                document.getElementById("circle-progress").setAttribute("stroke-dasharray", "100, 100");
+                document.getElementById("circle-text").innerText = "100%";
+                document.getElementById("analysis-status-desc").innerText = "Pronto para análise visual.";
                 return;
             }
 
@@ -983,30 +1045,15 @@
                     </div>
                 `;
 
-                // Chama a IA para gerar os "Pontos Relevantes" e o "Resumo" da barra lateral
-                const pwd = appPassword.value.trim();
-                if (!pwd) {
-                    document.getElementById("meta-summary").innerText = "Análise Jurídica Automática indisponível. Insira o Token de Validação no Assistente.";
-                    document.getElementById("meta-points").innerHTML = `<div class="text-[11px] text-amber-500 font-medium italic">Token requerido.</div>`;
-                } else {
-                    fetch("/api/analyze-note", {
-                        method: "POST",
-                        headers: { "Content-Type": "application/json", "x-app-password": pwd },
-                        body: JSON.stringify({ filename, content: fileContent })
-                    }).then(r => r.json()).then(analysis => {
-                        if (analysis.summary) {
-                            document.getElementById("meta-summary").innerText = analysis.summary;
-                            document.getElementById("meta-points").innerHTML = analysis.points.map(p => `<div class="flex items-start gap-2 text-slate-600 dark:text-slate-400 font-medium"><i data-lucide="check-circle" class="w-4 h-4 shrink-0 text-emerald-500"></i> <span>${p}</span></div>`).join('');
-                            lucide.createIcons();
-                        } else {
-                            document.getElementById("meta-summary").innerText = "A análise retornou vazia.";
-                            document.getElementById("meta-points").innerHTML = `<div class="text-[11px] text-slate-400">Falha ao computar pontos.</div>`;
-                        }
-                    }).catch(e => {
-                        document.getElementById("meta-summary").innerText = "Falha ao gerar análise jurídica.";
-                        document.getElementById("meta-points").innerHTML = `<div class="text-[11px] text-red-500">Erro: ${e.message}</div>`;
-                    });
-                }
+                // REQUISITO 4: Chama Análise Local a Custo Zero
+                const analysis = generateLocalAnalysis(fileContent);
+                document.getElementById("meta-summary").innerText = analysis.summary;
+                document.getElementById("meta-points").innerHTML = analysis.points.map(p => `<div class="flex items-start gap-2 text-slate-600 dark:text-slate-400 font-medium"><i data-lucide="check-circle" class="w-3.5 h-3.5 shrink-0 text-emerald-500"></i> <span>${p}</span></div>`).join('');
+                
+                document.getElementById("circle-progress").setAttribute("stroke-dasharray", "100, 100");
+                document.getElementById("circle-text").innerText = "100%";
+                document.getElementById("analysis-status-desc").innerText = "Varredura local completa.";
+                lucide.createIcons();
 
             } catch (err) {
                 console.error(err);
@@ -1102,7 +1149,6 @@
                     renderMessageBlock("assistant", data.reply);
                     chatHistory.push({ role: "assistant", content: data.reply });
                     
-                    // Atualiza os NÓS em Destaque que a IA leu!
                     if (data.citedFiles && data.citedFiles.length > 0) {
                         highlightedNodes = data.citedFiles.map(f => f.replace(/\/$/, ""));
                     } else {
@@ -1119,7 +1165,6 @@
             }
         }
 
-        // Renderizador de Histórico Agora Permite Links de Download em HTML
         function renderMessageBlock(role, text) {
             msgCounter++;
             const id = "msg-" + Date.now() + "-" + msgCounter;
@@ -1130,9 +1175,8 @@
             
             const bubble = document.createElement("div");
             
-            // Parser básico para Markdown Links enviados pelo Claude
             let htmlText = text
-                .replace(/</g, "&lt;").replace(/>/g, "&gt;") // Segurança Básica XSS
+                .replace(/</g, "&lt;").replace(/>/g, "&gt;") 
                 .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" download class="text-blue-200 underline font-black hover:text-white transition-colors">$1</a>')
                 .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
                 .replace(/\n/g, '<br>');
