@@ -49,7 +49,7 @@
         
         <div class="flex-1 max-w-xl mx-8 relative">
             <i data-lucide="search" class="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2"></i>
-            <input type="text" id="global-search-bar" oninput="searchFileTree()" placeholder="Buscar processos, leis, jurisprudências, petições... (Ctrl K)" 
+            <input type="text" id="global-search-bar" oninput="searchFileTree()" placeholder="Buscar processos, leis, jurisprudências, petições... (Ctrl + K)" 
                    class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl pl-10 pr-4 py-2 text-xs focus:outline-none focus:border-blue-500 focus:bg-white dark:focus:bg-slate-900 transition-all font-semibold text-slate-700 dark:text-slate-200">
         </div>
 
@@ -94,7 +94,6 @@
                     <span class="text-[11px] font-bold text-slate-700 dark:text-slate-300 flex items-center gap-1.5"><i data-lucide="shield-check" class="w-3.5 h-3.5 text-blue-600"></i> Plano Profissional</span>
                     <span class="text-[10px] bg-emerald-100 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-300 font-extrabold px-1.5 py-0.5 rounded-md">ATIVO</span>
                 </div>
-                <div class="text-[10px] text-slate-400 dark:text-slate-500 mb-2 font-medium">Uso de IA e chamadas este mês</div>
                 <div class="w-full bg-slate-200 dark:bg-slate-700 h-2 rounded-full overflow-hidden mb-1"><div class="bg-blue-600 h-full w-[78%] rounded-full"></div></div>
             </div>
         </aside>
@@ -223,11 +222,11 @@
                     <div class="w-2/5 p-5 flex flex-col gap-4 overflow-y-auto bg-white dark:bg-slate-900 border-l border-slate-50 dark:border-slate-800">
                         <div>
                             <span class="text-[10px] font-black uppercase tracking-widest text-slate-400 dark:text-slate-500">Análise Jurídica</span>
-                            <p id="meta-summary" class="text-xs text-slate-600 dark:text-slate-400 mt-1 font-medium leading-relaxed">Selecione um arquivo para compilar a análise gerencial.</p>
+                            <p id="meta-summary" class="text-xs text-slate-600 dark:text-slate-400 mt-1 font-medium leading-relaxed transition-all">Selecione um arquivo para compilar a análise gerencial.</p>
                         </div>
                         <div class="border-t border-slate-100 dark:border-slate-800 pt-3">
                             <span class="text-[10px] font-black uppercase tracking-widest text-slate-400 dark:text-slate-500 block mb-2">Pontos Relevantes</span>
-                            <div id="meta-points" class="space-y-2 text-xs font-semibold text-slate-600 dark:text-slate-400">
+                            <div id="meta-points" class="space-y-2 text-xs font-semibold text-slate-600 dark:text-slate-400 transition-all">
                                 <div class="flex items-start gap-2 text-slate-400 font-medium"><i data-lucide="minus" class="w-4 h-4 shrink-0"></i> <span>Aguardando arquivo...</span></div>
                             </div>
                         </div>
@@ -306,8 +305,17 @@
         </aside>
     </div>
 
+    <!-- ENGINE LOGICO OPERACIONAL -->
     <script>
         lucide.createIcons();
+
+        // ATALHO CTRL+K PARA PESQUISA
+        document.addEventListener('keydown', (e) => {
+            if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
+                e.preventDefault();
+                document.getElementById('global-search-bar').focus();
+            }
+        });
 
         const messagesContainer = document.getElementById("chat-messages");
         const chatInput = document.getElementById("chat-input");
@@ -351,6 +359,7 @@
         
         let favoriteItems = JSON.parse(localStorage.getItem("bms_favorites_map") || "{}");
         let collapsedFolders = JSON.parse(localStorage.getItem("bms_collapsed_folders") || "{}");
+        let highlightedNodes = []; // Usado para piscar os nós na malha quando a IA os citar
 
         const sidebarLeft = document.getElementById('sidebar-left');
         const sidebarRight = document.getElementById('sidebar-right');
@@ -412,7 +421,6 @@
             drawGraph(); 
         }
 
-        // Lógica de Menus Dropdown
         function closeAllDropdownsMenu() {
             filterDropdown.classList.add("hidden");
             document.getElementById("custom-context-menu").classList.add("hidden");
@@ -759,7 +767,6 @@
             } catch (err) { console.error(err); }
         }
 
-        // MOTOR FÍSICO COM REQUISITO DE CLIQUE E PONTEIRO NATIVO
         function initPhysicsNodes(data) {
             const width = canvas.parentElement.clientWidth || 500; 
             const height = canvas.parentElement.clientHeight || 230;
@@ -822,6 +829,7 @@
             });
         }
 
+        // DESENHADOR DO GRÁFICO (AGORA DESTACA ARQUIVOS CITADOS PELA IA)
         function drawGraph() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             const isDark = document.documentElement.classList.contains("dark");
@@ -838,17 +846,33 @@
             graphData.nodes.forEach(node => {
                 const cleanNodeId = node.id.replace(/\/$/, "");
                 const cleanSelectedId = selectedFileId ? selectedFileId.replace(/\/$/, "") : "";
-                const act = (cleanSelectedId === cleanNodeId);
+                
+                const isSelected = (cleanSelectedId === cleanNodeId);
+                const isHighlighted = highlightedNodes.includes(cleanNodeId); // Citado pelo Claude
                 
                 ctx.beginPath(); 
-                ctx.arc(node.x, node.y, act ? 6.5 : 4.5, 0, 2*Math.PI);
-                ctx.fillStyle = act ? "#2563eb" : (isDark ? "#3b82f6" : "#64748b"); 
+                
+                // Se o Claude citou, fica MAIOR e Âmbar. Se tiver apenas selecionado, fica azul.
+                let radius = 4.5;
+                if (isSelected) radius = 6.5;
+                if (isHighlighted) radius = 9.0;
+                
+                ctx.arc(node.x, node.y, radius, 0, 2*Math.PI);
+                
+                if (isHighlighted) {
+                    ctx.fillStyle = "#f59e0b"; // Laranja/Âmbar para arquivos lidos pela IA
+                } else if (isSelected) {
+                    ctx.fillStyle = "#2563eb"; // Azul padrão para seleção do usuário
+                } else {
+                    ctx.fillStyle = isDark ? "#64748b" : "#94a3b8"; // Cinza
+                }
+                
                 ctx.fill();
                 
-                ctx.font = act ? "bold 10px sans-serif" : "10px sans-serif"; 
+                ctx.font = (isSelected || isHighlighted) ? "bold 11px sans-serif" : "10px sans-serif"; 
                 ctx.fillStyle = isDark ? "#cbd5e1" : "#334155";
                 ctx.textAlign = "center"; 
-                ctx.fillText(node.label, node.x, node.y + 15);
+                ctx.fillText(node.label, node.x, node.y + 16);
             });
         }
 
@@ -859,7 +883,6 @@
         }
         requestAnimationFrame(anim);
 
-        // REQUISITO: CLIQUE PARA ABRIR O ARQUIVO DIRETO PELA MALHA
         canvas.addEventListener("mousedown", (e) => {
             const rect = canvas.getBoundingClientRect(); 
             const mx = e.clientX - rect.left; 
@@ -873,6 +896,7 @@
                 } 
             }
         });
+
         canvas.addEventListener("mousemove", (e) => { 
             const rect = canvas.getBoundingClientRect(); 
             const mx = e.clientX - rect.left; 
@@ -894,9 +918,9 @@
                 canvas.style.cursor = isHovering ? 'pointer' : 'default';
             }
         });
-        window.addEventListener("mouseup", () => { 
+
+        canvas.addEventListener("mouseup", () => { 
             if (draggedNode && !isDraggingNode) {
-                // Se soltou sem arrastar, é um clique: abre o arquivo!
                 loadNoteContent(draggedNode.id);
             }
             draggedNode = null; 
@@ -912,18 +936,21 @@
             } catch(e){} 
         }
 
+        // CARREGAMENTO COM ANÁLISE JURÍDICA AUTOMÁTICA DE IA (ROTA NOVA)
         async function loadNoteContent(filename) {
             selectedFileId = filename;
             const shortName = filename.split('/').pop();
             activeNoteTitle.innerText = shortName.replace(/\.(md|pdf|txt)$/i, "");
-            
             if (activeNoteMeta) activeNoteMeta.innerText = `Cofre: BaseConhecimento/${filename}`;
             
             viewDoc.innerHTML = `<div class="text-center text-slate-400 my-20 animate-pulse">Indexando bloco documental...</div>`;
             viewRaw.innerText = "Buscando texto bruto...";
+            
+            // Reseta UI de Análise
+            document.getElementById("meta-summary").innerText = "Sincronizando Análise Jurídica com a IA...";
+            document.getElementById("meta-points").innerHTML = `<div class="text-[11px] text-slate-400 font-medium animate-pulse">Aguarde...</div>`;
 
             switchTab('doc');
-            
             updateFavoriteStarUI();
             buildNotesTree();
 
@@ -931,9 +958,8 @@
                 viewDoc.innerHTML = `<iframe src="/api/note-raw?file=${encodeURIComponent(filename)}" class="w-full h-[380px] border-0 rounded-xl bg-white"></iframe>`;
                 viewRaw.innerText = "[Visualização de arquivo PDF ativa]";
                 rawContentBuffer = "[Arquivo Binário PDF]";
-                document.getElementById("circle-progress").setAttribute("stroke-dasharray", "100, 100");
-                document.getElementById("circle-text").innerText = "100%";
-                document.getElementById("analysis-status-desc").innerText = "Pronto para análise visual.";
+                document.getElementById("meta-summary").innerText = "Arquivos PDF aguardando OCR externo. Análise não disponível no momento.";
+                document.getElementById("meta-points").innerHTML = `<div class="text-[11px] text-amber-500 font-medium italic">Arquivo binário.</div>`;
                 return;
             }
 
@@ -941,7 +967,6 @@
                 const res = await fetch(`/api/note-content?file=${encodeURIComponent(filename)}`);
                 if (!res.ok) throw new Error(`Erro HTTP: ${res.status}`);
                 const data = await res.json();
-                
                 if (data.error) throw new Error(data.error);
                 
                 const fileContent = (data && data.content !== undefined) ? data.content : "";
@@ -958,10 +983,31 @@
                     </div>
                 `;
 
-                document.getElementById("meta-summary").innerText = "Peça arquivada mapeada de forma íntegra no cofre local corporativo.";
-                document.getElementById("circle-progress").setAttribute("stroke-dasharray", "100, 100");
-                document.getElementById("circle-text").innerText = "100%";
-                document.getElementById("analysis-status-desc").innerText = "Análise documental ok.";
+                // Chama a IA para gerar os "Pontos Relevantes" e o "Resumo" da barra lateral
+                const pwd = appPassword.value.trim();
+                if (!pwd) {
+                    document.getElementById("meta-summary").innerText = "Análise Jurídica Automática indisponível. Insira o Token de Validação no Assistente.";
+                    document.getElementById("meta-points").innerHTML = `<div class="text-[11px] text-amber-500 font-medium italic">Token requerido.</div>`;
+                } else {
+                    fetch("/api/analyze-note", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json", "x-app-password": pwd },
+                        body: JSON.stringify({ filename, content: fileContent })
+                    }).then(r => r.json()).then(analysis => {
+                        if (analysis.summary) {
+                            document.getElementById("meta-summary").innerText = analysis.summary;
+                            document.getElementById("meta-points").innerHTML = analysis.points.map(p => `<div class="flex items-start gap-2 text-slate-600 dark:text-slate-400 font-medium"><i data-lucide="check-circle" class="w-4 h-4 shrink-0 text-emerald-500"></i> <span>${p}</span></div>`).join('');
+                            lucide.createIcons();
+                        } else {
+                            document.getElementById("meta-summary").innerText = "A análise retornou vazia.";
+                            document.getElementById("meta-points").innerHTML = `<div class="text-[11px] text-slate-400">Falha ao computar pontos.</div>`;
+                        }
+                    }).catch(e => {
+                        document.getElementById("meta-summary").innerText = "Falha ao gerar análise jurídica.";
+                        document.getElementById("meta-points").innerHTML = `<div class="text-[11px] text-red-500">Erro: ${e.message}</div>`;
+                    });
+                }
+
             } catch (err) {
                 console.error(err);
                 viewDoc.innerHTML = `<div class="text-center text-red-500 my-20 font-bold text-sm bg-red-50 dark:bg-red-900/30 p-4 rounded-xl border border-red-200 dark:border-red-900 mx-10">Erro ao abrir visualização: ${err.message}</div>`;
@@ -1055,6 +1101,14 @@
                 } else if (data.reply) {
                     renderMessageBlock("assistant", data.reply);
                     chatHistory.push({ role: "assistant", content: data.reply });
+                    
+                    // Atualiza os NÓS em Destaque que a IA leu!
+                    if (data.citedFiles && data.citedFiles.length > 0) {
+                        highlightedNodes = data.citedFiles.map(f => f.replace(/\/$/, ""));
+                    } else {
+                        highlightedNodes = [];
+                    }
+
                     buildNotesTree();
                     reloadGlobalGraph();
                 }
@@ -1065,6 +1119,7 @@
             }
         }
 
+        // Renderizador de Histórico Agora Permite Links de Download em HTML
         function renderMessageBlock(role, text) {
             msgCounter++;
             const id = "msg-" + Date.now() + "-" + msgCounter;
@@ -1074,12 +1129,21 @@
             wrapper.id = id;
             
             const bubble = document.createElement("div");
+            
+            // Parser básico para Markdown Links enviados pelo Claude
+            let htmlText = text
+                .replace(/</g, "&lt;").replace(/>/g, "&gt;") // Segurança Básica XSS
+                .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" download class="text-blue-200 underline font-black hover:text-white transition-colors">$1</a>')
+                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                .replace(/\n/g, '<br>');
+
             if (role === "user") {
                 bubble.className = "bg-blue-600 text-white rounded-2xl rounded-tr-none p-3 text-xs max-w-[85%] font-semibold leading-relaxed whitespace-pre-wrap shadow-xs select-text text-left break-words";
             } else {
                 bubble.className = "bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 rounded-2xl rounded-tl-none p-3 text-xs max-w-[85%] shadow-xs leading-relaxed whitespace-pre-wrap select-text text-left break-words";
             }
-            bubble.innerText = text;
+            
+            bubble.innerHTML = htmlText;
             wrapper.appendChild(bubble);
             messagesContainer.appendChild(wrapper);
             messagesContainer.scrollTop = messagesContainer.scrollHeight;
