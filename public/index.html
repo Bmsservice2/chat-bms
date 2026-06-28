@@ -7,7 +7,9 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <script>
-        tailwind.config = { darkMode: 'class' };
+        tailwind.config = {
+            darkMode: 'class'
+        }
         if (!localStorage.getItem("theme") || localStorage.getItem("theme") === "dark") {
             document.documentElement.classList.add("dark");
             localStorage.setItem("theme", "dark");
@@ -43,7 +45,9 @@
 
     <header class="bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 h-16 min-h-16 flex items-center justify-between px-6 z-20 shadow-xs">
         <div class="flex items-center gap-3">
-            <div class="bg-blue-600 p-2.5 rounded-xl text-white shadow-sm shadow-blue-300 dark:shadow-none"><i data-lucide="brain-circuit" class="w-5 h-5"></i></div>
+            <div class="bg-blue-600 p-2.5 rounded-xl text-white shadow-sm shadow-blue-300 dark:shadow-none">
+                <i data-lucide="brain-circuit" class="w-5 h-5"></i>
+            </div>
             <span class="font-black text-xl tracking-tight text-slate-900 dark:text-white">BMS <span class="text-blue-600 font-medium">Knowledge</span></span>
         </div>
         
@@ -72,6 +76,7 @@
     </header>
 
     <div class="flex flex-1 overflow-hidden relative" onclick="closeAllDropdownsMenu()">
+
         <aside id="sidebar-left" class="w-64 bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 flex flex-col overflow-hidden p-4 relative flex-shrink-0" onclick="clearTreeSelection(event)">
             <div class="flex items-center justify-between mb-4 px-1">
                 <span class="text-xs font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest">Processos e Cofre</span>
@@ -96,7 +101,14 @@
                     <span class="text-[11px] font-bold text-slate-700 dark:text-slate-300 flex items-center gap-1.5"><i data-lucide="shield-check" class="w-3.5 h-3.5 text-blue-600"></i> Plano Profissional</span>
                     <span class="text-[10px] bg-emerald-100 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-300 font-extrabold px-1.5 py-0.5 rounded-md">ATIVO</span>
                 </div>
-                <div class="w-full bg-slate-200 dark:bg-slate-700 h-2 rounded-full overflow-hidden mb-1"><div class="bg-blue-600 h-full w-[78%] rounded-full"></div></div>
+                <div class="text-[10px] text-slate-400 dark:text-slate-500 mb-2 font-medium">Uso de IA e chamadas este mês</div>
+                <div class="w-full bg-slate-200 dark:bg-slate-700 h-2 rounded-full overflow-hidden mb-1">
+                    <div class="bg-blue-600 h-full w-[78%] rounded-full"></div>
+                </div>
+                <div class="flex justify-between text-[10px] font-bold text-slate-500 dark:text-slate-400">
+                    <span>7.8k / 10k chamadas</span>
+                    <span>78%</span>
+                </div>
             </div>
         </aside>
 
@@ -104,10 +116,22 @@
 
         <main id="center-panel" class="flex-1 flex flex-col min-w-[300px] overflow-y-auto p-5 gap-4 no-scrollbar">
             <div class="grid grid-cols-4 gap-4">
-                <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-3 flex items-center shadow-xs"><div class="p-2 bg-blue-50 dark:bg-slate-800 text-blue-600 dark:text-blue-400 rounded-lg mr-3"><i data-lucide="scale" class="w-4 h-4"></i></div><div><p class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Área</p><p class="text-xs font-bold text-slate-700 dark:text-white">Jurisprudência</p></div></div>
-                <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-3 flex items-center shadow-xs"><div class="p-2 bg-purple-50 dark:bg-slate-800 text-purple-600 dark:text-purple-400 rounded-lg mr-3"><i data-lucide="file-text" class="w-4 h-4"></i></div><div><p class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Tipo</p><p class="text-xs font-bold text-slate-700 dark:text-white">Petição Inicial</p></div></div>
-                <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-3 flex items-center shadow-xs"><div class="p-2 bg-amber-50 dark:bg-slate-800 text-amber-600 dark:text-amber-400 rounded-lg mr-3"><i data-lucide="folder-git" class="w-4 h-4"></i></div><div><p class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Fase</p><p class="text-xs font-bold text-slate-700 dark:text-white">Análise Inicial</p></div></div>
-                <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-3 flex items-center shadow-xs"><div class="p-2 bg-emerald-50 dark:bg-slate-800 text-emerald-600 dark:text-emerald-400 rounded-lg mr-3"><i data-lucide="target" class="w-4 h-4"></i></div><div><p class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Foco</p><p class="text-xs font-bold text-slate-700 dark:text-white">Auditar Peças</p></div></div>
+                <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-3 flex items-center shadow-xs">
+                    <div class="p-2 bg-blue-50 dark:bg-slate-800 text-blue-600 dark:text-blue-400 rounded-lg mr-3"><i data-lucide="scale" class="w-4 h-4"></i></div>
+                    <div><p class="text-[10px] text-slate-400 dark:text-slate-500 font-bold uppercase tracking-wider">Área</p><p class="text-xs font-bold text-slate-700 dark:text-white">Jurisprudência</p></div>
+                </div>
+                <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-3 flex items-center shadow-xs">
+                    <div class="p-2 bg-purple-50 dark:bg-slate-800 text-purple-600 dark:text-purple-400 rounded-lg mr-3"><i data-lucide="file-text" class="w-4 h-4"></i></div>
+                    <div><p class="text-[10px] text-slate-400 dark:text-slate-500 font-bold uppercase tracking-wider">Tipo</p><p class="text-xs font-bold text-slate-700 dark:text-white">Petição Inicial</p></div>
+                </div>
+                <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-3 flex items-center shadow-xs">
+                    <div class="p-2 bg-amber-50 dark:bg-slate-800 text-amber-600 dark:text-amber-400 rounded-lg mr-3"><i data-lucide="folder-git" class="w-4 h-4"></i></div>
+                    <div><p class="text-[10px] text-slate-400 dark:text-slate-500 font-bold uppercase tracking-wider">Fase</p><p class="text-xs font-bold text-slate-700 dark:text-white">Análise Inicial</p></div>
+                </div>
+                <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-3 flex items-center shadow-xs">
+                    <div class="p-2 bg-emerald-50 dark:bg-slate-800 text-emerald-600 dark:text-emerald-400 rounded-lg mr-3"><i data-lucide="target" class="w-4 h-4"></i></div>
+                    <div><p class="text-[10px] text-slate-400 dark:text-slate-500 font-bold uppercase tracking-wider">Foco</p><p class="text-xs font-bold text-slate-700 dark:text-white">Auditar Peças</p></div>
+                </div>
             </div>
 
             <div id="center-preview-container" class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-xs flex flex-col flex-1 overflow-hidden min-h-[350px]">
@@ -115,7 +139,9 @@
                     <div>
                         <div class="flex items-center gap-2.5">
                             <h2 id="active-note-title" class="text-sm font-bold text-slate-800 dark:text-white">Selecione um arquivo do cofre</h2>
-                            <button id="btn-favorite-star" onclick="toggleActiveFileFavorite()" class="text-slate-300 dark:text-slate-600 hover:text-amber-500 dark:hover:text-amber-400 transition-colors focus:outline-none"><i data-lucide="star" class="w-4 h-4"></i></button>
+                            <button id="btn-favorite-star" onclick="toggleActiveFileFavorite()" class="text-slate-300 dark:text-slate-600 hover:text-amber-500 dark:hover:text-amber-400 transition-colors focus:outline-none">
+                                <i data-lucide="star" class="w-4 h-4"></i>
+                            </button>
                         </div>
                         <p id="active-note-meta" class="text-[10px] text-slate-400 dark:text-slate-500 font-medium mt-0.5">Nenhum item ativo no momento</p>
                     </div>
@@ -269,10 +295,13 @@
         let rawContentBuffer = "";
         let contextMenuSelectedPath = null;
         
+        // CONTADOR DE MENSAGENS PARA NÃO COLIDIR IDS DO CHAT
+        let msgCounter = 0; 
+        
         let favoriteItems = JSON.parse(localStorage.getItem("bms_favorites_map") || "{}");
         let collapsedFolders = JSON.parse(localStorage.getItem("bms_collapsed_folders") || "{}");
 
-        // LÓGICA DE RESIZE (ARRASTAR COLUNAS)
+        // LÓGICA DE RESIZE
         const sidebarLeft = document.getElementById('sidebar-left');
         const sidebarRight = document.getElementById('sidebar-right');
         const resizerLeft = document.getElementById('resizer-left');
@@ -569,7 +598,6 @@
             }
         }
 
-        // ÁRVORE DE DIRETÓRIOS COM GAVETAS FUNCIONAIS
         async function buildNotesTree() {
             try {
                 const res = await fetch("/api/notes");
@@ -659,7 +687,6 @@
             } catch (err) { console.error(err); }
         }
 
-        // MOTOR FÍSICO BLINDADO
         function initPhysicsNodes(data) {
             const width = canvas.parentElement.clientWidth || 500; 
             const height = canvas.parentElement.clientHeight || 230;
@@ -784,7 +811,6 @@
             } catch(e){} 
         }
 
-        // CARREGAMENTO DE PRÉ-VISUALIZAÇÃO DESCONGELADO
         async function loadNoteContent(filename) {
             selectedFileId = filename;
             const shortName = filename.split('/').pop();
@@ -798,7 +824,7 @@
             switchTab('doc');
             
             updateFavoriteStarUI();
-            buildNotesTree(); // Ao invés de uma função separada, usamos a árvore inteira para calcular o contorno perfeito
+            buildNotesTree();
 
             if (filename.toLowerCase().endsWith('.pdf')) {
                 viewDoc.innerHTML = `<iframe src="/api/note-raw?file=${encodeURIComponent(filename)}" class="w-full h-[380px] border-0 rounded-xl bg-white"></iframe>`;
@@ -812,7 +838,7 @@
 
             try {
                 const res = await fetch(`/api/note-content?file=${encodeURIComponent(filename)}`);
-                if (!res.ok) throw new Error(`Erro de Conexão com o Servidor (HTTP ${res.status})`);
+                if (!res.ok) throw new Error(`Erro HTTP: ${res.status}`);
                 const data = await res.json();
                 
                 if (data.error) throw new Error(data.error);
@@ -838,7 +864,7 @@
             } catch (err) {
                 console.error(err);
                 viewDoc.innerHTML = `<div class="text-center text-red-500 my-20 font-bold">Erro ao abrir visualização: ${err.message}</div>`;
-                viewRaw.innerText = `Falha Crítica: ${err.message}`;
+                viewRaw.innerText = `Falha: ${err.message}`;
             }
         }
 
@@ -878,12 +904,10 @@
             document.getElementById("chat-context-upload").value = "";
         };
 
-        // REQUISITO 1: Envio do Chat com Trava de Token Obrigatória
         async function sendChatMessage() {
             let query = chatInput.value.trim();
             if (!query) return;
 
-            // Trava de segurança: barra o envio e avisa o usuário se não tiver token
             const pwd = appPassword.value.trim();
             if (!pwd) {
                 renderMessageBlock("assistant", "⚠️ **Acesso Negado:** Por favor, insira o Token de Validação Local no campo acima antes de enviar instruções.");
@@ -893,7 +917,6 @@
             renderMessageBlock("user", query);
             chatInput.value = "";
             
-            // Injeção silenciosa do contexto da interface (Awareness)
             let sysContext = "";
             if (selectedFileId) sysContext += `[Arquivo ativo no momento pelo usuário na interface: Cofre/${selectedFileId}]\n`;
             if (pendingChatAttachment) {
@@ -924,7 +947,6 @@
                 } else if (data.reply) {
                     renderMessageBlock("assistant", data.reply);
                     chatHistory.push({ role: "assistant", content: data.reply });
-                    // Atualiza a interface caso ele tenha criado/apagado algo
                     buildNotesTree();
                     reloadGlobalGraph();
                 }
@@ -935,9 +957,11 @@
             }
         }
 
-        // Box de Histórico com linha flex fixa para mensagens não sumirem (shrink-0 adicionado na base)
+        // REQUISITO: FIX ABSOLUTO PARA MENSAGENS NÃO SUMIREM USANDO msgCounter EXCLUSIVO E SHRINK-0
         function renderMessageBlock(role, text) {
-            const id = "msg-" + Date.now();
+            msgCounter++;
+            const id = "msg-" + Date.now() + "-" + msgCounter;
+            
             const wrapper = document.createElement("div");
             wrapper.className = `w-full flex shrink-0 ${role === 'user' ? 'justify-end' : 'justify-start'}`;
             wrapper.id = id;
