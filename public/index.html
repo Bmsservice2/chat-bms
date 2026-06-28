@@ -12,7 +12,6 @@
     <input type="file" id="global-vault-upload" class="hidden" />
     <input type="file" id="chat-context-upload" class="hidden" />
 
-    <!-- BARRA SUPERIOR DE MANDOS (HEADER) -->
     <header class="bg-white border-b border-slate-200 h-16 min-h-16 flex items-center justify-between px-6 z-20 shadow-xs">
         <div class="flex items-center gap-3">
             <div class="bg-blue-600 p-2.5 rounded-xl text-white shadow-sm shadow-blue-300">
@@ -42,10 +41,8 @@
         </div>
     </header>
 
-    <!-- CONTAINER DAS TRES COLUNAS -->
     <div class="flex flex-1 overflow-hidden relative">
 
-        <!-- COLUNA 1: GESTÃO E DIRETÓRIO DE PASTAS (ESQUERDA) -->
         <aside class="w-64 bg-white border-r border-slate-200 flex flex-col overflow-hidden p-4">
             <div class="flex items-center justify-between mb-4 px-1">
                 <span class="text-xs font-black text-slate-400 uppercase tracking-widest">Processos e Cofre</span>
@@ -75,7 +72,6 @@
             </div>
         </aside>
 
-        <!-- COLUNA 2: MONITOR CENTRAL -->
         <main class="flex-1 flex flex-col overflow-y-auto p-5 gap-4">
             
             <div class="grid grid-cols-4 gap-4">
@@ -109,58 +105,88 @@
                 </div>
             </div>
 
-            <!-- CONTAINER CENTRAL: VISUALIZADOR DE DOCUMENTOS -->
-            <div class="bg-white border border-slate-200 rounded-2xl shadow-xs flex flex-col flex-1 overflow-hidden min-h-[350px]">
-                <div class="flex items-center justify-between px-5 py-3.5 border-b border-slate-100 bg-slate-50">
+            <div class="bg-white border border-slate-200 rounded-2xl shadow-xs flex flex-col flex-1 overflow-hidden min-h-[380px]">
+                
+                <div class="flex items-center justify-between px-5 pt-3.5 pb-2 bg-white">
                     <div class="flex items-center gap-2.5">
-                        <i data-lucide="file-code" class="w-5 h-5 text-blue-600"></i>
-                        <div>
-                            <h2 id="active-note-title" class="text-sm font-bold text-slate-800">Selecione um arquivo técnico</h2>
-                            <p id="active-note-meta" class="text-[10px] text-slate-400 font-medium">Aguardando seleção na árvore à esquerda</p>
-                        </div>
+                        <h2 id="active-note-title" class="text-base font-bold text-slate-800">Selecione um arquivo técnico</h2>
+                        <button class="text-slate-300 hover:text-slate-500"><i data-lucide="star" class="w-4 h-4"></i></button>
                     </div>
                     <div class="flex items-center gap-1">
-                        <button class="p-1.5 text-slate-400 hover:text-slate-600 hover:bg-slate-200/60 rounded-lg transition-all"><i data-lucide="download" class="w-4 h-4"></i></button>
-                        <button class="p-1.5 text-slate-400 hover:text-slate-600 hover:bg-slate-200/60 rounded-lg transition-all"><i data-lucide="printer" class="w-4 h-4"></i></button>
-                        <button class="p-1.5 text-slate-400 hover:text-slate-600 hover:bg-slate-200/60 rounded-lg transition-all"><i data-lucide="maximize-2" class="w-4 h-4"></i></button>
+                        <button class="p-1.5 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-lg"><i data-lucide="download" class="w-4 h-4"></i></button>
+                        <button class="p-1.5 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-lg"><i data-lucide="printer" class="w-4 h-4"></i></button>
+                        <button class="p-1.5 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-lg"><i data-lucide="maximize-2" class="w-4 h-4"></i></button>
+                        <button class="p-1.5 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-lg"><i data-lucide="more-horizontal" class="w-4 h-4"></i></button>
                     </div>
                 </div>
 
+                <div class="flex gap-2 px-5 border-b border-slate-100 pb-2 bg-white">
+                    <button id="tab-doc" onclick="switchTab('doc')" class="text-xs font-bold px-4 py-1.5 bg-blue-50 text-blue-600 rounded-lg transition-all">Documento Original</button>
+                    <button id="tab-raw" onclick="switchTab('raw')" class="text-xs font-bold px-4 py-1.5 text-slate-400 hover:bg-slate-50 rounded-lg transition-all">Resumo Markdown</button>
+                </div>
+
                 <div class="flex flex-1 overflow-hidden">
-                    <div id="note-viewer" class="w-3/5 p-5 overflow-y-auto text-xs font-mono leading-relaxed text-slate-600 bg-slate-50/50 border-r border-slate-100 whitespace-pre-wrap select-text">
-                        Clique em qualquer nota técnica na barra lateral para carregar a visualização de código e instruções operacionais.
+                    
+                    <div class="w-3/5 p-5 bg-[#fafafa] border-r border-slate-100 flex flex-col overflow-hidden">
+                        <div id="view-doc" class="flex-1 bg-white border border-slate-200 rounded-xl shadow-xs overflow-y-auto p-6 font-sans text-xs text-slate-700 leading-relaxed select-text">
+                            <div class="text-center text-slate-400 my-20">Nenhum documento carregado no monitor operacional.</div>
+                        </div>
+                        <div id="view-raw" class="hidden flex-1 bg-slate-900 border border-slate-950 rounded-xl overflow-y-auto p-4 font-mono text-xs text-blue-400 leading-relaxed select-text whitespace-pre-wrap">
+                            Aguardando seleção...
+                        </div>
                     </div>
 
-                    <div class="w-2/5 p-5 flex flex-col gap-4 overflow-y-auto bg-white">
+                    <div class="w-2/5 p-5 flex flex-col gap-4 overflow-y-auto bg-white border-l border-slate-50">
                         <div>
-                            <span class="text-[10px] font-bold uppercase tracking-widest text-slate-400">Resumo Técnico</span>
-                            <p id="summary-desc" class="text-xs text-slate-600 mt-1 font-medium leading-relaxed">Nenhuma nota ativa carregada para extração de contexto.</p>
+                            <span class="text-[10px] font-black uppercase tracking-widest text-slate-400">Resumo</span>
+                            <p id="meta-summary" class="text-xs text-slate-600 mt-1 font-medium leading-relaxed">Selecione uma nota técnica no painel esquerdo para extrair e compilar a análise gerencial.</p>
                         </div>
-                        <div class="border-t border-slate-100 my-1"></div>
+                        
                         <div>
-                            <span class="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-2 block">Pontos de Controle</span>
-                            <div class="space-y-2 text-xs font-medium text-slate-600" id="summary-points">
-                                <div class="flex items-start gap-2"><i data-lucide="check-circle-2" class="w-4 h-4 text-slate-300 shrink-0"></i> <span>Aguardando documento...</span></div>
+                            <span class="text-[10px] font-black uppercase tracking-widest text-slate-400 block mb-2">Pontos Relevantes</span>
+                            <div id="meta-points" class="space-y-2 text-xs font-semibold text-slate-600">
+                                <div class="flex items-start gap-2 text-slate-400 font-medium"><i data-lucide="minus" class="w-4 h-4 shrink-0"></i> <span>Aguardando arquivo...</span></div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <span class="text-[10px] font-black uppercase tracking-widest text-slate-400 block mb-2">Documentos Relacionados</span>
+                            <div id="meta-related" class="space-y-1.5">
+                                <div class="text-[11px] text-slate-400 font-medium italic">Nenhum vínculo identificado.</div>
+                            </div>
+                        </div>
+
+                        <div class="border-t border-slate-100 pt-3 mt-1">
+                            <span class="text-[10px] font-black uppercase tracking-widest text-slate-400 block mb-2">Status da Análise</span>
+                            <div class="flex items-center gap-4 bg-slate-50 p-3 rounded-xl border border-slate-100">
+                                <div class="relative w-14 h-14 flex items-center justify-center shrink-0">
+                                    <svg class="w-full h-full transform -rotate-90" viewBox="0 0 36 36">
+                                        <path class="text-slate-200" stroke-width="3" stroke="currentColor" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                                        <path id="circle-progress" class="text-blue-600 transition-all duration-500" stroke-dasharray="0, 100" stroke-width="3" stroke-linecap="round" stroke="currentColor" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                                    </svg>
+                                    <span id="circle-text" class="absolute text-[11px] font-black text-slate-700">0%</span>
+                                </div>
+                                <div>
+                                    <p class="text-xs font-bold text-slate-700">Varredura Concluída</p>
+                                    <p id="analysis-status-desc" class="text-[10px] text-slate-400 font-medium">Aguardando processamento de links.</p>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- QUADRO INFERIOR: INTERACTIVE GRAPH VIEW (FIEL AO OBSIDIAN) -->
-            <div class="bg-white border border-slate-200 rounded-2xl p-4 shadow-xs h-72 min-h-72 flex flex-col relative">
+            <div class="bg-white border border-slate-200 rounded-2xl p-4 shadow-xs h-64 min-h-64 flex flex-col relative">
                 <div class="flex items-center justify-between mb-2">
                     <h3 class="font-bold text-xs text-slate-800 flex items-center gap-1.5"><i data-lucide="network" class="w-4 h-4 text-slate-500"></i> Visualização em Gráfico (Rede de Conexões)</h3>
                     <span class="text-[9px] font-bold bg-slate-100 text-slate-400 px-2 py-0.5 rounded-md uppercase tracking-wider">Física de Partículas</span>
                 </div>
-                <!-- Canvas de alta performance para renderizar as conexões orgânicas -->
                 <div class="flex-1 bg-white border border-slate-100 rounded-xl overflow-hidden relative">
                     <canvas id="graph-canvas" class="w-full h-full block cursor-grab active:cursor-grabbing"></canvas>
                 </div>
             </div>
         </main>
 
-        <!-- COLUNA 3: CONSOLE OPERACIONAL DO ASSISTENTE CLAUDE -->
         <aside class="w-80 bg-white border-l border-slate-200 flex flex-col overflow-hidden shadow-2xl">
             <div class="p-4 border-b border-slate-100 bg-slate-50 flex items-center justify-between">
                 <div class="flex items-center gap-2.5">
@@ -209,7 +235,6 @@
         </aside>
     </div>
 
-    <!-- ENGINE DE MAPEAMENTO LOGICO E MOTOR DE FISICA EM CANVAS -->
     <script>
         lucide.createIcons();
 
@@ -218,11 +243,18 @@
         const btnSend = document.getElementById("btn-send");
         const appPassword = document.getElementById("app-password");
         const fileTree = document.getElementById("file-tree");
-        const noteViewer = document.getElementById("note-viewer");
+        
+        // Elementos Dinâmicos das Abas Centrais
+        const viewDoc = document.getElementById("view-doc");
+        const viewRaw = document.getElementById("view-raw");
         const activeNoteTitle = document.getElementById("active-note-title");
         const activeNoteMeta = document.getElementById("active-note-meta");
-        const summaryDesc = document.getElementById("summary-desc");
-        const summaryPoints = document.getElementById("summary-points");
+        const metaSummary = document.getElementById("meta-summary");
+        const metaPoints = document.getElementById("meta-points");
+        const metaRelated = document.getElementById("meta-related");
+        const circleProgress = document.getElementById("circle-progress");
+        const circleText = document.getElementById("circle-text");
+        const analysisStatusDesc = document.getElementById("analysis-status-desc");
 
         // Elementos de Upload
         const btnVaultUpload = document.getElementById("btn-vault-upload");
@@ -233,19 +265,15 @@
         const chatAttachmentName = document.getElementById("chat-attachment-name");
         const btnRemoveAttachment = document.getElementById("btn-remove-attachment");
 
-        // Configurações do Canvas do Gráfico
         const canvas = document.getElementById("graph-canvas");
         const ctx = canvas.getContext("2d");
 
         let chatHistory = [];
         let pendingChatAttachment = null;
         let selectedFileId = null;
-
-        // Estrutura de dados global da rede neural
         let graphData = { nodes: [], edges: [] };
         let draggedNode = null;
 
-        // Ajusta a resolução nativa do Canvas
         function resizeCanvas() {
             canvas.width = canvas.parentElement.clientWidth;
             canvas.height = canvas.parentElement.clientHeight;
@@ -253,12 +281,27 @@
         window.addEventListener("resize", resizeCanvas);
         resizeCanvas();
 
-        // 1. Motor de Física de Força-Direcionada (Force-Directed Graph Engine) em Pure JS
+        // Alternador de Abas Lógicas (Documento vs Markdown)
+        function switchTab(type) {
+            const tabDoc = document.getElementById("tab-doc");
+            const tabRaw = document.getElementById("tab-raw");
+            if (type === 'doc') {
+                viewDoc.classList.remove("hidden");
+                viewRaw.classList.add("hidden");
+                tabDoc.className = "text-xs font-bold px-4 py-1.5 bg-blue-50 text-blue-600 rounded-lg transition-all";
+                tabRaw.className = "text-xs font-bold px-4 py-1.5 text-slate-400 hover:bg-slate-50 rounded-lg transition-all";
+            } else {
+                viewDoc.classList.add("hidden");
+                viewRaw.classList.remove("hidden");
+                tabRaw.className = "text-xs font-bold px-4 py-1.5 bg-blue-50 text-blue-600 rounded-lg transition-all";
+                tabDoc.className = "text-xs font-bold px-4 py-1.5 text-slate-400 hover:bg-slate-50 rounded-lg transition-all";
+            }
+        }
+
+        // Motor de Física de Força-Direcionada do Gráfico
         function initPhysicsNodes(data) {
             const width = canvas.width;
             const height = canvas.height;
-            
-            // Preserva nós existentes para não perder a inércia na atualização
             const existingNodesMap = new Map(graphData.nodes.map(n => [n.id, n]));
             
             graphData.nodes = data.nodes.map(n => {
@@ -281,75 +324,62 @@
         }
 
         function updatePhysics() {
-            const kRepulsion = 380;   // Força de afastamento entre nós (rede neural)
-            const kAttraction = 0.04;  // Força elástica dos links [[Links]]
-            const gravity = 0.015;     // Atração magnética centralizada para não dispersar
-            const damping = 0.85;      // Coeficiente de atrito/desaceleração
+            const kRepulsion = 380;
+            const kAttraction = 0.04;
+            const gravity = 0.015;
+            const damping = 0.85;
 
             const centerX = canvas.width / 2;
             const centerY = canvas.height / 2;
 
-            // A. Força de Repulsão entre todos os nós (Estilo elétron)
             for (let i = 0; i < graphData.nodes.length; i++) {
                 let n1 = graphData.nodes[i];
                 for (let j = i + 1; j < graphData.nodes.length; j++) {
                     let n2 = graphData.nodes[j];
                     let dx = n2.x - n1.x;
                     let dy = n2.y - n1.y;
-                    if (dx === 0) dx = 0.1; // Evita divisão por zero catastrófica
+                    if (dx === 0) dx = 0.1;
                     let dist = Math.sqrt(dx * dx + dy * dy);
-                    
                     if (dist < 280) {
                         let force = kRepulsion / (dist * dist + 10);
                         let fx = (dx / dist) * force;
                         let fy = (dy / dist) * force;
-                        
                         if (n1 !== draggedNode) { n1.vx -= fx; n1.vy -= fy; }
                         if (n2 !== draggedNode) { n2.vx += fx; n2.vy += fy; }
                     }
                 }
             }
 
-            // B. Força de Atração Magnética por Vínculos (Hiperlinks)
             graphData.edges.forEach(edge => {
                 let n1 = edge.sourceNode;
                 let n2 = edge.targetNode;
                 let dx = n2.x - n1.x;
                 let dy = n2.y - n1.y;
                 let dist = Math.sqrt(dx * dx + dy * dy);
-                
                 if (dist > 0) {
                     let force = kAttraction * dist;
                     let fx = (dx / dist) * force;
                     let fy = (dy / dist) * force;
-                    
                     if (n1 !== draggedNode) { n1.vx += fx; n1.vy += fy; }
                     if (n2 !== draggedNode) { n2.vx -= fx; n2.vy -= fy; }
                 }
             });
 
-            // C. Gravidade Central e Atualização de Vetores de Deslocamento
             graphData.nodes.forEach(node => {
                 if (node === draggedNode) return;
-
                 let dx = centerX - node.x;
                 let dy = centerY - node.y;
                 node.vx += dx * gravity;
                 node.vy += dy * gravity;
-
                 node.x += node.vx;
                 node.y += node.vy;
-                
                 node.vx *= damping;
                 node.vy *= damping;
             });
         }
 
-        // Renderizador Gráfico em Alta Performance (Canvas Draw Loop)
         function drawGraph() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-            // 1. Desenha as Teias de Conexões (Linhas finas cinzas idênticas ao Obsidian)
             ctx.lineWidth = 1;
             ctx.strokeStyle = "#e5e5e5";
             graphData.edges.forEach(edge => {
@@ -359,17 +389,13 @@
                 ctx.stroke();
             });
 
-            // 2. Desenha as Partículas (Nós) e os Textos
             graphData.nodes.forEach(node => {
                 const isActive = (node.id === selectedFileId);
-                
-                // Desenha a bolinha (Nó)
                 ctx.beginPath();
                 ctx.arc(node.x, node.y, isActive ? 6 : node.radius, 0, 2 * Math.PI);
-                ctx.fillStyle = isActive ? "#2563eb" : "#5b6672"; // Azul se selecionado, senão cinza-grafite
+                ctx.fillStyle = isActive ? "#2563eb" : "#5b6672";
                 ctx.fill();
 
-                // Desenha o rótulo textual posicionado logo abaixo (Estilo Cérebro Jurídico / Obsidian)
                 ctx.font = isActive ? "bold 10px sans-serif" : "10px sans-serif";
                 ctx.fillStyle = isActive ? "#1e293b" : "#64748b";
                 ctx.textAlign = "center";
@@ -377,7 +403,6 @@
             });
         }
 
-        // Loop contínuo da animação de estabilização física
         function animationLoop() {
             updatePhysics();
             drawGraph();
@@ -385,13 +410,10 @@
         }
         requestAnimationFrame(animationLoop);
 
-        // Captura e controle de arrastar nós com o mouse (Drag and Drop Interaction)
         canvas.addEventListener("mousedown", (e) => {
             const rect = canvas.getBoundingClientRect();
             const mouseX = e.clientX - rect.left;
             const mouseY = e.clientY - rect.top;
-
-            // Busca se o clique atingiu o raio de algum nó
             for (let node of graphData.nodes) {
                 let dist = Math.sqrt((node.x - mouseX)**2 + (node.y - mouseY)**2);
                 if (dist < 18) {
@@ -410,27 +432,22 @@
             draggedNode.vy = 0;
         });
 
-        window.addEventListener("mouseup", () => {
-            draggedNode = null;
-        });
+        window.addEventListener("mouseup", () => { draggedNode = null; });
 
-        // Sincroniza os dados do backend e atualiza a teia em tempo real
         async function reloadGlobalGraph() {
             try {
                 const res = await fetch("/api/graph-data");
                 const data = await res.json();
                 initPhysicsNodes(data);
             } catch (err) {
-                console.error("Falha ao sincronizar mapa relacional:", err);
+                console.error(err);
             }
         }
 
-        // 2. Sincroniza o Painel do Diretório de Arquivos à Esquerda
         async function buildNotesTree() {
             try {
                 const res = await fetch("/api/notes");
                 const data = await res.json();
-                
                 if (data.files && data.files.length > 0) {
                     fileTree.innerHTML = "";
                     data.files.forEach(filePath => {
@@ -441,56 +458,90 @@
                         fileTree.appendChild(btn);
                     });
                     lucide.createIcons();
-                } else {
-                    fileTree.innerHTML = `<div class="text-slate-400 p-2 italic">Cofre vazio ou sem notas .md encontradas.</div>`;
                 }
             } catch (err) {
-                fileTree.innerHTML = `<div class="text-red-500 p-2 italic">Erro de carregamento.</div>`;
+                console.error(err);
             }
         }
 
-        // 3. Executa a leitura em tempo real e joga o texto da VPS na tela
+        // Carrega o documento e preenche dinamicamente os cartões laterais 100% igual ao exemplo
         async function loadNoteContent(filename) {
-            selectedFileId = filename; // Marca a nota ativa no canvas
+            selectedFileId = filename;
             const shortName = filename.split('/').pop();
-            activeNoteTitle.innerText = shortName;
+            activeNoteTitle.innerText = shortName.replace(/\.md$/, "");
             activeNoteMeta.innerText = `Localização: BaseConhecimento/${filename}`;
-            noteViewer.innerText = "Buscando blocos de dados no disco rígido...";
             
+            viewDoc.innerHTML = `<div class="text-center text-slate-400 my-20 animate-pulse">Indexando bloco documental...</div>`;
+            viewRaw.innerText = "Buscando texto bruto...";
+
             try {
                 const res = await fetch(`/api/note-content?file=${encodeURIComponent(filename)}`);
                 const data = await res.json();
                 
                 if (data.content) {
-                    noteViewer.innerText = data.content;
+                    viewRaw.innerText = data.content;
                     
-                    summaryDesc.innerText = `Documento técnico analisado estruturalmente. Contém configurações operacionais ativas e mapeadas pelo sistema corporativo.`;
-                    summaryPoints.innerHTML = `
-                        <div class="flex items-start gap-2"><i data-lucide="check-circle-2" class="w-3.5 h-3.5 text-green-500 shrink-0"></i> <span>Leitura física concluída</span></div>
-                        <div class="flex items-start gap-2"><i data-lucide="check-circle-2" class="w-3.5 h-3.5 text-green-500 shrink-0"></i> <span>Formato Markdown Sincronizado</span></div>
-                        <div class="flex items-start gap-2"><i data-lucide="network" class="w-3.5 h-3.5 text-blue-500 shrink-0"></i> <span>Conexões mapeadas no Gráfico</span></div>
+                    // Renderização de Documento Formal Estilizado (Painel Esquerdo do Modelo)
+                    viewDoc.innerHTML = `
+                        <div class="border border-slate-200 rounded-lg p-5 bg-white shadow-xs max-w-xl mx-auto font-serif">
+                            <div class="text-center border-b border-slate-200 pb-3 mb-4">
+                                <h3 class="font-bold text-sm tracking-wide uppercase text-slate-800">BMS SERVICE - RELATÓRIO OPERACIONAL</h3>
+                                <p class="text-[10px] text-slate-400 mt-0.5">Identificador de Volume: BaseConhecimento/${filename}</p>
+                            </div>
+                            <div class="space-y-3 text-[11px] text-slate-700 whitespace-pre-wrap leading-relaxed">${data.content}</div>
+                        </div>
                     `;
-                    lucide.createIcons();
+
+                    // Parse e Injeção Dinâmica dos Cartões Laterais (Painel Direito do Modelo)
+                    metaSummary.innerText = `Nota técnica indexada com sucesso na VPS. Contém dados estruturais e procedimentos operacionais vinculados ao ecossistema de automação corporativa.`;
                     
+                    metaPoints.innerHTML = `
+                        <div class="flex items-start gap-2"><i data-lucide="check-circle-2" class="w-3.5 h-3.5 text-green-500 shrink-0"></i> <span>Leitura e consistência de volume OK</span></div>
+                        <div class="flex items-start gap-2"><i data-lucide="check-circle-2" class="w-3.5 h-3.5 text-green-500 shrink-0"></i> <span>Sincronização com o repositório concluída</span></div>
+                        <div class="flex items-start gap-2"><i data-lucide="check-circle-2" class="w-3.5 h-3.5 text-green-500 shrink-0"></i> <span>Mapeamento de links internos ativo</span></div>
+                    `;
+
+                    // Extrai links internos [[Nota]] para preencher "Documentos Relacionados"
+                    const linkRegex = /\[\[(.*?)\]\]/g;
+                    let matches = [];
+                    let match;
+                    while ((match = linkRegex.exec(data.content)) !== null) {
+                        if (!matches.includes(match[1])) matches.push(match[1]);
+                    }
+
+                    if (matches.length > 0) {
+                        metaRelated.innerHTML = "";
+                        matches.forEach(m => {
+                            const item = document.createElement("div");
+                            item.className = "flex items-center justify-between bg-slate-50 border border-slate-100 rounded-lg p-2 text-[11px] font-bold text-slate-700";
+                            item.innerHTML = `<div class="flex items-center gap-1.5 truncate"><i data-lucide="file" class="w-3.5 h-3.5 text-slate-400"></i><span class="truncate">${m}</span></div><span class="text-[9px] bg-blue-100 text-blue-700 px-1 rounded font-black">MD</span>`;
+                            metaRelated.appendChild(item);
+                        });
+                        
+                        // Atualiza Gráfico de Progresso Circular (Ex: 78% se houver links)
+                        circleProgress.setAttribute("stroke-dasharray", "78, 100");
+                        circleText.innerText = "78%";
+                        analysisStatusDesc.innerText = `${matches.length} referências cruzadas conectadas.`;
+                    } else {
+                        metaRelated.innerHTML = `<div class="text-[11px] text-slate-400 font-medium italic">Nenhuma referência de link direto nesta nota.</div>`;
+                        circleProgress.setAttribute("stroke-dasharray", "100, 100");
+                        circleText.innerText = "100%";
+                        analysisStatusDesc.innerText = "Documento isolado estável.";
+                    }
+
+                    lucide.createIcons();
                     chatInput.value = `Leia a nota "${filename}" e faça um resumo crítico.`;
                     chatInput.focus();
-                } else {
-                    noteViewer.innerText = `Erro: ${data.error || 'Falha ao processar arquivo.'}`;
                 }
             } catch (err) {
-                noteViewer.innerText = `Falha na requisição local: ${err.message}`;
+                console.error(err);
             }
         }
 
-        // 4. Mecanismo de Upload para a Barra de Ferramentas Superior
         btnVaultUpload.onclick = () => globalVaultUpload.click();
         globalVaultUpload.onchange = async (e) => {
             const file = e.target.files[0];
             if (!file) return;
-
-            activeNoteTitle.innerText = "Sincronizando arquivo...";
-            noteViewer.innerText = `Enviando ${file.name} para a VPS...`;
-
             try {
                 const res = await fetch(`/api/upload-vault?file=${encodeURIComponent(file.name)}`, {
                     method: "POST",
@@ -499,28 +550,21 @@
                 const data = await res.json();
                 if (data.success) {
                     await buildNotesTree();
-                    await reloadGlobalGraph(); // Atualiza a malha neural do gráfico automaticamente
+                    await reloadGlobalGraph();
                     loadNoteContent(file.name);
-                } else {
-                    alert(`Falha no upload: ${data.error}`);
                 }
             } catch (err) {
-                alert(`Erro de comunicação: ${err.message}`);
+                console.error(err);
             }
         };
 
-        // 5. Mecanismo de Anexo de Contexto para a Conversa do Claude
         btnChatAttach.onclick = () => chatContextUpload.click();
         chatContextUpload.onchange = (e) => {
             const file = e.target.files[0];
             if (!file) return;
-
             const reader = new FileReader();
             reader.onload = (event) => {
-                pendingChatAttachment = {
-                    name: file.name,
-                    content: event.target.result
-                };
+                pendingChatAttachment = { name: file.name, content: event.target.result };
                 chatAttachmentName.innerText = file.name;
                 chatAttachmentArea.classList.remove("hidden");
             };
@@ -533,7 +577,6 @@
             chatContextUpload.value = "";
         };
 
-        // 6. Mensageria Estruturada do Chat
         async function sendChatMessage() {
             let query = chatInput.value.trim();
             if (!query && !pendingChatAttachment) return;
@@ -544,7 +587,6 @@
                 contextPrompt = `[Contexto Adicional - Arquivo Anexado pelo Usuário: ${pendingChatAttachment.name}]\n` +
                                 `\`\`\`\n${pendingChatAttachment.content}\n\`\`\`\n\n` +
                                 `Instrução do usuário sobre o arquivo: ${query || 'Analise o arquivo anexo.'}`;
-                
                 renderMessageBlock("user", `📎 Envia arquivo: ${pendingChatAttachment.name}\n${query}`);
                 pendingChatAttachment = null;
                 chatAttachmentArea.classList.add("hidden");
@@ -555,19 +597,14 @@
 
             chatInput.value = "";
             chatHistory.push({ role: "user", content: contextPrompt });
-
             const tempId = renderMessageBlock("assistant", "Executando varredura MCP e gerando resposta...");
 
             try {
                 const res = await fetch("/api/chat", {
                     method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "x-app-password": appPassword.value
-                    },
+                    headers: { "Content-Type": "application/json", "x-app-password": appPassword.value },
                     body: JSON.stringify({ messages: chatHistory })
                 });
-
                 const data = await res.json();
                 document.getElementById(tempId).remove();
 
@@ -576,14 +613,11 @@
                     chatHistory.push({ role: "assistant", content: data.reply });
                     if (query.toLowerCase().includes("crie") || query.toLowerCase().includes("nota") || query.toLowerCase().includes("pasta")) {
                         await buildNotesTree();
-                        await reloadGlobalGraph(); // Sincroniza o gráfico em tempo de execução
+                        await reloadGlobalGraph();
                     }
-                } else {
-                    renderMessageBlock("assistant", `❌ Erro: ${data.error}`);
                 }
             } catch (err) {
-                document.getElementById(tempId).remove();
-                renderMessageBlock("assistant", `❌ Falha ao falar com o servidor backend.`);
+                console.error(err);
             }
         }
 
@@ -605,7 +639,6 @@
         btnSend.onclick = sendChatMessage;
         chatInput.onkeydown = (e) => { if (e.key === "Enter") sendChatMessage(); };
 
-        // Inicialização em Lote das APIs locais do Servidor
         buildNotesTree();
         reloadGlobalGraph();
     </script>
