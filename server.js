@@ -1,6 +1,7 @@
 import express from "express";
 import fs from "fs";
 import path from "path";
+import crypto from "crypto";
 import Anthropic from "@anthropic-ai/sdk";
 
 const app = express();
@@ -132,6 +133,17 @@ function readNoteLocal(filename) {
 app.get("/api/status", (req, res) => {
   if (missingVars.length > 0 || !fs.existsSync(VAULT_PATH)) return res.status(500).json({ status: "ERRO" });
   res.json({ status: "OK" });
+});
+
+// NOVA ROTA: GERADOR DE CARGA PARA TESTE DE VELOCIDADE
+app.get("/api/speedtest", (req, res) => {
+  const size = 5 * 1024 * 1024; // Gera 5MB de bytes aleatórios intransponíveis
+  res.set({
+      'Content-Type': 'application/octet-stream',
+      'Content-Length': size,
+      'Cache-Control': 'no-store, no-cache, must-revalidate, private'
+  });
+  res.send(crypto.randomBytes(size));
 });
 
 app.get("/api/notes", (req, res) => {
@@ -317,4 +329,4 @@ app.post("/api/chat", async (req, res) => {
   } catch (error) { res.status(500).json({ error: "Falha de IA." }); }
 });
 
-app.listen(3000, () => console.log("Servidor ativo com Custo Zero para Análises Locais."));
+app.listen(3000, () => console.log("Servidor ativo."));
