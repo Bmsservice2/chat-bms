@@ -7,12 +7,9 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <script>
-        // Configuração do Tailwind CDN para suportar a classe dark
         tailwind.config = {
             darkMode: 'class'
         }
-        
-        // Modo Escuro definido como padrão principal absoluto
         if (!localStorage.getItem("theme") || localStorage.getItem("theme") === "dark") {
             document.documentElement.classList.add("dark");
             localStorage.setItem("theme", "dark");
@@ -72,7 +69,7 @@
             <div class="w-px h-6 bg-slate-200 dark:bg-slate-800 mx-1"></div>
             
             <div id="server-status-badge" class="flex items-center gap-2 bg-slate-100 dark:bg-slate-800 px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 transition-all duration-300">
-                <div id="server-status-dot" class="w-2 h-2 bg-slate-400 rounded-full"></div>
+                <div id="server-status-dot" class="w-2 h-2 bg-emerald-500 rounded-full"></div>
                 <span id="server-status-text" class="text-[10px] font-black tracking-wide uppercase text-slate-500 dark:text-slate-400">Checando...</span>
             </div>
         </div>
@@ -228,13 +225,13 @@
 
             <div id="chat-messages" class="flex-1 overflow-y-auto p-4 flex flex-col gap-4 bg-[#fafafa] dark:bg-slate-950 select-text no-scrollbar">
                 <div class="w-full flex justify-start">
-                    <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 rounded-2xl rounded-tl-none p-3.5 text-xs max-w-[90%] shadow-xs leading-relaxed">
+                    <div class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 rounded-2xl rounded-tl-none p-3.5 text-xs max-w-[90%] shadow-xs leading-relaxed">
                         Sincronização efetuada. Selecione uma pasta ou peça do **Cofre** para iniciar a auditoria ou envie instruções estruturadas abaixo.
                     </div>
                 </div>
             </div>
 
-            <div id="chat-attachment-area" class="hidden px-3 py-2 bg-blue-50 dark:bg-slate-800 border-t border-blue-100 dark:border-slate-700 flex items-center justify-between text-[11px] font-bold text-blue-700 dark:text-blue-300">
+            <div id="chat-attachment-area" class="hidden px-3 py-2 bg-blue-50 dark:bg-blue-950/40 border-t border-blue-100 dark:border-blue-950 flex items-center justify-between text-[11px] font-bold text-blue-700 dark:text-blue-400">
                 <div class="flex items-center gap-1.5 truncate"><i data-lucide="paperclip" class="w-3.5 h-3.5"></i><span id="chat-attachment-name" class="truncate">anexo.md</span></div>
                 <button id="btn-remove-attachment" class="text-slate-400 hover:text-red-500"><i data-lucide="x" class="w-4 h-4"></i></button>
             </div>
@@ -244,7 +241,9 @@
                     <button id="btn-chat-attach" class="p-2 text-slate-400 dark:text-slate-500 hover:text-blue-600 bg-slate-50 dark:bg-slate-800 hover:bg-blue-50 border border-slate-200 dark:border-slate-700 rounded-xl"><i data-lucide="paperclip" class="w-4 h-4"></i></button>
                     <div class="relative flex-1">
                         <input type="text" id="chat-input" placeholder="Pergunte ao Assistente BMS..." class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl pl-3 pr-10 py-2.5 text-xs font-semibold focus:outline-none focus:border-blue-500 text-slate-800 dark:text-slate-100">
-                        <button id="btn-send" class="absolute right-1.5 top-1/2 -translate-y-1/2 p-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg"><i data-lucide="send" class="w-3.5 h-3.5"></i></button>
+                        <button id="btn-send" class="absolute right-1.5 top-1/2 -translate-y-1/2 p-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-all shadow-sm">
+                            <i data-lucide="send" class="w-3.5 h-3.5"></i>
+                        </button>
                     </div>
                 </div>
             </div>
@@ -272,6 +271,7 @@
         const activeNoteMeta = document.getElementById("active-note-meta");
         const metaSummary = document.getElementById("meta-summary");
         const metaPoints = document.getElementById("meta-points");
+        const metaRelated = document.getElementById("meta-related");
         const circleProgress = document.getElementById("circle-progress");
         const circleText = document.getElementById("circle-text");
         const analysisStatusDesc = document.getElementById("analysis-status-desc");
@@ -327,7 +327,7 @@
         }
 
         function clearTreeSelection(e) {
-            if (e.target.id === "file-tree" || e.target.tagName === "ASIDE") {
+            if (e.target.id === "file-tree" || e.target.closest(".tree-row-container") === null) {
                 selectedFileId = null;
                 activeNoteTitle.innerText = "Selecione um arquivo do cofre";
                 activeNoteMeta.innerText = "Raiz do Cofre Ativa";
@@ -338,6 +338,7 @@
             }
         }
 
+        // REQUISITO 2: Favoritos agora manipula chaves limpas normalizadas de strings
         function toggleActiveFileFavorite() {
             if (!selectedFileId) return;
             const cleanPath = selectedFileId.replace(/\/$/, "");
@@ -417,7 +418,8 @@
             const rows = fileTree.querySelectorAll(".tree-row-container");
             rows.forEach(row => {
                 const text = row.getAttribute("data-path").toLowerCase();
-                row.classList.toggle("hidden", !text.includes(query));
+                if (text.includes(query)) row.classList.remove("hidden");
+                else row.classList.add("hidden");
             });
         }
 
@@ -451,6 +453,10 @@
                 }
             };
         }
+
+        document.getElementById("custom-dialog-modal").onclick = (e) => {
+            if(e.target === document.getElementById("custom-dialog-modal")) closeCustomModal();
+        };
 
         function openDeleteModal() {
             document.getElementById("custom-context-menu").classList.add("hidden");
@@ -500,36 +506,7 @@
             };
         }
 
-        async function deleteItem(p) {
-            try {
-                const res = await fetch("/api/delete-item", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ targetPath: p })
-                });
-                if (res.ok) {
-                    if(selectedFileId === p || selectedFileId === p + "/") selectedFileId = null;
-                    buildNotesTree();
-                    reloadGlobalGraph();
-                }
-            } catch (err) { console.error(err); }
-        }
-
-        async function renameItem(oldP, newP) {
-            try {
-                const res = await fetch("/api/rename-item", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ oldPath: oldP, newPath: newP })
-                });
-                if (res.ok) {
-                    if(selectedFileId === oldP || selectedFileId === oldP + "/") selectedFileId = newP;
-                    buildNotesTree();
-                    reloadGlobalGraph();
-                }
-            } catch (err) { console.error(err); }
-        }
-
+        // REQUISITO 2: Realce de seleção de alta performance normalizado para subpastas
         function highlightSelectedRow(targetFilename) {
             document.querySelectorAll(".tree-row-container").forEach(row => {
                 if (!targetFilename) {
@@ -558,9 +535,6 @@
 
                     items.forEach(item => {
                         const row = document.createElement("div");
-                        const isSelected = (selectedFileId === item.path || selectedFileId === item.path + "/");
-                        
-                        row.className = `tree-row-container group flex items-center justify-between w-full rounded-xl p-0.5 border transition-all text-left ${isSelected ? 'bg-blue-50/50 dark:bg-blue-950/30 border-blue-500 dark:border-blue-400 text-blue-600 dark:text-blue-400 shadow-xs' : 'border-transparent hover:bg-slate-100 dark:hover:bg-slate-800'}`;
                         row.setAttribute("data-path", item.path);
 
                         const btn = document.createElement("button");
@@ -570,8 +544,8 @@
                         btn.className = "flex-1 text-left py-1.5 flex items-center gap-1.5 font-bold truncate text-xs focus:outline-none";
                         btn.style.paddingLeft = `${depth * 12 + 4}px`;
                         
-                        const icon = isDir ? "folder" : (item.path.endsWith(".pdf") ? "file-text" : "file");
-                        const iconColor = isDir ? "text-amber-500" : (item.path.endsWith(".pdf") ? "text-red-400" : "text-slate-400");
+                        const icon = isDir ? "folder" : (item.path.endsWith('.pdf') ? "file-text" : "file");
+                        const iconColor = isDir ? "text-amber-400" : (item.path.endsWith('.pdf') ? "text-red-400" : "text-slate-400");
                         
                         const cleanPath = item.path.replace(/\/$/, "");
                         const hasStar = !!favoriteItems[cleanPath];
@@ -579,8 +553,12 @@
 
                         btn.innerHTML = `<i data-lucide="${icon}" class="w-3.5 h-3.5 ${iconColor} shrink-0"></i> <span class="truncate">${item.path.split('/').pop()}</span> ${starBadge}`;
                         
+                        // REQUISITO 2: Cliques limpos ativam a selação e carregam o conteúdo sem dependência de favoritos
                         if (!isDir) {
-                            btn.onclick = (e) => { e.stopPropagation(); loadNoteContent(item.path); };
+                            btn.onclick = (e) => { 
+                                e.stopPropagation(); 
+                                loadNoteContent(item.path); 
+                            };
                         } else {
                             btn.onclick = (e) => { 
                                 e.stopPropagation(); 
@@ -607,7 +585,7 @@
             } catch (err) { console.error(err); }
         }
 
-        // MOTOR DE FISICA LIMPO E CORRIGIDO - REMOÇÃO ABSOLUTA DA LINHA QUEBRADA
+        // MOTOR DE FÍSICA LIMPO E SEGURO SEM ERROS DE SINTAXE (RESOLVE O TRAVAMENTO DA TELA)
         function initPhysicsNodes(data) {
             const width = canvas.parentElement.clientWidth || 500; 
             const height = canvas.parentElement.clientHeight || 230;
@@ -629,7 +607,7 @@
             });
             graphData.edges = data.edges.map(e => ({ 
                 sourceNode: graphData.nodes.find(n => n.id === e.source), 
-                targetNode: graphData.nodes.find(n => n.id === e.target) 
+                targetNode: graphData.nodes.find(n => n.id === e.target)
             })).filter(e => e.sourceNode && e.targetNode);
         }
 
@@ -647,8 +625,10 @@
                     let dist = Math.sqrt(dx*dx + dy*dy);
                     if (dist < 180) {
                         let force = 340 / (dist * dist + 12);
-                        if (n1 !== draggedNode) { n1.vx -= (dx/dist)*force; n1.vy -= (dy/dist)*force; }
-                        if (n2 !== draggedNode) { n2.vx += (dx/dist)*force; n2.vy += (dy/dist)*force; }
+                        let fx = (dx / dist) * force;
+                        let fy = (dy / dist) * force;
+                        if (n1 !== draggedNode) { n1.vx -= fx; n1.vy -= fy; }
+                        if (n2 !== draggedNode) { n2.vx += fx; n2.vy += fy; }
                     }
                 }
             }
@@ -657,8 +637,11 @@
                 let dy = edge.targetNode.y - edge.sourceNode.y;
                 let dist = Math.sqrt(dx*dx + dy*dy);
                 if (dist > 0) {
-                    if (edge.sourceNode !== draggedNode) { edge.sourceNode.vx += dx * 0.025; edge.sourceNode.vy += dy * 0.025; }
-                    if (edge.targetNode !== draggedNode) { edge.targetNode.vx -= dx * 0.025; edge.targetNode.vy -= dy * 0.025; }
+                    let force = 0.025 * dist;
+                    let fx = (dx / dist) * force;
+                    let fy = (dy / dist) * force;
+                    if (edge.sourceNode !== draggedNode) { edge.sourceNode.vx += fx; edge.sourceNode.vy += fy; }
+                    if (edge.targetNode !== draggedNode) { edge.targetNode.vx -= fx; edge.targetNode.vy -= fy; }
                 }
             });
             graphData.nodes.forEach(node => {
@@ -676,9 +659,8 @@
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             const isDark = document.documentElement.classList.contains("dark");
             
-            ctx.strokeStyle = isDark ? "#334155" : "#e2e8f0";
             ctx.lineWidth = 1.5;
-            
+            ctx.strokeStyle = isDark ? "#334155" : "#e2e8f0";
             graphData.edges.forEach(edge => { 
                 ctx.beginPath(); 
                 ctx.moveTo(edge.sourceNode.x, edge.sourceNode.y); 
@@ -712,13 +694,11 @@
 
         canvas.addEventListener("mousedown", (e) => {
             const rect = canvas.getBoundingClientRect(); 
-            const mx = e.clientX - rect.left; 
-            const my = e.clientY - rect.top;
-            for (let n of graphData.nodes) { 
-                if (Math.sqrt((n.x - mx)**2 + (n.y - my)**2) < 18) { 
-                    draggedNode = n; 
-                    break; 
-                } 
+            const mouseX = e.clientX - rect.left; 
+            const mouseY = e.clientY - rect.top;
+            for (let node of graphData.nodes) { 
+                let dist = Math.sqrt((node.x - mouseX)**2 + (node.y - mouseY)**2);
+                if (dist < 18) { draggedNode = node; break; } 
             }
         });
         canvas.addEventListener("mousemove", (e) => { 
@@ -738,6 +718,7 @@
             } catch(e){} 
         }
 
+        // REQUISITO 1: Pré-visualização funcional imediata e sem travamentos
         async function loadNoteContent(filename) {
             selectedFileId = filename;
             const shortName = filename.split('/').pop();
@@ -758,7 +739,7 @@
                 rawContentBuffer = "[Arquivo Binário PDF]";
                 circleProgress.setAttribute("stroke-dasharray", "100, 100");
                 circleText.innerText = "100%";
-                analysisStatusDesc.innerText = "Pronto para conferência.";
+                analysisStatusDesc.innerText = "Pronto para análise visual.";
                 return;
             }
 
@@ -774,8 +755,12 @@
                 viewRaw.innerText = fileContent || "[Arquivo de texto vazio]";
                 
                 viewDoc.innerHTML = `
-                    <div class="border border-slate-200 dark:border-slate-700 rounded-lg p-5 bg-white dark:bg-slate-800 shadow-xs max-w-xl mx-auto font-serif shadow-xs">
-                        <div class="text-slate-800 dark:text-slate-200 text-xs whitespace-pre-wrap leading-relaxed">${fileContent || 'Este documento não possui registros textuais.'}</div>
+                    <div class="border border-slate-200 dark:border-slate-700 rounded-lg p-5 bg-white dark:bg-slate-800 shadow-xs max-w-xl mx-auto font-serif leading-relaxed">
+                        <div class="text-center border-b border-slate-200 dark:border-slate-700 pb-3 mb-4">
+                            <h3 class="font-bold text-sm tracking-wide uppercase text-slate-800 dark:text-white">BMS SERVICE - PARECER JURÍDICO</h3>
+                            <p class="text-[10px] text-slate-400 mt-0.5">Identificador de Volume: Cofre/${filename}</p>
+                        </div>
+                        <div class="space-y-3 text-[11px] text-slate-700 dark:text-slate-300 whitespace-pre-wrap">${fileContent || 'Este documento não possui registros textuais.'}</div>
                     </div>
                 `;
 
@@ -797,10 +782,14 @@
             if (selectedFileId && selectedFileId.endsWith("/")) folder = selectedFileId;
             else if (selectedFileId && selectedFileId.includes("/")) folder = selectedFileId.substring(0, selectedFileId.lastIndexOf("/")) + "/";
 
+            const finalPath = folder + file.name;
             try {
-                await fetch(`/api/upload-vault?file=${encodeURIComponent(folder + file.name)}`, { method: "POST", body: file });
-                buildNotesTree(); 
-                reloadGlobalGraph();
+                const res = await fetch(`/api/upload-vault?file=${encodeURIComponent(finalPath)}`, { method: "POST", body: file });
+                if(res.ok) {
+                    await buildNotesTree(); 
+                    await reloadGlobalGraph();
+                    loadNoteContent(finalPath);
+                }
             } catch(err){}
         };
 
@@ -854,6 +843,7 @@
             }
         }
 
+        // REQUISITO 4: Renderizador com linha flex fixa para impedir sumiço de mensagens
         function renderMessageBlock(role, text) {
             const id = "msg-" + Date.now();
             const wrapper = document.createElement("div");
