@@ -92,7 +92,7 @@ function listNotesLocal() {
       const stat = fs.statSync(fullPath);
       if (stat && stat.isDirectory()) {
         results = results.concat(getFilesRecursively(fullPath));
-      } else if (file.endsWith('.md') || file.endsWith('.txt')) {
+      } else if (file.endsWith('.md') || file.endsWith('.txt') || file.endsWith('.pdf')) { // Suporte a PDF ativado
         results.push(path.relative(VAULT_PATH, fullPath));
       }
     });
@@ -118,7 +118,7 @@ function editNoteLocal(filename, content) {
   const safePath = getSafePath(filename);
   if (!fs.existsSync(safePath)) return { error: `Nota ${filename} não existe para ser editada.` };
   fs.writeFileSync(safePath, content, "utf-8");
-  return { filename, status: "Nota updated com sucesso." };
+  return { filename, status: "Nota atualizada com sucesso." };
 }
 
 function createFolderLocal(foldername) {
@@ -151,30 +151,43 @@ app.get("/api/note-content", (req, res) => {
   }
 });
 
-// Mapeia globalmente a rede neural de links internos do Obsidian
+// Rota crucial para servir arquivos de mídia e PDFs diretamente para o navegador
+app.get("/api/note-raw", (req, res) => {
+  const filename = req.query.file;
+  if (!filename) return res.status(400).json({ error: "Parâmetro 'file' obrigatório." });
+  try {
+    const safePath = getSafePath(filename);
+    if (!fs.existsSync(safePath)) return res.status(404).json({ error: "Arquivo não encontrado." });
+    res.sendFile(safePath);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 app.get("/api/graph-data", (req, res) => {
   try {
     const check = listNotesLocal();
     if (check.error || !check.files) return res.json({ nodes: [], edges: [] });
     
     const files = check.files;
-    const nodes = files.map(f => ({ id: f, label: f.split('/').pop().replace(/\.md$/, "") }));
+    const nodes = files.map(f => ({ id: f, label: f.split('/').pop().replace(/\.(md|pdf|txt)$/i, "") }));
     const edges = [];
 
     files.forEach(file => {
+      if (file.toLowerCase().endsWith('.pdf')) return; // Pula leitura binária no interpretador de texto
       try {
         const fullContent = fs.readFileSync(getSafePath(file), "utf-8");
         const linkRegex = /\[\[(.*?)\]\]/g;
         let match;
         while ((match = linkRegex.exec(fullContent)) !== null) {
-          const targetLabel = match[1].trim().replace(/\.md$/, "");
+          const targetLabel = match[1].trim().replace(/\.(md|pdf|txt)$/i, "");
           const targetNode = nodes.find(n => n.label === targetLabel || n.id === match[1].trim());
           if (targetNode) {
             edges.push({ source: file, target: targetNode.id });
           }
         }
       } catch (e) {
-        console.error("Erro ao ler mapa da nota:", file, e.message);
+        console.error(e.message);
       }
     });
 
