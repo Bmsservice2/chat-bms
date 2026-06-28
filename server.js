@@ -18,25 +18,28 @@ for (const key of requiredEnv) {
 
 const anthropic = process.env.ANTHROPIC_API_KEY ? new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY }) : null;
 const VAULT_PATH = "/app/obsidian_vault/BaseConhecimento";
+const DOWNLOADS_PATH = path.join(process.cwd(), "public", "downloads");
+
+if (!fs.existsSync(DOWNLOADS_PATH)) fs.mkdirSync(DOWNLOADS_PATH, { recursive: true });
 
 const localTools = [
   {
     name: "list_notes",
-    description: "Lista processos e documentos jurídicos do Cofre.",
+    description: "Lista processos, pastas e documentos jurídicos do Cofre.",
     input_schema: { type: "object", properties: {} }
   },
   {
     name: "read_note",
-    description: "Lê o conteúdo completo de uma peça processual do Cofre. Use isso para ler links [[Obsidian]].",
+    description: "Lê o conteúdo completo de um documento do Cofre. Extremamente importante para procurar contextos.",
     input_schema: {
       type: "object",
-      properties: { filename: { type: "string", description: "Nome do arquivo com extensão" } },
+      properties: { filename: { type: "string", description: "Caminho do arquivo" } },
       required: ["filename"]
     }
   },
   {
     name: "create_note",
-    description: "Cria um novo documento no Cofre.",
+    description: "Cria um novo documento permanente no Cofre.",
     input_schema: {
       type: "object",
       properties: { filename: { type: "string" }, content: { type: "string" } },
@@ -45,7 +48,7 @@ const localTools = [
   },
   {
     name: "edit_note",
-    description: "Edita uma peça existente no Cofre.",
+    description: "Edita e sobrescreve uma peça existente no Cofre.",
     input_schema: {
       type: "object",
       properties: { filename: { type: "string" }, content: { type: "string" } },
@@ -57,7 +60,7 @@ const localTools = [
     description: "Exclui permanentemente um arquivo ou pasta do Cofre.",
     input_schema: {
       type: "object",
-      properties: { targetPath: { type: "string", description: "Caminho do arquivo ou pasta" } },
+      properties: { targetPath: { type: "string" } },
       required: ["targetPath"]
     }
   },
@@ -77,6 +80,15 @@ const localTools = [
       type: "object",
       properties: { foldername: { type: "string" } },
       required: ["foldername"]
+    }
+  },
+  {
+    name: "create_downloadable_file",
+    description: "Cria um arquivo físico para o usuário fazer download (ex: .md, .docx, .txt). Use esta ferramenta caso o usuário aceite o download de uma peça que você gerou.",
+    input_schema: {
+      type: "object",
+      properties: { filename: { type: "string" }, content: { type: "string" } },
+      required: ["filename", "content"]
     }
   }
 ];
@@ -146,6 +158,33 @@ app.get("/api/note-raw", (req, res) => {
   } catch (err) { res.status(500).json({ error: err.message }); }
 });
 
+// NOVA ROTA: Análise Jurídica Automática
+app.post("/api/analyze-note", async (req, res) => {
+  if (req.headers["x-app-password"] !== process.env.APP_PASSWORD) return res.status(401).json({ error: "Senha inválida." });
+  try {
+    const { filename, content } = req.body;
+    if (!content) return res.json({ summary: "Documento sem texto.", points: [] });
+
+    const prompt = `Analise o documento jurídico '${filename}' e retorne APENAS um JSON válido. Formato exigido: {"summary": "Resumo em até 3 linhas", "points": ["Ponto 1", "Ponto 2", "Ponto 3"]}.\n\nDocumento:\n${content.substring(0, 10000)}`;
+
+    const response = await anthropic.messages.create({
+      model: "claude-3-haiku-20240307",
+      max_tokens: 500,
+      system: "Você é um auditor de peças jurídicas. Responda ESTRITAMENTE em formato JSON, sem marcações ou texto adicional.",
+      messages: [{ role: "user", content: prompt }]
+    });
+
+    const jsonMatch = response.content[0].text.match(/\{[\s\S]*\}/);
+    if (jsonMatch) {
+        res.json(JSON.parse(jsonMatch[0]));
+    } else {
+        res.status(500).json({ error: "Falha na estrutura do JSON." });
+    }
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 app.post("/api/create-folder", (req, res) => {
   try {
     const safePath = getSafePath(cleanPath(req.body.foldername));
@@ -178,7 +217,6 @@ app.post("/api/rename-item", (req, res) => {
   } catch (err) { res.status(500).json({ error: err.message }); }
 });
 
-// MOTOR DE LIGAMENTOS OBSIDIAN CORRIGIDO
 app.get("/api/graph-data", (req, res) => {
   try {
     const check = listNotesLocal();
@@ -192,19 +230,13 @@ app.get("/api/graph-data", (req, res) => {
       if (file.path.toLowerCase().endsWith('.pdf')) return;
       try {
         const fullContent = fs.readFileSync(getSafePath(file.path), "utf-8");
-        // Captura todas as ocorrências de [[Link]] ou [[Link|Alias]]
         const linkRegex = /\[\[(.*?)\]\]/g;
         let match;
         while ((match = linkRegex.exec(fullContent)) !== null) {
-          // Extrai apenas a parte antes do Pipe (|) para ignorar aliases
           const rawLink = match[1].split('|')[0].trim();
           const targetName = rawLink.split('/').pop().replace(/\.(md|pdf|txt)$/i, "").toLowerCase();
-          
-          // Busca um nó que tenha o mesmo nome de destino
           const targetNode = nodes.find(n => n.label.toLowerCase() === targetName);
-          if (targetNode) {
-            edges.push({ source: file.path, target: targetNode.id });
-          }
+          if (targetNode) edges.push({ source: file.path, target: targetNode.id });
         }
       } catch (e) {}
     });
@@ -230,10 +262,12 @@ app.post("/api/chat", async (req, res) => {
     const messages = userMessages.filter(msg => msg && ["user", "assistant"].includes(msg.role)).slice(-20);
     if (messages.length === 0) return res.status(400).json({ error: "Mensagem vazia." });
 
+    let citedFiles = new Set(); // Rastreia quais arquivos a IA leu
+
     let response = await anthropic.messages.create({
       model: process.env.CLAUDE_MODEL || "claude-3-5-sonnet-20241022",
       max_tokens: 4000,
-      system: "Você é o Assistente BMS, uma inteligência corporativa com MODO DEUS. Você tem autonomia total. Quando precisar pesquisar conexões processuais, leia os arquivos e procure ativamente por links no formato [[NomeDoArquivo]]. Adapte seu linguajar rigorosamente aos metadados processuais (Área, Fase e Peça) que o usuário selecionar na plataforma. NUNCA cite a Anthropic.",
+      system: "Você é o Assistente BMS, uma inteligência corporativa com MODO DEUS. Se o usuário pedir para gerar um documento ou peça inteira, PRIMEIRO envie o texto e DIGA que você pode transformar isso em um arquivo físico para download, pergunte se ele quer. SE ELE ACEITAR, use a ferramenta 'create_downloadable_file' e forneça na mensagem exatamente assim: '[📥 Clique aqui para baixar o Arquivo](/downloads/NOME_DO_ARQUIVO)'. Quando usar informações do Cofre, cite explicitamente de quais arquivos pegou as informações no final da sua resposta. NUNCA cite a Anthropic.",
       messages,
       tools: localTools
     });
@@ -247,7 +281,10 @@ app.post("/api/chat", async (req, res) => {
           let toolResult = {};
           try {
             if (block.name === "list_notes") toolResult = listNotesLocal();
-            else if (block.name === "read_note") toolResult = readNoteLocal(block.input.filename);
+            else if (block.name === "read_note") {
+                citedFiles.add(block.input.filename);
+                toolResult = readNoteLocal(block.input.filename);
+            }
             else if (block.name === "create_note") {
               const sp = getSafePath(cleanPath(block.input.filename));
               fs.mkdirSync(path.dirname(sp), { recursive: true });
@@ -286,6 +323,11 @@ app.post("/api/chat", async (req, res) => {
               fs.mkdirSync(sp, { recursive: true });
               toolResult = { status: "Pasta criada." };
             }
+            else if (block.name === "create_downloadable_file") {
+              const dlPath = path.join(DOWNLOADS_PATH, block.input.filename);
+              fs.writeFileSync(dlPath, block.input.content, "utf-8");
+              toolResult = { status: `Link de download gerado com sucesso: /downloads/${block.input.filename}` };
+            }
           } catch (err) { toolResult = { error: err.message }; }
           toolResults.push({ type: "tool_result", tool_use_id: block.id, content: JSON.stringify(toolResult) });
         }
@@ -293,8 +335,14 @@ app.post("/api/chat", async (req, res) => {
       messages.push({ role: "user", content: toolResults });
       response = await anthropic.messages.create({ model: process.env.CLAUDE_MODEL || "claude-3-5-sonnet-20241022", max_tokens: 4000, messages, tools: localTools });
     }
-    res.json({ reply: response.content.find(c => c.type === "text")?.text || "Operação executada." });
+    
+    // Retorna a mensagem E os arquivos citados!
+    res.json({ 
+        reply: response.content.find(c => c.type === "text")?.text || "Operação executada.",
+        citedFiles: Array.from(citedFiles)
+    });
+
   } catch (error) { res.status(500).json({ error: "Falha de IA." }); }
 });
 
-app.listen(3000, () => console.log("Servidor ativo com Motor de Links Obsidian."));
+app.listen(3000, () => console.log("Servidor ativo com Citações e Motor de Links."));
