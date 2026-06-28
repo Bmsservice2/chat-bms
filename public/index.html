@@ -16,7 +16,6 @@
         }
     </script>
     <style>
-        /* Escala o projeto perfeitamente sem afetar o clique/física (75%) */
         html { font-size: 12px; }
 
         .no-scrollbar::-webkit-scrollbar { display: none; }
@@ -113,13 +112,17 @@
                 </div>
                 <button onclick="closeSpeedTest()" class="w-full mt-5 py-3 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-xl transition-all font-bold text-xs">Concluir</button>
             </div>
-
         </div>
     </div>
 
     <header class="bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 h-16 min-h-16 flex items-center justify-between px-6 z-20 shadow-xs">
-        <div class="flex items-center gap-3">
-            <div class="bg-blue-600 p-2.5 rounded-xl text-white shadow-sm shadow-blue-300 dark:shadow-none"><i data-lucide="brain-circuit" class="w-5 h-5"></i></div>
+        <div class="flex items-center gap-1.5">
+            <div class="w-10 h-10 flex items-center justify-center mr-1">
+                <svg viewBox="0 0 100 100" class="w-full h-full drop-shadow-md">
+                    <path d="M 35 10 V 70 A 25 25 0 0 0 85 70 A 25 25 0 0 0 35 45" fill="none" stroke="#8bc34a" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M 47 10 V 70 A 13 13 0 0 0 73 70 A 13 13 0 0 0 47 57" fill="none" stroke="#0ea5e9" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </div>
             <span class="font-black text-xl tracking-tight text-slate-900 dark:text-white">BMS <span class="text-blue-600 font-medium">Knowledge</span></span>
         </div>
         
@@ -408,17 +411,15 @@
             }
         });
 
-        // LÓGICA DO TESTE DE VELOCIDADE (ANIMAÇÕES E FETCH STREAMING)
+        // SPEEDTEST LOGIC (Animação Visual Sincronizada com Fetch Local)
         function openSpeedTestModal() {
             const modal = document.getElementById("speedtest-modal");
             modal.classList.remove("hidden");
-            // Delay curto para CSS transition
             setTimeout(() => {
                 modal.classList.remove("opacity-0");
                 document.getElementById("speedtest-content").classList.remove("scale-95");
             }, 10);
             
-            // Reseta a UI do modal
             document.getElementById("st-state-1").classList.remove("hidden");
             document.getElementById("st-state-2").classList.add("hidden");
             document.getElementById("st-state-3").classList.add("hidden");
@@ -433,14 +434,10 @@
 
         function updateSpeedometer(mbps) {
             document.getElementById("st-value").innerText = mbps.toFixed(1);
-            let maxSpeed = 100; // Escala do velocímetro
+            let maxSpeed = 100;
             let mapped = Math.min(Math.max(mbps, 0), maxSpeed);
-            
-            // Rotação da agulha (-90 até 90 graus)
             let rot = -90 + (mapped / maxSpeed) * 180;
             document.getElementById("st-needle").style.transform = `translateX(-50%) rotate(${rot}deg)`;
-            
-            // Preenchimento do arco SVG (max stroke-dashoffset = 125)
             let offset = 125 - (mapped / maxSpeed) * 125;
             document.getElementById("st-progress").style.strokeDashoffset = offset;
         }
@@ -448,12 +445,9 @@
         async function startSpeedTest() {
             document.getElementById("st-state-1").classList.add("hidden");
             document.getElementById("st-state-2").classList.remove("hidden");
-            
-            // Zera o painel
             updateSpeedometer(0);
 
             try {
-                // Tenta puxar o arquivo gerado pelo nosso servidor para burlar o cache
                 const res = await fetch('/api/speedtest?cacheBust=' + Date.now());
                 if (!res.ok) throw new Error("Falha no servidor");
                 
@@ -469,7 +463,6 @@
                     loaded += value.length;
                     const now = Date.now();
                     
-                    // Atualiza a agulha visualmente a cada 100 milissegundos
                     if (now - lastUiUpdate > 100) {
                         const duration = (now - startTime) / 1000;
                         const mbps = ((loaded * 8) / 1000000) / duration;
@@ -478,22 +471,17 @@
                     }
                 }
                 
-                // Finaliza calculando o total
                 const finalDuration = (Date.now() - startTime) / 1000;
                 const finalMbps = ((loaded * 8) / 1000000) / finalDuration;
                 
                 updateSpeedometer(finalMbps);
-                
-                // Segura a agulha na velocidade final um momento antes de mostrar o resultado
                 setTimeout(() => {
                     document.getElementById("st-state-2").classList.add("hidden");
                     document.getElementById("st-state-3").classList.remove("hidden");
                     document.getElementById("st-final-value").innerText = finalMbps.toFixed(1);
                 }, 800);
-
             } catch (e) {
-                console.error(e);
-                alert("Erro ao testar velocidade. Verifique sua conexão com o servidor local.");
+                alert("Erro ao testar velocidade. Verifique sua conexão local.");
                 closeSpeedTest();
             }
         }
@@ -590,6 +578,17 @@
         }
         window.addEventListener("resize", resizeCanvas);
         resizeCanvas();
+
+        function toggleDarkMode() {
+            if (document.documentElement.classList.contains("dark")) {
+                document.documentElement.classList.remove("dark");
+                localStorage.setItem("theme", "light");
+            } else {
+                document.documentElement.classList.add("dark");
+                localStorage.setItem("theme", "dark");
+            }
+            drawGraph(); 
+        }
 
         function closeAllDropdownsMenu() {
             filterDropdown.classList.add("hidden");
@@ -848,6 +847,7 @@
             }
         }
 
+        // REQUISITO 2: LOGICA DE DRAG AND DROP (ARRASTAR E SOLTAR NA ÁRVORE)
         async function buildNotesTree() {
             try {
                 const res = await fetch("/api/notes");
@@ -860,6 +860,20 @@
 
                     if (currentFilterType === "md") items = items.filter(i => i.type === "directory" || i.path.endsWith(".md"));
                     if (currentFilterType === "pdf") items = items.filter(i => i.type === "directory" || i.path.endsWith(".pdf"));
+
+                    // Evento para soltar na raiz
+                    fileTree.ondragover = (e) => e.preventDefault();
+                    fileTree.ondrop = async (e) => {
+                        e.preventDefault();
+                        if (e.target === fileTree) {
+                            const draggedPath = e.dataTransfer.getData("text/plain");
+                            if (!draggedPath) return;
+                            const cleanDragged = draggedPath.replace(/\/$/, "");
+                            const itemName = cleanDragged.split('/').pop();
+                            if (cleanDragged === itemName) return; // Já está na raiz
+                            await renameItem(cleanDragged, itemName);
+                        }
+                    };
 
                     items.forEach(item => {
                         const cleanItemPath = item.path.replace(/\/$/, "");
@@ -884,8 +898,49 @@
                         row.className = `tree-row-container group flex items-center justify-between w-full rounded-xl p-0.5 border transition-all text-left ${isSelected ? 'bg-blue-50/50 dark:bg-blue-950/30 border-blue-500 dark:border-blue-400 text-blue-600 dark:text-blue-400 shadow-xs' : 'border-transparent hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300'}`;
                         row.setAttribute("data-path", item.path);
 
-                        const btn = document.createElement("button");
+                        // Lógica Drag and Drop no Row
                         const isDir = item.type === "directory";
+                        row.draggable = true;
+                        
+                        row.ondragstart = (e) => {
+                            e.dataTransfer.setData("text/plain", item.path);
+                            e.currentTarget.classList.add("opacity-50");
+                        };
+                        row.ondragend = (e) => {
+                            e.currentTarget.classList.remove("opacity-50");
+                            document.querySelectorAll('.drag-over').forEach(el => el.classList.remove('drag-over', 'ring-2', 'ring-blue-500', 'bg-blue-50/50'));
+                        };
+                        row.ondragover = (e) => {
+                            e.preventDefault(); 
+                            if (isDir) e.currentTarget.classList.add('ring-2', 'ring-blue-500', 'bg-blue-50/50', 'drag-over');
+                        };
+                        row.ondragleave = (e) => {
+                            e.currentTarget.classList.remove('ring-2', 'ring-blue-500', 'bg-blue-50/50', 'drag-over');
+                        };
+                        row.ondrop = async (e) => {
+                            e.preventDefault();
+                            e.currentTarget.classList.remove('ring-2', 'ring-blue-500', 'bg-blue-50/50', 'drag-over');
+                            
+                            const draggedPath = e.dataTransfer.getData("text/plain");
+                            if (!draggedPath || draggedPath === item.path) return;
+                            
+                            let targetFolder = isDir ? item.path : "";
+                            if (!isDir) {
+                                const parts = item.path.split('/');
+                                parts.pop();
+                                targetFolder = parts.length > 0 ? parts.join('/') + '/' : '';
+                            }
+                            
+                            const cleanDragged = draggedPath.replace(/\/$/, "");
+                            const itemName = cleanDragged.split('/').pop();
+                            const newPath = targetFolder + itemName;
+                            
+                            if (cleanDragged !== newPath.replace(/\/$/, "")) {
+                                await renameItem(cleanDragged, newPath);
+                            }
+                        };
+
+                        const btn = document.createElement("button");
                         const depth = (item.path.match(/\//g) || []).length - (isDir ? 1 : 0);
                         
                         btn.className = "flex-1 text-left py-1.5 flex items-center gap-1.5 font-bold truncate text-xs focus:outline-none";
@@ -937,7 +992,6 @@
             } catch (err) { console.error(err); }
         }
 
-        // REQUISITO 2: Malha de conexões presa nas bordas com física browniana natural
         function initPhysicsNodes(data) {
             const width = canvas.parentElement.clientWidth || 500; 
             const height = canvas.parentElement.clientHeight || 230;
@@ -960,6 +1014,7 @@
             })).filter(e => e.sourceNode && e.targetNode);
         }
 
+        // REQUISITO 2: FISICA COM COLISÃO NA BORDA E PUXADA CENTRAL AUMENTADA
         function updatePhysics() {
             const centerX = canvas.width / 2; 
             const centerY = canvas.height / 2;
@@ -994,26 +1049,25 @@
             graphData.nodes.forEach(node => {
                 if (node === draggedNode) return;
                 
-                // Puxada suave pro centro para não perder de vista
-                node.vx += (centerX - node.x) * 0.0005;
-                node.vy += (centerY - node.y) * 0.0005;
+                // Puxada gravitacional mais forte pro centro
+                node.vx += (centerX - node.x) * 0.003;
+                node.vy += (centerY - node.y) * 0.003;
 
-                // Animação browniana leve (vento lento)
-                node.vx += (Math.random() - 0.5) * 0.15;
-                node.vy += (Math.random() - 0.5) * 0.15;
+                node.vx += (Math.random() - 0.5) * 0.10;
+                node.vy += (Math.random() - 0.5) * 0.10;
 
                 node.x += node.vx; 
                 node.y += node.vy; 
 
-                // REQUISITO 2: Paredes Sólidas (Colisão com borda do visualizador)
+                // Prende nas paredes
                 const padding = 15;
                 if (node.x < padding) { node.x = padding; node.vx *= -1; }
                 if (node.y < padding) { node.y = padding; node.vy *= -1; }
                 if (node.x > canvas.width - padding) { node.x = canvas.width - padding; node.vx *= -1; }
                 if (node.y > canvas.height - padding) { node.y = canvas.height - padding; node.vy *= -1; }
                 
-                node.vx *= 0.92; 
-                node.vy *= 0.92;
+                node.vx *= 0.90; 
+                node.vy *= 0.90;
             });
         }
 
