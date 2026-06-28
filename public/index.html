@@ -12,7 +12,6 @@
     <input type="file" id="global-vault-upload" class="hidden" />
     <input type="file" id="chat-context-upload" class="hidden" />
 
-    <!-- BARRA SUPERIOR DE MANDOS (HEADER) -->
     <header class="bg-white border-b border-slate-200 h-16 min-h-16 flex items-center justify-between px-6 z-20 shadow-xs">
         <div class="flex items-center gap-3">
             <div class="bg-blue-600 p-2.5 rounded-xl text-white shadow-sm shadow-blue-300">
@@ -42,10 +41,8 @@
         </div>
     </header>
 
-    <!-- CONTAINER DAS TRES COLUNAS -->
     <div class="flex flex-1 overflow-hidden relative">
 
-        <!-- COLUNA 1: DIRETÓRIO (ESQUERDA) -->
         <aside class="w-64 bg-white border-r border-slate-200 flex flex-col overflow-hidden p-4">
             <div class="flex items-center justify-between mb-4 px-1">
                 <span class="text-xs font-black text-slate-400 uppercase tracking-widest">Processos e Cofre</span>
@@ -75,7 +72,6 @@
             </div>
         </aside>
 
-        <!-- COLUNA 2: MONITOR CENTRAL (CENTRO) -->
         <main class="flex-1 flex flex-col overflow-y-auto p-5 gap-4">
             
             <div class="grid grid-cols-4 gap-4">
@@ -109,13 +105,15 @@
                 </div>
             </div>
 
-            <!-- PAINEL MONITOR DE PRE-VISUALIZACAO -->
             <div class="bg-white border border-slate-200 rounded-2xl shadow-xs flex flex-col flex-1 overflow-hidden min-h-[380px]">
                 
                 <div class="flex items-center justify-between px-5 pt-3.5 pb-2 bg-white">
-                    <div class="flex items-center gap-2.5">
-                        <h2 id="active-note-title" class="text-base font-bold text-slate-800">Selecione um arquivo técnico</h2>
-                        <button class="text-slate-300 hover:text-slate-500"><i data-lucide="star" class="w-4 h-4"></i></button>
+                    <div>
+                        <div class="flex items-center gap-2.5">
+                            <h2 id="active-note-title" class="text-base font-bold text-slate-800">Selecione um arquivo técnico</h2>
+                            <button class="text-slate-300 hover:text-slate-500"><i data-lucide="star" class="w-4 h-4"></i></button>
+                        </div>
+                        <p id="active-note-meta" class="text-[10px] text-slate-400 font-medium mt-0.5">Aguardando seleção na árvore à esquerda</p>
                     </div>
                     <div class="flex items-center gap-1">
                         <button class="p-1.5 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-lg"><i data-lucide="download" class="w-4 h-4"></i></button>
@@ -132,11 +130,9 @@
 
                 <div class="flex flex-1 overflow-hidden">
                     <div class="w-3/5 p-5 bg-[#fafafa] border-r border-slate-100 flex flex-col overflow-hidden">
-                        <!-- Aba do Visualizador de Documento -->
                         <div id="view-doc" class="flex-1 bg-white border border-slate-200 rounded-xl shadow-xs overflow-y-auto p-6 font-sans text-xs text-slate-700 leading-relaxed select-text">
                             <div class="text-center text-slate-400 my-20">Nenhum documento carregado no monitor operacional.</div>
                         </div>
-                        <!-- Aba do Visualizador de Texto Markdown Cru -->
                         <div id="view-raw" class="hidden flex-1 bg-slate-900 border border-slate-950 rounded-xl overflow-y-auto p-4 font-mono text-xs text-blue-400 leading-relaxed select-text whitespace-pre-wrap">
                             Aguardando seleção de arquivo...
                         </div>
@@ -182,7 +178,6 @@
                 </div>
             </div>
 
-            <!-- QUADRO INFERIOR (GRAPH VIEW) -->
             <div class="bg-white border border-slate-200 rounded-2xl p-4 shadow-xs h-64 min-h-64 flex flex-col relative">
                 <div class="flex items-center justify-between mb-2">
                     <h3 class="font-bold text-xs text-slate-800 flex items-center gap-1.5"><i data-lucide="network" class="w-4 h-4 text-slate-500"></i> Visualização em Gráfico (Rede de Conexões)</h3>
@@ -194,7 +189,6 @@
             </div>
         </main>
 
-        <!-- COLUNA 3: CHAT (DIREITA) -->
         <aside class="w-80 bg-white border-l border-slate-200 flex flex-col overflow-hidden shadow-2xl">
             <div class="p-4 border-b border-slate-100 bg-slate-50 flex items-center justify-between">
                 <div class="flex items-center gap-2.5">
@@ -473,7 +467,11 @@
             selectedFileId = filename;
             const shortName = filename.split('/').pop();
             activeNoteTitle.innerText = shortName.replace(/\.(md|pdf|txt)$/i, "");
-            activeNoteMeta.innerText = `Localização: BaseConhecimento/${filename}`;
+            
+            // Verificação preventiva caso o elemento de meta falhe
+            if (activeNoteMeta) {
+                activeNoteMeta.innerText = `Localização: BaseConhecimento/${filename}`;
+            }
             
             viewDoc.innerHTML = `<div class="text-center text-slate-400 my-20 animate-pulse">Indexando bloco documental...</div>`;
             viewRaw.innerText = "Buscando texto bruto...";
@@ -503,7 +501,6 @@
                 const res = await fetch(`/api/note-content?file=${encodeURIComponent(filename)}`);
                 const data = await res.json();
                 
-                // Tratamento caso o arquivo venha vazio ou com propriedades nulas
                 const fileContent = (data && data.content !== undefined) ? data.content : "";
                 viewRaw.innerText = fileContent || "[Arquivo de texto vazio ou sem conteúdo para exibir]";
                 
@@ -555,7 +552,6 @@
                 chatInput.focus();
 
             } catch (err) {
-                // Fallback visual caso ocorra um erro de processamento na rota
                 viewRaw.innerText = `Erro de Processamento: ${err.message}`;
                 viewDoc.innerHTML = `
                     <div class="p-4 bg-red-50 border border-red-200 text-red-700 rounded-xl text-xs flex flex-col gap-2">
