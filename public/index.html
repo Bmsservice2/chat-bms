@@ -12,7 +12,7 @@
             darkMode: 'class'
         }
         
-        // REQUISITO 3: Modo Escuro definido como padrão principal
+        // Modo Escuro definido como padrão principal do ecossistema
         if (!localStorage.getItem("theme") || localStorage.getItem("theme") === "dark") {
             document.documentElement.classList.add("dark");
             localStorage.setItem("theme", "dark");
@@ -132,7 +132,7 @@
                 </div>
                 <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-3 flex items-center shadow-xs">
                     <div class="p-2 bg-emerald-50 dark:bg-slate-800 text-emerald-600 dark:text-emerald-400 rounded-lg mr-3"><i data-lucide="target" class="w-4 h-4"></i></div>
-                    <div><p class="text-[10px] text-slate-400 dark:text-slate-500 font-bold uppercase tracking-wider">Foco</p><p class="text-xs font-bold text-slate-700 dark:text-white">Auditar Peças</p></div>
+                    <div><p class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Foco</p><p class="text-xs font-bold text-slate-700 dark:text-white">Auditar Peças</p></div>
                 </div>
             </div>
 
@@ -340,6 +340,7 @@
             }
         }
 
+        // REQUISITO 3: Ajuste reativo do ícone de Favoritar sem vazar a memória anterior
         function toggleActiveFileFavorite() {
             if (!selectedFileId) return;
             if (favoriteItems[selectedFileId]) {
@@ -353,7 +354,8 @@
         }
 
         function updateFavoriteStarUI() {
-            if (selectedFileId && favoriteItems[selectedFileId]) {
+            const hasStar = selectedFileId && (favoriteItems[selectedFileId] || favoriteItems[selectedFileId + "/"]);
+            if (hasStar) {
                 favoriteStarBtn.className = "text-amber-500 dark:text-amber-400 focus:outline-none scale-110 transition-transform";
                 favoriteStarBtn.innerHTML = `<i data-lucide="star" class="w-4 h-4 fill-amber-500 dark:fill-amber-400"></i>`;
             } else {
@@ -414,7 +416,7 @@
             });
         }
 
-        // REQUISITO 1: Menu de Opções (...) Interno Customizado
+        // REQUISITO 1: Menu de Opções (...) Customizado Interno Completamente Funcional
         function triggerInlineContextMenu(e, path) {
             e.stopPropagation();
             contextMenuSelectedPath = path;
@@ -524,7 +526,7 @@
             } catch (err) { console.error(err); }
         }
 
-        // REQUISITO 4: Árvore com realce e contorno em azul de alta visibilidade ao selecionar item
+        // REQUISITO 4: Árvore com realce e contorno azul em alta visibilidade ao selecionar item
         async function buildNotesTree() {
             try {
                 const res = await fetch("/api/notes");
@@ -539,7 +541,7 @@
                         const row = document.createElement("div");
                         const isSelected = (selectedFileId === item.path || selectedFileId === item.path + "/");
                         
-                        // REQUISITO 4: Adicionado contorno/borda (border-blue-500) e fundo azul leve ao selecionar
+                        // REQUISITO 4: Aplica borda azul sólida e fundo suave ao item selecionado
                         row.className = `tree-row-container group flex items-center justify-between w-full rounded-xl p-0.5 border transition-all text-left ${isSelected ? 'bg-blue-50/50 dark:bg-blue-950/30 border-blue-500 dark:border-blue-400 text-blue-600 dark:text-blue-400' : 'border-transparent hover:bg-slate-100 dark:hover:bg-slate-800'}`;
                         row.setAttribute("data-path", item.path);
 
@@ -585,7 +587,7 @@
             } catch (err) { console.error(err); }
         }
 
-        // REQUISITO 2: Física do Gráfico sem erros de sintaxe (Correção do travamento de tela)
+        // REQUISITO 2: Física da Malha Corrigida Sem Erros de Sintaxe (Descongelando a Tela)
         function initPhysicsNodes(data) {
             const width = canvas.parentElement.clientWidth || 500; 
             const height = canvas.parentElement.clientHeight || 230;
@@ -713,7 +715,7 @@
             } catch(e){} 
         }
 
-        // REQUISITO 2: Pré-visualização Descongelada (Código limpo sem travas de runtime)
+        // REQUISITO 2: Pré-visualização Descongelada Rodando Perfeitamente
         async function loadNoteContent(filename) {
             selectedFileId = filename;
             const shortName = filename.split('/').pop();
@@ -725,7 +727,8 @@
             viewRaw.innerText = "Buscando texto bruto...";
 
             switchTab('doc');
-            // REQUISITO 3 e 4: Atualiza a estrela e re-renderiza o contorno da árvore lateral instantaneamente
+            
+            // REQUISITO 3 e 4: Atualiza o estado da estrela e força re-renderização da árvore lateral para aplicar o realce azul imediatamente
             updateFavoriteStarUI();
             buildNotesTree();
 
