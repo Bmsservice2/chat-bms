@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BMS Knowledge - Centro Operacional de Inteligência</title>
+    <title>BMS Knowledge - Centro Operacional de Inteligência Jurídica</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
 </head>
@@ -22,21 +22,19 @@
         
         <div class="flex-1 max-w-xl mx-8 relative">
             <i data-lucide="search" class="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2"></i>
-            <input type="text" placeholder="Buscar notas, rotinas do n8n, documentações... (Ctrl K)" 
-                   class="w-full bg-slate-50 border border-slate-200 rounded-xl pl-10 pr-4 py-2 text-xs focus:outline-none focus:border-blue-500 focus:bg-white transition-all font-medium">
+            <input type="text" id="global-search-bar" oninput="searchFileTree()" placeholder="Buscar processos, documentos, partes, teses... (Ctrl K)" 
+                   class="w-full bg-slate-50 border border-slate-200 rounded-xl pl-10 pr-4 py-2 text-xs focus:outline-none focus:border-blue-500 focus:bg-white transition-all font-semibold text-slate-700">
         </div>
 
         <div class="flex items-center gap-3">
-            <button class="bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold px-4 py-2.5 rounded-xl flex items-center gap-2 transition-all shadow-sm shadow-blue-200">
-                <i data-lucide="plus" class="w-4 h-4"></i> Novo Processo
-            </button>
-            <button id="btn-vault-upload" class="border border-slate-200 bg-white text-slate-600 text-xs font-semibold px-4 py-2.5 rounded-xl flex items-center gap-2 hover:bg-slate-50 transition-all active:scale-95">
-                <i data-lucide="upload-cloud" class="w-4 h-4"></i> Upload Vault
+            <button id="btn-vault-upload" class="border border-slate-200 bg-white text-slate-600 text-xs font-bold px-4 py-2.5 rounded-xl flex items-center gap-2 hover:bg-slate-50 transition-all active:scale-95 shadow-xs">
+                <i data-lucide="upload-cloud" class="w-4 h-4 text-blue-600"></i> Upload Cofre
             </button>
             <div class="w-px h-6 bg-slate-200 mx-1"></div>
-            <div class="flex items-center gap-2 bg-emerald-50 px-3 py-2 rounded-xl border border-emerald-100">
-                <div class="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></div>
-                <span class="text-[10px] font-bold text-emerald-700 tracking-wide uppercase">Server Active</span>
+            
+            <div id="server-status-badge" class="flex items-center gap-2 bg-slate-100 px-3 py-2 rounded-xl border border-slate-200 transition-all duration-300">
+                <div id="server-status-dot" class="w-2 h-2 bg-slate-400 rounded-full"></div>
+                <span id="server-status-text" class="text-[10px] font-black tracking-wide uppercase text-slate-500">Checando...</span>
             </div>
         </div>
     </header>
@@ -47,13 +45,13 @@
             <div class="flex items-center justify-between mb-4 px-1">
                 <span class="text-xs font-black text-slate-400 uppercase tracking-widest">Processos e Cofre</span>
                 <div class="flex gap-1">
-                    <button class="p-1 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-lg"><i data-lucide="filter" class="w-3.5 h-3.5"></i></button>
-                    <button class="p-1 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-lg"><i data-lucide="folder-plus" class="w-3.5 h-3.5"></i></button>
+                    <button id="btn-filter-tree" onclick="toggleTreeFilter()" class="p-1 text-slate-400 hover:text-blue-600 hover:bg-slate-100 rounded-lg transition-colors" title="Filtrar arquivos por tipo"><i data-lucide="filter" class="w-3.5 h-3.5"></i></button>
+                    <button onclick="createNewFolderManual()" class="p-1 text-slate-400 hover:text-blue-600 hover:bg-slate-100 rounded-lg transition-colors" title="Criar nova pasta estrutural"><i data-lucide="folder-plus" class="w-3.5 h-3.5"></i></button>
                 </div>
             </div>
 
             <div id="file-tree" class="flex-1 overflow-y-auto space-y-1 pr-1 text-xs font-medium text-slate-600">
-                <div class="text-slate-400 p-2 animate-pulse">Sincronizando volumes locais...</div>
+                <div class="text-slate-400 p-2 animate-pulse">Sincronizando volumes do cofre...</div>
             </div>
 
             <div class="mt-4 bg-slate-50 border border-slate-200 rounded-2xl p-3.5">
@@ -61,7 +59,7 @@
                     <span class="text-[11px] font-bold text-slate-700 flex items-center gap-1.5"><i data-lucide="shield-check" class="w-3.5 h-3.5 text-blue-600"></i> Plano Profissional</span>
                     <span class="text-[10px] bg-emerald-100 text-emerald-800 font-extrabold px-1.5 py-0.5 rounded-md">ATIVO</span>
                 </div>
-                <div class="text-[10px] text-slate-400 mb-2 font-medium">Uso de IA e chamadas este mês</div>
+                <div class="text-[10px] text-slate-400 mb-2 font-medium">Análises de IA este mês</div>
                 <div class="w-full bg-slate-200 h-2 rounded-full overflow-hidden mb-1">
                     <div class="bg-blue-600 h-full w-[78%] rounded-full"></div>
                 </div>
@@ -106,14 +104,13 @@
             </div>
 
             <div class="bg-white border border-slate-200 rounded-2xl shadow-xs flex flex-col flex-1 overflow-hidden min-h-[380px]">
-                
                 <div class="flex items-center justify-between px-5 pt-3.5 pb-2 bg-white">
                     <div>
                         <div class="flex items-center gap-2.5">
-                            <h2 id="active-note-title" class="text-base font-bold text-slate-800">Selecione um arquivo técnico</h2>
+                            <h2 id="active-note-title" class="text-base font-bold text-slate-800">Selecione um arquivo do cofre</h2>
                             <button class="text-slate-300 hover:text-slate-500"><i data-lucide="star" class="w-4 h-4"></i></button>
                         </div>
-                        <p id="active-note-meta" class="text-[10px] text-slate-400 font-medium mt-0.5">Aguardando seleção na árvore à esquerda</p>
+                        <p id="active-note-meta" class="text-[10px] text-slate-400 font-medium mt-0.5">Nenhum item ativo no momento</p>
                     </div>
                     <div class="flex items-center gap-1">
                         <button class="p-1.5 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-lg"><i data-lucide="download" class="w-4 h-4"></i></button>
@@ -134,14 +131,14 @@
                             <div class="text-center text-slate-400 my-20">Nenhum documento carregado no monitor operacional.</div>
                         </div>
                         <div id="view-raw" class="hidden flex-1 bg-slate-900 border border-slate-950 rounded-xl overflow-y-auto p-4 font-mono text-xs text-blue-400 leading-relaxed select-text whitespace-pre-wrap">
-                            Aguardando seleção de arquivo...
+                            Aguardando seleção...
                         </div>
                     </div>
 
                     <div class="w-2/5 p-5 flex flex-col gap-4 overflow-y-auto bg-white border-l border-slate-50">
                         <div>
-                            <span class="text-[10px] font-black uppercase tracking-widest text-slate-400">Resumo</span>
-                            <p id="meta-summary" class="text-xs text-slate-600 mt-1 font-medium leading-relaxed">Selecione uma nota técnica no painel esquerdo para extrair e compilar a análise gerencial.</p>
+                            <span class="text-[10px] font-black uppercase tracking-widest text-slate-400">Análise Gerencial</span>
+                            <p id="meta-summary" class="text-xs text-slate-600 mt-1 font-medium leading-relaxed">Selecione uma peça jurídica para extração automática de metadados.</p>
                         </div>
                         
                         <div>
@@ -159,7 +156,7 @@
                         </div>
 
                         <div class="border-t border-slate-100 pt-3 mt-1">
-                            <span class="text-[10px] font-black uppercase tracking-widest text-slate-400 block mb-2">Status da Análise</span>
+                            <span class="text-[10px] font-black uppercase tracking-widest text-slate-400 block mb-2">Conclusão da Peça</span>
                             <div class="flex items-center gap-4 bg-slate-50 p-3 rounded-xl border border-slate-100">
                                 <div class="relative w-14 h-14 flex items-center justify-center shrink-0">
                                     <svg class="w-full h-full transform -rotate-90" viewBox="0 0 36 36">
@@ -169,8 +166,8 @@
                                     <span id="circle-text" class="absolute text-[11px] font-black text-slate-700">0%</span>
                                 </div>
                                 <div>
-                                    <p class="text-xs font-bold text-slate-700">Varredura Concluída</p>
-                                    <p id="analysis-status-desc" class="text-[10px] text-slate-400 font-medium">Aguardando processamento de links.</p>
+                                    <p class="text-xs font-bold text-slate-700">Varredura de Links</p>
+                                    <p id="analysis-status-desc" class="text-[10px] text-slate-400 font-medium">Aguardando processamento do cofre.</p>
                                 </div>
                             </div>
                         </div>
@@ -180,8 +177,8 @@
 
             <div class="bg-white border border-slate-200 rounded-2xl p-4 shadow-xs h-64 min-h-64 flex flex-col relative">
                 <div class="flex items-center justify-between mb-2">
-                    <h3 class="font-bold text-xs text-slate-800 flex items-center gap-1.5"><i data-lucide="network" class="w-4 h-4 text-slate-500"></i> Visualização em Gráfico (Rede de Conexões)</h3>
-                    <span class="text-[9px] font-bold bg-slate-100 text-slate-400 px-2 py-0.5 rounded-md uppercase tracking-wider">Física de Partículas</span>
+                    <h3 class="font-bold text-xs text-slate-800 flex items-center gap-1.5"><i data-lucide="network" class="w-4 h-4 text-slate-500"></i> Malha de Conexões Jurídicas do Cofre</h3>
+                    <span class="text-[9px] font-bold bg-slate-100 text-slate-400 px-2 py-0.5 rounded-md uppercase tracking-wider">Física Relacional</span>
                 </div>
                 <div class="flex-1 bg-white border border-slate-100 rounded-xl overflow-hidden relative">
                     <canvas id="graph-canvas" class="w-full h-full block cursor-grab active:cursor-grabbing"></canvas>
@@ -194,28 +191,28 @@
                 <div class="flex items-center gap-2.5">
                     <div class="w-9 h-9 bg-blue-600 rounded-xl flex items-center justify-center text-white font-bold shadow-md shadow-blue-200"><i data-lucide="bot" class="w-4 h-4"></i></div>
                     <div>
-                        <h3 class="font-bold text-xs text-slate-800">Assistente Claude</h3>
-                        <div class="flex items-center gap-1"><div class="w-1.5 h-1.5 bg-green-500 rounded-full"></div><span class="text-[10px] text-slate-400 font-bold tracking-wide uppercase">Volume Conectado</span></div>
+                        <h3 class="font-bold text-xs text-slate-800">Assistente BMS</h3>
+                        <div class="flex items-center gap-1"><div class="w-1.5 h-1.5 bg-green-500 rounded-full"></div><span class="text-[10px] text-slate-400 font-bold tracking-wide uppercase">Cofre Integrado</span></div>
                     </div>
                 </div>
             </div>
 
             <div class="p-3 bg-amber-50/50 border-b border-amber-100/60 flex flex-col gap-1.5">
-                <label class="text-[9px] font-black text-amber-800 uppercase tracking-widest">Token de Validação Local</label>
+                <label class="text-[9px] font-black text-amber-800 uppercase tracking-widest">Chave de Validação Local</label>
                 <input type="password" id="app-password" placeholder="Chave do chat..." value="sua_senha_aqui"
                        class="w-full bg-white border border-amber-200 rounded-lg px-3 py-1.5 text-xs font-mono focus:outline-none focus:border-amber-400 text-slate-700">
             </div>
 
             <div id="chat-messages" class="flex-1 overflow-y-auto p-4 flex flex-col gap-3.5 bg-[#fafafa] select-text">
                 <div class="bg-white border border-slate-100 rounded-2xl rounded-tl-none p-3.5 text-xs text-slate-600 max-w-[90%] self-start shadow-xs leading-relaxed">
-                    Painel sincronizado. Clique em um documento no diretório para abrir no monitor central ou dê ordens de automação.
+                    Sincronização jurídica efetuada. Selecione uma pasta ou peça do **Cofre** para iniciar a auditoria ou envie instruções estruturadas abaixo.
                 </div>
             </div>
 
             <div id="chat-attachment-area" class="hidden px-3 py-2 bg-blue-50 border-t border-blue-100 flex items-center justify-between text-[11px] font-bold text-blue-700">
                 <div class="flex items-center gap-1.5 truncate">
                     <i data-lucide="paperclip" class="w-3.5 h-3.5"></i>
-                    <span id="chat-attachment-name" class="truncate">arquivo.md</span>
+                    <span id="chat-attachment-name" class="truncate">peça.md</span>
                 </div>
                 <button id="btn-remove-attachment" class="text-slate-400 hover:text-red-500"><i data-lucide="x" class="w-4 h-4" ></i></button>
             </div>
@@ -226,7 +223,7 @@
                         <i data-lucide="paperclip" class="w-4 h-4"></i>
                     </button>
                     <div class="relative flex-1">
-                        <input type="text" id="chat-input" placeholder="Digite sua instrução para a IA..." 
+                        <input type="text" id="chat-input" placeholder="Pergunte ao Assistente BMS..." 
                                class="w-full bg-slate-50 border border-slate-200 rounded-xl pl-3 pr-10 py-2.5 text-xs font-medium focus:outline-none focus:border-blue-500 focus:bg-white transition-all text-slate-800">
                         <button id="btn-send" class="absolute right-1.5 top-1/2 -translate-y-1/2 p-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-all shadow-sm">
                             <i data-lucide="send" class="w-3.5 h-3.5"></i>
@@ -245,7 +242,13 @@
         const btnSend = document.getElementById("btn-send");
         const appPassword = document.getElementById("app-password");
         const fileTree = document.getElementById("file-tree");
+        const globalSearchBar = document.getElementById("global-search-bar");
         
+        // Elementos de Status de Servidor Real
+        const serverStatusBadge = document.getElementById("server-status-badge");
+        const serverStatusDot = document.getElementById("server-status-dot");
+        const serverStatusText = document.getElementById("server-status-text");
+
         const viewDoc = document.getElementById("view-doc");
         const viewRaw = document.getElementById("view-raw");
         const activeNoteTitle = document.getElementById("active-note-title");
@@ -273,6 +276,7 @@
         let selectedFileId = null;
         let graphData = { nodes: [], edges: [] };
         let draggedNode = null;
+        let currentFilterType = "all"; // 'all' -> 'md' -> 'pdf'
 
         function resizeCanvas() {
             canvas.width = canvas.parentElement.clientWidth;
@@ -297,6 +301,97 @@
             }
         }
 
+        // REQUISITO 5: Checagem operacional real da comunicação da VPS
+        async function checkRealServerStatus() {
+            try {
+                const res = await fetch("/api/status");
+                if (res.ok) {
+                    serverStatusBadge.className = "flex items-center gap-2 bg-emerald-50 px-3 py-2 rounded-xl border border-emerald-100 transition-all duration-300";
+                    serverStatusDot.className = "w-2 h-2 bg-emerald-500 rounded-full animate-pulse";
+                    serverStatusText.className = "text-[10px] font-black tracking-wide uppercase text-emerald-700";
+                    serverStatusText.innerText = "SERVIDOR ATIVO";
+                } else {
+                    throw new Error("Fora do ar");
+                }
+            } catch (err) {
+                serverStatusBadge.className = "flex items-center gap-2 bg-red-50 px-3 py-2 rounded-xl border border-red-100 transition-all duration-300";
+                serverStatusDot.className = "w-2 h-2 bg-red-500 rounded-full animate-pulse";
+                serverStatusText.className = "text-[10px] font-black tracking-wide uppercase text-red-700";
+                serverStatusText.innerText = "SERVIDOR INATIVO";
+            }
+        }
+        setInterval(checkRealServerStatus, 4000);
+        checkRealServerStatus();
+
+        // REQUISITO 3: Filtro em tempo de execução da barra central superior (Search Engine)
+        function searchFileTree() {
+            const query = globalSearchBar.value.toLowerCase().trim();
+            const items = fileTree.querySelectorAll(".tree-item-btn");
+            items.forEach(item => {
+                const text = item.innerText.toLowerCase();
+                if (text.includes(query)) {
+                    item.classList.remove("hidden");
+                } else {
+                    item.classList.add("hidden");
+                }
+            });
+        }
+
+        // REQUISITO 6: Função cíclica do botão de Filtro do Cofre
+        function toggleTreeFilter() {
+            const btn = document.getElementById("btn-filter-tree");
+            if (currentFilterType === "all") {
+                currentFilterType = "md";
+                btn.className = "p-1 text-blue-600 bg-blue-50 border border-blue-200 rounded-lg transition-colors";
+            } else if (currentFilterType === "md") {
+                currentFilterType = "pdf";
+                btn.className = "p-1 text-red-600 bg-red-50 border border-red-200 rounded-lg transition-colors";
+            } else {
+                currentFilterType = "all";
+                btn.className = "p-1 text-slate-400 hover:text-blue-600 hover:bg-slate-100 rounded-lg transition-colors";
+            }
+            buildNotesTree();
+        }
+
+        // REQUISITO 6: Geração Manual Contextualizada de Pastas
+        async function createFolderOnVPS(fullFolderName) {
+            try {
+                const res = await fetch("/api/create-folder", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ foldername: fullFolderName })
+                });
+                if (res.ok) {
+                    await buildNotesTree();
+                    await reloadGlobalGraph();
+                } else {
+                    alert("Falha ao gerar diretório.");
+                }
+            } catch (err) {
+                console.error(err);
+            }
+        }
+
+        function createNewFolderManual() {
+            let contextDir = "";
+            if (selectedFileId && selectedFileId.includes("/")) {
+                contextDir = selectedFileId.substring(0, selectedFileId.lastIndexOf("/")) + "/";
+            }
+            
+            const promptMsg = contextDir 
+                ? `Criar subpasta dentro de: [Cofre/${contextDir}]\nDigite o nome da nova pasta:` 
+                : "Criar pasta na raiz do Cofre:\nDigite o nome da nova pasta:";
+                
+            const folderInput = prompt(promptMsg);
+            if (!folderInput) return;
+            
+            const cleanFolderName = folderInput.trim().replace(/[\/\\\?\%\*\:\|\"\<\>]/g, "");
+            if (!cleanFolderName) return;
+
+            createFolderOnVPS(contextDir + cleanFolderName);
+        }
+
+        // Motor de Física e Renderização do Canvas do Gráfico Global
         function initPhysicsNodes(data) {
             const width = canvas.width;
             const height = canvas.height;
@@ -448,15 +543,25 @@
                 const data = await res.json();
                 if (data.files && data.files.length > 0) {
                     fileTree.innerHTML = "";
-                    data.files.forEach(filePath => {
+                    
+                    // Filtragem ativa de botões baseada no estado do ícone de filtro
+                    let filteredFiles = data.files;
+                    if (currentFilterType === "md") {
+                        filteredFiles = data.files.filter(f => f.toLowerCase().endsWith('.md'));
+                    } else if (currentFilterType === "pdf") {
+                        filteredFiles = data.files.filter(f => f.toLowerCase().endsWith('.pdf'));
+                    }
+
+                    filteredFiles.forEach(filePath => {
                         const btn = document.createElement("button");
-                        btn.className = "w-full text-left px-2.5 py-1.5 rounded-lg flex items-center gap-2 text-slate-600 hover:bg-slate-100 hover:text-slate-900 transition-all truncate font-semibold text-xs";
+                        btn.className = "tree-item-btn w-full text-left px-2.5 py-1.5 rounded-lg flex items-center gap-2 text-slate-600 hover:bg-slate-100 hover:text-slate-900 transition-all truncate font-semibold text-xs";
                         const isPdf = filePath.toLowerCase().endsWith('.pdf');
                         btn.innerHTML = `<i data-lucide="file-text" class="w-3.5 h-3.5 ${isPdf ? 'text-red-400' : 'text-slate-400'} shrink-0"></i> <span class="truncate">${filePath}</span>`;
                         btn.onclick = () => loadNoteContent(filePath);
                         fileTree.appendChild(btn);
                     });
                     lucide.createIcons();
+                    searchFileTree(); // Força re-aplicação da caixa de busca caso haja termos digitados
                 }
             } catch (err) {
                 console.error(err);
@@ -468,9 +573,8 @@
             const shortName = filename.split('/').pop();
             activeNoteTitle.innerText = shortName.replace(/\.(md|pdf|txt)$/i, "");
             
-            // Verificação preventiva caso o elemento de meta falhe
             if (activeNoteMeta) {
-                activeNoteMeta.innerText = `Localização: BaseConhecimento/${filename}`;
+                activeNoteMeta.innerText = `Cofre: BaseConhecimento/${filename}`;
             }
             
             viewDoc.innerHTML = `<div class="text-center text-slate-400 my-20 animate-pulse">Indexando bloco documental...</div>`;
@@ -482,17 +586,17 @@
                 viewDoc.innerHTML = `<iframe src="/api/note-raw?file=${encodeURIComponent(filename)}" class="w-full h-[400px] min-h-[350px] border-0 rounded-xl"></iframe>`;
                 viewRaw.innerText = "[Arquivo Binário PDF - Use a aba 'Documento Original' para visualização]";
                 
-                metaSummary.innerText = `Documento PDF gravado e indexado localmente. Pronto para auditoria operacional do Claude.`;
+                metaSummary.innerText = `Peça processual em PDF indexada no cofre local. Pronto para auditoria operacional do Assistente BMS.`;
                 metaPoints.innerHTML = `
-                    <div class="flex items-start gap-2"><i data-lucide="check-circle-2" class="w-3.5 h-3.5 text-green-500 shrink-0"></i> <span>Leitura de binários estruturada</span></div>
+                    <div class="flex items-start gap-2"><i data-lucide="check-circle-2" class="w-3.5 h-3.5 text-green-500 shrink-0"></i> <span>Leitura de binários jurídica OK</span></div>
                     <div class="flex items-start gap-2"><i data-lucide="check-circle-2" class="w-3.5 h-3.5 text-green-500 shrink-0"></i> <span>Visualização em iFrame nativa</span></div>
                 `;
-                metaRelated.innerHTML = `<div class="text-[11px] text-slate-400 font-medium italic">PDFs não possuem hyperlinks markdown de saída.</div>`;
+                metaRelated.innerHTML = `<div class="text-[11px] text-slate-400 font-medium italic">Documentos em PDF não possuem hiperlinks markdown de saída.</div>`;
                 circleProgress.setAttribute("stroke-dasharray", "100, 100");
                 circleText.innerText = "100%";
                 analysisStatusDesc.innerText = "Pronto para análise visual.";
                 lucide.createIcons();
-                chatInput.value = `Analise o arquivo PDF "${filename}" e resuma o conteúdo técnico.`;
+                chatInput.value = `Analise o arquivo PDF "${filename}" e resuma os pontos críticos.`;
                 chatInput.focus();
                 return;
             }
@@ -502,23 +606,22 @@
                 const data = await res.json();
                 
                 const fileContent = (data && data.content !== undefined) ? data.content : "";
-                viewRaw.innerText = fileContent || "[Arquivo de texto vazio ou sem conteúdo para exibir]";
+                viewRaw.innerText = fileContent || "[Arquivo de texto sem conteúdo gravado]";
                 
                 viewDoc.innerHTML = `
                     <div class="border border-slate-200 rounded-lg p-5 bg-white shadow-xs max-w-xl mx-auto font-serif">
                         <div class="text-center border-b border-slate-200 pb-3 mb-4">
-                            <h3 class="font-bold text-sm tracking-wide uppercase text-slate-800">BMS SERVICE - RELATÓRIO OPERACIONAL</h3>
-                            <p class="text-[10px] text-slate-400 mt-0.5">Identificador de Volume: BaseConhecimento/${filename}</p>
+                            <h3 class="font-bold text-sm tracking-wide uppercase text-slate-800">BMS SERVICE - CENTRO DE INTELIGÊNCIA JURÍDICA</h3>
+                            <p class="text-[10px] text-slate-400 mt-0.5">Identificador de Volume: Cofre/${filename}</p>
                         </div>
-                        <div class="space-y-3 text-[11px] text-slate-700 whitespace-pre-wrap leading-relaxed">${fileContent || 'Este documento não possui registros textuais gravados.'}</div>
+                        <div class="space-y-3 text-[11px] text-slate-700 whitespace-pre-wrap leading-relaxed">${fileContent || 'Este documento não possui registros textuais.'}</div>
                     </div>
                 `;
 
-                metaSummary.innerText = `Nota técnica indexada com sucesso na VPS. Contém dados estruturais e procedimentos operacionais vinculados ao ecossistema de automação corporativa.`;
+                metaSummary.innerText = `Documento indexado com sucesso no Cofre. Conteúdo mapeado estruturalmente para auditoria de termos e cruzamento de dados.`;
                 metaPoints.innerHTML = `
-                    <div class="flex items-start gap-2"><i data-lucide="check-circle-2" class="w-3.5 h-3.5 text-green-500 shrink-0"></i> <span>Leitura e consistência de volume OK</span></div>
-                    <div class="flex items-start gap-2"><i data-lucide="check-circle-2" class="w-3.5 h-3.5 text-green-500 shrink-0"></i> <span>Sincronização com o repositório concluída</span></div>
-                    <div class="flex items-start gap-2"><i data-lucide="check-circle-2" class="w-3.5 h-3.5 text-green-500 shrink-0"></i> <span>Mapeamento de links internos ativo</span></div>
+                    <div class="flex items-start gap-2"><i data-lucide="check-circle-2" class="w-3.5 h-3.5 text-green-500 shrink-0"></i> <span>Integridade física do arquivo OK</span></div>
+                    <div class="flex items-start gap-2"><i data-lucide="check-circle-2" class="w-3.5 h-3.5 text-green-500 shrink-0"></i> <span>Vínculos indexados no ecossistema</span></div>
                 `;
 
                 const linkRegex = /\[\[(.*?)\]\]/g;
@@ -539,36 +642,42 @@
                     
                     circleProgress.setAttribute("stroke-dasharray", "78, 100");
                     circleText.innerText = "78%";
-                    analysisStatusDesc.innerText = `${matches.length} referências cruzadas conectadas.`;
+                    analysisStatusDesc.innerText = `${matches.length} conexões de hyperlinks ativas.`;
                 } else {
-                    metaRelated.innerHTML = `<div class="text-[11px] text-slate-400 font-medium italic">Nenhuma referência de link direto nesta nota.</div>`;
+                    metaRelated.innerHTML = `<div class="text-[11px] text-slate-400 font-medium italic">Nenhum vínculo direto identificado nesta folha.</div>`;
                     circleProgress.setAttribute("stroke-dasharray", "100, 100");
                     circleText.innerText = "100%";
-                    analysisStatusDesc.innerText = "Documento isolado estável.";
+                    analysisStatusDesc.innerText = "Documento isolado seguro.";
                 }
 
                 lucide.createIcons();
-                chatInput.value = `Leia a nota "${filename}" e faça um resumo crítico.`;
+                chatInput.value = `Analise a nota jurídica "${filename}" e levante suas considerações.`;
                 chatInput.focus();
 
             } catch (err) {
                 viewRaw.innerText = `Erro de Processamento: ${err.message}`;
-                viewDoc.innerHTML = `
-                    <div class="p-4 bg-red-50 border border-red-200 text-red-700 rounded-xl text-xs flex flex-col gap-2">
-                        <p class="font-bold flex items-center gap-1.5"><i data-lucide="alert-triangle"></i> Falha na Pré-visualização</p>
-                        <p class="font-medium">${err.message}</p>
-                    </div>
-                `;
-                lucide.createIcons();
+                viewDoc.innerHTML = `<div class="p-4 bg-red-50 text-red-700 rounded-xl text-xs font-bold">Falha ao abrir visualização.</div>`;
             }
         }
 
+        // REQUISITO 7: Upload contextual baseado na localização selecionada pelo usuário
         btnVaultUpload.onclick = () => globalVaultUpload.click();
         globalVaultUpload.onchange = async (e) => {
             const file = e.target.files[0];
             if (!file) return;
+
+            // Identifica se estamos dentro de uma subpasta baseado no arquivo ativo na tela
+            let contextFolder = "";
+            if (selectedFileId && selectedFileId.includes("/")) {
+                contextFolder = selectedFileId.substring(0, selectedFileId.lastIndexOf("/")) + "/";
+            }
+
+            const targetUploadPath = contextFolder + file.name;
+            activeNoteTitle.innerText = "Transmitindo peça...";
+            viewDoc.innerHTML = `<div class="text-center text-slate-400 my-20 animate-pulse">Gravando em: [Cofre/${targetUploadPath}]...</div>`;
+
             try {
-                const res = await fetch(`/api/upload-vault?file=${encodeURIComponent(file.name)}`, {
+                const res = await fetch(`/api/upload-vault?file=${encodeURIComponent(targetUploadPath)}`, {
                     method: "POST",
                     body: file
                 });
@@ -576,7 +685,7 @@
                 if (data.success) {
                     await buildNotesTree();
                     await reloadGlobalGraph();
-                    loadNoteContent(file.name);
+                    loadNoteContent(targetUploadPath);
                 }
             } catch (err) {
                 console.error(err);
@@ -609,10 +718,10 @@
             let contextPrompt = query;
             
             if (pendingChatAttachment) {
-                contextPrompt = `[Contexto Adicional - Arquivo Anexado pelo Usuário: ${pendingChatAttachment.name}]\n` +
+                contextPrompt = `[Documento Anexado pelo Usuário na Sessão: ${pendingChatAttachment.name}]\n` +
                                 `\`\`\`\n${pendingChatAttachment.content}\n\`\`\`\n\n` +
-                                `Instrução do usuário sobre o arquivo: ${query || 'Analise o arquivo anexo.'}`;
-                renderMessageBlock("user", `📎 Envia arquivo: ${pendingChatAttachment.name}\n${query}`);
+                                `Instrução jurídica sobre a peça: ${query || 'Audite este anexo.'}`;
+                renderMessageBlock("user", `📎 Arquivo anexado: ${pendingChatAttachment.name}\n${query}`);
                 pendingChatAttachment = null;
                 chatAttachmentArea.classList.add("hidden");
                 chatContextUpload.value = "";
@@ -622,7 +731,7 @@
 
             chatInput.value = "";
             chatHistory.push({ role: "user", content: contextPrompt });
-            const tempId = renderMessageBlock("assistant", "Executando varredura MCP e gerando resposta...");
+            const tempId = renderMessageBlock("assistant", "Analisando conformidade e gerando parecer...");
 
             try {
                 const res = await fetch("/api/chat", {
