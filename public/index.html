@@ -12,6 +12,7 @@
     <input type="file" id="global-vault-upload" class="hidden" />
     <input type="file" id="chat-context-upload" class="hidden" />
 
+    <!-- BARRA SUPERIOR DE MANDOS (HEADER) -->
     <header class="bg-white border-b border-slate-200 h-16 min-h-16 flex items-center justify-between px-6 z-20 shadow-xs">
         <div class="flex items-center gap-3">
             <div class="bg-blue-600 p-2.5 rounded-xl text-white shadow-sm shadow-blue-300">
@@ -41,8 +42,10 @@
         </div>
     </header>
 
+    <!-- CONTAINER DAS TRES COLUNAS -->
     <div class="flex flex-1 overflow-hidden relative">
 
+        <!-- COLUNA 1: DIRETÓRIO (ESQUERDA) -->
         <aside class="w-64 bg-white border-r border-slate-200 flex flex-col overflow-hidden p-4">
             <div class="flex items-center justify-between mb-4 px-1">
                 <span class="text-xs font-black text-slate-400 uppercase tracking-widest">Processos e Cofre</span>
@@ -72,6 +75,7 @@
             </div>
         </aside>
 
+        <!-- COLUNA 2: MONITOR CENTRAL (CENTRO) -->
         <main class="flex-1 flex flex-col overflow-y-auto p-5 gap-4">
             
             <div class="grid grid-cols-4 gap-4">
@@ -105,6 +109,7 @@
                 </div>
             </div>
 
+            <!-- PAINEL MONITOR DE PRE-VISUALIZACAO -->
             <div class="bg-white border border-slate-200 rounded-2xl shadow-xs flex flex-col flex-1 overflow-hidden min-h-[380px]">
                 
                 <div class="flex items-center justify-between px-5 pt-3.5 pb-2 bg-white">
@@ -127,11 +132,13 @@
 
                 <div class="flex flex-1 overflow-hidden">
                     <div class="w-3/5 p-5 bg-[#fafafa] border-r border-slate-100 flex flex-col overflow-hidden">
+                        <!-- Aba do Visualizador de Documento -->
                         <div id="view-doc" class="flex-1 bg-white border border-slate-200 rounded-xl shadow-xs overflow-y-auto p-6 font-sans text-xs text-slate-700 leading-relaxed select-text">
                             <div class="text-center text-slate-400 my-20">Nenhum documento carregado no monitor operacional.</div>
                         </div>
+                        <!-- Aba do Visualizador de Texto Markdown Cru -->
                         <div id="view-raw" class="hidden flex-1 bg-slate-900 border border-slate-950 rounded-xl overflow-y-auto p-4 font-mono text-xs text-blue-400 leading-relaxed select-text whitespace-pre-wrap">
-                            Aguardando seleção...
+                            Aguardando seleção de arquivo...
                         </div>
                     </div>
 
@@ -175,6 +182,7 @@
                 </div>
             </div>
 
+            <!-- QUADRO INFERIOR (GRAPH VIEW) -->
             <div class="bg-white border border-slate-200 rounded-2xl p-4 shadow-xs h-64 min-h-64 flex flex-col relative">
                 <div class="flex items-center justify-between mb-2">
                     <h3 class="font-bold text-xs text-slate-800 flex items-center gap-1.5"><i data-lucide="network" class="w-4 h-4 text-slate-500"></i> Visualização em Gráfico (Rede de Conexões)</h3>
@@ -186,6 +194,7 @@
             </div>
         </main>
 
+        <!-- COLUNA 3: CHAT (DIREITA) -->
         <aside class="w-80 bg-white border-l border-slate-200 flex flex-col overflow-hidden shadow-2xl">
             <div class="p-4 border-b border-slate-100 bg-slate-50 flex items-center justify-between">
                 <div class="flex items-center gap-2.5">
@@ -471,7 +480,6 @@
 
             switchTab('doc');
 
-            // Renderizador Exclusivo para PDFs via Stream Direto de iFrame
             if (filename.toLowerCase().endsWith('.pdf')) {
                 viewDoc.innerHTML = `<iframe src="/api/note-raw?file=${encodeURIComponent(filename)}" class="w-full h-[400px] min-h-[350px] border-0 rounded-xl"></iframe>`;
                 viewRaw.innerText = "[Arquivo Binário PDF - Use a aba 'Documento Original' para visualização]";
@@ -491,63 +499,71 @@
                 return;
             }
 
-            // Renderizador para Notas de Texto (.md / .txt)
             try {
                 const res = await fetch(`/api/note-content?file=${encodeURIComponent(filename)}`);
                 const data = await res.json();
                 
-                if (data.content) {
-                    viewRaw.innerText = data.content;
-                    
-                    viewDoc.innerHTML = `
-                        <div class="border border-slate-200 rounded-lg p-5 bg-white shadow-xs max-w-xl mx-auto font-serif">
-                            <div class="text-center border-b border-slate-200 pb-3 mb-4">
-                                <h3 class="font-bold text-sm tracking-wide uppercase text-slate-800">BMS SERVICE - RELATÓRIO OPERACIONAL</h3>
-                                <p class="text-[10px] text-slate-400 mt-0.5">Identificador de Volume: BaseConhecimento/${filename}</p>
-                            </div>
-                            <div class="space-y-3 text-[11px] text-slate-700 whitespace-pre-wrap leading-relaxed">${data.content}</div>
+                // Tratamento caso o arquivo venha vazio ou com propriedades nulas
+                const fileContent = (data && data.content !== undefined) ? data.content : "";
+                viewRaw.innerText = fileContent || "[Arquivo de texto vazio ou sem conteúdo para exibir]";
+                
+                viewDoc.innerHTML = `
+                    <div class="border border-slate-200 rounded-lg p-5 bg-white shadow-xs max-w-xl mx-auto font-serif">
+                        <div class="text-center border-b border-slate-200 pb-3 mb-4">
+                            <h3 class="font-bold text-sm tracking-wide uppercase text-slate-800">BMS SERVICE - RELATÓRIO OPERACIONAL</h3>
+                            <p class="text-[10px] text-slate-400 mt-0.5">Identificador de Volume: BaseConhecimento/${filename}</p>
                         </div>
-                    `;
+                        <div class="space-y-3 text-[11px] text-slate-700 whitespace-pre-wrap leading-relaxed">${fileContent || 'Este documento não possui registros textuais gravados.'}</div>
+                    </div>
+                `;
 
-                    metaSummary.innerText = `Nota técnica indexada com sucesso na VPS. Contém dados estruturais e procedimentos operacionais vinculados ao ecossistema de automação corporativa.`;
-                    metaPoints.innerHTML = `
-                        <div class="flex items-start gap-2"><i data-lucide="check-circle-2" class="w-3.5 h-3.5 text-green-500 shrink-0"></i> <span>Leitura e consistência de volume OK</span></div>
-                        <div class="flex items-start gap-2"><i data-lucide="check-circle-2" class="w-3.5 h-3.5 text-green-500 shrink-0"></i> <span>Sincronização com o repositório concluída</span></div>
-                        <div class="flex items-start gap-2"><i data-lucide="check-circle-2" class="w-3.5 h-3.5 text-green-500 shrink-0"></i> <span>Mapeamento de links internos ativo</span></div>
-                    `;
+                metaSummary.innerText = `Nota técnica indexada com sucesso na VPS. Contém dados estruturais e procedimentos operacionais vinculados ao ecossistema de automação corporativa.`;
+                metaPoints.innerHTML = `
+                    <div class="flex items-start gap-2"><i data-lucide="check-circle-2" class="w-3.5 h-3.5 text-green-500 shrink-0"></i> <span>Leitura e consistência de volume OK</span></div>
+                    <div class="flex items-start gap-2"><i data-lucide="check-circle-2" class="w-3.5 h-3.5 text-green-500 shrink-0"></i> <span>Sincronização com o repositório concluída</span></div>
+                    <div class="flex items-start gap-2"><i data-lucide="check-circle-2" class="w-3.5 h-3.5 text-green-500 shrink-0"></i> <span>Mapeamento de links internos ativo</span></div>
+                `;
 
-                    const linkRegex = /\[\[(.*?)\]\]/g;
-                    let matches = [];
-                    let match;
-                    while ((match = linkRegex.exec(data.content)) !== null) {
-                        if (!matches.includes(match[1])) matches.push(match[1]);
-                    }
-
-                    if (matches.length > 0) {
-                        metaRelated.innerHTML = "";
-                        matches.forEach(m => {
-                            const item = document.createElement("div");
-                            item.className = "flex items-center justify-between bg-slate-50 border border-slate-100 rounded-lg p-2 text-[11px] font-bold text-slate-700";
-                            item.innerHTML = `<div class="flex items-center gap-1.5 truncate"><i data-lucide="file" class="w-3.5 h-3.5 text-slate-400"></i><span class="truncate">${m}</span></div><span class="text-[9px] bg-blue-100 text-blue-700 px-1 rounded font-black">MD</span>`;
-                            metaRelated.appendChild(item);
-                        });
-                        
-                        circleProgress.setAttribute("stroke-dasharray", "78, 100");
-                        circleText.innerText = "78%";
-                        analysisStatusDesc.innerText = `${matches.length} referências cruzadas conectadas.`;
-                    } else {
-                        metaRelated.innerHTML = `<div class="text-[11px] text-slate-400 font-medium italic">Nenhuma referência de link direto nesta nota.</div>`;
-                        circleProgress.setAttribute("stroke-dasharray", "100, 100");
-                        circleText.innerText = "100%";
-                        analysisStatusDesc.innerText = "Documento isolado estável.";
-                    }
-
-                    lucide.createIcons();
-                    chatInput.value = `Leia a nota "${filename}" e faça um resumo crítico.`;
-                    chatInput.focus();
+                const linkRegex = /\[\[(.*?)\]\]/g;
+                let matches = [];
+                let match;
+                while ((match = linkRegex.exec(fileContent)) !== null) {
+                    if (!matches.includes(match[1])) matches.push(match[1]);
                 }
+
+                if (matches.length > 0) {
+                    metaRelated.innerHTML = "";
+                    matches.forEach(m => {
+                        const item = document.createElement("div");
+                        item.className = "flex items-center justify-between bg-slate-50 border border-slate-100 rounded-lg p-2 text-[11px] font-bold text-slate-700";
+                        item.innerHTML = `<div class="flex items-center gap-1.5 truncate"><i data-lucide="file" class="w-3.5 h-3.5 text-slate-400"></i><span class="truncate">${m}</span></div><span class="text-[9px] bg-blue-100 text-blue-700 px-1 rounded font-black">MD</span>`;
+                        metaRelated.appendChild(item);
+                    });
+                    
+                    circleProgress.setAttribute("stroke-dasharray", "78, 100");
+                    circleText.innerText = "78%";
+                    analysisStatusDesc.innerText = `${matches.length} referências cruzadas conectadas.`;
+                } else {
+                    metaRelated.innerHTML = `<div class="text-[11px] text-slate-400 font-medium italic">Nenhuma referência de link direto nesta nota.</div>`;
+                    circleProgress.setAttribute("stroke-dasharray", "100, 100");
+                    circleText.innerText = "100%";
+                    analysisStatusDesc.innerText = "Documento isolado estável.";
+                }
+
+                lucide.createIcons();
+                chatInput.value = `Leia a nota "${filename}" e faça um resumo crítico.`;
+                chatInput.focus();
+
             } catch (err) {
-                console.error(err);
+                // Fallback visual caso ocorra um erro de processamento na rota
+                viewRaw.innerText = `Erro de Processamento: ${err.message}`;
+                viewDoc.innerHTML = `
+                    <div class="p-4 bg-red-50 border border-red-200 text-red-700 rounded-xl text-xs flex flex-col gap-2">
+                        <p class="font-bold flex items-center gap-1.5"><i data-lucide="alert-triangle"></i> Falha na Pré-visualização</p>
+                        <p class="font-medium">${err.message}</p>
+                    </div>
+                `;
+                lucide.createIcons();
             }
         }
 
