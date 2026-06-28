@@ -22,51 +22,51 @@ const VAULT_PATH = "/app/obsidian_vault/BaseConhecimento";
 const localTools = [
   {
     name: "list_notes",
-    description: "Lista todas as notas e arquivos disponíveis na base de conhecimento técnica do Obsidian.",
+    description: "Lista todos os processos e documentos jurídicos disponíveis no Cofre de arquivos.",
     input_schema: { type: "object", properties: {} }
   },
   {
     name: "read_note",
-    description: "Lê o conteúdo completo de uma nota específica do Obsidian para extrair procedimentos ou informações técnicas.",
+    description: "Lê o conteúdo completo de uma peça processual ou documento técnico do Cofre.",
     input_schema: {
       type: "object",
       properties: {
-        filename: { type: "string", description: "Nome do arquivo com extensão .md (ex: projetos.md ou subpasta/nota.md)" }
+        filename: { type: "string", description: "Nome do arquivo com extensão (ex: subpasta/documento.md)" }
       },
       required: ["filename"]
     }
   },
   {
     name: "create_note",
-    description: "Cria uma nova nota (.md) no cofre do Obsidian com o conteúdo técnico fornecido.",
+    description: "Cria um novo documento ou petição (.md) dentro do Cofre com a estrutura informada.",
     input_schema: {
       type: "object",
       properties: {
-        filename: { type: "string", description: "Nome do arquivo com extensão .md (ex: automacao_n8n.md)" },
-        content: { type: "string", description: "Conteúdo completo estruturado em formato Markdown." }
+        filename: { type: "string", description: "Nome do arquivo com extensão .md (ex: 01 Oficios/documento.md)" },
+        content: { type: "string", description: "Conteúdo estruturado completo." }
       },
       required: ["filename", "content"]
     }
   },
   {
     name: "edit_note",
-    description: "Edita ou sobrescreve completamente uma nota existente no cofre para atualizar procedimentos técnicos.",
+    description: "Edita ou sobrescreve uma peça existente no Cofre para atualizar teses ou informações.",
     input_schema: {
       type: "object",
       properties: {
-        filename: { type: "string", description: "Nome do arquivo existente com extensão (ex: projetos.md)" },
-        content: { type: "string", description: "Novo conteúdo atualizado completo da nota." }
+        filename: { type: "string", description: "Nome do arquivo existente com extensão (ex: tese.md)" },
+        content: { type: "string", description: "Novo conteúdo atualizado completo." }
       },
       required: ["filename", "content"]
     }
   },
   {
     name: "create_folder",
-    description: "Cria uma nova pasta organizacional dentro do cofre do Obsidian.",
+    description: "Cria uma nova pasta organizacional de processos dentro do Cofre.",
     input_schema: {
       type: "object",
       properties: {
-        foldername: { type: "string", description: "Caminho ou nome da pasta a ser criada (ex: NovaPasta)" }
+        foldername: { type: "string", description: "Caminho ou nome da pasta a ser criada (ex: PastaDeTestes)" }
       },
       required: ["foldername"]
     }
@@ -76,13 +76,13 @@ const localTools = [
 function getSafePath(targetPath) {
   const resolvedPath = path.resolve(VAULT_PATH, targetPath);
   if (!resolvedPath.startsWith(VAULT_PATH)) {
-    throw new Error("Acesso negado: Tentativa de manipulação fora do cofre corporativo.");
+    throw new Error("Acesso negado: Tentativa de manipulação externa.");
   }
   return resolvedPath;
 }
 
 function listNotesLocal() {
-  if (!fs.existsSync(VAULT_PATH)) return { error: `Pasta ${VAULT_PATH} não encontrada.` };
+  if (!fs.existsSync(VAULT_PATH)) return { error: `Cofre de dados não localizado na VPS.` };
   const getFilesRecursively = (dir) => {
     let results = [];
     const list = fs.readdirSync(dir);
@@ -92,7 +92,7 @@ function listNotesLocal() {
       const stat = fs.statSync(fullPath);
       if (stat && stat.isDirectory()) {
         results = results.concat(getFilesRecursively(fullPath));
-      } else if (file.endsWith('.md') || file.endsWith('.txt') || file.endsWith('.pdf')) { // Suporte a PDF ativado
+      } else if (file.endsWith('.md') || file.endsWith('.txt') || file.endsWith('.pdf')) {
         results.push(path.relative(VAULT_PATH, fullPath));
       }
     });
@@ -103,7 +103,7 @@ function listNotesLocal() {
 
 function readNoteLocal(filename) {
   const safePath = getSafePath(filename);
-  if (!fs.existsSync(safePath)) return { error: `Arquivo ${filename} não encontrado.` };
+  if (!fs.existsSync(safePath)) return { error: `Documento ${filename} não encontrado.` };
   return { filename, content: fs.readFileSync(safePath, "utf-8") };
 }
 
@@ -111,24 +111,28 @@ function createNoteLocal(filename, content) {
   const safePath = getSafePath(filename);
   fs.mkdirSync(path.dirname(safePath), { recursive: true });
   fs.writeFileSync(safePath, content, "utf-8");
-  return { filename, status: "Nota criada com sucesso no sistema." };
+  return { filename, status: "Documento integrado com sucesso." };
 }
 
 function editNoteLocal(filename, content) {
   const safePath = getSafePath(filename);
-  if (!fs.existsSync(safePath)) return { error: `Nota ${filename} não existe para ser editada.` };
+  if (!fs.existsSync(safePath)) return { error: `Documento não localizado para edição.` };
   fs.writeFileSync(safePath, content, "utf-8");
-  return { filename, status: "Nota atualizada com sucesso." };
+  return { filename, status: "Peça processual atualizada." };
 }
 
 function createFolderLocal(foldername) {
   const safePath = getSafePath(foldername);
   fs.mkdirSync(safePath, { recursive: true });
-  return { foldername, status: "Diretório organizacional criado com sucesso." };
+  return { foldername, status: "Diretório estrutural criado." };
 }
 
+// Verifica de verdade a integridade física da pasta compartilhada
 app.get("/api/status", (req, res) => {
-  res.json({ status: missingVars.length === 0 ? "OK" : "CONFIG_INCOMPLETA" });
+  if (missingVars.length > 0 || !fs.existsSync(VAULT_PATH)) {
+    return res.status(500).json({ status: "ERRO" });
+  }
+  res.json({ status: "OK" });
 });
 
 app.get("/api/notes", (req, res) => {
@@ -141,7 +145,7 @@ app.get("/api/notes", (req, res) => {
 
 app.get("/api/note-content", (req, res) => {
   const filename = req.query.file;
-  if (!filename) return res.status(400).json({ error: "Parâmetro 'file' obrigatório." });
+  if (!filename) return res.status(400).json({ error: "Parâmetro obrigatório." });
   try {
     const result = readNoteLocal(filename);
     if (result.error) return res.status(404).json(result);
@@ -151,14 +155,25 @@ app.get("/api/note-content", (req, res) => {
   }
 });
 
-// Rota crucial para servir arquivos de mídia e PDFs diretamente para o navegador
 app.get("/api/note-raw", (req, res) => {
   const filename = req.query.file;
-  if (!filename) return res.status(400).json({ error: "Parâmetro 'file' obrigatório." });
+  if (!filename) return res.status(400).json({ error: "Parâmetro obrigatório." });
   try {
     const safePath = getSafePath(filename);
     if (!fs.existsSync(safePath)) return res.status(404).json({ error: "Arquivo não encontrado." });
     res.sendFile(safePath);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// Endpoint direto para manipulação manual de pastas pelo front-end
+app.post("/api/create-folder", (req, res) => {
+  const { foldername } = req.body;
+  if (!foldername) return res.status(400).json({ error: "Nome do diretório ausente." });
+  try {
+    const result = createFolderLocal(foldername);
+    res.json(result);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -174,7 +189,7 @@ app.get("/api/graph-data", (req, res) => {
     const edges = [];
 
     files.forEach(file => {
-      if (file.toLowerCase().endsWith('.pdf')) return; // Pula leitura binária no interpretador de texto
+      if (file.toLowerCase().endsWith('.pdf')) return;
       try {
         const fullContent = fs.readFileSync(getSafePath(file), "utf-8");
         const linkRegex = /\[\[(.*?)\]\]/g;
@@ -199,20 +214,20 @@ app.get("/api/graph-data", (req, res) => {
 
 app.post("/api/upload-vault", (req, res) => {
   const filename = req.query.file;
-  if (!filename) return res.status(400).json({ error: "Nome do arquivo não especificado." });
+  if (!filename) return res.status(400).json({ error: "Caminho de gravação inválido." });
   try {
     const safePath = getSafePath(filename);
     fs.mkdirSync(path.dirname(safePath), { recursive: true });
     fs.writeFileSync(safePath, req.body);
-    res.json({ success: true, message: "Arquivo integrado ao Obsidian." });
+    res.json({ success: true });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 });
 
 app.post("/api/chat", async (req, res) => {
-  if (missingVars.length > 0) return res.status(500).json({ error: "Configuração incompleta nas variáveis." });
-  if (req.headers["x-app-password"] !== process.env.APP_PASSWORD) return res.status(401).json({ error: "Senha inválida." });
+  if (missingVars.length > 0) return res.status(500).json({ error: "Configuração incompleta." });
+  if (req.headers["x-app-password"] !== process.env.APP_PASSWORD) return res.status(401).json({ error: "Chave inválida." });
 
   try {
     const userMessages = Array.isArray(req.body.messages) ? req.body.messages : [];
@@ -223,10 +238,11 @@ app.post("/api/chat", async (req, res) => {
 
     if (messages.length === 0) return res.status(400).json({ error: "Mensagem vazia." });
 
+    // REQUISITO 1: Restrição absoluta de identidade da IA corporativa
     let response = await anthropic.messages.create({
       model: process.env.CLAUDE_MODEL || "claude-3-5-sonnet-20241022",
       max_tokens: Number(process.env.MAX_TOKENS || 3000),
-      system: "Você é o Assistente Claude conectado de forma nativa aos arquivos do Obsidian da BMS Service. Você possui ferramentas completas para listar, ler, criar e editar notas ou pastas. Execute as ações solicitadas imediatamente e retorne a confirmação.",
+      system: "Você é o Assistente BMS, uma inteligência especializada e copiloto de alta performance conectado de forma nativa ao Cofre de documentos e processos jurídicos da empresa. Em hipótese alguma mencione marcas como Claude ou Anthropic. Nunca utilize o termo 'Obsidian', chame a base local exclusivamente de 'Cofre'. Use as ferramentas disponíveis para listar, ler, criar e alterar arquivos sempre que necessário.",
       messages,
       tools: localTools
     });
@@ -272,11 +288,15 @@ app.post("/api/chat", async (req, res) => {
       });
     }
 
-    res.json({ reply: response.content.find(c => c.type === "text")?.text || "Ação concluída com sucesso." });
+    res.json({ reply: response.content.find(c => c.type === "text")?.text || "Processado com sucesso." });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: `Erro na execução do MCP nativo: ${error.message}` });
+    res.status(500).json({ error: `Falha crítica no barramento local.` });
   }
+});
+
+app.use((err, req, res, next) => {
+  res.status(500).json({ error: "Erro interno no servidor do cofre." });
 });
 
 app.listen(3000, () => console.log("Servidor ativo e consolidado na porta 3000."));
