@@ -81,7 +81,6 @@ function getSafePath(targetPath) {
   return resolvedPath;
 }
 
-// Lista arquivos e pastas vazias recursivamente
 function listNotesLocal() {
   if (!fs.existsSync(VAULT_PATH)) return { error: `Cofre de dados não localizado na VPS.` };
   const items = [];
@@ -110,7 +109,6 @@ function readNoteLocal(filename) {
   return { filename, content: fs.readFileSync(safePath, "utf-8") };
 }
 
-// Rota de status real
 app.get("/api/status", (req, res) => {
   if (missingVars.length > 0 || !fs.existsSync(VAULT_PATH)) {
     return res.status(500).json({ status: "ERRO" });
@@ -162,7 +160,6 @@ app.post("/api/create-folder", (req, res) => {
   }
 });
 
-// Nova rota para deletar arquivos e pastas
 app.post("/api/delete-item", (req, res) => {
   const { targetPath } = req.body;
   if (!targetPath) return res.status(400).json({ error: "Caminho ausente." });
@@ -184,13 +181,12 @@ app.post("/api/delete-item", (req, res) => {
   }
 });
 
-// Nova rota para renomear arquivos e pastas
 app.post("/api/rename-item", (req, res) => {
   const { oldPath, newPath } = req.body;
   if (!oldPath || !newPath) return res.status(400).json({ error: "Caminhos ausentes." });
   try {
-    const safeOldPath = getSafePath(oldPath);
-    const safeNewPath = getSafePath(newPath);
+    const safeOldPath = getSafePath(oldP);
+    const safeNewPath = getSafePath(newP);
     if (fs.existsSync(safeOldPath)) {
       fs.mkdirSync(path.dirname(safeNewPath), { recursive: true });
       fs.renameSync(safeOldPath, safeNewPath);
@@ -265,7 +261,7 @@ app.post("/api/chat", async (req, res) => {
     let response = await anthropic.messages.create({
       model: process.env.CLAUDE_MODEL || "claude-3-5-sonnet-20241022",
       max_tokens: Number(process.env.MAX_TOKENS || 3000),
-      system: "Você é o Assistente BMS, uma inteligência artificial corporativa especializada no auxílio de profissionais do direito. Você está conectado ao cofre seguro de arquivos. Sob nenhuma hipótese mencione marcas como Claude, Anthropic ou Obsidian. Trate a base de conhecimento estritamente pelo nome de 'Cofre'. Use suas ferramentas para ler, criar ou modificar o acervo jurídico quando solicitado.",
+      system: "Você é o Assistente BMS, uma inteligência artificial corporativa de alto desempenho especializada no auxílio de profissionais do direito. Você está conectado ao cofre seguro de arquivos. Sob nenhuma hipótese mencione as marcas Claude, Anthropic ou Obsidian. Trate a base de conhecimento estritamente pelo nome de 'Cofre'. Use suas ferramentas locais para ler, criar ou modificar o acervo jurídico quando solicitado.",
       messages,
       tools: localTools
     });
