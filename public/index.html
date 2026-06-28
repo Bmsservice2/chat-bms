@@ -104,7 +104,6 @@
         <main id="center-panel" class="flex-1 flex flex-col min-w-[300px] overflow-y-auto p-5 gap-4 no-scrollbar">
             
             <div class="grid grid-cols-4 gap-4">
-                
                 <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-3 flex items-center shadow-xs relative cursor-pointer" onclick="toggleCustomDropdown('dropdown-area', event)">
                     <div class="p-2 bg-blue-50 dark:bg-slate-800 text-blue-600 dark:text-blue-400 rounded-lg mr-3"><i data-lucide="scale" class="w-4 h-4"></i></div>
                     <div class="flex-1 min-w-0">
@@ -171,7 +170,7 @@
                 <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-3 flex items-center shadow-xs relative cursor-pointer" onclick="toggleCustomDropdown('dropdown-obj', event)">
                     <div class="p-2 bg-emerald-50 dark:bg-slate-800 text-emerald-600 dark:text-emerald-400 rounded-lg mr-3"><i data-lucide="target" class="w-4 h-4"></i></div>
                     <div class="flex-1 min-w-0">
-                        <p class="text-[10px] text-slate-400 dark:text-slate-500 font-bold uppercase tracking-wider mb-0.5">Foco Atual</p>
+                        <p class="text-[10px] text-slate-400 dark:text-slate-500 font-bold uppercase tracking-wider mb-0.5">Objetivo Direto</p>
                         <div class="flex items-center justify-between">
                             <span id="label-ctx-obj" class="text-xs font-bold text-slate-700 dark:text-white truncate">Auditoria Geral</span>
                             <i data-lucide="chevron-down" class="w-3.5 h-3.5 text-slate-400 shrink-0"></i>
@@ -187,7 +186,6 @@
                         <button onclick="selectOption('obj', 'Sistematizar Fatos', 'Resumir Fatos/Prazos', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 truncate">Resumir Fatos/Prazos</button>
                     </div>
                 </div>
-
             </div>
 
             <div id="center-preview-container" class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-xs flex flex-col flex-1 overflow-hidden min-h-[350px]">
@@ -233,8 +231,7 @@
                                 <div class="flex items-start gap-2 text-slate-400 font-medium"><i data-lucide="minus" class="w-4 h-4 shrink-0"></i> <span>Aguardando arquivo...</span></div>
                             </div>
                         </div>
-                        <div>
-                            <span class="text-[10px] font-black uppercase tracking-widest text-slate-400 dark:text-slate-500 block mb-2">Conclusão da Peça</span>
+                        <div class="border-t border-slate-100 dark:border-slate-800 pt-3 mt-1">
                             <div class="flex items-center gap-4 bg-slate-50 dark:bg-slate-800 p-3 rounded-xl border border-slate-100 dark:border-slate-700">
                                 <div class="relative w-14 h-14 flex items-center justify-center shrink-0">
                                     <svg class="w-full h-full transform -rotate-90" viewBox="0 0 36 36">
@@ -259,7 +256,7 @@
                     <span class="text-[9px] font-bold bg-slate-100 dark:bg-slate-800 text-slate-400 dark:text-slate-500 px-2 py-0.5 rounded-md uppercase tracking-wider">Malha Neural Orgânica</span>
                 </div>
                 <div class="flex-1 bg-slate-50 dark:bg-slate-950 border border-slate-100 dark:border-slate-850 rounded-xl overflow-hidden relative">
-                    <canvas id="graph-canvas" class="w-full h-full block cursor-grab active:cursor-grabbing"></canvas>
+                    <canvas id="graph-canvas" class="w-full h-full block"></canvas>
                 </div>
             </div>
         </main>
@@ -350,11 +347,11 @@
         let rawContentBuffer = "";
         let contextMenuSelectedPath = null;
         let msgCounter = 0;
+        let isDraggingNode = false;
         
         let favoriteItems = JSON.parse(localStorage.getItem("bms_favorites_map") || "{}");
         let collapsedFolders = JSON.parse(localStorage.getItem("bms_collapsed_folders") || "{}");
 
-        // RESIZERS
         const sidebarLeft = document.getElementById('sidebar-left');
         const sidebarRight = document.getElementById('sidebar-right');
         const resizerLeft = document.getElementById('resizer-left');
@@ -415,7 +412,7 @@
             drawGraph(); 
         }
 
-        // LÓGICA DOS NOVOS MENUS DROPDOWN (Área, Peça, etc.)
+        // Lógica de Menus Dropdown
         function closeAllDropdownsMenu() {
             filterDropdown.classList.add("hidden");
             document.getElementById("custom-context-menu").classList.add("hidden");
@@ -435,7 +432,7 @@
             e.stopPropagation();
             const el = document.getElementById(id);
             const isHidden = el.classList.contains("hidden");
-            closeAllDropdownsMenu(); // fecha todos
+            closeAllDropdownsMenu();
             if (isHidden) el.classList.remove("hidden");
         }
 
@@ -762,6 +759,7 @@
             } catch (err) { console.error(err); }
         }
 
+        // MOTOR FÍSICO COM REQUISITO DE CLIQUE E PONTEIRO NATIVO
         function initPhysicsNodes(data) {
             const width = canvas.parentElement.clientWidth || 500; 
             const height = canvas.parentElement.clientHeight || 230;
@@ -861,22 +859,50 @@
         }
         requestAnimationFrame(anim);
 
+        // REQUISITO: CLIQUE PARA ABRIR O ARQUIVO DIRETO PELA MALHA
         canvas.addEventListener("mousedown", (e) => {
             const rect = canvas.getBoundingClientRect(); 
             const mx = e.clientX - rect.left; 
             const my = e.clientY - rect.top;
+            isDraggingNode = false;
             for (let n of graphData.nodes) { 
-                if (Math.sqrt((n.x - mx)**2 + (n.y - my)**2) < 18) { draggedNode = n; break; } 
+                if (Math.sqrt((n.x - mx)**2 + (n.y - my)**2) < 18) { 
+                    draggedNode = n; 
+                    canvas.style.cursor = 'grabbing';
+                    break; 
+                } 
             }
         });
         canvas.addEventListener("mousemove", (e) => { 
+            const rect = canvas.getBoundingClientRect(); 
+            const mx = e.clientX - rect.left; 
+            const my = e.clientY - rect.top;
+
             if (draggedNode) { 
-                const rect = canvas.getBoundingClientRect(); 
-                draggedNode.x = e.clientX - rect.left; 
-                draggedNode.y = e.clientY - rect.top; 
-            } 
+                isDraggingNode = true;
+                draggedNode.x = mx; 
+                draggedNode.y = my; 
+                canvas.style.cursor = 'grabbing';
+            } else {
+                let isHovering = false;
+                for (let n of graphData.nodes) { 
+                    if (Math.sqrt((n.x - mx)**2 + (n.y - my)**2) < 18) { 
+                        isHovering = true; 
+                        break; 
+                    } 
+                }
+                canvas.style.cursor = isHovering ? 'pointer' : 'default';
+            }
         });
-        window.addEventListener("mouseup", () => draggedNode = null);
+        window.addEventListener("mouseup", () => { 
+            if (draggedNode && !isDraggingNode) {
+                // Se soltou sem arrastar, é um clique: abre o arquivo!
+                loadNoteContent(draggedNode.id);
+            }
+            draggedNode = null; 
+            isDraggingNode = false;
+            if (canvas) canvas.style.cursor = 'default';
+        });
 
         async function reloadGlobalGraph() { 
             try { 
@@ -913,7 +939,7 @@
 
             try {
                 const res = await fetch(`/api/note-content?file=${encodeURIComponent(filename)}`);
-                if (!res.ok) throw new Error(`Erro de Conexão com o Servidor (HTTP ${res.status})`);
+                if (!res.ok) throw new Error(`Erro HTTP: ${res.status}`);
                 const data = await res.json();
                 
                 if (data.error) throw new Error(data.error);
