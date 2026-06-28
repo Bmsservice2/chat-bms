@@ -7,12 +7,19 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <script>
+        // Configuração inicial rigorosa do tema nativo
         if (localStorage.getItem("theme") === "dark" || (!("theme" in localStorage) && window.matchMedia("(prefers-color-scheme: dark)").matches)) {
             document.documentElement.classList.add("dark");
         } else {
             document.documentElement.classList.remove("dark");
         }
     </script>
+    <style>
+        /* Transições suaves e desativação de scrollbars feias */
+        * { transition: background-color 0.15s ease, border-color 0.15s ease; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
 </head>
 <body class="bg-[#f3f4f6] dark:bg-slate-950 text-slate-800 dark:text-slate-100 font-sans h-screen flex flex-col overflow-hidden select-none">
 
@@ -21,7 +28,7 @@
 
     <header class="bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 h-16 min-h-16 flex items-center justify-between px-6 z-20 shadow-xs">
         <div class="flex items-center gap-3">
-            <div class="bg-blue-600 p-2.5 rounded-xl text-white shadow-sm shadow-blue-300">
+            <div class="bg-blue-600 p-2.5 rounded-xl text-white shadow-sm shadow-blue-300 dark:shadow-none">
                 <i data-lucide="brain-circuit" class="w-5 h-5"></i>
             </div>
             <span class="font-black text-xl tracking-tight text-slate-900 dark:text-white">BMS <span class="text-blue-600 font-medium">Knowledge</span></span>
@@ -34,9 +41,9 @@
         </div>
 
         <div class="flex items-center gap-3">
-            <button onclick="toggleDarkMode()" class="p-2.5 border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-700 transition-all shadow-xs">
-                <i data-lucide="moon" class="w-4 h-4 dark:hidden"></i>
-                <i data-lucide="sun" class="w-4 h-4 hidden dark:block"></i>
+            <button onclick="toggleDarkMode()" class="p-2.5 border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-700 transition-all shadow-xs active:scale-95">
+                <i id="theme-icon-moon" data-lucide="moon" class="w-4 h-4 dark:hidden"></i>
+                <i id="theme-icon-sun" data-lucide="sun" class="w-4 h-4 hidden dark:block"></i>
             </button>
 
             <button id="btn-vault-upload" class="border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 text-xs font-bold px-4 py-2.5 rounded-xl flex items-center gap-2 hover:bg-slate-50 dark:hover:bg-slate-700 transition-all active:scale-95 shadow-xs">
@@ -53,12 +60,12 @@
 
     <div class="flex flex-1 overflow-hidden relative" onclick="closeAllDropdownsMenu()">
 
-        <aside class="w-64 bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 flex flex-col overflow-hidden p-4 relative">
+        <aside class="w-64 bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 flex flex-col overflow-hidden p-4 relative" onclick="clearTreeSelection(event)">
             <div class="flex items-center justify-between mb-4 px-1">
                 <span class="text-xs font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest">Processos e Cofre</span>
-                <div class="flex gap-1 relative">
-                    <button id="btn-filter-tree" onclick="toggleFilterDropdown(event)" class="p-1 text-slate-400 hover:text-blue-600 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors"><i data-lucide="filter" class="w-3.5 h-3.5"></i></button>
-                    <button onclick="createNewFolderManual()" class="p-1 text-slate-400 hover:text-blue-600 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors"><i data-lucide="folder-plus" class="w-3.5 h-3.5"></i></button>
+                <div class="flex gap-1 relative" onclick="e => e.stopPropagation()">
+                    <button id="btn-filter-tree" onclick="toggleFilterDropdown(event)" class="p-1 text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors"><i data-lucide="filter" class="w-3.5 h-3.5"></i></button>
+                    <button onclick="createNewFolderManual(event)" class="p-1 text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors"><i data-lucide="folder-plus" class="w-3.5 h-3.5"></i></button>
                     
                     <div id="filter-menu-dropdown" class="hidden absolute top-7 right-0 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl shadow-xl py-1 w-44 z-30 text-xs font-bold text-slate-600 dark:text-slate-300">
                         <button onclick="changeFilter('all')" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-700 flex items-center gap-2">Mostrar Todos</button>
@@ -68,67 +75,72 @@
                 </div>
             </div>
 
-            <div id="file-tree" class="flex-1 overflow-y-auto space-y-0.5 pr-1 text-xs font-semibold text-slate-600 dark:text-slate-300">
+            <div id="file-tree" class="flex-1 overflow-y-auto space-y-0.5 pr-1 text-xs font-semibold text-slate-600 dark:text-slate-300 no-scrollbar">
                 <div class="text-slate-400 p-2 animate-pulse">Sincronizando volumes do cofre...</div>
             </div>
         </aside>
 
-        <main class="flex-1 flex flex-col overflow-y-auto p-5 gap-4">
+        <main class="flex-1 flex flex-col overflow-y-auto p-5 gap-4 no-scrollbar">
             <div class="grid grid-cols-4 gap-4">
                 <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-3 flex items-center shadow-xs">
                     <div class="p-2 bg-blue-50 dark:bg-slate-800 text-blue-600 dark:text-blue-400 rounded-lg mr-3"><i data-lucide="scale" class="w-4 h-4"></i></div>
-                    <div><p class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Área</p><p class="text-xs font-bold text-slate-700 dark:text-white">Jurisprudência</p></div>
+                    <div><p class="text-[10px] text-slate-400 dark:text-slate-500 font-bold uppercase tracking-wider">Área</p><p class="text-xs font-bold text-slate-700 dark:text-white">Jurisprudência</p></div>
                 </div>
                 <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-3 flex items-center shadow-xs">
                     <div class="p-2 bg-purple-50 dark:bg-slate-800 text-purple-600 dark:text-purple-400 rounded-lg mr-3"><i data-lucide="file-text" class="w-4 h-4"></i></div>
-                    <div><p class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Tipo</p><p class="text-xs font-bold text-slate-700 dark:text-white">Petição Inicial</p></div>
+                    <div><p class="text-[10px] text-slate-400 dark:text-slate-500 font-bold uppercase tracking-wider">Tipo</p><p class="text-xs font-bold text-slate-700 dark:text-white">Petição Inicial</p></div>
                 </div>
                 <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-3 flex items-center shadow-xs">
                     <div class="p-2 bg-amber-50 dark:bg-slate-800 text-amber-600 dark:text-amber-400 rounded-lg mr-3"><i data-lucide="folder-git" class="w-4 h-4"></i></div>
-                    <div><p class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Fase</p><p class="text-xs font-bold text-slate-700 dark:text-white">Análise Inicial</p></div>
+                    <div><p class="text-[10px] text-slate-400 dark:text-slate-500 font-bold uppercase tracking-wider">Fase</p><p class="text-xs font-bold text-slate-700 dark:text-white">Análise Inicial</p></div>
                 </div>
                 <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-3 flex items-center shadow-xs">
                     <div class="p-2 bg-emerald-50 dark:bg-slate-800 text-emerald-600 dark:text-emerald-400 rounded-lg mr-3"><i data-lucide="target" class="w-4 h-4"></i></div>
-                    <div><p class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Foco</p><p class="text-xs font-bold text-slate-700 dark:text-white">Auditar Peças</p></div>
+                    <div><p class="text-[10px] text-slate-400 dark:text-slate-500 font-bold uppercase tracking-wider">Foco</p><p class="text-xs font-bold text-slate-700 dark:text-white">Auditar Peças</p></div>
                 </div>
             </div>
 
             <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-xs flex flex-col flex-1 overflow-hidden min-h-[350px]">
                 <div class="flex items-center justify-between px-5 py-3.5 border-b border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900">
                     <div>
-                        <h2 id="active-note-title" class="text-sm font-bold text-slate-800 dark:text-white">Selecione um arquivo do cofre</h2>
-                        <p id="active-note-meta" class="text-[10px] text-slate-400 font-medium mt-0.5">Nenhum item ativo no momento</p>
+                        <div class="flex items-center gap-2.5">
+                            <h2 id="active-note-title" class="text-sm font-bold text-slate-800 dark:text-white">Selecione um arquivo do cofre</h2>
+                            <button id="btn-favorite-star" onclick="toggleActiveFileFavorite()" class="text-slate-300 dark:text-slate-600 hover:text-amber-500 dark:hover:text-amber-400 transition-colors focus:outline-none">
+                                <i data-lucide="star" class="w-4 h-4"></i>
+                            </button>
+                        </div>
+                        <p id="active-note-meta" class="text-[10px] text-slate-400 dark:text-slate-500 font-medium mt-0.5">Nenhum item ativo no momento</p>
                     </div>
                 </div>
 
                 <div class="flex gap-2 px-5 border-b border-slate-100 dark:border-slate-800 pb-2 bg-white dark:bg-slate-900">
-                    <button id="tab-doc" onclick="switchTab('doc')" class="text-xs font-bold px-4 py-1.5 bg-blue-50 text-blue-600 rounded-lg transition-all">Documento Original</button>
+                    <button id="tab-doc" onclick="switchTab('doc')" class="text-xs font-bold px-4 py-1.5 bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400 rounded-lg transition-all">Documento Original</button>
                     <button id="tab-raw" onclick="switchTab('raw')" class="text-xs font-bold px-4 py-1.5 text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg transition-all">Resumo Markdown</button>
                 </div>
 
                 <div class="flex flex-1 overflow-hidden">
-                    <div class="w-3/5 p-5 bg-[#fafafa] dark:bg-slate-900/40 border-r border-slate-100 dark:border-slate-800 flex flex-col overflow-hidden">
+                    <div class="w-3/5 p-5 bg-[#fafafa] dark:bg-slate-950 border-r border-slate-100 dark:border-slate-800 flex flex-col overflow-hidden">
                         <div id="view-doc" class="flex-1 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl shadow-xs overflow-y-auto p-6 font-sans text-xs text-slate-700 dark:text-slate-300 leading-relaxed select-text">
                             <div class="text-center text-slate-400 my-20">Nenhum documento aberto no monitor.</div>
                         </div>
-                        <div id="view-raw" class="hidden flex-1 bg-slate-950 text-blue-400 rounded-xl overflow-y-auto p-4 font-mono text-xs whitespace-pre-wrap select-text">
+                        <div id="view-raw" class="hidden flex-1 bg-slate-950 border border-slate-800 text-blue-400 dark:text-blue-400 rounded-xl overflow-y-auto p-4 font-mono text-xs whitespace-pre-wrap select-text">
                             Aguardando seleção...
                         </div>
                     </div>
 
-                    <div class="w-2/5 p-5 flex flex-col gap-4 overflow-y-auto bg-white dark:bg-slate-900">
+                    <div class="w-2/5 p-5 flex flex-col gap-4 overflow-y-auto bg-white dark:bg-slate-900 border-l border-slate-50 dark:border-slate-800">
                         <div>
-                            <span class="text-[10px] font-black uppercase tracking-widest text-slate-400">Análise Jurídica</span>
+                            <span class="text-[10px] font-black uppercase tracking-widest text-slate-400 dark:text-slate-500">Análise Jurídica</span>
                             <p id="meta-summary" class="text-xs text-slate-600 dark:text-slate-400 mt-1 font-medium leading-relaxed">Selecione um arquivo para compilar a análise gerencial.</p>
                         </div>
                         <div class="border-t border-slate-100 dark:border-slate-800 pt-3">
-                            <span class="text-[10px] font-black uppercase tracking-widest text-slate-400 block mb-2">Pontos Relevantes</span>
+                            <span class="text-[10px] font-black uppercase tracking-widest text-slate-400 dark:text-slate-500 block mb-2">Pontos Relevantes</span>
                             <div id="meta-points" class="space-y-2 text-xs font-semibold text-slate-600 dark:text-slate-400">
                                 <div class="flex items-start gap-2 text-slate-400 font-medium"><i data-lucide="minus" class="w-4 h-4 shrink-0"></i> <span>Aguardando arquivo...</span></div>
                             </div>
                         </div>
                         <div>
-                            <span class="text-[10px] font-black uppercase tracking-widest text-slate-400 block mb-2">Conclusão da Peça</span>
+                            <span class="text-[10px] font-black uppercase tracking-widest text-slate-400 dark:text-slate-500 block mb-2">Conclusão da Peça</span>
                             <div class="flex items-center gap-4 bg-slate-50 dark:bg-slate-800 p-3 rounded-xl border border-slate-100 dark:border-slate-700">
                                 <div class="relative w-14 h-14 flex items-center justify-center shrink-0">
                                     <svg class="w-full h-full transform -rotate-90" viewBox="0 0 36 36">
@@ -147,11 +159,12 @@
                 </div>
             </div>
 
-            <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 shadow-xs h-56 min-h-56 flex flex-col relative">
+            <div class="bg-white border border-slate-200 rounded-2xl p-4 shadow-xs h-64 min-h-64 flex flex-col relative dark:bg-slate-900 dark:border-slate-800">
                 <div class="flex items-center justify-between mb-2">
-                    <h3 class="font-bold text-xs text-slate-800 dark:text-white flex items-center gap-1.5"><i data-lucide="network" class="w-4 h-4 text-slate-500"></i> Malha Relacional do Cofre</h3>
+                    <h3 class="font-bold text-xs text-slate-800 dark:text-white flex items-center gap-1.5"><i data-lucide="network" class="w-4 h-4 text-blue-600"></i> Gráfico de Conexões de Processos</h3>
+                    <span class="text-[9px] font-bold bg-slate-100 dark:bg-slate-800 text-slate-400 dark:text-slate-500 px-2 py-0.5 rounded-md uppercase tracking-wider">Malha Neural Dinâmica</span>
                 </div>
-                <div class="flex-1 bg-white dark:bg-slate-950 border border-slate-100 dark:border-slate-800 rounded-xl overflow-hidden relative">
+                <div class="flex-1 bg-slate-50 dark:bg-slate-950 border border-slate-100 dark:border-slate-850 rounded-xl overflow-hidden relative">
                     <canvas id="graph-canvas" class="w-full h-full block cursor-grab active:cursor-grabbing"></canvas>
                 </div>
             </div>
@@ -163,7 +176,7 @@
                     <div class="w-9 h-9 bg-blue-600 rounded-xl flex items-center justify-center text-white font-bold"><i data-lucide="bot" class="w-4 h-4"></i></div>
                     <div>
                         <h3 class="font-bold text-xs text-slate-800 dark:text-white">Assistente BMS</h3>
-                        <div class="flex items-center gap-1"><div class="w-1.5 h-1.5 bg-green-500 rounded-full"></div><span class="text-[10px] text-slate-400 font-bold uppercase">Cofre Ativo</span></div>
+                        <div class="flex items-center gap-1"><div class="w-1.5 h-1.5 bg-green-500 rounded-full"></div><span class="text-[10px] text-slate-400 dark:text-slate-500 font-bold uppercase">Cofre Integrado</span></div>
                     </div>
                 </div>
             </div>
@@ -172,9 +185,9 @@
                 <input type="password" id="app-password" value="sua_senha_aqui" class="w-full bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-lg px-3 py-1.5 text-xs font-mono text-slate-700 dark:text-slate-300 focus:outline-none">
             </div>
 
-            <div id="chat-messages" class="flex-1 overflow-y-auto p-4 flex flex-col gap-4 bg-[#fafafa] dark:bg-slate-950 select-text">
+            <div id="chat-messages" class="flex-1 overflow-y-auto p-4 flex flex-col gap-4 bg-[#fafafa] dark:bg-slate-950 select-text no-scrollbar">
                 <div class="w-full flex justify-start">
-                    <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 rounded-2xl rounded-tl-none p-3.5 text-xs max-w-[90%] shadow-xs leading-relaxed">
+                    <div class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 rounded-2xl rounded-tl-none p-3.5 text-xs max-w-[90%] shadow-xs leading-relaxed">
                         Sincronização efetuada. Selecione uma pasta ou peça do **Cofre** para iniciar a auditoria ou envie instruções estruturadas abaixo.
                     </div>
                 </div>
@@ -187,7 +200,7 @@
 
             <div class="p-3 border-t border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900">
                 <div class="relative flex items-center gap-2">
-                    <button id="btn-chat-attach" class="p-2 text-slate-400 dark:text-slate-500 hover:text-blue-600 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl"><i data-lucide="paperclip" class="w-4 h-4"></i></button>
+                    <button id="btn-chat-attach" class="p-2 text-slate-400 dark:text-slate-500 hover:text-blue-600 bg-slate-50 dark:bg-slate-800 hover:bg-blue-50 border border-slate-200 dark:border-slate-700 rounded-xl"><i data-lucide="paperclip" class="w-4 h-4"></i></button>
                     <div class="relative flex-1">
                         <input type="text" id="chat-input" placeholder="Pergunte ao Assistente BMS..." class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl pl-3 pr-10 py-2.5 text-xs font-semibold focus:outline-none focus:border-blue-500 text-slate-800 dark:text-slate-100">
                         <button id="btn-send" class="absolute right-1.5 top-1/2 -translate-y-1/2 p-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg"><i data-lucide="send" class="w-3.5 h-3.5"></i></button>
@@ -221,6 +234,7 @@
         const circleProgress = document.getElementById("circle-progress");
         const circleText = document.getElementById("circle-text");
         const analysisStatusDesc = document.getElementById("analysis-status-desc");
+        const favoriteStarBtn = document.getElementById("btn-favorite-star");
 
         const btnVaultUpload = document.getElementById("btn-vault-upload");
         const globalVaultUpload = document.getElementById("global-vault-upload");
@@ -238,8 +252,12 @@
         let selectedFileId = null;
         let graphData = { nodes: [], edges: [] };
         let draggedNode = null;
+        let currentFilterType = "all";
+        
+        // Memória local de favoritos persistente
+        let favoriteItems = JSON.parse(localStorage.getItem("favorites_map") || "{}");
 
-        // Modo Escuro Funcional
+        // REQUISITO 3: Alternador de Modo Escuro Perfeito sem Quebra Visual
         function toggleDarkMode() {
             if (document.documentElement.classList.contains("dark")) {
                 document.documentElement.classList.remove("dark");
@@ -248,6 +266,7 @@
                 document.documentElement.classList.add("dark");
                 localStorage.setItem("theme", "dark");
             }
+            drawGraph(); // Redesenha instantaneamente as paletas de cores do canvas
         }
 
         function closeAllDropdownsMenu() {
@@ -265,7 +284,42 @@
             buildNotesTree();
         }
 
-        // Monitor de Status Real do Servidor
+        // REQUISITO 4: Limpa a seleção ativa ao clicar em uma área vazia do menu lateral esquerdo
+        function clearTreeSelection(e) {
+            if (e.target.id === "file-tree" || e.target.tagName === "ASIDE") {
+                selectedFileId = null;
+                activeNoteTitle.innerText = "Selecione um arquivo do cofre";
+                activeNoteMeta.innerText = "Raiz do Cofre Ativa";
+                viewDoc.innerHTML = `<div class="text-center text-slate-400 my-20">Raiz selecionada. Novos diretórios e uploads serão gravados na pasta principal.</div>`;
+                buildNotesTree(); // Atualiza os realces visuais
+            }
+        }
+
+        // REQUISITO 1: Sistema de favoritos funcional integrado
+        function toggleActiveFileFavorite() {
+            if (!selectedFileId) return;
+            if (favoriteItems[selectedFileId]) {
+                delete favoriteItems[selectedFileId];
+            } else {
+                favoriteItems[selectedFileId] = true;
+            }
+            localStorage.setItem("favorites_map", JSON.stringify(favoriteItems));
+            updateFavoriteStarUI();
+            buildNotesTree(); // Força realce da estrela na árvore lateral
+        }
+
+        function updateFavoriteStarUI() {
+            if (selectedFileId && favoriteItems[selectedFileId]) {
+                favoriteStarBtn.className = "text-amber-500 dark:text-amber-400 focus:outline-none scale-110 transition-transform";
+                favoriteStarBtn.innerHTML = `<i data-lucide="star" class="w-4 h-4 fill-amber-500 dark:fill-amber-400"></i>`;
+            } else {
+                favoriteStarBtn.className = "text-slate-300 dark:text-slate-600 hover:text-amber-500 transition-colors focus:outline-none";
+                favoriteStarBtn.innerHTML = `<i data-lucide="star" class="w-4 h-4"></i>`;
+            }
+            lucide.createIcons();
+        }
+
+        // Monitor de Redes do Servidor Real
         async function checkRealServerStatus() {
             try {
                 const res = await fetch("/api/status");
@@ -294,7 +348,22 @@
             });
         }
 
-        // Criar Pastas Manuais
+        function switchTab(type) {
+            const tabDoc = document.getElementById("tab-doc");
+            const tabRaw = document.getElementById("tab-raw");
+            if (type === 'doc') {
+                viewDoc.classList.remove("hidden");
+                viewRaw.classList.add("hidden");
+                tabDoc.className = "text-xs font-bold px-4 py-1.5 bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400 rounded-lg transition-all";
+                tabRaw.className = "text-xs font-bold px-4 py-1.5 text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg transition-all";
+            } else {
+                viewDoc.classList.add("hidden");
+                viewRaw.classList.remove("hidden");
+                tabRaw.className = "text-xs font-bold px-4 py-1.5 bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400 rounded-lg transition-all";
+                tabDoc.className = "text-xs font-bold px-4 py-1.5 text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg transition-all";
+            }
+        }
+
         async function createFolderOnVPS(name) {
             try {
                 const res = await fetch("/api/create-folder", {
@@ -309,18 +378,18 @@
             } catch (err) { console.error(err); }
         }
 
-        function createNewFolderManual() {
+        function createNewFolderManual(e) {
+            if(e) e.stopPropagation();
             let context = "";
-            if (selectedFileId && selectedFileId.includes("/")) {
-                context = selectedFileId.substring(0, selectedFileId.lastIndexOf("/")) + "/";
-            }
-            const name = prompt(context ? `Criar subpasta dentro de ${context}:` : "Criar pasta na raiz do cofre:");
+            if (selectedFileId && selectedFileId.endsWith("/")) context = selectedFileId;
+            else if (selectedFileId && selectedFileId.includes("/")) context = selectedFileId.substring(0, selectedFileId.lastIndexOf("/")) + "/";
+            
+            const name = prompt(context ? `Criar subpasta dentro de [Cofre/${context}]:` : "Criar pasta na raiz do cofre:");
             if (name && name.trim()) {
                 createFolderOnVPS(context + name.trim());
             }
         }
 
-        // Opções Básicas de Arquivos via Prompt
         async function deleteItem(p) {
             if (!confirm(`Excluir permanentemente: ${p}?`)) return;
             try {
@@ -330,6 +399,7 @@
                     body: JSON.stringify({ targetPath: p })
                 });
                 if (res.ok) {
+                    if(selectedFileId === p) selectedFileId = null;
                     buildNotesTree();
                     reloadGlobalGraph();
                 }
@@ -344,13 +414,14 @@
                     body: JSON.stringify({ oldPath: oldP, newPath: newP })
                 });
                 if (res.ok) {
+                    if(selectedFileId === oldP) selectedFileId = newP;
                     buildNotesTree();
                     reloadGlobalGraph();
                 }
             } catch (err) { console.error(err); }
         }
 
-        // Árvore de Diretórios Inteligente - Suporta Pastas e Arquivos vazios
+        // Árvore de Diretórios com realce e suporte a favoritos
         async function buildNotesTree() {
             try {
                 const res = await fetch("/api/notes");
@@ -364,33 +435,45 @@
 
                     items.forEach(item => {
                         const row = document.createElement("div");
-                        row.className = "tree-row-container group flex items-center justify-between w-full hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg p-1 transition-all";
+                        const isSelected = (selectedFileId === item.path || selectedFileId === item.path + "/");
+                        
+                        row.className = `tree-row-container group flex items-center justify-between w-full rounded-lg p-0.5 transition-all text-left ${isSelected ? 'bg-blue-50 dark:bg-blue-950/40 text-blue-600 dark:text-blue-400' : 'hover:bg-slate-100 dark:hover:bg-slate-800'}`;
                         row.setAttribute("data-path", item.path);
 
                         const btn = document.createElement("button");
                         const isDir = item.type === "directory";
                         const depth = (item.path.match(/\//g) || []).length;
                         
-                        btn.className = "flex-1 text-left py-1 flex items-center gap-1.5 text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white font-semibold truncate";
+                        btn.className = "flex-1 text-left py-1 flex items-center gap-1.5 font-bold truncate text-xs";
                         btn.style.paddingLeft = `${depth * 12 + 4}px`;
                         
                         const icon = isDir ? "folder" : (item.path.endsWith(".pdf") ? "file-text" : "file");
                         const iconColor = isDir ? "text-amber-500" : (item.path.endsWith(".pdf") ? "text-red-400" : "text-slate-400");
                         
-                        btn.innerHTML = `<i data-lucide="${icon}" class="w-3.5 h-3.5 ${iconColor} shrink-0"></i> <span class="truncate">${item.path.split('/').pop()}</span>`;
+                        const hasStar = favoriteItems[item.path] || favoriteItems[item.path + "/"];
+                        const starBadge = hasStar ? `<i data-lucide="star" class="w-3 h-3 text-amber-500 fill-amber-500 inline shrink-0 ml-1"></i>` : "";
+
+                        btn.innerHTML = `<i data-lucide="${icon}" class="w-3.5 h-3.5 ${iconColor} shrink-0"></i> <span class="truncate">${item.path.split('/').pop()}</span> ${starBadge}`;
                         
                         if (!isDir) {
-                            btn.onclick = () => loadNoteContent(item.path);
+                            btn.onclick = (e) => { e.stopPropagation(); loadNoteContent(item.path); };
                         } else {
-                            btn.onclick = () => { selectedFileId = item.path + "/"; activeNoteMeta.innerText = `Pasta ativa: ${item.path}`; };
+                            btn.onclick = (e) => { 
+                                e.stopPropagation(); 
+                                selectedFileId = item.path + "/"; 
+                                activeNoteTitle.innerText = item.path.split('/').pop();
+                                activeNoteMeta.innerText = `Pasta ativa: ${item.path}`;
+                                updateFavoriteStarUI();
+                                buildNotesTree();
+                            };
                         }
 
                         const menuBtn = document.createElement("button");
-                        menuBtn.className = "opacity-0 group-hover:opacity-100 p-1 text-slate-400 hover:text-blue-500 rounded transition-all";
+                        menuBtn.className = "opacity-0 group-hover:opacity-100 p-1 text-slate-400 hover:text-blue-500 rounded transition-all focus:outline-none";
                         menuBtn.innerHTML = `<i data-lucide="more-horizontal" class="w-3.5 h-3.5"></i>`;
                         menuBtn.onclick = (e) => {
                             e.stopPropagation();
-                            const act = prompt(`Opções de Gerenciamento:\n[1] Renomear ou Mover\n[2] Apagar permanentemente\nDigite o número do comando:`);
+                            const act = prompt(`Gerenciar item [${item.path}]:\n[1] Renomear / Mover\n[2] Apagar permanentemente\nDigite o número da ação:`);
                             if (act === "1") {
                                 const newPath = prompt("Digite o novo caminho completo do arquivo ou pasta:", item.path);
                                 if (newPath && newPath.trim()) renameItem(item.path, newPath.trim());
@@ -408,85 +491,149 @@
             } catch (err) { console.error(err); }
         }
 
-        // Motor do Gráfico Relacional
+        // REQUISITO 2: Motor de Física de Partículas do Gráfico Corrigido (Sem bugs de string)
         function initPhysicsNodes(data) {
-            const width = canvas.width; const height = canvas.height;
+            const width = canvas.width || 500; 
+            const height = canvas.height || 250;
             const existingNodesMap = new Map(graphData.nodes.map(n => [n.id, n]));
+            
             graphData.nodes = data.nodes.map(n => {
                 const old = existingNodesMap.get(n.id);
-                return { id: n.id, label: n.label, x: old ? old.x : width / 2 + (Math.random() - 0.5) * 120, y: old ? old.y : height / 2 + (Math.random() - 0.5) * 120, vx: 0, vy: 0, radius: 4.5 };
+                return { 
+                    id: n.id, 
+                    label: n.label, 
+                    x: old ? old.x : width / 2 + (Math.random() - 0.5) * 160, 
+                    y: old ? old.y : height / 2 + (Math.random() - 0.5) * 160, 
+                    vx: 0, 
+                    vy: 0, 
+                    radius: 5 
+                };
             });
-            graphData.edges = data.edges.map(e => ({ sourceNode: graphData.nodes.find(n => n.id === e.source), targetNode: graphData.nodes.find(n => n.id === e.target) })).filter(e => e.sourceNode && e.targetNode);
+            graphData.edges = data.edges.map(e => ({ 
+                sourceNode: graphData.nodes.find(n => n.id === e.source), 
+                targetNode: graphData.nodes.find(n => n.id === e.target) 
+            })).filter(e => e.sourceNode && e.targetNode);
         }
 
         function updatePhysics() {
-            const centerX = canvas.width / 2; const centerY = canvas.height / 2;
+            const centerX = canvas.width / 2; 
+            const centerY = canvas.height / 2;
+            
             for (let i = 0; i < graphData.nodes.length; i++) {
                 let n1 = graphData.nodes[i];
                 for (let j = i + 1; j < graphData.nodes.length; j++) {
                     let n2 = graphData.nodes[j];
-                    let dx = n2.x - n1.x; let dy = n2.y - n1.y; if (dx === 0) dx = 0.1;
+                    let dx = n2.x - n1.x; 
+                    let dy = n2.y - n1.y; 
+                    if (dx === 0) dx = 0.1;
                     let dist = Math.sqrt(dx*dx + dy*dy);
-                    if (dist < 200) {
-                        let force = 300 / (dist * dist + 10);
+                    if (dist < 180) {
+                        let force = 340 / (dist * dist + 12);
                         if (n1 !== draggedNode) { n1.vx -= (dx/dist)*force; n1.vy -= (dy/dist)*force; }
                         if (n2 !== draggedNode) { n2.vx += (dx/dist)*force; n2.vy += (dy/dist)*force; }
                     }
                 }
             }
             graphData.edges.forEach(edge => {
-                let dx = edge.targetNode.x - edge.sourceNode.x; let dy = edge.targetNode.y - edge.sourceNode.y;
+                let dx = edge.targetNode.x - edge.sourceNode.x; 
+                let dy = edge.targetNode.y - edge.sourceNode.y;
                 let dist = Math.sqrt(dx*dx + dy*dy);
                 if (dist > 0) {
-                    if (edge.sourceNode !== draggedNode) { edge.sourceNode.vx += dx * 0.03; edge.sourceNode.vy += dy * 0.03; }
-                    if (edge.targetNode !== draggedNode) { edge.targetNode.vx -= dx * 0.03; edge.targetNode.vy -= dy * 0.03; }
+                    if (edge.sourceNode !== draggedNode) { edge.sourceNode.vx += dx * 0.025; edge.sourceNode.vy += dy * 0.025; }
+                    if (edge.targetNode !== draggedNode) { edge.targetNode.vx -= dx * 0.025; edge.targetNode.vy -= dy * 0.025; }
                 }
             });
             graphData.nodes.forEach(node => {
                 if (node === draggedNode) return;
-                node.vx += (centerX - node.x) * 0.01; node.vy += (centerY - node.y) * 0.01;
-                node.x += node.vx; node.y += node.vy; node.vx *= 0.8; node.vy *= 0.8;
+                node.vx += (centerX - node.x) * 0.01; 
+                node.vy += (centerY - node.y) * 0.01;
+                node.x += node.vx; 
+                node.y += node.vy; 
+                node.vx *= 0.82; 
+                node.vy *= 0.82;
             });
         }
 
         function drawGraph() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-            ctx.strokeStyle = document.documentElement.classList.contains("dark") ? "#334155" : "#e2e8f0";
-            ctx.lineWidth = 1;
-            graphData.edges.forEach(edge => { ctx. Esk = () => {}; ctx.beginPath(); ctx.moveTo(edge.sourceNode.x, edge.sourceNode.y); ctx.lineTo(edge.targetNode.x, edge.targetNode.y); ctx.stroke(); });
+            const isDark = document.documentElement.classList.contains("dark");
+            
+            ctx.strokeStyle = isDark ? "#334155" : "#e2e8f0";
+            ctx.lineWidth = 1.5;
+            
+            graphData.edges.forEach(edge => { 
+                ctx.beginPath(); 
+                ctx.moveTo(edge.sourceNode.x, edge.sourceNode.y); 
+                ctx.lineTo(edge.targetNode.x, edge.targetNode.y); 
+                ctx.stroke(); 
+            });
+            
             graphData.nodes.forEach(node => {
-                const act = node.id === selectedFileId;
-                ctx.beginPath(); ctx.arc(node.x, node.y, act ? 6 : 4, 0, 2*Math.PI);
-                ctx.fillStyle = act ? "#2563eb" : "#64748b"; ctx.fill();
-                ctx.font = "9px sans-serif"; ctx.fillStyle = document.documentElement.classList.contains("dark") ? "#94a3b8" : "#475569";
-                ctx.textAlign = "center"; ctx.fillText(node.label, node.x, node.y + 14);
+                const act = (selectedFileId === node.id);
+                ctx.beginPath(); 
+                ctx.arc(node.x, node.y, act ? 6.5 : 4.5, 0, 2*Math.PI);
+                ctx.fillStyle = act ? "#2563eb" : (isDark ? "#3b82f6" : "#64748b"); 
+                ctx.fill();
+                
+                ctx.font = act ? "bold 10px sans-serif" : "10px sans-serif"; 
+                ctx.fillStyle = isDark ? "#cbd5e1" : "#334155";
+                ctx.textAlign = "center"; 
+                ctx.fillText(node.label, node.x, node.y + 15);
             });
         }
 
-        function anim() { updatePhysics(); drawGraph(); requestAnimationFrame(anim); }
+        function anim() { 
+            updatePhysics(); 
+            drawGraph(); 
+            requestAnimationFrame(anim); 
+        }
         requestAnimationFrame(anim);
 
         canvas.addEventListener("mousedown", (e) => {
-            const rect = canvas.getBoundingClientRect(); const mx = e.clientX - rect.left; const my = e.clientY - rect.top;
-            for (let n of graphData.nodes) { if (Math.sqrt((n.x - mx)**2 + (n.y - my)**2) < 15) { draggedNode = n; break; } }
+            const rect = canvas.getBoundingClientRect(); 
+            const mx = e.clientX - rect.left; 
+            const my = e.clientY - rect.top;
+            for (let n of graphData.nodes) { 
+                if (Math.sqrt((n.x - mx)**2 + (n.y - my)**2) < 18) { 
+                    draggedNode = n; 
+                    break; 
+                } 
+            }
         });
-        canvas.addEventListener("mousemove", (e) => { if (draggedNode) { const rect = canvas.getBoundingClientRect(); draggedNode.x = e.clientX - rect.left; draggedNode.y = e.clientY - rect.top; } });
+        canvas.addEventListener("mousemove", (e) => { 
+            if (draggedNode) { 
+                const rect = canvas.getBoundingClientRect(); 
+                draggedNode.x = e.clientX - rect.left; 
+                draggedNode.y = e.clientY - rect.top; 
+            } 
+        });
         window.addEventListener("mouseup", () => draggedNode = null);
 
-        async function reloadGlobalGraph() { try { const res = await fetch("/api/graph-data"); const data = await res.json(); initPhysicsNodes(data); } catch(e){} }
+        async function reloadGlobalGraph() { 
+            try { 
+                const res = await fetch("/api/graph-data"); 
+                const data = await res.json(); 
+                initPhysicsNodes(data); 
+            } catch(e){} 
+        }
 
-        // Carregar Conteúdo
         async function loadNoteContent(filename) {
             selectedFileId = filename;
             const shortName = filename.split('/').pop();
             activeNoteTitle.innerText = shortName.replace(/\.(md|pdf|txt)$/i, "");
-            activeNoteMeta.innerText = `Cofre: BaseConhecimento/${filename}`;
             
+            if (activeNoteMeta) activeNoteMeta.innerText = `Cofre: BaseConhecimento/${filename}`;
+            
+            viewDoc.innerHTML = `<div class="text-center text-slate-400 my-20 animate-pulse">Indexando bloco documental...</div>`;
+            viewRaw.innerText = "Buscando texto bruto...";
+
             switchTab('doc');
+            updateFavoriteStarUI();
+            buildNotesTree(); // Realça o item ativo na árvore esquerda
 
             if (filename.toLowerCase().endsWith('.pdf')) {
-                viewDoc.innerHTML = `<iframe src="/api/note-raw?file=${encodeURIComponent(filename)}" class="w-full h-[380px] border-0 rounded-xl"></iframe>`;
-                viewRaw.innerText = "[Visualização binária de PDF ativa]";
+                viewDoc.innerHTML = `<iframe src="/api/note-raw?file=${encodeURIComponent(filename)}" class="w-full h-[380px] border-0 rounded-xl bg-white"></iframe>`;
+                viewRaw.innerText = "[Visualização de arquivo PDF ativa]";
                 circleProgress.setAttribute("stroke-dasharray", "100, 100");
                 circleText.innerText = "100%";
                 analysisStatusDesc.innerText = "Pronto para conferência.";
@@ -498,18 +645,17 @@
                 const data = await res.json();
                 viewRaw.innerText = data.content || "";
                 viewDoc.innerHTML = `
-                    <div class="border border-slate-200 dark:border-slate-700 rounded-lg p-5 bg-white dark:bg-slate-900 max-w-xl mx-auto font-serif">
-                        <div class="text-slate-800 dark:text-slate-200 text-xs whitespace-pre-wrap leading-relaxed">${data.content || 'Sem registros.'}</div>
+                    <div class="border border-slate-200 dark:border-slate-700 rounded-lg p-5 bg-white dark:bg-slate-900 max-w-xl mx-auto font-serif shadow-xs">
+                        <div class="text-slate-800 dark:text-slate-200 text-xs whitespace-pre-wrap leading-relaxed">${data.content || 'Sem registros textuais.'}</div>
                     </div>
                 `;
-                metaSummary.innerText = "Peça arquivada indexada no servidor local do cofre corporativo.";
+                metaSummary.innerText = "Peça arquivada mapeada de forma íntegra no cofre local corporativo.";
                 circleProgress.setAttribute("stroke-dasharray", "100, 100");
                 circleText.innerText = "100%";
-                analysisStatusDesc.innerText = "Indexado.";
+                analysisStatusDesc.innerText = "Análise documental ok.";
             } catch (err) {}
         }
 
-        // Upload do Cofre Contextual
         btnVaultUpload.onclick = () => globalVaultUpload.click();
         globalVaultUpload.onchange = async (e) => {
             const file = e.target.files[0]; if (!file) return;
@@ -519,11 +665,30 @@
 
             try {
                 await fetch(`/api/upload-vault?file=${encodeURIComponent(folder + file.name)}`, { method: "POST", body: file });
-                buildNotesTree(); reloadGlobalGraph();
+                buildNotesTree(); 
+                reloadGlobalGraph();
             } catch(err){}
         };
 
-        // Chat sem sumiço de mensagens
+        btnChatAttach.onclick = () => chatContextUpload.click();
+        chatContextUpload.onchange = (e) => {
+            const file = e.target.files[0]; if (!file) return;
+            const reader = new FileReader();
+            reader.onload = (event) => {
+                pendingChatAttachment = { name: file.name, content: event.target.result };
+                chatAttachmentName.innerText = file.name;
+                chatAttachmentArea.classList.remove("hidden");
+            };
+            reader.readAsText(file);
+        };
+
+        btnRemoveAttachment.onclick = () => {
+            pendingChatAttachment = null;
+            chatAttachmentArea.classList.add("hidden");
+            chatContextUpload.value = "";
+        };
+
+        // REQUISITO 2: Chat blindado e mensagens enviadas renderizadas perfeitamente
         async function sendChatMessage() {
             let query = chatInput.value.trim();
             if (!query) return;
@@ -541,14 +706,19 @@
                     body: JSON.stringify({ messages: chatHistory })
                 });
                 const data = await res.json();
-                document.getElementById(tempId).remove();
+                
+                const loaderBlock = document.getElementById(tempId);
+                if (loaderBlock) loaderBlock.remove();
 
                 if (data.reply) {
                     renderMessageBlock("assistant", data.reply);
                     chatHistory.push({ role: "assistant", content: data.reply });
+                } else {
+                    renderMessageBlock("assistant", "❌ Resposta nula recebida da IA local.");
                 }
             } catch (err) {
-                document.getElementById(tempId).remove();
+                const loaderBlock = document.getElementById(tempId);
+                if (loaderBlock) loaderBlock.remove();
                 renderMessageBlock("assistant", "❌ Falha crítica de conexão com o servidor local.");
             }
         }
@@ -557,14 +727,14 @@
             const id = "msg-" + Date.now();
             const wrapper = document.createElement("div");
             wrapper.className = `w-full flex ${role === 'user' ? 'justify-end' : 'justify-start'}`;
+            wrapper.id = id;
             
             const bubble = document.createElement("div");
             if (role === "user") {
-                bubble.className = "bg-blue-600 text-white rounded-2xl rounded-tr-none p-3 text-xs max-w-[85%] font-medium leading-relaxed whitespace-pre-wrap shadow-xs";
+                bubble.className = "bg-blue-600 text-white rounded-2xl rounded-tr-none p-3 text-xs max-w-[85%] font-semibold leading-relaxed whitespace-pre-wrap shadow-xs select-text text-left";
             } else {
-                bubble.className = "bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 rounded-2xl rounded-tl-none p-3 text-xs max-w-[85%] shadow-xs leading-relaxed whitespace-pre-wrap";
+                bubble.className = "bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 rounded-2xl rounded-tl-none p-3 text-xs max-w-[85%] shadow-xs leading-relaxed whitespace-pre-wrap select-text text-left";
             }
-            bubble.id = id;
             bubble.innerText = text;
             wrapper.appendChild(bubble);
             messagesContainer.appendChild(wrapper);
