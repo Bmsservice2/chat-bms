@@ -85,7 +85,7 @@ const localTools = [
   },
   {
     name: "create_downloadable_file",
-    description: "Cria um arquivo físico para o usuário fazer download. Use esta ferramenta caso o usuário aceite o download de uma peça.",
+    description: "Cria um arquivo físico para o usuário fazer download (ex: .md, .docx, .txt). Use esta ferramenta caso o usuário aceite o download de uma peça que você gerou.",
     input_schema: {
       type: "object",
       properties: { filename: { type: "string" }, content: { type: "string" } },
@@ -135,8 +135,9 @@ app.get("/api/status", (req, res) => {
   res.json({ status: "OK" });
 });
 
+// NOVA ROTA: GERADOR DE CARGA PARA TESTE DE VELOCIDADE
 app.get("/api/speedtest", (req, res) => {
-  const size = 5 * 1024 * 1024;
+  const size = 5 * 1024 * 1024; // Gera 5MB de bytes aleatórios intransponíveis
   res.set({
       'Content-Type': 'application/octet-stream',
       'Content-Length': size,
@@ -251,7 +252,7 @@ app.post("/api/chat", async (req, res) => {
     let response = await anthropic.messages.create({
       model: process.env.CLAUDE_MODEL || "claude-3-5-sonnet-20241022",
       max_tokens: 4000,
-      system: "Você é o Assistente BMS, uma inteligência corporativa com MODO DEUS. Você tem permissões globais para editar, criar, e EXCLUIR, além de MOVER/TRANSFERIR arquivos e pastas. Se o usuário pedir para MOVER algo, use a ferramenta 'rename_item' passando o diretório antigo e o novo diretório de destino. NUNCA coloque 'Cofre/' no path da ferramenta. Para baixar arquivos gerados, ofereça usar 'create_downloadable_file' com a URL formatada em Markdown: '[📥 Clique aqui para baixar o Arquivo](/downloads/NOME_DO_ARQUIVO)'. Cite de onde pegou as infos. NUNCA cite Anthropic.",
+      system: "Você é o Assistente BMS, uma inteligência corporativa com MODO DEUS. Se o usuário pedir para gerar um documento ou peça inteira, PRIMEIRO envie o texto e DIGA que você pode transformar isso em um arquivo físico para download, pergunte se ele quer. SE ELE ACEITAR, use a ferramenta 'create_downloadable_file' e forneça na mensagem exatamente assim: '[📥 Clique aqui para baixar o Arquivo](/downloads/NOME_DO_ARQUIVO)'. Quando usar informações do Cofre, cite explicitamente de quais arquivos pegou as informações no final da sua resposta. NUNCA cite a Anthropic.",
       messages,
       tools: localTools
     });
@@ -297,7 +298,7 @@ app.post("/api/chat", async (req, res) => {
               if (fs.existsSync(oldP)) {
                 fs.mkdirSync(path.dirname(newP), { recursive: true });
                 fs.renameSync(oldP, newP);
-                toolResult = { status: "Ação concluída. Item movido ou renomeado com sucesso." };
+                toolResult = { status: "Item renomeado." };
               } else {
                 toolResult = { error: "Arquivo de origem não encontrado." };
               }
