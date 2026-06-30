@@ -17,14 +17,14 @@
     </script>
     <style>
         html { font-size: 12px; }
-
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
     </style>
 </head>
 <body class="bg-[#f3f4f6] dark:bg-slate-950 text-slate-800 dark:text-slate-100 font-sans h-screen flex flex-col overflow-hidden select-none transition-colors duration-200">
 
-    <input type="file" id="global-vault-upload" class="hidden" />
+    <input type="file" id="global-vault-upload" class="hidden" multiple />
+    <input type="file" id="global-folder-upload" class="hidden" webkitdirectory directory multiple />
     <input type="file" id="chat-context-upload" class="hidden" />
 
     <div id="custom-context-menu" class="hidden absolute bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl shadow-2xl py-1.5 w-44 z-50 text-xs font-bold text-slate-600 dark:text-slate-300">
@@ -67,7 +67,6 @@
 
     <div id="speedtest-modal" class="hidden fixed inset-0 bg-slate-950/40 dark:bg-slate-950/60 backdrop-blur-xs flex items-center justify-center z-50 transition-opacity duration-300 opacity-0">
         <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl shadow-2xl p-6 w-[350px] max-w-full flex flex-col gap-4 transform transition-all duration-300 scale-95" id="speedtest-content">
-            
             <div id="st-state-1" class="flex flex-col items-center pt-2">
                 <div class="w-14 h-14 bg-blue-100 dark:bg-blue-900/50 rounded-full flex items-center justify-center text-blue-600 dark:text-blue-400 mb-3 relative">
                     <i data-lucide="wifi" class="w-7 h-7"></i>
@@ -80,19 +79,13 @@
                     <button onclick="startSpeedTest()" class="flex-1 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-xl transition-all shadow-md shadow-blue-500/30">Iniciar Teste</button>
                 </div>
             </div>
-
             <div id="st-state-2" class="hidden flex flex-col items-center py-4">
                 <h3 class="font-black text-slate-800 dark:text-white text-sm mb-6 uppercase tracking-widest text-slate-400">Medindo Banda...</h3>
                 <div class="relative w-56 h-28 overflow-hidden mb-2">
                     <svg viewBox="0 0 100 50" class="w-full h-full">
                         <path d="M 10 50 A 40 40 0 0 1 90 50" fill="none" stroke="currentColor" stroke-width="8" class="text-slate-100 dark:text-slate-800" stroke-linecap="round"></path>
                         <path d="M 10 50 A 40 40 0 0 1 90 50" fill="none" stroke="url(#gradient)" stroke-width="8" class="text-blue-500" stroke-dasharray="125" stroke-dashoffset="125" id="st-progress" stroke-linecap="round" style="transition: stroke-dashoffset 0.2s ease-out;"></path>
-                        <defs>
-                            <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                                <stop offset="0%" stop-color="#3b82f6" />
-                                <stop offset="100%" stop-color="#10b981" />
-                            </linearGradient>
-                        </defs>
+                        <defs><linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#3b82f6" /><stop offset="100%" stop-color="#10b981" /></linearGradient></defs>
                     </svg>
                     <div id="st-needle" class="absolute bottom-0 left-1/2 w-[3px] h-[85px] bg-slate-800 dark:bg-white origin-bottom -translate-x-1/2 transform -rotate-90 transition-transform duration-200 ease-out rounded-full shadow-sm z-10"></div>
                     <div class="absolute bottom-0 left-1/2 w-5 h-5 bg-slate-800 dark:bg-white rounded-full transform -translate-x-1/2 translate-y-1/2 border-4 border-white dark:border-slate-900 shadow-md z-20"></div>
@@ -100,11 +93,8 @@
                 <div class="text-4xl font-black text-slate-800 dark:text-white mt-4 font-mono tracking-tighter"><span id="st-value">0.0</span></div>
                 <div class="text-[11px] font-bold text-slate-400 uppercase tracking-widest mt-1">Mbps</div>
             </div>
-
             <div id="st-state-3" class="hidden flex flex-col items-center pt-2">
-                <div class="w-16 h-16 bg-emerald-100 dark:bg-emerald-900/50 rounded-full flex items-center justify-center text-emerald-600 dark:text-emerald-400 mb-3">
-                    <i data-lucide="check-circle-2" class="w-8 h-8"></i>
-                </div>
+                <div class="w-16 h-16 bg-emerald-100 dark:bg-emerald-900/50 rounded-full flex items-center justify-center text-emerald-600 dark:text-emerald-400 mb-3"><i data-lucide="check-circle-2" class="w-8 h-8"></i></div>
                 <h3 class="font-black text-slate-800 dark:text-white text-lg">Teste Concluído!</h3>
                 <div class="bg-slate-50 dark:bg-slate-800 rounded-2xl p-5 w-full mt-4 border border-slate-100 dark:border-slate-700">
                     <p class="text-center text-[10px] uppercase font-bold text-slate-400 mb-1 tracking-widest">Sua Velocidade</p>
@@ -138,9 +128,16 @@
                 <i data-lucide="sun" class="w-4 h-4 hidden dark:block"></i>
             </button>
 
-            <button id="btn-vault-upload" class="border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 text-xs font-bold px-4 py-2.5 rounded-xl flex items-center gap-2 hover:bg-slate-50 dark:hover:bg-slate-700 transition-all active:scale-95 shadow-xs">
-                <i data-lucide="upload-cloud" class="w-4 h-4 text-blue-600"></i> Upload Cofre
-            </button>
+            <div class="relative">
+                <button onclick="toggleCustomDropdown('dropdown-upload', event)" class="border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 text-xs font-bold px-4 py-2.5 rounded-xl flex items-center gap-2 hover:bg-slate-50 dark:hover:bg-slate-700 transition-all active:scale-95 shadow-xs">
+                    <i data-lucide="upload-cloud" class="w-4 h-4 text-blue-600"></i> Upload Cofre
+                </button>
+                <div id="dropdown-upload" class="hidden absolute top-[105%] right-0 mt-1 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl shadow-2xl py-1.5 w-48 z-50 flex flex-col text-xs font-bold text-slate-600 dark:text-slate-300">
+                    <button onclick="document.getElementById('global-vault-upload').click(); document.getElementById('dropdown-upload').classList.add('hidden')" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 flex items-center gap-2 transition-all"><i data-lucide="file-plus" class="w-4 h-4 text-blue-500"></i> Arquivos Avulsos</button>
+                    <button onclick="document.getElementById('global-folder-upload').click(); document.getElementById('dropdown-upload').classList.add('hidden')" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 flex items-center gap-2 transition-all"><i data-lucide="folder-plus" class="w-4 h-4 text-amber-500"></i> Pasta Completa</button>
+                </div>
+            </div>
+            
             <div class="w-px h-6 bg-slate-200 dark:bg-slate-800 mx-1"></div>
             
             <div id="server-status-badge" class="flex items-center gap-2 bg-slate-100 dark:bg-slate-800 px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 transition-all duration-300">
@@ -166,7 +163,7 @@
                 </div>
             </div>
 
-            <div id="file-tree" class="flex-1 overflow-y-auto space-y-0.5 pr-1 text-xs font-semibold text-slate-600 dark:text-slate-300 no-scrollbar"></div>
+            <div id="file-tree" class="flex-1 overflow-y-auto space-y-0.5 pr-1 text-xs font-semibold text-slate-600 dark:text-slate-300 no-scrollbar relative"></div>
 
             <div class="mt-2">
                 <div onclick="openSpeedTestModal()" class="mb-2 bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-800 rounded-xl p-2.5 cursor-pointer hover:ring-2 hover:ring-blue-500/50 transition-all flex items-center justify-between group">
@@ -411,7 +408,6 @@
             }
         });
 
-        // SPEEDTEST LOGIC (Animação Visual Sincronizada com Fetch Local)
         function openSpeedTestModal() {
             const modal = document.getElementById("speedtest-modal");
             modal.classList.remove("hidden");
@@ -506,6 +502,7 @@
 
         const btnVaultUpload = document.getElementById("btn-vault-upload");
         const globalVaultUpload = document.getElementById("global-vault-upload");
+        const globalFolderUpload = document.getElementById("global-folder-upload");
         const btnChatAttach = document.getElementById("btn-chat-attach");
         const chatContextUpload = document.getElementById("chat-context-upload");
         const chatAttachmentArea = document.getElementById("chat-attachment-area");
@@ -579,17 +576,6 @@
         window.addEventListener("resize", resizeCanvas);
         resizeCanvas();
 
-        function toggleDarkMode() {
-            if (document.documentElement.classList.contains("dark")) {
-                document.documentElement.classList.remove("dark");
-                localStorage.setItem("theme", "light");
-            } else {
-                document.documentElement.classList.add("dark");
-                localStorage.setItem("theme", "dark");
-            }
-            drawGraph(); 
-        }
-
         function closeAllDropdownsMenu() {
             filterDropdown.classList.add("hidden");
             document.getElementById("custom-context-menu").classList.add("hidden");
@@ -597,6 +583,7 @@
             document.getElementById("dropdown-type")?.classList.add("hidden");
             document.getElementById("dropdown-phase")?.classList.add("hidden");
             document.getElementById("dropdown-obj")?.classList.add("hidden");
+            document.getElementById("dropdown-upload")?.classList.add("hidden");
         }
 
         function toggleFilterDropdown(e) {
@@ -847,7 +834,57 @@
             }
         }
 
-        // REQUISITO 2: LOGICA DE DRAG AND DROP (ARRASTAR E SOLTAR NA ÁRVORE)
+        // REQUISITO 2: LOGICA DE DRAG AND DROP
+        async function handleOSDrop(e, targetFolder = "") {
+            const items = e.dataTransfer.items;
+            if (!items) return;
+            
+            let baseFolder = targetFolder;
+            if (baseFolder === "") {
+                if (selectedFileId && selectedFileId.endsWith("/")) baseFolder = selectedFileId;
+                else if (selectedFileId && selectedFileId.includes("/")) baseFolder = selectedFileId.substring(0, selectedFileId.lastIndexOf("/")) + "/";
+            }
+
+            document.getElementById("meta-summary").innerText = "Sincronizando arquivos do sistema...";
+            let successCount = 0;
+
+            async function readEntry(entry, pathPrefix = "") {
+                if (entry.isFile) {
+                    return new Promise((resolve) => {
+                        entry.file(async (file) => {
+                            const finalPath = baseFolder + pathPrefix + file.name;
+                            try {
+                                const res = await fetch(`/api/upload-vault?file=${encodeURIComponent(finalPath)}`, { method: "POST", body: file });
+                                if (res.ok) successCount++;
+                            } catch(err){}
+                            resolve();
+                        });
+                    });
+                } else if (entry.isDirectory) {
+                    return new Promise((resolve) => {
+                        const dirReader = entry.createReader();
+                        dirReader.readEntries(async (entries) => {
+                            for (let i = 0; i < entries.length; i++) {
+                                await readEntry(entries[i], pathPrefix + entry.name + "/");
+                            }
+                            resolve();
+                        });
+                    });
+                }
+            }
+
+            let promises = [];
+            for (let i = 0; i < items.length; i++) {
+                const item = items[i].webkitGetAsEntry();
+                if (item) promises.push(readEntry(item));
+            }
+
+            await Promise.all(promises);
+            document.getElementById("meta-summary").innerText = `Transferência de ${successCount} arquivo(s) concluída!`;
+            buildNotesTree();
+            reloadGlobalGraph();
+        }
+
         async function buildNotesTree() {
             try {
                 const res = await fetch("/api/notes");
@@ -861,17 +898,18 @@
                     if (currentFilterType === "md") items = items.filter(i => i.type === "directory" || i.path.endsWith(".md"));
                     if (currentFilterType === "pdf") items = items.filter(i => i.type === "directory" || i.path.endsWith(".pdf"));
 
-                    // Evento para soltar na raiz
-                    fileTree.ondragover = (e) => e.preventDefault();
+                    fileTree.ondragover = (e) => { e.preventDefault(); };
                     fileTree.ondrop = async (e) => {
                         e.preventDefault();
                         if (e.target === fileTree) {
                             const draggedPath = e.dataTransfer.getData("text/plain");
-                            if (!draggedPath) return;
-                            const cleanDragged = draggedPath.replace(/\/$/, "");
-                            const itemName = cleanDragged.split('/').pop();
-                            if (cleanDragged === itemName) return; // Já está na raiz
-                            await renameItem(cleanDragged, itemName);
+                            if (draggedPath) {
+                                const cleanDragged = draggedPath.replace(/\/$/, "");
+                                const itemName = cleanDragged.split('/').pop();
+                                if (cleanDragged !== itemName) await renameItem(cleanDragged, itemName);
+                            } else if (e.dataTransfer.items) {
+                                await handleOSDrop(e, "");
+                            }
                         }
                     };
 
@@ -898,7 +936,6 @@
                         row.className = `tree-row-container group flex items-center justify-between w-full rounded-xl p-0.5 border transition-all text-left ${isSelected ? 'bg-blue-50/50 dark:bg-blue-950/30 border-blue-500 dark:border-blue-400 text-blue-600 dark:text-blue-400 shadow-xs' : 'border-transparent hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300'}`;
                         row.setAttribute("data-path", item.path);
 
-                        // Lógica Drag and Drop no Row
                         const isDir = item.type === "directory";
                         row.draggable = true;
                         
@@ -921,22 +958,24 @@
                             e.preventDefault();
                             e.currentTarget.classList.remove('ring-2', 'ring-blue-500', 'bg-blue-50/50', 'drag-over');
                             
-                            const draggedPath = e.dataTransfer.getData("text/plain");
-                            if (!draggedPath || draggedPath === item.path) return;
-                            
                             let targetFolder = isDir ? item.path : "";
                             if (!isDir) {
                                 const parts = item.path.split('/');
                                 parts.pop();
                                 targetFolder = parts.length > 0 ? parts.join('/') + '/' : '';
                             }
-                            
-                            const cleanDragged = draggedPath.replace(/\/$/, "");
-                            const itemName = cleanDragged.split('/').pop();
-                            const newPath = targetFolder + itemName;
-                            
-                            if (cleanDragged !== newPath.replace(/\/$/, "")) {
-                                await renameItem(cleanDragged, newPath);
+
+                            const draggedPath = e.dataTransfer.getData("text/plain");
+                            if (draggedPath) {
+                                if (draggedPath === item.path) return;
+                                const cleanDragged = draggedPath.replace(/\/$/, "");
+                                const itemName = cleanDragged.split('/').pop();
+                                const newPath = targetFolder + itemName;
+                                if (cleanDragged !== newPath.replace(/\/$/, "")) {
+                                    await renameItem(cleanDragged, newPath);
+                                }
+                            } else if (e.dataTransfer.items) {
+                                await handleOSDrop(e, targetFolder);
                             }
                         };
 
@@ -1014,7 +1053,6 @@
             })).filter(e => e.sourceNode && e.targetNode);
         }
 
-        // REQUISITO 2: FISICA COM COLISÃO NA BORDA E PUXADA CENTRAL AUMENTADA
         function updatePhysics() {
             const centerX = canvas.width / 2; 
             const centerY = canvas.height / 2;
@@ -1049,7 +1087,6 @@
             graphData.nodes.forEach(node => {
                 if (node === draggedNode) return;
                 
-                // Puxada gravitacional mais forte pro centro
                 node.vx += (centerX - node.x) * 0.003;
                 node.vy += (centerY - node.y) * 0.003;
 
@@ -1059,7 +1096,6 @@
                 node.x += node.vx; 
                 node.y += node.vy; 
 
-                // Prende nas paredes
                 const padding = 15;
                 if (node.x < padding) { node.x = padding; node.vx *= -1; }
                 if (node.y < padding) { node.y = padding; node.vy *= -1; }
@@ -1267,22 +1303,38 @@
             }
         }
 
-        document.getElementById("btn-vault-upload").onclick = () => document.getElementById("global-vault-upload").click();
-        document.getElementById("global-vault-upload").onchange = async (e) => {
-            const file = e.target.files[0]; if (!file) return;
-            let folder = "";
-            if (selectedFileId && selectedFileId.endsWith("/")) folder = selectedFileId;
-            else if (selectedFileId && selectedFileId.includes("/")) folder = selectedFileId.substring(0, selectedFileId.lastIndexOf("/")) + "/";
+        async function processUploadBatch(fileList) {
+            let baseFolder = "";
+            if (selectedFileId && selectedFileId.endsWith("/")) baseFolder = selectedFileId;
+            else if (selectedFileId && selectedFileId.includes("/")) baseFolder = selectedFileId.substring(0, selectedFileId.lastIndexOf("/")) + "/";
 
-            const finalPath = folder + file.name;
-            try {
-                const res = await fetch(`/api/upload-vault?file=${encodeURIComponent(finalPath)}`, { method: "POST", body: file });
-                if(res.ok) {
-                    await buildNotesTree(); 
-                    await reloadGlobalGraph();
-                    loadNoteContent(finalPath);
-                }
-            } catch(err){}
+            document.getElementById("meta-summary").innerText = `Fazendo upload de ${fileList.length} item(ns)...`;
+            
+            let successCount = 0;
+            for (let i = 0; i < fileList.length; i++) {
+                const file = fileList[i];
+                const relativePath = file.webkitRelativePath || file.name;
+                const finalPath = baseFolder + relativePath;
+
+                try {
+                    const res = await fetch(`/api/upload-vault?file=${encodeURIComponent(finalPath)}`, { method: "POST", body: file });
+                    if (res.ok) successCount++;
+                } catch(err) { console.error(err); }
+            }
+            
+            document.getElementById("meta-summary").innerText = `Transferência de ${successCount} arquivo(s) concluída!`;
+            await buildNotesTree(); 
+            await reloadGlobalGraph();
+        }
+
+        document.getElementById("global-vault-upload").onchange = (e) => {
+            if(e.target.files.length > 0) processUploadBatch(e.target.files);
+            e.target.value = "";
+        };
+
+        document.getElementById("global-folder-upload").onchange = (e) => {
+            if(e.target.files.length > 0) processUploadBatch(e.target.files);
+            e.target.value = "";
         };
 
         document.getElementById("btn-chat-attach").onclick = () => document.getElementById("chat-context-upload").click();
