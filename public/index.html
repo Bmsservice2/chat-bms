@@ -8,14 +8,20 @@
     <script src="https://unpkg.com/lucide@latest"></script>
     <script>
         tailwind.config = { darkMode: 'class' };
-        if (!localStorage.getItem("theme") || localStorage.getItem("theme") === "dark") {
-            document.documentElement.classList.add("dark");
-            localStorage.setItem("theme", "dark");
-        } else {
-            document.documentElement.classList.remove("dark");
+        
+        function applySavedTheme() {
+            if (!localStorage.getItem("theme") || localStorage.getItem("theme") === "dark") {
+                document.documentElement.classList.add("dark");
+                localStorage.setItem("theme", "dark");
+            } else {
+                document.documentElement.classList.remove("dark");
+                localStorage.setItem("theme", "light");
+            }
         }
+        applySavedTheme();
     </script>
     <style>
+        /* Proporção 75% solicitada */
         html { font-size: 12px; }
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
@@ -39,68 +45,6 @@
             <div class="flex justify-end gap-2 text-xs font-bold mt-2">
                 <button onclick="closeCustomModal()" class="px-3 py-2 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 rounded-xl hover:bg-slate-200/60 dark:hover:bg-slate-700 transition-all">Cancelar</button>
                 <button id="modal-confirm-btn" class="px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl transition-all">Confirmar</button>
-            </div>
-        </div>
-    </div>
-
-    <div id="account-settings-modal" class="hidden fixed inset-0 bg-slate-950/40 dark:bg-slate-950/60 backdrop-blur-xs flex items-center justify-center z-50">
-        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-2xl p-6 w-[400px] max-w-full flex flex-col gap-4">
-            <div class="flex items-center gap-3 border-b border-slate-100 dark:border-slate-800 pb-4">
-                <div class="w-12 h-12 bg-blue-100 dark:bg-blue-900/50 rounded-full flex items-center justify-center text-blue-600 dark:text-blue-400 font-bold text-xl">
-                    TS
-                </div>
-                <div>
-                    <h3 class="font-bold text-slate-800 dark:text-white">Ambiente de Testes</h3>
-                    <p class="text-[10px] text-slate-400 font-medium">BETA V1.0 - BMS Service</p>
-                </div>
-            </div>
-            <div class="flex flex-col gap-2 text-xs font-semibold text-slate-600 dark:text-slate-400">
-                <div class="flex justify-between p-2 bg-slate-50 dark:bg-slate-800/50 rounded-lg"><span>Plano Habilitado:</span> <span class="text-emerald-600 dark:text-emerald-400">Profissional (Ilimitado)</span></div>
-                <div class="flex justify-between p-2 bg-slate-50 dark:bg-slate-800/50 rounded-lg"><span>Tokens Restantes:</span> <span>Infinitos (Local Mode)</span></div>
-                <div class="flex justify-between p-2 bg-slate-50 dark:bg-slate-800/50 rounded-lg"><span>Status da VPS:</span> <span class="text-blue-500">Conectado / Alta Prioridade</span></div>
-            </div>
-            <div class="flex justify-end gap-2 text-xs font-bold mt-2 pt-4 border-t border-slate-100 dark:border-slate-800">
-                <button onclick="document.getElementById('account-settings-modal').classList.add('hidden')" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl transition-all w-full">Fechar Painel</button>
-            </div>
-        </div>
-    </div>
-
-    <div id="speedtest-modal" class="hidden fixed inset-0 bg-slate-950/40 dark:bg-slate-950/60 backdrop-blur-xs flex items-center justify-center z-50 transition-opacity duration-300 opacity-0">
-        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl shadow-2xl p-6 w-[350px] max-w-full flex flex-col gap-4 transform transition-all duration-300 scale-95" id="speedtest-content">
-            <div id="st-state-1" class="flex flex-col items-center pt-2">
-                <div class="w-14 h-14 bg-blue-100 dark:bg-blue-900/50 rounded-full flex items-center justify-center text-blue-600 dark:text-blue-400 mb-3 relative">
-                    <i data-lucide="wifi" class="w-7 h-7"></i>
-                    <div class="absolute inset-0 border-2 border-blue-400 dark:border-blue-500 rounded-full animate-ping opacity-20"></div>
-                </div>
-                <h3 class="font-black text-slate-800 dark:text-white text-lg">Teste de Velocidade</h3>
-                <p class="text-center text-xs text-slate-500 dark:text-slate-400 font-medium mt-1 leading-relaxed">Sente que o sistema está lento? Faça um teste da velocidade da sua internet agora mesmo!</p>
-                <div class="flex w-full gap-2 text-xs font-bold mt-6">
-                    <button onclick="closeSpeedTest()" class="flex-1 py-3 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-xl transition-all">Cancelar</button>
-                    <button onclick="startSpeedTest()" class="flex-1 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-xl transition-all shadow-md shadow-blue-500/30">Iniciar Teste</button>
-                </div>
-            </div>
-            <div id="st-state-2" class="hidden flex flex-col items-center py-4">
-                <h3 class="font-black text-slate-800 dark:text-white text-sm mb-6 uppercase tracking-widest text-slate-400">Medindo Banda...</h3>
-                <div class="relative w-56 h-28 overflow-hidden mb-2">
-                    <svg viewBox="0 0 100 50" class="w-full h-full">
-                        <path d="M 10 50 A 40 40 0 0 1 90 50" fill="none" stroke="currentColor" stroke-width="8" class="text-slate-100 dark:text-slate-800" stroke-linecap="round"></path>
-                        <path d="M 10 50 A 40 40 0 0 1 90 50" fill="none" stroke="url(#gradient)" stroke-width="8" class="text-blue-500" stroke-dasharray="125" stroke-dashoffset="125" id="st-progress" stroke-linecap="round" style="transition: stroke-dashoffset 0.2s ease-out;"></path>
-                        <defs><linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#3b82f6" /><stop offset="100%" stop-color="#10b981" /></linearGradient></defs>
-                    </svg>
-                    <div id="st-needle" class="absolute bottom-0 left-1/2 w-[3px] h-[85px] bg-slate-800 dark:bg-white origin-bottom -translate-x-1/2 transform -rotate-90 transition-transform duration-200 ease-out rounded-full shadow-sm z-10"></div>
-                    <div class="absolute bottom-0 left-1/2 w-5 h-5 bg-slate-800 dark:bg-white rounded-full transform -translate-x-1/2 translate-y-1/2 border-4 border-white dark:border-slate-900 shadow-md z-20"></div>
-                </div>
-                <div class="text-4xl font-black text-slate-800 dark:text-white mt-4 font-mono tracking-tighter"><span id="st-value">0.0</span></div>
-                <div class="text-[11px] font-bold text-slate-400 uppercase tracking-widest mt-1">Mbps</div>
-            </div>
-            <div id="st-state-3" class="hidden flex flex-col items-center pt-2">
-                <div class="w-16 h-16 bg-emerald-100 dark:bg-emerald-900/50 rounded-full flex items-center justify-center text-emerald-600 dark:text-emerald-400 mb-3"><i data-lucide="check-circle-2" class="w-8 h-8"></i></div>
-                <h3 class="font-black text-slate-800 dark:text-white text-lg">Teste Concluído!</h3>
-                <div class="bg-slate-50 dark:bg-slate-800 rounded-2xl p-5 w-full mt-4 border border-slate-100 dark:border-slate-700">
-                    <p class="text-center text-[10px] uppercase font-bold text-slate-400 mb-1 tracking-widest">Sua Velocidade</p>
-                    <p class="text-center text-3xl font-black text-slate-800 dark:text-white font-mono"><span id="st-final-value">0.0</span> <span class="text-sm text-slate-500 font-sans">Mbps</span></p>
-                </div>
-                <button onclick="closeSpeedTest()" class="w-full mt-5 py-3 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-xl transition-all font-bold text-xs">Concluir</button>
             </div>
         </div>
     </div>
@@ -133,14 +77,13 @@
                     <i data-lucide="upload-cloud" class="w-4 h-4 text-blue-600"></i> Upload Cofre
                 </button>
                 <div id="dropdown-upload" class="hidden absolute top-[105%] right-0 mt-1 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl shadow-2xl py-1.5 w-48 z-50 flex flex-col text-xs font-bold text-slate-600 dark:text-slate-300">
-                    <button onclick="document.getElementById('global-vault-upload').click(); document.getElementById('dropdown-upload').classList.add('hidden')" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 flex items-center gap-2 transition-all"><i data-lucide="file-plus" class="w-4 h-4 text-blue-500"></i> Arquivos Avulsos</button>
-                    <button onclick="document.getElementById('global-folder-upload').click(); document.getElementById('dropdown-upload').classList.add('hidden')" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 flex items-center gap-2 transition-all"><i data-lucide="folder-plus" class="w-4 h-4 text-amber-500"></i> Pasta Completa</button>
+                    <button onclick="document.getElementById('global-vault-upload').click(); closeAllDropdownsMenu()" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 flex items-center gap-2 transition-all"><i data-lucide="file-plus" class="w-4 h-4 text-blue-500"></i> Arquivos Avulsos</button>
+                    <button onclick="document.getElementById('global-folder-upload').click(); closeAllDropdownsMenu()" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 flex items-center gap-2 transition-all"><i data-lucide="folder-plus" class="w-4 h-4 text-amber-500"></i> Pasta Completa</button>
                 </div>
             </div>
             
             <div class="w-px h-6 bg-slate-200 dark:bg-slate-800 mx-1"></div>
-            
-            <div id="server-status-badge" class="flex items-center gap-2 bg-slate-100 dark:bg-slate-800 px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 transition-all duration-300">
+            <div id="server-status-badge" class="flex items-center gap-2 bg-slate-100 dark:bg-slate-800 px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-800 transition-all duration-300">
                 <div id="server-status-dot" class="w-2 h-2 bg-slate-400 rounded-full"></div>
                 <span id="server-status-text" class="text-[10px] font-black tracking-wide uppercase text-slate-500 dark:text-slate-400">Checando...</span>
             </div>
@@ -148,18 +91,13 @@
     </header>
 
     <div class="flex flex-1 overflow-hidden relative" onclick="closeAllDropdownsMenu()">
+        
         <aside id="sidebar-left" class="w-64 bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 flex flex-col overflow-hidden p-4 relative flex-shrink-0" onclick="clearTreeSelection(event)">
             <div class="flex items-center justify-between mb-4 px-1">
                 <span class="text-xs font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest">Processos e Cofre</span>
                 <div class="flex gap-1 relative" onclick="e => e.stopPropagation()">
                     <button id="btn-filter-tree" onclick="toggleFilterDropdown(event)" class="p-1 text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors"><i data-lucide="filter" class="w-3.5 h-3.5"></i></button>
                     <button onclick="createNewFolderManual(event)" class="p-1 text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors"><i data-lucide="folder-plus" class="w-3.5 h-3.5"></i></button>
-                    
-                    <div id="filter-menu-dropdown" class="hidden absolute top-7 right-0 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl shadow-xl py-1 w-44 z-30 text-xs font-bold text-slate-600 dark:text-slate-300">
-                        <button onclick="changeFilter('all')" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-700 flex items-center gap-2">Mostrar Todos</button>
-                        <button onclick="changeFilter('md')" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-700 flex items-center gap-2">Apenas Texto (.md)</button>
-                        <button onclick="changeFilter('pdf')" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-700 flex items-center gap-2">Apenas PDFs (.pdf)</button>
-                    </div>
                 </div>
             </div>
 
@@ -168,42 +106,32 @@
             <div class="mt-2">
                 <div onclick="openSpeedTestModal()" class="mb-2 bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-800 rounded-xl p-2.5 cursor-pointer hover:ring-2 hover:ring-blue-500/50 transition-all flex items-center justify-between group">
                     <div class="flex items-center gap-2">
-                        <div class="p-1.5 bg-blue-100 dark:bg-blue-900/50 text-blue-600 dark:text-blue-400 rounded-md group-hover:scale-110 transition-transform">
-                            <i data-lucide="wifi" class="w-3.5 h-3.5"></i>
-                        </div>
+                        <div class="p-1.5 bg-blue-100 dark:bg-blue-900/50 text-blue-600 dark:text-blue-400 rounded-md group-hover:scale-110 transition-transform"><i data-lucide="wifi" class="w-3.5 h-3.5"></i></div>
                         <span class="text-[10px] font-bold text-slate-700 dark:text-slate-300">O sistema está lento?</span>
                     </div>
                     <i data-lucide="chevron-right" class="w-3.5 h-3.5 text-slate-400 group-hover:text-blue-500 transition-colors"></i>
                 </div>
 
-                <div onclick="document.getElementById('account-settings-modal').classList.remove('hidden')" class="bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-800 rounded-2xl p-3.5 cursor-pointer hover:ring-2 hover:ring-blue-500/50 transition-all">
+                <div class="bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-800 rounded-2xl p-3.5">
                     <div class="flex items-center justify-between mb-1.5">
                         <span class="text-[11px] font-bold text-slate-700 dark:text-slate-300 flex items-center gap-1.5"><i data-lucide="shield-check" class="w-3.5 h-3.5 text-blue-600"></i> Plano Profissional</span>
-                        <span class="text-[10px] bg-emerald-100 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-300 font-extrabold px-1.5 py-0.5 rounded-md">TESTE</span>
                     </div>
                     <div class="text-[10px] text-slate-400 dark:text-slate-500 mb-2 font-medium">Uso do Assistente BMS este mês</div>
                     <div class="w-full bg-slate-200 dark:bg-slate-700 h-2 rounded-full overflow-hidden mb-1"><div class="bg-blue-600 h-full w-[10%] rounded-full"></div></div>
-                    <div class="flex justify-between text-[10px] font-bold text-slate-500 dark:text-slate-400">
-                        <span>120 / Ilimitado</span>
-                        <span>1%</span>
-                    </div>
                 </div>
             </div>
         </aside>
 
         <div id="resizer-left" class="w-1.5 bg-transparent hover:bg-blue-500 cursor-col-resize z-10 flex-shrink-0 transition-colors"></div>
 
-        <main id="center-panel" class="flex-1 flex flex-col min-w-[300px] overflow-y-auto p-5 gap-4 no-scrollbar">
+        <main id="center-panel" class="flex-1 flex flex-col min-w-[300px] overflow-hidden p-4 gap-3">
             
-            <div class="grid grid-cols-4 gap-4">
-                <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-3 flex items-center shadow-xs relative cursor-pointer" onclick="toggleCustomDropdown('dropdown-area', event)">
-                    <div class="p-2 bg-blue-50 dark:bg-slate-800 text-blue-600 dark:text-blue-400 rounded-lg mr-3"><i data-lucide="scale" class="w-4 h-4"></i></div>
+            <div class="grid grid-cols-4 gap-3">
+                <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-2.5 flex items-center shadow-xs relative cursor-pointer" onclick="toggleCustomDropdown('dropdown-area', event)">
+                    <div class="p-2 bg-blue-50 dark:bg-slate-800 text-blue-600 dark:text-blue-400 rounded-lg mr-2.5"><i data-lucide="scale" class="w-4 h-4"></i></div>
                     <div class="flex-1 min-w-0">
-                        <p class="text-[10px] text-slate-400 dark:text-slate-500 font-bold uppercase tracking-wider mb-0.5">Área Jurídica</p>
-                        <div class="flex items-center justify-between">
-                            <span id="label-ctx-area" class="text-xs font-bold text-slate-700 dark:text-white truncate">Geral (Misto)</span>
-                            <i data-lucide="chevron-down" class="w-3.5 h-3.5 text-slate-400 shrink-0"></i>
-                        </div>
+                        <p class="text-[10px] text-slate-400 font-bold uppercase tracking-wider mb-0.5">Área Jurídica</p>
+                        <div class="flex items-center justify-between"><span id="label-ctx-area" class="text-xs font-bold text-slate-700 dark:text-white truncate">Geral (Misto)</span><i data-lucide="chevron-down" class="w-3.5 h-3.5 text-slate-400 shrink-0"></i></div>
                     </div>
                     <input type="hidden" id="ctx-area" value="Geral/Nenhuma">
                     <div id="dropdown-area" class="hidden absolute top-[105%] left-0 mt-1 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl shadow-2xl py-1.5 w-full z-50 flex flex-col max-h-48 overflow-y-auto no-scrollbar text-xs font-bold text-slate-600 dark:text-slate-300">
@@ -211,188 +139,122 @@
                         <button onclick="selectOption('area', 'Direito Trabalhista', 'Direito Trabalhista', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 truncate">Direito Trabalhista</button>
                         <button onclick="selectOption('area', 'Direito Cível', 'Direito Cível', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 truncate">Direito Cível</button>
                         <button onclick="selectOption('area', 'Direito Penal', 'Direito Penal', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 truncate">Direito Penal</button>
-                        <button onclick="selectOption('area', 'Direito Tributário', 'Direito Tributário', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 truncate">Direito Tributário</button>
-                        <button onclick="selectOption('area', 'Direito Empresarial', 'Direito Empresarial', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 truncate">Direito Empresarial</button>
-                        <button onclick="selectOption('area', 'Direito de Família', 'Direito de Família', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 truncate">Direito de Família</button>
-                        <button onclick="selectOption('area', 'Direito Administrativo', 'Direito Administrativo', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 truncate">Direito Administrativo</button>
                     </div>
                 </div>
 
                 <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-3 flex items-center shadow-xs relative cursor-pointer" onclick="toggleCustomDropdown('dropdown-type', event)">
                     <div class="p-2 bg-purple-50 dark:bg-slate-800 text-purple-600 dark:text-purple-400 rounded-lg mr-3"><i data-lucide="file-text" class="w-4 h-4"></i></div>
                     <div class="flex-1 min-w-0">
-                        <p class="text-[10px] text-slate-400 dark:text-slate-500 font-bold uppercase tracking-wider mb-0.5">Tipo de Peça</p>
-                        <div class="flex items-center justify-between">
-                            <span id="label-ctx-type" class="text-xs font-bold text-slate-700 dark:text-white truncate">Análise Interna</span>
-                            <i data-lucide="chevron-down" class="w-3.5 h-3.5 text-slate-400 shrink-0"></i>
-                        </div>
+                        <p class="text-[10px] text-slate-400 font-bold uppercase tracking-wider mb-0.5">Tipo de Peça</p>
+                        <div class="flex items-center justify-between"><span id="label-ctx-type" class="text-xs font-bold text-slate-700 dark:text-white truncate">Análise Interna</span><i data-lucide="chevron-down" class="w-3.5 h-3.5 text-slate-400 shrink-0"></i></div>
                     </div>
                     <input type="hidden" id="ctx-type" value="Análise/Documento">
                     <div id="dropdown-type" class="hidden absolute top-[105%] left-0 mt-1 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl shadow-2xl py-1.5 w-full z-50 flex flex-col max-h-48 overflow-y-auto no-scrollbar text-xs font-bold text-slate-600 dark:text-slate-300">
                         <button onclick="selectOption('type', 'Análise/Documento', 'Análise Interna', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 truncate">Análise Interna</button>
                         <button onclick="selectOption('type', 'Petição Inicial', 'Petição Inicial', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 truncate">Petição Inicial</button>
-                        <button onclick="selectOption('type', 'Contestação', 'Contestação', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 truncate">Contestação</button>
-                        <button onclick="selectOption('type', 'Recurso', 'Recurso (Apelação/RO)', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 truncate">Recurso (Apelação/RO)</button>
-                        <button onclick="selectOption('type', 'Alegações Finais', 'Alegações Finais', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 truncate">Alegações Finais</button>
-                        <button onclick="selectOption('type', 'Contrato/Acordo', 'Contrato / Acordo', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 truncate">Contrato / Acordo</button>
-                        <button onclick="selectOption('type', 'Parecer Jurídico', 'Parecer Jurídico', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 truncate">Parecer Jurídico</button>
                     </div>
                 </div>
 
                 <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-3 flex items-center shadow-xs relative cursor-pointer" onclick="toggleCustomDropdown('dropdown-phase', event)">
                     <div class="p-2 bg-amber-50 dark:bg-slate-800 text-amber-600 dark:text-amber-400 rounded-lg mr-3"><i data-lucide="folder-git" class="w-4 h-4"></i></div>
                     <div class="flex-1 min-w-0">
-                        <p class="text-[10px] text-slate-400 dark:text-slate-500 font-bold uppercase tracking-wider mb-0.5">Fase Atual</p>
-                        <div class="flex items-center justify-between">
-                            <span id="label-ctx-phase" class="text-xs font-bold text-slate-700 dark:text-white truncate">Fase de Estudo</span>
-                            <i data-lucide="chevron-down" class="w-3.5 h-3.5 text-slate-400 shrink-0"></i>
-                        </div>
+                        <p class="text-[10px] text-slate-400 font-bold uppercase tracking-wider mb-0.5">Fase Atual</p>
+                        <div class="flex items-center justify-between"><span id="label-ctx-phase" class="text-xs font-bold text-slate-700 dark:text-white truncate">Fase de Estudo</span><i data-lucide="chevron-down" class="w-3.5 h-3.5 text-slate-400 shrink-0"></i></div>
                     </div>
                     <input type="hidden" id="ctx-phase" value="Fase de Estudo">
                     <div id="dropdown-phase" class="hidden absolute top-[105%] left-0 mt-1 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl shadow-2xl py-1.5 w-full z-50 flex flex-col max-h-48 overflow-y-auto no-scrollbar text-xs font-bold text-slate-600 dark:text-slate-300">
                         <button onclick="selectOption('phase', 'Fase de Estudo', 'Fase de Estudo', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 truncate">Fase de Estudo</button>
-                        <button onclick="selectOption('phase', 'Fase de Conhecimento', 'Fase de Conhecimento', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 truncate">Fase de Conhecimento</button>
-                        <button onclick="selectOption('phase', 'Fase de Instrução/Provas', 'Fase de Instrução', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 truncate">Fase de Instrução</button>
-                        <button onclick="selectOption('phase', 'Fase Recursal', 'Fase Recursal', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 truncate">Fase Recursal</button>
-                        <button onclick="selectOption('phase', 'Fase de Execução', 'Fase de Execução', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 truncate">Fase de Execução</button>
-                        <button onclick="selectOption('phase', 'Acordo ou Mediação', 'Acordo/Mediação', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 truncate">Acordo/Mediação</button>
                     </div>
                 </div>
 
                 <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-3 flex items-center shadow-xs relative cursor-pointer" onclick="toggleCustomDropdown('dropdown-obj', event)">
                     <div class="p-2 bg-emerald-50 dark:bg-slate-800 text-emerald-600 dark:text-emerald-400 rounded-lg mr-3"><i data-lucide="target" class="w-4 h-4"></i></div>
                     <div class="flex-1 min-w-0">
-                        <p class="text-[10px] text-slate-400 dark:text-slate-500 font-bold uppercase tracking-wider mb-0.5">Objetivo Direto</p>
-                        <div class="flex items-center justify-between">
-                            <span id="label-ctx-obj" class="text-xs font-bold text-slate-700 dark:text-white truncate">Auditoria Geral</span>
-                            <i data-lucide="chevron-down" class="w-3.5 h-3.5 text-slate-400 shrink-0"></i>
-                        </div>
+                        <p class="text-[10px] text-slate-400 font-bold uppercase tracking-wider mb-0.5">Objetivo Direto</p>
+                        <div class="flex items-center justify-between"><span id="label-ctx-obj" class="text-xs font-bold text-slate-700 dark:text-white truncate">Auditoria Geral</span><i data-lucide="chevron-down" class="w-3.5 h-3.5 text-slate-400 shrink-0"></i></div>
                     </div>
                     <input type="hidden" id="ctx-obj" value="Auditar/Resumir">
                     <div id="dropdown-obj" class="hidden absolute top-[105%] left-0 mt-1 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl shadow-2xl py-1.5 w-full z-50 flex flex-col max-h-48 overflow-y-auto no-scrollbar text-xs font-bold text-slate-600 dark:text-slate-300">
                         <button onclick="selectOption('obj', 'Auditar/Resumir', 'Auditoria Geral', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 truncate">Auditoria Geral</button>
-                        <button onclick="selectOption('obj', 'Encontrar Contradições', 'Achar Contradições', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 truncate">Achar Contradições</button>
-                        <button onclick="selectOption('obj', 'Elaborar Minuta', 'Elaborar Minuta', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 truncate">Elaborar Minuta</button>
-                        <button onclick="selectOption('obj', 'Análise de Risco Jurídico', 'Análise de Risco', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 truncate">Análise de Risco</button>
-                        <button onclick="selectOption('obj', 'Pesquisa Jurisprudencial', 'Levantar Jurisprudência', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 truncate">Levantar Jurisprudência</button>
-                        <button onclick="selectOption('obj', 'Sistematizar Fatos', 'Resumir Fatos/Prazos', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 truncate">Resumir Fatos/Prazos</button>
                     </div>
                 </div>
             </div>
 
-            <div id="center-preview-container" class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-xs flex flex-col flex-1 overflow-hidden min-h-[350px]">
-                <div class="flex items-center justify-between px-5 py-3.5 border-b border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900">
-                    <div>
-                        <div class="flex items-center gap-2.5">
-                            <h2 id="active-note-title" class="text-sm font-bold text-slate-800 dark:text-white">Selecione um arquivo do cofre</h2>
-                            <button id="btn-favorite-star" onclick="toggleActiveFileFavorite()" class="text-slate-300 dark:text-slate-600 hover:text-amber-500 dark:hover:text-amber-400 transition-colors focus:outline-none"><i data-lucide="star" class="w-4 h-4"></i></button>
-                        </div>
-                        <p id="active-note-meta" class="text-[10px] text-slate-400 dark:text-slate-500 font-medium mt-0.5">Nenhum item ativo no momento</p>
+            <div id="center-preview-container" class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-xs flex flex-col flex-1 overflow-hidden relative">
+                <div class="flex items-center justify-between px-4 py-3 border-b border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900">
+                    <div class="flex items-center gap-2">
+                        <h2 id="active-note-title" class="text-sm font-bold text-slate-800 dark:text-white truncate max-w-xs">Selecione um arquivo principal</h2>
+                        <button id="btn-favorite-star" onclick="toggleActiveFileFavorite()" class="text-slate-300 dark:text-slate-600 hover:text-amber-500"><i data-lucide="star" class="w-4 h-4"></i></button>
                     </div>
-                    
-                    <div class="flex items-center gap-1.5">
-                        <button onclick="downloadActiveFile()" class="p-1.5 text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-all" title="Download"><i data-lucide="download" class="w-4 h-4"></i></button>
-                        <button onclick="printActiveFile()" class="p-1.5 text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-all" title="Imprimir"><i data-lucide="printer" class="w-4 h-4"></i></button>
-                        <button onclick="fullscreenActiveFile()" class="p-1.5 text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-all" title="Tela Cheia"><i data-lucide="maximize-2" class="w-4 h-4"></i></button>
+                    <div class="flex items-center gap-1">
+                        <button onclick="downloadActiveFile()" class="p-1.5 text-slate-400 hover:text-slate-600"><i data-lucide="download" class="w-4 h-4"></i></button>
+                        <button onclick="printActiveFile()" class="p-1.5 text-slate-400 hover:text-slate-600"><i data-lucide="printer" class="w-4 h-4"></i></button>
                     </div>
                 </div>
 
-                <div class="flex gap-2 px-5 border-b border-slate-100 dark:border-slate-800 pb-2 bg-white dark:bg-slate-900">
-                    <button id="tab-doc" onclick="switchTab('doc')" class="text-xs font-bold px-4 py-1.5 bg-blue-50 text-blue-600 dark:text-blue-400 rounded-lg transition-all">Documento Original</button>
-                    <button id="tab-raw" onclick="switchTab('raw')" class="text-xs font-bold px-4 py-1.5 text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg transition-all">Resumo Markdown</button>
-                </div>
-
-                <div class="flex flex-1 overflow-hidden">
-                    <div class="w-3/5 p-5 bg-[#fafafa] dark:bg-slate-950 border-r border-slate-100 dark:border-slate-800 flex flex-col overflow-hidden">
-                        <div id="view-doc" class="flex-1 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl shadow-xs overflow-y-auto p-6 font-sans text-xs text-slate-700 dark:text-slate-300 leading-relaxed select-text">
-                            <div class="text-center text-slate-400 my-20">Nenhum documento aberto no monitor.</div>
-                        </div>
-                        <div id="view-raw" class="hidden flex-1 bg-slate-950 border border-slate-800 text-blue-400 dark:text-blue-400 rounded-xl overflow-y-auto p-4 font-mono text-xs whitespace-pre-wrap select-text">
-                            Aguardando seleção...
-                        </div>
+                <div class="flex flex-1 p-3 bg-[#fafafa] dark:bg-slate-950 overflow-hidden">
+                    <div id="view-doc" class="flex-1 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl overflow-y-auto p-5 text-xs text-slate-700 dark:text-slate-300 leading-relaxed select-text font-serif">
+                        <div class="text-center text-slate-400 my-20">Nenhum documento aberto no monitor principal.</div>
                     </div>
-
-                    <div class="w-2/5 p-5 flex flex-col gap-4 overflow-y-auto bg-white dark:bg-slate-900 border-l border-slate-50 dark:border-slate-800">
-                        <div>
-                            <span class="text-[10px] font-black uppercase tracking-widest text-slate-400 dark:text-slate-500">Análise Jurídica Automática</span>
-                            <p id="meta-summary" class="text-xs text-slate-600 dark:text-slate-400 mt-1 font-medium leading-relaxed transition-all">Selecione um arquivo para compilar a análise gerencial.</p>
-                        </div>
-                        <div class="border-t border-slate-100 dark:border-slate-800 pt-3">
-                            <span class="text-[10px] font-black uppercase tracking-widest text-slate-400 dark:text-slate-500 block mb-2">Pontos Relevantes Extraídos</span>
-                            <div id="meta-points" class="space-y-2 text-xs font-semibold text-slate-600 dark:text-slate-400 transition-all">
-                                <div class="flex items-start gap-2 text-slate-400 font-medium"><i data-lucide="minus" class="w-4 h-4 shrink-0"></i> <span>Aguardando arquivo...</span></div>
-                            </div>
-                        </div>
-                        <div class="border-t border-slate-100 dark:border-slate-800 pt-3 mt-1">
-                            <div class="flex items-center gap-4 bg-slate-50 dark:bg-slate-800 p-3 rounded-xl border border-slate-100 dark:border-slate-700">
-                                <div class="relative w-14 h-14 flex items-center justify-center shrink-0">
-                                    <svg class="w-full h-full transform -rotate-90" viewBox="0 0 36 36">
-                                        <path class="text-slate-200 dark:text-slate-700" stroke-width="3" stroke="currentColor" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
-                                        <path id="circle-progress" class="text-blue-600" stroke-dasharray="0, 100" stroke-width="3" stroke-linecap="round" stroke="currentColor" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
-                                    </svg>
-                                    <span id="circle-text" class="absolute text-[11px] font-black text-slate-700 dark:text-white">0%</span>
-                                </div>
-                                <div>
-                                    <p class="text-xs font-bold text-slate-700 dark:text-white">Motor de Indexação</p>
-                                    <p id="analysis-status-desc" class="text-[10px] text-slate-400 dark:text-slate-500 font-medium">Aguardando arquivo local.</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="bg-white border border-slate-200 rounded-2xl p-4 shadow-xs h-64 min-h-64 flex flex-col relative dark:bg-slate-900 dark:border-slate-800">
-                <div class="flex items-center justify-between mb-2">
-                    <h3 class="font-bold text-xs text-slate-800 dark:text-white flex items-center gap-1.5"><i data-lucide="network" class="w-4 h-4 text-blue-600"></i> Malha de Conexões</h3>
-                    <span class="text-[9px] font-bold bg-slate-100 dark:bg-slate-800 text-slate-400 dark:text-slate-500 px-2 py-0.5 rounded-md uppercase tracking-wider">Malha Neural Orgânica</span>
-                </div>
-                <div class="flex-1 bg-slate-50 dark:bg-slate-950 border border-slate-100 dark:border-slate-850 rounded-xl overflow-hidden relative">
-                    <canvas id="graph-canvas" class="w-full h-full block cursor-grab active:cursor-grabbing"></canvas>
                 </div>
             </div>
         </main>
 
+        <div id="resizer-center" class="w-1.5 bg-transparent hover:bg-blue-500 cursor-col-resize z-10 flex-shrink-0 transition-colors"></div>
+
+        <section id="sidebar-comparison" class="w-1/3 min-w-[300px] bg-white dark:bg-slate-900 border-r border-l border-slate-200 dark:border-slate-800 flex flex-col overflow-hidden flex-shrink-0">
+            <div class="p-3 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between bg-slate-50 dark:bg-slate-900">
+                <div class="flex items-center gap-2">
+                    <div class="p-1.5 bg-blue-600 text-white rounded-lg"><i data-lucide="git-compare" class="w-4 h-4"></i></div>
+                    <span class="font-black text-xs uppercase tracking-wider dark:text-white">Módulo de Correlação</span>
+                </div>
+                <div class="flex bg-slate-200 dark:bg-slate-800 p-0.5 rounded-lg text-[10px] font-black">
+                    <button id="btn-tab-comp" onclick="setComparisonMode('compare')" class="px-3 py-1 bg-white dark:bg-slate-700 dark:text-white rounded-md shadow-xs">Comparação</button>
+                    <button id="btn-tab-graph" onclick="setComparisonMode('graph')" class="px-3 py-1 text-slate-500 dark:text-slate-400">Malha Neural</button>
+                </div>
+            </div>
+
+            <div id="pane-comparison-doc" class="flex-1 flex flex-col overflow-hidden p-3 bg-[#fafafa] dark:bg-slate-950">
+                <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-2 mb-2 flex items-center justify-between shadow-xs">
+                    <span id="comp-note-title" class="text-xs font-bold text-slate-400 truncate pr-2">Arraste outro arquivo aqui para comparar...</span>
+                    <button onclick="clearComparisonDoc()" class="text-slate-400 hover:text-red-500"><i data-lucide="x" class="w-3.5 h-3.5"></i></button>
+                </div>
+                <div id="comp-view-body" class="flex-1 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-4 overflow-y-auto text-xs text-slate-600 dark:text-slate-300 font-serif whitespace-pre-wrap select-text leading-relaxed">
+                    <div class="text-center text-slate-300 my-20 dark:text-slate-700">Painel secundário inativo.</div>
+                </div>
+            </div>
+
+            <div id="pane-comparison-graph" class="hidden flex-1 flex flex-col overflow-hidden relative bg-slate-50 dark:bg-slate-950">
+                <canvas id="graph-canvas" class="w-full h-full block cursor-grab active:cursor-grabbing"></canvas>
+                <div class="absolute top-2 left-2 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xs px-2 py-1 rounded-md text-[9px] font-bold border border-slate-200 dark:border-slate-800 tracking-wide uppercase text-slate-400">Indexador de #Tags e Temas</div>
+            </div>
+        </section>
+
         <div id="resizer-right" class="w-1.5 bg-transparent hover:bg-blue-500 cursor-col-resize z-10 flex-shrink-0 transition-colors"></div>
 
-        <aside id="sidebar-right" class="w-80 bg-white dark:bg-slate-900 border-l border-slate-200 dark:border-slate-800 flex flex-col overflow-hidden shadow-2xl flex-shrink-0">
+        <aside id="sidebar-right" class="w-80 bg-white dark:bg-slate-900 flex flex-col overflow-hidden shadow-2xl flex-shrink-0">
             <div class="p-4 border-b border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-900 flex items-center justify-between">
                 <div class="flex items-center gap-2.5">
                     <div class="w-9 h-9 bg-blue-600 rounded-xl flex items-center justify-center text-white font-bold"><i data-lucide="bot" class="w-4 h-4"></i></div>
                     <div>
                         <h3 class="font-bold text-xs text-slate-800 dark:text-white">Assistente BMS</h3>
-                        <div class="flex items-center gap-1"><div class="w-1.5 h-1.5 bg-green-500 rounded-full"></div><span class="text-[10px] text-slate-400 dark:text-slate-500 font-bold uppercase">Cofre Integrado</span></div>
+                        <div class="flex items-center gap-1"><div class="w-1.5 h-1.5 bg-green-500 rounded-full"></div><span class="text-[10px] text-slate-400 font-bold uppercase">Cofre Ativo</span></div>
                     </div>
                 </div>
             </div>
 
-            <div class="p-3 bg-amber-50/50 dark:bg-slate-800/30 border-b border-amber-100/60 dark:border-slate-800 flex flex-col gap-1.5">
-                <label class="text-[9px] font-black text-amber-800 dark:text-amber-400 uppercase tracking-widest">Token de Validação Local</label>
-                <input type="password" id="app-password" value="" placeholder="Insira a chave operacional..." class="w-full bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-lg px-3 py-1.5 text-xs font-mono text-slate-700 dark:text-slate-300 focus:outline-none">
-            </div>
+            <div id="chat-messages" class="flex-1 overflow-y-auto p-4 flex flex-col gap-4 bg-[#fafafa] dark:bg-slate-950 select-text no-scrollbar"></div>
 
-            <div id="chat-messages" class="flex-1 overflow-y-auto p-4 flex flex-col gap-4 bg-[#fafafa] dark:bg-slate-950 select-text no-scrollbar">
-                <div class="w-full flex justify-start shrink-0">
-                    <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 rounded-2xl rounded-tl-none p-3.5 text-xs max-w-[90%] shadow-xs leading-relaxed">
-                        Sincronização efetuada. Selecione uma pasta ou peça do **Cofre** para iniciar a auditoria ou envie instruções estruturadas abaixo.
-                    </div>
-                </div>
-            </div>
-
-            <div id="chat-attachment-area" class="hidden px-3 py-2 bg-blue-50 dark:bg-slate-800 border-t border-blue-100 dark:border-slate-700 flex items-center justify-between text-[11px] font-bold text-blue-700 dark:text-blue-300">
+            <div id="chat-attachment-area" class="hidden px-3 py-2 bg-blue-50 dark:bg-slate-800 border-t border-blue-100 flex items-center justify-between text-[11px] font-bold text-blue-700">
                 <div class="flex items-center gap-1.5 truncate"><i data-lucide="paperclip" class="w-3.5 h-3.5"></i><span id="chat-attachment-name" class="truncate">anexo.md</span></div>
                 <button id="btn-remove-attachment" class="text-slate-400 hover:text-red-500"><i data-lucide="x" class="w-4 h-4"></i></button>
             </div>
 
             <div class="p-3 border-t border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900">
-                <div class="relative flex items-center gap-2">
-                    <button id="btn-chat-attach" class="p-2 text-slate-400 dark:text-slate-500 hover:text-blue-600 bg-slate-50 dark:bg-slate-800 hover:bg-blue-50 border border-slate-200 dark:border-slate-700 rounded-xl"><i data-lucide="paperclip" class="w-4 h-4"></i></button>
-                    <div class="relative flex-1">
-                        <input type="text" id="chat-input" placeholder="Pergunte ao Assistente BMS..." class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl pl-3 pr-10 py-2.5 text-xs font-semibold focus:outline-none focus:border-blue-500 text-slate-800 dark:text-slate-100">
-                        <button id="btn-send" class="absolute right-1.5 top-1/2 -translate-y-1/2 p-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-all shadow-sm">
-                            <i data-lucide="send" class="w-3.5 h-3.5"></i>
-                        </button>
-                    </div>
+                <div class="relative flex items-end gap-2 bg-slate-50 dark:bg-slate-800 rounded-xl p-1.5 border border-slate-200 dark:border-slate-700">
+                    <button id="btn-chat-attach" class="p-2 text-slate-400 hover:text-blue-600 mb-0.5"><i data-lucide="paperclip" class="w-4 h-4"></i></button>
+                    <textarea id="chat-input" rows="1" placeholder="Pergunte ao Assistente BMS..." class="flex-1 bg-transparent py-2 px-1 text-xs font-semibold focus:outline-none text-slate-800 dark:text-slate-100 resize-none max-h-32 no-scrollbar leading-relaxed" style="height: auto;"></textarea>
+                    <button id="btn-send" class="p-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg mb-0.5 shadow-sm transition-all active:scale-95"><i data-lucide="send" class="w-3.5 h-3.5"></i></button>
                 </div>
             </div>
         </aside>
@@ -400,87 +262,6 @@
 
     <script>
         lucide.createIcons();
-
-        document.addEventListener('keydown', (e) => {
-            if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
-                e.preventDefault();
-                document.getElementById('global-search-bar').focus();
-            }
-        });
-
-        function openSpeedTestModal() {
-            const modal = document.getElementById("speedtest-modal");
-            modal.classList.remove("hidden");
-            setTimeout(() => {
-                modal.classList.remove("opacity-0");
-                document.getElementById("speedtest-content").classList.remove("scale-95");
-            }, 10);
-            
-            document.getElementById("st-state-1").classList.remove("hidden");
-            document.getElementById("st-state-2").classList.add("hidden");
-            document.getElementById("st-state-3").classList.add("hidden");
-        }
-
-        function closeSpeedTest() {
-            const modal = document.getElementById("speedtest-modal");
-            modal.classList.add("opacity-0");
-            document.getElementById("speedtest-content").classList.add("scale-95");
-            setTimeout(() => { modal.classList.add("hidden"); }, 300);
-        }
-
-        function updateSpeedometer(mbps) {
-            document.getElementById("st-value").innerText = mbps.toFixed(1);
-            let maxSpeed = 100;
-            let mapped = Math.min(Math.max(mbps, 0), maxSpeed);
-            let rot = -90 + (mapped / maxSpeed) * 180;
-            document.getElementById("st-needle").style.transform = `translateX(-50%) rotate(${rot}deg)`;
-            let offset = 125 - (mapped / maxSpeed) * 125;
-            document.getElementById("st-progress").style.strokeDashoffset = offset;
-        }
-
-        async function startSpeedTest() {
-            document.getElementById("st-state-1").classList.add("hidden");
-            document.getElementById("st-state-2").classList.remove("hidden");
-            updateSpeedometer(0);
-
-            try {
-                const res = await fetch('/api/speedtest?cacheBust=' + Date.now());
-                if (!res.ok) throw new Error("Falha no servidor");
-                
-                const reader = res.body.getReader();
-                let loaded = 0;
-                const startTime = Date.now();
-                let lastUiUpdate = startTime;
-                
-                while(true) {
-                    const {done, value} = await reader.read();
-                    if (done) break;
-                    
-                    loaded += value.length;
-                    const now = Date.now();
-                    
-                    if (now - lastUiUpdate > 100) {
-                        const duration = (now - startTime) / 1000;
-                        const mbps = ((loaded * 8) / 1000000) / duration;
-                        updateSpeedometer(mbps);
-                        lastUiUpdate = now;
-                    }
-                }
-                
-                const finalDuration = (Date.now() - startTime) / 1000;
-                const finalMbps = ((loaded * 8) / 1000000) / finalDuration;
-                
-                updateSpeedometer(finalMbps);
-                setTimeout(() => {
-                    document.getElementById("st-state-2").classList.add("hidden");
-                    document.getElementById("st-state-3").classList.remove("hidden");
-                    document.getElementById("st-final-value").innerText = finalMbps.toFixed(1);
-                }, 800);
-            } catch (e) {
-                alert("Erro ao testar velocidade. Verifique sua conexão local.");
-                closeSpeedTest();
-            }
-        }
 
         const messagesContainer = document.getElementById("chat-messages");
         const chatInput = document.getElementById("chat-input");
@@ -495,19 +276,15 @@
         const serverStatusText = document.getElementById("server-status-text");
 
         const viewDoc = document.getElementById("view-doc");
-        const viewRaw = document.getElementById("view-raw");
         const activeNoteTitle = document.getElementById("active-note-title");
         const activeNoteMeta = document.getElementById("active-note-meta");
         const favoriteStarBtn = document.getElementById("btn-favorite-star");
 
-        const btnVaultUpload = document.getElementById("btn-vault-upload");
         const globalVaultUpload = document.getElementById("global-vault-upload");
         const globalFolderUpload = document.getElementById("global-folder-upload");
-        const btnChatAttach = document.getElementById("btn-chat-attach");
         const chatContextUpload = document.getElementById("chat-context-upload");
         const chatAttachmentArea = document.getElementById("chat-attachment-area");
         const chatAttachmentName = document.getElementById("chat-attachment-name");
-        const btnRemoveAttachment = document.getElementById("btn-remove-attachment");
 
         const canvas = document.getElementById("graph-canvas");
         const ctx = canvas.getContext("2d");
@@ -515,10 +292,12 @@
         let chatHistory = [];
         let pendingChatAttachment = null;
         let selectedFileId = null;
+        let comparisonFileId = null; // ID do segundo documento de comparação
         let graphData = { nodes: [], edges: [] };
         let draggedNode = null;
         let currentFilterType = "all";
         let rawContentBuffer = "";
+        let compContentBuffer = "";
         let contextMenuSelectedPath = null;
         let msgCounter = 0;
         let isDraggingNode = false;
@@ -527,54 +306,86 @@
         let collapsedFolders = JSON.parse(localStorage.getItem("bms_collapsed_folders") || "{}");
         let highlightedNodes = []; 
 
+        // REQUISITO 6: EXPANSÃO DINÂMICA DA CAIXA DE TEXTO DO CHAT
+        chatInput.addEventListener("input", function() {
+            this.style.height = "auto";
+            this.style.height = this.scrollHeight + "px";
+        });
+
+        // REQUISITO 5: SCRIPT DE TEMA REVISADO E FUNCIONAL
+        function toggleDarkMode() {
+            if (document.documentElement.classList.contains("dark")) {
+                document.documentElement.classList.remove("dark");
+                localStorage.setItem("theme", "light");
+            } else {
+                document.documentElement.classList.add("dark");
+                localStorage.setItem("theme", "dark");
+            }
+            drawGraph(); 
+        }
+
+        // REDIMENSIONADORES (4 COLUNAS)
         const sidebarLeft = document.getElementById('sidebar-left');
+        const centerPanel = document.getElementById('center-panel');
+        const sidebarComparison = document.getElementById('sidebar-comparison');
         const sidebarRight = document.getElementById('sidebar-right');
+        
         const resizerLeft = document.getElementById('resizer-left');
+        const resizerCenter = document.getElementById('resizer-center');
         const resizerRight = document.getElementById('resizer-right');
 
         let isResizingLeft = false;
+        let isResizingCenter = false;
         let isResizingRight = false;
 
-        resizerLeft.addEventListener('mousedown', (e) => {
-            isResizingLeft = true;
-            document.body.style.cursor = 'col-resize';
-            e.preventDefault();
-        });
-
-        resizerRight.addEventListener('mousedown', (e) => {
-            isResizingRight = true;
-            document.body.style.cursor = 'col-resize';
-            e.preventDefault();
-        });
+        resizerLeft.addEventListener('mousedown', (e) => { isResizingLeft = true; document.body.style.cursor = 'col-resize'; e.preventDefault(); });
+        resizerCenter.addEventListener('mousedown', (e) => { isResizingCenter = true; document.body.style.cursor = 'col-resize'; e.preventDefault(); });
+        resizerRight.addEventListener('mousedown', (e) => { isResizingRight = true; document.body.style.cursor = 'col-resize'; e.preventDefault(); });
 
         document.addEventListener('mousemove', (e) => {
-            if (!isResizingLeft && !isResizingRight) return;
             if (isResizingLeft) {
-                const newWidth = e.clientX;
-                if (newWidth > 180 && newWidth < window.innerWidth * 0.5) sidebarLeft.style.width = `${newWidth}px`;
+                let w = e.clientX;
+                if (w > 150 && w < window.innerWidth * 0.3) sidebarLeft.style.width = w + "px";
+            }
+            if (isResizingCenter) {
+                let leftW = sidebarLeft.clientWidth;
+                let w = e.clientX - leftW - 10;
+                if (w > 250 && w < window.innerWidth * 0.5) centerPanel.style.width = w + "px";
             }
             if (isResizingRight) {
-                const newWidth = window.innerWidth - e.clientX;
-                if (newWidth > 220 && newWidth < window.innerWidth * 0.5) sidebarRight.style.width = `${newWidth}px`;
+                let w = window.innerWidth - e.clientX;
+                if (w > 200 && w < window.innerWidth * 0.3) sidebarRight.style.width = w + "px";
             }
             if (canvas) resizeCanvas();
         });
 
         document.addEventListener('mouseup', () => {
-            if (isResizingLeft || isResizingRight) {
-                isResizingLeft = false;
-                isResizingRight = false;
-                document.body.style.cursor = 'default';
-                resizeCanvas();
-            }
+            isResizingLeft = isResizingCenter = isResizingRight = false;
+            document.body.style.cursor = 'default';
+            resizeCanvas();
         });
 
-        function resizeCanvas() {
-            canvas.width = canvas.parentElement.clientWidth;
-            canvas.height = canvas.parentElement.clientHeight;
+        // GESTÃO DE MODOS DO TERCEIRO MENU
+        function setComparisonMode(mode) {
+            const btnComp = document.getElementById("btn-tab-comp");
+            const btnGraph = document.getElementById("btn-tab-graph");
+            const paneComp = document.getElementById("pane-comparison-doc");
+            const paneGraph = document.getElementById("pane-comparison-graph");
+
+            if (mode === 'compare') {
+                paneComp.classList.remove("hidden");
+                paneGraph.classList.add("hidden");
+                btnComp.className = "px-3 py-1 bg-white dark:bg-slate-700 dark:text-white rounded-md shadow-xs";
+                btnGraph.className = "px-3 py-1 text-slate-500 dark:text-slate-400";
+            } else {
+                paneComp.classList.add("hidden");
+                paneGraph.classList.remove("hidden");
+                btnGraph.className = "px-3 py-1 bg-white dark:bg-slate-700 dark:text-white rounded-md shadow-xs";
+                btnComp.className = "px-3 py-1 text-slate-500 dark:text-slate-400";
+                resizeCanvas();
+                reloadGlobalGraph();
+            }
         }
-        window.addEventListener("resize", resizeCanvas);
-        resizeCanvas();
 
         function closeAllDropdownsMenu() {
             filterDropdown.classList.add("hidden");
@@ -586,268 +397,52 @@
             document.getElementById("dropdown-upload")?.classList.add("hidden");
         }
 
-        function toggleFilterDropdown(e) {
-            e.stopPropagation();
-            closeAllDropdownsMenu();
-            filterDropdown.classList.remove("hidden");
-        }
+        function toggleFilterDropdown(e) { e.stopPropagation(); closeAllDropdownsMenu(); filterDropdown.classList.remove("hidden"); }
+        function toggleCustomDropdown(id, e) { e.stopPropagation(); const el = document.getElementById(id); const isHidden = el.classList.contains("hidden"); closeAllDropdownsMenu(); if (isHidden) el.classList.remove("hidden"); }
+        function selectOption(category, value, label, e) { e.stopPropagation(); document.getElementById(`ctx-${category}`).value = value; document.getElementById(`label-ctx-${category}`).innerText = label; document.getElementById(`dropdown-${category}`).classList.add("hidden"); }
+        function changeFilter(type) { currentFilterType = type; closeAllDropdownsMenu(); buildNotesTree(); }
 
-        function toggleCustomDropdown(id, e) {
-            e.stopPropagation();
-            const el = document.getElementById(id);
-            const isHidden = el.classList.contains("hidden");
-            closeAllDropdownsMenu();
-            if (isHidden) el.classList.remove("hidden");
-        }
-
-        function selectOption(category, value, label, e) {
-            e.stopPropagation();
-            document.getElementById(`ctx-${category}`).value = value;
-            document.getElementById(`label-ctx-${category}`).innerText = label;
-            document.getElementById(`dropdown-${category}`).classList.add("hidden");
-        }
-
-        function changeFilter(type) {
-            currentFilterType = type;
-            closeAllDropdownsMenu();
-            buildNotesTree();
-        }
-
-        function clearTreeSelection(e) {
-            if (e.target.id === "file-tree" || e.target.tagName === "ASIDE") {
-                selectedFileId = null;
-                activeNoteTitle.innerText = "Selecione um arquivo do cofre";
-                activeNoteMeta.innerText = "Raiz do Cofre Ativa";
-                rawContentBuffer = "";
-                viewDoc.innerHTML = `<div class="text-center text-slate-400 my-20 dark:text-slate-500">Raiz selecionada. Novos diretórios e uploads serão gravados na pasta principal.</div>`;
-                updateFavoriteStarUI();
-                buildNotesTree();
-            }
-        }
-
-        function toggleActiveFileFavorite() {
-            if (!selectedFileId) return;
-            const cleanPath = selectedFileId.replace(/\/$/, "");
-            if (favoriteItems[cleanPath]) {
-                delete favoriteItems[cleanPath];
-            } else {
-                favoriteItems[cleanPath] = true;
-            }
-            localStorage.setItem("bms_favorites_map", JSON.stringify(favoriteItems));
-            updateFavoriteStarUI();
-            buildNotesTree();
-        }
-
-        function updateFavoriteStarUI() {
-            if (!selectedFileId) {
-                favoriteStarBtn.className = "text-slate-300 dark:text-slate-600 focus:outline-none";
-                favoriteStarBtn.innerHTML = `<i data-lucide="star" class="w-4 h-4"></i>`;
-                lucide.createIcons();
-                return;
-            }
-            const cleanPath = selectedFileId.replace(/\/$/, "");
-            const hasStar = !!favoriteItems[cleanPath];
-            if (hasStar) {
-                favoriteStarBtn.className = "text-amber-500 dark:text-amber-400 focus:outline-none scale-110 transition-transform";
-                favoriteStarBtn.innerHTML = `<i data-lucide="star" class="w-4 h-4 fill-amber-500 dark:fill-amber-400"></i>`;
-            } else {
-                favoriteStarBtn.className = "text-slate-300 dark:text-slate-600 hover:text-amber-500 transition-colors focus:outline-none";
-                favoriteStarBtn.innerHTML = `<i data-lucide="star" class="w-4 h-4"></i>`;
-            }
-            lucide.createIcons();
-        }
-
-        function downloadActiveFile() {
-            if (!selectedFileId || !rawContentBuffer) return;
-            const blob = new Blob([rawContentBuffer], { type: "text/markdown;charset=utf-8" });
-            const link = document.createElement("a");
-            link.href = URL.createObjectURL(blob);
-            link.download = selectedFileId.replace(/\/$/, "").split('/').pop();
-            link.click();
-        }
-
-        function printActiveFile() {
-            if (!selectedFileId) return;
-            const printWindow = window.open("", "_blank");
-            printWindow.document.write(`<html><head><title>BMS - Imprimir</title></head><body style="font-family:serif;padding:30px;line-height:1.6;">${viewDoc.innerHTML}</body></html>`);
-            printWindow.document.close();
-            printWindow.print();
-        }
-
-        function fullscreenActiveFile() {
-            const container = document.getElementById("center-preview-container");
-            if (!document.fullscreenElement) container.requestFullscreen().catch(err => console.error(err));
-            else document.exitFullscreen();
-        }
-
-        async function checkRealServerStatus() {
+        // CARREGAR SEGUNDO ARQUIVO DE COMPARAÇÃO (ZONA DE SOLTAR)
+        async function loadComparisonDoc(filename) {
+            comparisonFileId = filename;
+            document.getElementById("comp-note-title").innerText = filename.split('/').pop();
+            const body = document.getElementById("comp-view-body");
+            body.innerHTML = `<div class="text-center text-slate-400 py-10 animate-pulse">Carregando arquivo secundário...</div>`;
+            
             try {
-                const res = await fetch("/api/status");
-                if (res.ok) {
-                    serverStatusBadge.className = "flex items-center gap-2 bg-emerald-50 dark:bg-emerald-950/40 px-3 py-2 rounded-xl border border-emerald-100 dark:border-emerald-900 transition-all duration-300";
-                    serverStatusDot.className = "w-2 h-2 bg-emerald-500 rounded-full animate-pulse";
-                    serverStatusText.className = "text-[10px] font-black tracking-wide uppercase text-emerald-700 dark:text-emerald-400";
-                    serverStatusText.innerText = "SERVIDOR ATIVO";
-                } else { throw new Error(); }
-            } catch (err) {
-                serverStatusBadge.className = "flex items-center gap-2 bg-red-50 dark:bg-red-950/40 px-3 py-2 rounded-xl border border-red-100 dark:border-red-900 transition-all duration-300";
-                serverStatusDot.className = "w-2 h-2 bg-red-500 rounded-full animate-pulse";
-                serverStatusText.className = "text-[10px] font-black tracking-wide uppercase text-red-700 dark:text-red-400";
-                serverStatusText.innerText = "SERVIDOR INATIVO";
-            }
+                const res = await fetch(`/api/note-content?file=${encodeURIComponent(filename)}`);
+                const data = await res.json();
+                body.innerText = data.content || "[Arquivo vazio]";
+            } catch(e) { body.innerText = "Erro ao cargevá-lo."; }
         }
-        setInterval(checkRealServerStatus, 4000);
-        checkRealServerStatus();
 
-        function searchFileTree() {
-            const query = globalSearchBar.value.toLowerCase().trim();
-            const rows = fileTree.querySelectorAll(".tree-row-container");
-            rows.forEach(row => {
-                const text = row.getAttribute("data-path").toLowerCase();
-                row.classList.toggle("hidden", !text.includes(query));
+        function clearComparisonDoc() {
+            comparisonFileId = null;
+            document.getElementById("comp-note-title").innerText = "Arraste outro arquivo aqui para comparar...";
+            document.getElementById("comp-view-body").innerHTML = `<div class="text-center text-slate-300 my-20">Painel secundário inativo.</div>`;
+        }
+
+        function highlightSelectedRow(targetFilename) {
+            document.querySelectorAll(".tree-row-container").forEach(row => {
+                if (!targetFilename) {
+                    row.className = "tree-row-container group flex items-center justify-between w-full rounded-xl p-0.5 border border-transparent hover:bg-slate-100 dark:hover:bg-slate-800 transition-all text-left text-slate-600 dark:text-slate-300";
+                    return;
+                }
+                const rowPath = row.getAttribute("data-path").replace(/\/$/, "");
+                const cleanTarget = targetFilename.replace(/\/$/, "");
+                if (rowPath === cleanTarget) {
+                    row.className = "tree-row-container group flex items-center justify-between w-full rounded-xl p-0.5 border transition-all text-left bg-blue-50/50 dark:bg-blue-950/30 border-blue-500 dark:border-blue-400 text-blue-600 dark:text-blue-400 shadow-xs";
+                } else {
+                    row.className = "tree-row-container group flex items-center justify-between w-full rounded-xl p-0.5 border border-transparent hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300";
+                }
             });
         }
 
-        function triggerInlineContextMenu(e, path) {
-            e.stopPropagation();
-            contextMenuSelectedPath = path;
-            const menu = document.getElementById("custom-context-menu");
-            closeAllDropdownsMenu();
-            menu.classList.remove("hidden");
-            menu.style.left = `${e.clientX - 160}px`;
-            menu.style.top = `${e.clientY + 10}px`;
-        }
-
-        function closeCustomModal() {
-            document.getElementById("custom-dialog-modal").classList.add("hidden");
-        }
-
-        function openRenameModal() {
-            document.getElementById("custom-context-menu").classList.add("hidden");
-            const modal = document.getElementById("custom-dialog-modal");
-            document.getElementById("modal-title").innerText = "Renomear / Mover Item";
-            document.getElementById("modal-body-content").innerHTML = `
-                <p class="mb-1">Insira o novo caminho completo do registro:</p>
-                <input type="text" id="modal-input-field" value="${contextMenuSelectedPath.replace(/\/$/, "")}" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-2 text-xs font-semibold focus:outline-none text-slate-800 dark:text-white">
-            `;
-            modal.classList.remove("hidden");
-            document.getElementById("modal-confirm-btn").onclick = async () => {
-                const newPath = document.getElementById("modal-input-field").value.trim();
-                if (newPath) {
-                    await renameItem(contextMenuSelectedPath, newPath);
-                    closeCustomModal();
-                }
-            };
-        }
-
-        function openDeleteModal() {
-            document.getElementById("custom-context-menu").classList.add("hidden");
-            const modal = document.getElementById("custom-dialog-modal");
-            document.getElementById("modal-title").innerText = "Confirmar Exclusão";
-            document.getElementById("modal-body-content").innerHTML = `<p>Tem certeza que deseja apagar permanentemente o item <strong>${contextMenuSelectedPath.replace(/\/$/, "")}</strong> do cofre?</p>`;
-            modal.classList.remove("hidden");
-            document.getElementById("modal-confirm-btn").onclick = async () => {
-                await deleteItem(contextMenuSelectedPath);
-                closeCustomModal();
-            };
-        }
-
-        async function createFolderOnVPS(name) {
-            try {
-                const res = await fetch("/api/create-folder", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ foldername: name })
-                });
-                if (res.ok) {
-                    buildNotesTree();
-                    reloadGlobalGraph();
-                }
-            } catch (err) { console.error(err); }
-        }
-
-        function createNewFolderManual(e) {
-            if(e) e.stopPropagation();
-            let context = "";
-            if (selectedFileId && selectedFileId.endsWith("/")) context = selectedFileId;
-            else if (selectedFileId && selectedFileId.includes("/")) context = selectedFileId.substring(0, selectedFileId.lastIndexOf("/")) + "/";
-            
-            const modal = document.getElementById("custom-dialog-modal");
-            document.getElementById("modal-title").innerText = "Criar Nova Pasta";
-            document.getElementById("modal-body-content").innerHTML = `
-                <p class="mb-1">${context ? 'Subpasta em ' + context : 'Pasta na raiz do cofre:'}</p>
-                <input type="text" id="modal-input-field" placeholder="Nome do diretório..." class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-2 text-xs font-semibold focus:outline-none text-slate-800 dark:text-white">
-            `;
-            modal.classList.remove("hidden");
-            document.getElementById("modal-confirm-btn").onclick = async () => {
-                const name = document.getElementById("modal-input-field").value.trim();
-                if (name) {
-                    await createFolderOnVPS(context + name);
-                    closeCustomModal();
-                }
-            };
-        }
-
-        async function deleteItem(p) {
-            try {
-                const res = await fetch("/api/delete-item", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ targetPath: p })
-                });
-                if (res.ok) {
-                    if(selectedFileId === p || selectedFileId === p + "/") selectedFileId = null;
-                    buildNotesTree();
-                    reloadGlobalGraph();
-                }
-            } catch (err) { console.error(err); }
-        }
-
-        async function renameItem(oldP, newP) {
-            try {
-                const res = await fetch("/api/rename-item", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ oldPath: oldP, newPath: newP })
-                });
-                if (res.ok) {
-                    if(selectedFileId === oldP || selectedFileId === oldP + "/") selectedFileId = newP;
-                    buildNotesTree();
-                    reloadGlobalGraph();
-                }
-            } catch (err) { console.error(err); }
-        }
-
-        function switchTab(type) {
-            const tabDoc = document.getElementById("tab-doc");
-            const tabRaw = document.getElementById("tab-raw");
-            if (type === 'doc') {
-                document.getElementById("view-doc").classList.remove("hidden");
-                document.getElementById("view-raw").classList.add("hidden");
-                tabDoc.className = "text-xs font-bold px-4 py-1.5 bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400 rounded-lg transition-all";
-                tabRaw.className = "text-xs font-bold px-4 py-1.5 text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg transition-all";
-            } else {
-                document.getElementById("view-doc").classList.add("hidden");
-                document.getElementById("view-raw").classList.remove("hidden");
-                tabRaw.className = "text-xs font-bold px-4 py-1.5 bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400 rounded-lg transition-all";
-                tabDoc.className = "text-xs font-bold px-4 py-1.5 text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg transition-all";
-            }
-        }
-
-        // REQUISITO 2: LOGICA DE DRAG AND DROP
         async function handleOSDrop(e, targetFolder = "") {
             const items = e.dataTransfer.items;
             if (!items) return;
-            
             let baseFolder = targetFolder;
-            if (baseFolder === "") {
-                if (selectedFileId && selectedFileId.endsWith("/")) baseFolder = selectedFileId;
-                else if (selectedFileId && selectedFileId.includes("/")) baseFolder = selectedFileId.substring(0, selectedFileId.lastIndexOf("/")) + "/";
-            }
-
-            document.getElementById("meta-summary").innerText = "Sincronizando arquivos do sistema...";
             let successCount = 0;
-
             async function readEntry(entry, pathPrefix = "") {
                 if (entry.isFile) {
                     return new Promise((resolve) => {
@@ -864,23 +459,15 @@
                     return new Promise((resolve) => {
                         const dirReader = entry.createReader();
                         dirReader.readEntries(async (entries) => {
-                            for (let i = 0; i < entries.length; i++) {
-                                await readEntry(entries[i], pathPrefix + entry.name + "/");
-                            }
+                            for (let i = 0; i < entries.length; i++) { await readEntry(entries[i], pathPrefix + entry.name + "/"); }
                             resolve();
                         });
                     });
                 }
             }
-
             let promises = [];
-            for (let i = 0; i < items.length; i++) {
-                const item = items[i].webkitGetAsEntry();
-                if (item) promises.push(readEntry(item));
-            }
-
+            for (let i = 0; i < items.length; i++) { const item = items[i].webkitGetAsEntry(); if (item) promises.push(readEntry(item)); }
             await Promise.all(promises);
-            document.getElementById("meta-summary").innerText = `Transferência de ${successCount} arquivo(s) concluída!`;
             buildNotesTree();
             reloadGlobalGraph();
         }
@@ -892,41 +479,20 @@
                 if (data.items) {
                     fileTree.innerHTML = "";
                     let items = data.items;
-                    
                     items.sort((a, b) => a.path.localeCompare(b.path));
 
                     if (currentFilterType === "md") items = items.filter(i => i.type === "directory" || i.path.endsWith(".md"));
                     if (currentFilterType === "pdf") items = items.filter(i => i.type === "directory" || i.path.endsWith(".pdf"));
-
-                    fileTree.ondragover = (e) => { e.preventDefault(); };
-                    fileTree.ondrop = async (e) => {
-                        e.preventDefault();
-                        if (e.target === fileTree) {
-                            const draggedPath = e.dataTransfer.getData("text/plain");
-                            if (draggedPath) {
-                                const cleanDragged = draggedPath.replace(/\/$/, "");
-                                const itemName = cleanDragged.split('/').pop();
-                                if (cleanDragged !== itemName) await renameItem(cleanDragged, itemName);
-                            } else if (e.dataTransfer.items) {
-                                await handleOSDrop(e, "");
-                            }
-                        }
-                    };
 
                     items.forEach(item => {
                         const cleanItemPath = item.path.replace(/\/$/, "");
                         let pathParts = cleanItemPath.split('/');
                         let isHidden = false;
                         let currentPathCheck = "";
-                        
                         for (let i = 0; i < pathParts.length - 1; i++) {
                             currentPathCheck += (i === 0 ? "" : "/") + pathParts[i];
-                            if (collapsedFolders[currentPathCheck]) {
-                                isHidden = true;
-                                break;
-                            }
+                            if (collapsedFolders[currentPathCheck]) { isHidden = true; break; }
                         }
-
                         if (isHidden) return;
 
                         const row = document.createElement("div");
@@ -941,86 +507,56 @@
                         
                         row.ondragstart = (e) => {
                             e.dataTransfer.setData("text/plain", item.path);
-                            e.currentTarget.classList.add("opacity-50");
-                        };
-                        row.ondragend = (e) => {
-                            e.currentTarget.classList.remove("opacity-50");
-                            document.querySelectorAll('.drag-over').forEach(el => el.classList.remove('drag-over', 'ring-2', 'ring-blue-500', 'bg-blue-50/50'));
                         };
                         row.ondragover = (e) => {
-                            e.preventDefault(); 
-                            if (isDir) e.currentTarget.classList.add('ring-2', 'ring-blue-500', 'bg-blue-50/50', 'drag-over');
+                            e.preventDefault();
+                            if (isDir) e.currentTarget.classList.add('bg-blue-100/30');
                         };
-                        row.ondragleave = (e) => {
-                            e.currentTarget.classList.remove('ring-2', 'ring-blue-500', 'bg-blue-50/50', 'drag-over');
-                        };
+                        row.ondragleave = (e) => { e.currentTarget.classList.remove('bg-blue-100/30'); };
                         row.ondrop = async (e) => {
                             e.preventDefault();
-                            e.currentTarget.classList.remove('ring-2', 'ring-blue-500', 'bg-blue-50/50', 'drag-over');
-                            
-                            let targetFolder = isDir ? item.path : "";
-                            if (!isDir) {
-                                const parts = item.path.split('/');
-                                parts.pop();
-                                targetFolder = parts.length > 0 ? parts.join('/') + '/' : '';
-                            }
-
+                            e.currentTarget.classList.remove('bg-blue-100/30');
                             const draggedPath = e.dataTransfer.getData("text/plain");
                             if (draggedPath) {
                                 if (draggedPath === item.path) return;
                                 const cleanDragged = draggedPath.replace(/\/$/, "");
                                 const itemName = cleanDragged.split('/').pop();
-                                const newPath = targetFolder + itemName;
-                                if (cleanDragged !== newPath.replace(/\/$/, "")) {
-                                    await renameItem(cleanDragged, newPath);
-                                }
-                            } else if (e.dataTransfer.items) {
-                                await handleOSDrop(e, targetFolder);
+                                const newPath = (isDir ? item.path : '') + itemName;
+                                await renameItem(cleanDragged, newPath);
+                            } else {
+                                await handleOSDrop(e, isDir ? item.path : "");
                             }
                         };
 
                         const btn = document.createElement("button");
                         const depth = (item.path.match(/\//g) || []).length - (isDir ? 1 : 0);
-                        
                         btn.className = "flex-1 text-left py-1.5 flex items-center gap-1.5 font-bold truncate text-xs focus:outline-none";
                         btn.style.paddingLeft = `${depth * 14 + 4}px`;
                         
                         const icon = isDir ? "folder" : (item.path.endsWith('.pdf') ? "file-text" : "file");
-                        const iconColor = isDir ? "text-amber-500" : (item.path.endsWith('.pdf') ? "text-red-400" : (isSelected ? "text-blue-500" : "text-slate-400"));
-                        
+                        const iconColor = isDir ? "text-amber-500" : (item.path.endsWith('.pdf') ? "text-red-400" : "text-slate-400");
                         const hasStar = !!favoriteItems[cleanItemPath];
                         const starBadge = hasStar ? `<i data-lucide="star" class="w-3 h-3 text-amber-500 fill-amber-500 inline shrink-0 ml-1"></i>` : "";
-
                         const isCollapsed = !!collapsedFolders[cleanItemPath];
                         const chevronIcon = isDir ? `<i data-lucide="${isCollapsed ? 'chevron-right' : 'chevron-down'}" class="w-3.5 h-3.5 text-slate-400 shrink-0"></i>` : `<div class="w-3.5 shrink-0"></div>`;
 
-                        const displayName = isDir ? item.path.slice(0, -1).split('/').pop() : item.path.split('/').pop();
-
-                        btn.innerHTML = `${chevronIcon}<i data-lucide="${icon}" class="w-3.5 h-3.5 ${iconColor} shrink-0"></i> <span class="truncate">${displayName}</span> ${starBadge}`;
+                        btn.innerHTML = `${chevronIcon}<i data-lucide="${icon}" class="w-3.5 h-3.5 ${iconColor} shrink-0"></i> <span class="truncate">${cleanItemPath.split('/').pop()}</span> ${starBadge}`;
                         
                         if (!isDir) {
-                            btn.onclick = (e) => { 
-                                e.stopPropagation(); 
-                                loadNoteContent(item.path); 
-                            };
+                            btn.onclick = () => loadNoteContent(item.path);
                         } else {
-                            btn.onclick = (e) => { 
-                                e.stopPropagation(); 
+                            btn.onclick = () => {
                                 collapsedFolders[cleanItemPath] = !collapsedFolders[cleanItemPath];
                                 localStorage.setItem("bms_collapsed_folders", JSON.stringify(collapsedFolders));
-
-                                selectedFileId = item.path; 
-                                activeNoteTitle.innerText = displayName;
-                                activeNoteMeta.innerText = `Pasta ativa: BaseConhecimento/${cleanItemPath}`;
-                                updateFavoriteStarUI();
+                                selectedFileId = item.path;
                                 buildNotesTree();
                             };
                         }
 
                         const menuBtn = document.createElement("button");
-                        menuBtn.className = "opacity-0 group-hover:opacity-100 p-1 text-slate-400 hover:text-blue-500 rounded transition-all focus:outline-none";
+                        menuBtn.className = "opacity-0 group-hover:opacity-100 p-1 text-slate-400 hover:text-blue-500 rounded transition-all";
                         menuBtn.innerHTML = `<i data-lucide="more-horizontal" class="w-3.5 h-3.5"></i>`;
-                        menuBtn.onclick = (e) => { triggerInlineContextMenu(e, item.path); };
+                        menuBtn.onclick = (e) => triggerInlineContextMenu(e, item.path);
 
                         row.appendChild(btn);
                         row.appendChild(menuBtn);
@@ -1031,28 +567,18 @@
             } catch (err) { console.error(err); }
         }
 
-        function initPhysicsNodes(data) {
-            const width = canvas.parentElement.clientWidth || 500; 
-            const height = canvas.parentElement.clientHeight || 230;
-            canvas.width = width;
-            canvas.height = height;
+        // CONFIGURAÇÃO DA SEGUNDA ÁREA DE SOLTAR (COMPARAÇÃO)
+        const paneCompBody = document.getElementById("pane-comparison-doc");
+        paneCompBody.ondragover = (e) => e.preventDefault();
+        paneCompBody.ondrop = async (e) => {
+            e.preventDefault();
+            const path = e.dataTransfer.getData("text/plain");
+            if (path && !path.endsWith("/")) {
+                loadComparisonDoc(path);
+            }
+        };
 
-            const existingNodesMap = new Map(graphData.nodes.map(n => [n.id, n]));
-            graphData.nodes = data.nodes.map(n => {
-                const old = existingNodesMap.get(n.id);
-                return { 
-                    id: n.id, label: n.label, 
-                    x: old ? old.x : width / 2 + (Math.random() - 0.5) * 160, 
-                    y: old ? old.y : height / 2 + (Math.random() - 0.5) * 160, 
-                    vx: 0, vy: 0, radius: 5 
-                };
-            });
-            graphData.edges = data.edges.map(e => ({ 
-                sourceNode: graphData.nodes.find(n => n.id === e.source), 
-                targetNode: graphData.nodes.find(n => n.id === e.target)
-            })).filter(e => e.sourceNode && e.targetNode);
-        }
-
+        // MOVIMENTO BROWNIANO SUAVE DAS BOLINHAS (CENTRALIZADO)
         function updatePhysics() {
             const centerX = canvas.width / 2; 
             const centerY = canvas.height / 2;
@@ -1061,25 +587,20 @@
                 let n1 = graphData.nodes[i];
                 for (let j = i + 1; j < graphData.nodes.length; j++) {
                     let n2 = graphData.nodes[j];
-                    let dx = n2.x - n1.x; 
-                    let dy = n2.y - n1.y; 
-                    if (dx === 0) dx = 0.1;
+                    let dx = n2.x - n1.x; let dy = n2.y - n1.y; if (dx === 0) dx = 0.1;
                     let dist = Math.sqrt(dx*dx + dy*dy);
-                    if (dist < 200) {
-                        let force = 300 / (dist * dist + 10);
-                        let fx = (dx / dist) * force;
-                        let fy = (dy / dist) * force;
-                        if (n1 !== draggedNode) { n1.vx -= fx; n1.vy -= fy; }
-                        if (n2 !== draggedNode) { n2.vx += fx; n2.vy += fy; }
+                    if (dist < 150) {
+                        let force = 200 / (dist * dist + 10);
+                        if (n1 !== draggedNode) { n1.vx -= (dx/dist)*force; n1.vy -= (dy/dist)*force; }
+                        if (n2 !== draggedNode) { n2.vx += (dx/dist)*force; n2.vy += (dy/dist)*force; }
                     }
                 }
             }
             graphData.edges.forEach(edge => {
-                let dx = edge.targetNode.x - edge.sourceNode.x; 
-                let dy = edge.targetNode.y - edge.sourceNode.y;
+                let dx = edge.targetNode.x - edge.sourceNode.x; let dy = edge.targetNode.y - edge.sourceNode.y;
                 let dist = Math.sqrt(dx*dx + dy*dy);
                 if (dist > 0) {
-                    let force = 0.015 * dist; 
+                    let force = 0.012 * dist;
                     if (edge.sourceNode !== draggedNode) { edge.sourceNode.vx += (dx / dist) * force; edge.sourceNode.vy += (dy / dist) * force; }
                     if (edge.targetNode !== draggedNode) { edge.targetNode.vx -= (dx / dist) * force; edge.targetNode.vy -= (dy / dist) * force; }
                 }
@@ -1087,14 +608,15 @@
             graphData.nodes.forEach(node => {
                 if (node === draggedNode) return;
                 
-                node.vx += (centerX - node.x) * 0.003;
-                node.vy += (centerY - node.y) * 0.003;
+                // REQUISITO 3: Atração magnética forte pro centro (Evita colar nas bordas)
+                node.vx += (centerX - node.x) * 0.004;
+                node.vy += (centerY - node.y) * 0.004;
 
-                node.vx += (Math.random() - 0.5) * 0.10;
-                node.vy += (Math.random() - 0.5) * 0.10;
+                // Vento browniano randômico lento
+                node.vx += (Math.random() - 0.5) * 0.12;
+                node.vy += (Math.random() - 0.5) * 0.12;
 
-                node.x += node.vx; 
-                node.y += node.vy; 
+                node.x += node.vx; node.y += node.vy; 
 
                 const padding = 15;
                 if (node.x < padding) { node.x = padding; node.vx *= -1; }
@@ -1102,292 +624,84 @@
                 if (node.x > canvas.width - padding) { node.x = canvas.width - padding; node.vx *= -1; }
                 if (node.y > canvas.height - padding) { node.y = canvas.height - padding; node.vy *= -1; }
                 
-                node.vx *= 0.90; 
-                node.vy *= 0.90;
+                node.vx *= 0.91; node.vy *= 0.91;
             });
         }
 
         function drawGraph() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             const isDark = document.documentElement.classList.contains("dark");
-            
-            ctx.lineWidth = 1.5;
+            ctx.lineWidth = 1.2;
             ctx.strokeStyle = isDark ? "#334155" : "#e2e8f0";
+            
             graphData.edges.forEach(edge => { 
-                ctx.beginPath(); 
-                ctx.moveTo(edge.sourceNode.x, edge.sourceNode.y); 
-                ctx.lineTo(edge.targetNode.x, edge.targetNode.y); 
-                ctx.stroke(); 
+                ctx.beginPath(); ctx.moveTo(edge.sourceNode.x, edge.sourceNode.y); ctx.lineTo(edge.targetNode.x, edge.targetNode.y); ctx.stroke(); 
             });
             
             graphData.nodes.forEach(node => {
-                const cleanNodeId = node.id.replace(/\/$/, "");
-                const cleanSelectedId = selectedFileId ? selectedFileId.replace(/\/$/, "") : "";
-                const act = (cleanSelectedId === cleanNodeId);
-                const isHighlighted = highlightedNodes.includes(cleanNodeId);
+                const act = (selectedFileId === node.id);
+                ctx.beginPath();
                 
-                ctx.beginPath(); 
-                let radius = 4.5;
-                if (act) radius = 6.5;
-                if (isHighlighted) radius = 9.0;
-                
+                // REQUISITO 9: Nós de #Tags ganham estilização verde-limão diferenciada do Obsidian
+                let radius = node.type === "tag" ? 5.5 : 4.5;
+                if (act) radius = 7;
                 ctx.arc(node.x, node.y, radius, 0, 2*Math.PI);
                 
-                if (isHighlighted) {
-                    ctx.fillStyle = "#f59e0b"; 
-                } else if (act) {
-                    ctx.fillStyle = "#2563eb"; 
+                if (node.type === "tag") {
+                    ctx.fillStyle = "#8bc34a"; // Verde-Obsidian para hashtags
                 } else {
-                    ctx.fillStyle = isDark ? "#64748b" : "#94a3b8"; 
+                    ctx.fillStyle = act ? "#2563eb" : (isDark ? "#3b82f6" : "#64748b");
                 }
                 ctx.fill();
                 
-                ctx.font = (act || isHighlighted) ? "bold 11px sans-serif" : "10px sans-serif"; 
+                ctx.font = act ? "bold 10px sans-serif" : "10px sans-serif";
                 ctx.fillStyle = isDark ? "#cbd5e1" : "#334155";
-                ctx.textAlign = "center"; 
-                ctx.fillText(node.label, node.x, node.y + 16);
+                ctx.textAlign = "center";
+                ctx.fillText(node.label, node.x, node.y + 15);
             });
-        }
-
-        function anim() { 
-            updatePhysics(); 
-            drawGraph(); 
-            requestAnimationFrame(anim); 
-        }
-        requestAnimationFrame(anim);
-
-        canvas.addEventListener("mousedown", (e) => {
-            const rect = canvas.getBoundingClientRect(); 
-            const mx = e.clientX - rect.left; 
-            const my = e.clientY - rect.top;
-            isDraggingNode = false;
-            for (let n of graphData.nodes) { 
-                if (Math.sqrt((n.x - mx)**2 + (n.y - my)**2) < 18) { 
-                    draggedNode = n; 
-                    canvas.style.cursor = 'grabbing';
-                    break; 
-                } 
-            }
-        });
-
-        canvas.addEventListener("mousemove", (e) => { 
-            const rect = canvas.getBoundingClientRect(); 
-            const mx = e.clientX - rect.left; 
-            const my = e.clientY - rect.top;
-
-            if (draggedNode) { 
-                isDraggingNode = true;
-                draggedNode.x = mx; 
-                draggedNode.y = my; 
-                canvas.style.cursor = 'grabbing';
-            } else {
-                let isHovering = false;
-                for (let n of graphData.nodes) { 
-                    if (Math.sqrt((n.x - mx)**2 + (n.y - my)**2) < 18) { 
-                        isHovering = true; 
-                        break; 
-                    } 
-                }
-                canvas.style.cursor = isHovering ? 'pointer' : 'default';
-            }
-        });
-
-        canvas.addEventListener("mouseup", () => { 
-            if (draggedNode && !isDraggingNode) {
-                loadNoteContent(draggedNode.id);
-            }
-            draggedNode = null; 
-            isDraggingNode = false;
-            if (canvas) canvas.style.cursor = 'default';
-        });
-
-        async function reloadGlobalGraph() { 
-            try { 
-                const res = await fetch("/api/graph-data"); 
-                const data = await res.json(); 
-                initPhysicsNodes(data); 
-            } catch(e){} 
-        }
-
-        function generateLocalAnalysis(text) {
-            if (!text || text.trim() === "") return { summary: "Documento sem conteúdo para análise estrutural.", points: ["Nenhum dado legível identificado."] };
-
-            const cleanText = text.replace(/\[\[(.*?)\]\]/g, '$1').replace(/[#*`>]/g, '').trim();
-            const sentences = cleanText.split(/(?<=[.!?])\s+/).filter(s => s.length > 15);
-
-            if (sentences.length === 0) return { summary: "Conteúdo insuficiente para gerar uma síntese jurídica compreensível.", points: ["Texto excessivamente curto ou vazio."] };
-
-            let summary = sentences.slice(0, 2).join(' ');
-            if (summary.length > 180) summary = summary.substring(0, 177) + "...";
-
-            const keywords = ["prazo", "valor", "artigo", "lei", "juiz", "decisão", "recurso", "testemunha", "alega", "direito", "dever", "cita", "importante", "urgente", "pedido", "condena", "prova", "jurisprudência"];
-            let points = [];
-
-            for (let sentence of sentences) {
-                const lower = sentence.toLowerCase();
-                if (keywords.some(kw => lower.includes(kw))) {
-                    points.push(sentence.length > 90 ? sentence.substring(0, 87) + "..." : sentence);
-                }
-                if (points.length >= 3) break;
-            }
-
-            if (points.length === 0) {
-                points = sentences.slice(1, 4).map(s => s.length > 90 ? s.substring(0, 87) + "..." : s);
-            }
-            if (points.length === 0) points = ["Nenhum ponto de destaque específico detectado."];
-
-            return { summary, points };
         }
 
         async function loadNoteContent(filename) {
             selectedFileId = filename;
             const shortName = filename.split('/').pop();
             activeNoteTitle.innerText = shortName.replace(/\.(md|pdf|txt)$/i, "");
-            if (activeNoteMeta) activeNoteMeta.innerText = `Cofre: BaseConhecimento/${filename}`;
-            
+            activeNoteMeta.innerText = `Cofre: BaseConhecimento/${filename}`;
             viewDoc.innerHTML = `<div class="text-center text-slate-400 my-20 animate-pulse">Indexando bloco documental...</div>`;
-            viewRaw.innerText = "Buscando texto bruto...";
-            
-            document.getElementById("meta-summary").innerText = "Processando varredura local da peça...";
-            document.getElementById("meta-points").innerHTML = `<div class="text-[11px] text-slate-400 font-medium animate-pulse">Aguarde...</div>`;
 
-            switchTab('doc');
-            updateFavoriteStarUI();
-            buildNotesTree();
-
-            if (filename.toLowerCase().endsWith('.pdf')) {
-                viewDoc.innerHTML = `<iframe src="/api/note-raw?file=${encodeURIComponent(filename)}" class="w-full h-[380px] border-0 rounded-xl bg-white"></iframe>`;
-                viewRaw.innerText = "[Visualização de arquivo PDF ativa]";
-                rawContentBuffer = "[Arquivo Binário PDF]";
-                document.getElementById("meta-summary").innerText = "Arquivos PDF aguardando OCR externo. Análise não disponível no momento.";
-                document.getElementById("meta-points").innerHTML = `<div class="text-[11px] text-amber-500 font-medium italic">Arquivo binário impenetrável sem IA Visual.</div>`;
-                document.getElementById("circle-progress").setAttribute("stroke-dasharray", "100, 100");
-                document.getElementById("circle-text").innerText = "100%";
-                document.getElementById("analysis-status-desc").innerText = "Pronto para análise visual.";
-                return;
-            }
+            highlightSelectedRow(filename);
 
             try {
                 const res = await fetch(`/api/note-content?file=${encodeURIComponent(filename)}`);
-                if (!res.ok) throw new Error(`Erro HTTP: ${res.status}`);
                 const data = await res.json();
-                if (data.error) throw new Error(data.error);
-                
-                const fileContent = (data && data.content !== undefined) ? data.content : "";
-                rawContentBuffer = fileContent;
-                viewRaw.innerText = fileContent || "[Arquivo de texto vazio]";
-                
-                viewDoc.innerHTML = `
-                    <div class="border border-slate-200 dark:border-slate-700 rounded-lg p-5 bg-white dark:bg-slate-800 shadow-xs max-w-xl mx-auto font-serif leading-relaxed">
-                        <div class="text-center border-b border-slate-200 dark:border-slate-700 pb-3 mb-4">
-                            <h3 class="font-bold text-sm tracking-wide uppercase text-slate-800 dark:text-white">BMS SERVICE - PARECER JURÍDICO</h3>
-                            <p class="text-[10px] text-slate-400 mt-0.5">Identificador de Volume: Cofre/${filename}</p>
-                        </div>
-                        <div class="space-y-3 text-[11px] text-slate-700 dark:text-slate-300 whitespace-pre-wrap">${fileContent || 'Este documento não possui registros textuais escritos.'}</div>
-                    </div>
-                `;
-
-                const analysis = generateLocalAnalysis(fileContent);
-                document.getElementById("meta-summary").innerText = analysis.summary;
-                document.getElementById("meta-points").innerHTML = analysis.points.map(p => `<div class="flex items-start gap-2 text-slate-600 dark:text-slate-400 font-medium"><i data-lucide="check-circle" class="w-3.5 h-3.5 shrink-0 text-emerald-500"></i> <span>${p}</span></div>`).join('');
-                
-                document.getElementById("circle-progress").setAttribute("stroke-dasharray", "100, 100");
-                document.getElementById("circle-text").innerText = "100%";
-                document.getElementById("analysis-status-desc").innerText = "Varredura local completa.";
-                lucide.createIcons();
-
-            } catch (err) {
-                console.error(err);
-                viewDoc.innerHTML = `<div class="text-center text-red-500 my-20 font-bold text-sm bg-red-50 dark:bg-red-900/30 p-4 rounded-xl border border-red-200 dark:border-red-900 mx-10">Erro ao abrir visualização: ${err.message}</div>`;
-                viewRaw.innerText = `Falha Crítica do Servidor: ${err.message}`;
-            }
+                viewDoc.innerHTML = `<div class="whitespace-pre-wrap">${data.content || 'Sem texto.'}</div>`;
+            } catch (err) { viewDoc.innerHTML = "Erro ao carregar."; }
         }
 
         async function processUploadBatch(fileList) {
             let baseFolder = "";
             if (selectedFileId && selectedFileId.endsWith("/")) baseFolder = selectedFileId;
-            else if (selectedFileId && selectedFileId.includes("/")) baseFolder = selectedFileId.substring(0, selectedFileId.lastIndexOf("/")) + "/";
-
-            document.getElementById("meta-summary").innerText = `Fazendo upload de ${fileList.length} item(ns)...`;
-            
-            let successCount = 0;
             for (let i = 0; i < fileList.length; i++) {
                 const file = fileList[i];
                 const relativePath = file.webkitRelativePath || file.name;
-                const finalPath = baseFolder + relativePath;
-
-                try {
-                    const res = await fetch(`/api/upload-vault?file=${encodeURIComponent(finalPath)}`, { method: "POST", body: file });
-                    if (res.ok) successCount++;
-                } catch(err) { console.error(err); }
+                await fetch(`/api/upload-vault?file=${encodeURIComponent(baseFolder + relativePath)}`, { method: "POST", body: file });
             }
-            
-            document.getElementById("meta-summary").innerText = `Transferência de ${successCount} arquivo(s) concluída!`;
-            await buildNotesTree(); 
-            await reloadGlobalGraph();
+            buildNotesTree(); reloadGlobalGraph();
         }
 
-        document.getElementById("global-vault-upload").onchange = (e) => {
-            if(e.target.files.length > 0) processUploadBatch(e.target.files);
-            e.target.value = "";
-        };
-
-        document.getElementById("global-folder-upload").onchange = (e) => {
-            if(e.target.files.length > 0) processUploadBatch(e.target.files);
-            e.target.value = "";
-        };
-
-        document.getElementById("btn-chat-attach").onclick = () => document.getElementById("chat-context-upload").click();
-        document.getElementById("chat-context-upload").onchange = (e) => {
-            const file = e.target.files[0]; if (!file) return;
-            const reader = new FileReader();
-            reader.onload = (event) => {
-                pendingChatAttachment = { name: file.name, content: event.target.result };
-                document.getElementById("chat-attachment-name").innerText = file.name;
-                document.getElementById("chat-attachment-area").classList.remove("hidden");
-            };
-            reader.readAsText(file);
-        };
-
-        document.getElementById("btn-remove-attachment").onclick = () => {
-            pendingChatAttachment = null;
-            document.getElementById("chat-attachment-area").classList.add("hidden");
-            document.getElementById("chat-context-upload").value = "";
-        };
+        document.getElementById("global-vault-upload").onchange = (e) => { processUploadBatch(e.target.files); };
+        document.getElementById("global-folder-upload").onchange = (e) => { processUploadBatch(e.target.files); };
 
         async function sendChatMessage() {
             let query = chatInput.value.trim();
             if (!query) return;
-
             const pwd = appPassword.value.trim();
-            if (!pwd) {
-                renderMessageBlock("assistant", "⚠️ **Acesso Negado:** Por favor, insira o Token de Validação Local no campo acima antes de enviar instruções.");
-                return;
-            }
+            if (!pwd) return alert("Insira o token.");
 
             renderMessageBlock("user", query);
-            chatInput.value = "";
+            chatInput.value = ""; chatInput.style.height = "auto";
             
-            const ctxArea = document.getElementById("ctx-area").value;
-            const ctxType = document.getElementById("ctx-type").value;
-            const ctxPhase = document.getElementById("ctx-phase").value;
-            const ctxObj = document.getElementById("ctx-obj").value;
-
-            let sysContext = `[Diretriz Processual Selecionada na Interface]\n- Área Jurídica: ${ctxArea}\n- Tipo de Peça: ${ctxType}\n- Fase Atual: ${ctxPhase}\n- Objetivo: ${ctxObj}\nAdapte seu vocabulário e respostas a estas diretrizes.\n\n`;
-            
-            if (selectedFileId) sysContext += `[O usuário está visualizando e trabalhando no arquivo: Cofre/${selectedFileId.replace(/\/$/, "")}]\n\n`;
-            
-            if (pendingChatAttachment) {
-                sysContext += `[Arquivo anexado nesta mensagem: ${pendingChatAttachment.name}]\nConteúdo:\n${pendingChatAttachment.content}\n\n`;
-                document.getElementById("chat-attachment-area").classList.add("hidden");
-                document.getElementById("chat-context-upload").value = "";
-                pendingChatAttachment = null;
-            }
-            
-            const fullPrompt = `${sysContext}Instrução do usuário: ${query}`;
-            chatHistory.push({ role: "user", content: fullPrompt });
-
-            const tempId = renderMessageBlock("assistant", "Analisando conformidade e processando...");
+            chatHistory.push({ role: "user", content: query });
+            const tempId = renderMessageBlock("assistant", "Processando parecer...");
 
             try {
                 const res = await fetch("/api/chat", {
@@ -1396,66 +710,30 @@
                     body: JSON.stringify({ messages: chatHistory })
                 });
                 const data = await res.json();
-                
-                const loaderBlock = document.getElementById(tempId);
-                if (loaderBlock) loaderBlock.remove();
-
-                if (data.error) {
-                    renderMessageBlock("assistant", `❌ Erro de Autenticação: ${data.error}`);
-                } else if (data.reply) {
+                document.getElementById(tempId).remove();
+                if (data.reply) {
                     renderMessageBlock("assistant", data.reply);
                     chatHistory.push({ role: "assistant", content: data.reply });
-                    
-                    if (data.citedFiles && data.citedFiles.length > 0) {
-                        highlightedNodes = data.citedFiles.map(f => f.replace(/\/$/, ""));
-                    } else {
-                        highlightedNodes = [];
-                    }
-
-                    buildNotesTree();
-                    reloadGlobalGraph();
+                    buildNotesTree(); reloadGlobalGraph();
                 }
-            } catch (err) {
-                const loaderBlock = document.getElementById(tempId);
-                if (loaderBlock) loaderBlock.remove();
-                renderMessageBlock("assistant", "❌ Falha crítica de conexão com o servidor local.");
-            }
+            } catch (err) { document.getElementById(tempId).innerText = "Erro na conexão."; }
         }
 
         function renderMessageBlock(role, text) {
-            msgCounter++;
-            const id = "msg-" + Date.now() + "-" + msgCounter;
-            
+            msgCounter++; const id = "msg-" + Date.now() + "-" + msgCounter;
             const wrapper = document.createElement("div");
             wrapper.className = `w-full flex shrink-0 ${role === 'user' ? 'justify-end' : 'justify-start'}`;
             wrapper.id = id;
-            
             const bubble = document.createElement("div");
-            
-            let htmlText = text
-                .replace(/</g, "&lt;").replace(/>/g, "&gt;") 
-                .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" download class="text-blue-200 underline font-black hover:text-white transition-colors">$1</a>')
-                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-                .replace(/\n/g, '<br>');
-
-            if (role === "user") {
-                bubble.className = "bg-blue-600 text-white rounded-2xl rounded-tr-none p-3 text-xs max-w-[85%] font-semibold leading-relaxed whitespace-pre-wrap shadow-xs select-text text-left break-words";
-            } else {
-                bubble.className = "bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 rounded-2xl rounded-tl-none p-3 text-xs max-w-[85%] shadow-xs leading-relaxed whitespace-pre-wrap select-text text-left break-words";
-            }
-            
-            bubble.innerHTML = htmlText;
-            wrapper.appendChild(bubble);
-            messagesContainer.appendChild(wrapper);
+            bubble.className = role === "user" ? "bg-blue-600 text-white rounded-2xl p-3 text-xs max-w-[85%] text-left break-words" : "bg-white dark:bg-slate-800 border dark:border-slate-700 p-3 text-xs max-w-[85%] text-left break-words text-slate-700 dark:text-slate-200 rounded-2xl";
+            bubble.innerText = text;
+            wrapper.appendChild(bubble); messagesContainer.appendChild(wrapper);
             messagesContainer.scrollTop = messagesContainer.scrollHeight;
             return id;
         }
 
         document.getElementById("btn-send").onclick = sendChatMessage;
-        chatInput.onkeydown = (e) => { if (e.key === "Enter") sendChatMessage(); };
-
-        buildNotesTree();
-        reloadGlobalGraph();
+        buildNotesTree(); reloadGlobalGraph();
     </script>
 </body>
 </html>
