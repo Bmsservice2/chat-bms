@@ -73,10 +73,10 @@
                 <div class="text-4xl font-black text-slate-800 dark:text-white mt-4 font-mono"><span id="st-value">0.0</span></div>
             </div>
             <div id="st-state-3" class="hidden flex flex-col items-center pt-2">
-                <div class="w-16 h-16 bg-emerald-100 dark:bg-emerald-900/50 rounded-full flex items-center justify-center text-emerald-600 dark:text-emerald-400 mb-3"><i data-lucide="check-circle-2" class="w-8 h-8"></i></div>
+                <div class="w-16 h-16 bg-emerald-100 dark:bg-emerald-950/40 rounded-full flex items-center justify-center text-emerald-600 dark:text-emerald-400 mb-3"><i data-lucide="check-circle-2" class="w-8 h-8"></i></div>
                 <h3 class="font-black text-slate-800 dark:text-white text-lg">Teste Concluído!</h3>
                 <div class="bg-slate-50 dark:bg-slate-800 rounded-2xl p-5 w-full mt-4 border border-slate-100">
-                    <p class="text-center text-3xl font-black text-slate-800 dark:text-white font-mono"><span id="st-final-value">0.0</span> <span class="text-sm font-sans">Mbps</span></p>
+                    <p class="text-center text-3xl font-black text-slate-800 dark:text-white font-mono"><span id="st-final-value">0.0</span> <span class="text-sm font-sans text-slate-400">Mbps</span></p>
                 </div>
                 <button onclick="closeSpeedTest()" class="w-full mt-5 py-3 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-xl font-bold text-xs">Concluir</button>
             </div>
@@ -144,9 +144,10 @@
                     <i data-lucide="chevron-right" class="w-3.5 h-3.5 text-slate-400 group-hover:text-blue-500"></i>
                 </div>
 
-                <div class="bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-800 rounded-2xl p-3.5">
+                <div onclick="document.getElementById('account-settings-modal').classList.remove('hidden')" class="bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-800 rounded-2xl p-3.5 cursor-pointer hover:ring-2 hover:ring-blue-500/50 transition-all">
                     <div class="flex items-center justify-between mb-1.5">
                         <span class="text-[11px] font-bold text-slate-700 dark:text-slate-300 flex items-center gap-1.5"><i data-lucide="shield-check" class="w-3.5 h-3.5 text-blue-600"></i> Plano Profissional</span>
+                        <span class="text-[10px] bg-emerald-100 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-300 font-extrabold px-1.5 py-0.5 rounded-md">TESTE</span>
                     </div>
                     <div class="text-[10px] text-slate-400 dark:text-slate-500 mb-2 font-medium">Uso do Assistente BMS este mês</div>
                     <div class="w-full bg-slate-200 dark:bg-slate-700 h-2 rounded-full overflow-hidden mb-1"><div class="bg-blue-600 h-full w-[10%] rounded-full"></div></div>
@@ -171,6 +172,12 @@
                         <button onclick="selectOption('area', 'Direito Trabalhista', 'Direito Trabalhista', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 truncate">Direito Trabalhista</button>
                         <button onclick="selectOption('area', 'Direito Cível', 'Direito Cível', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 truncate">Direito Cível</button>
                         <button onclick="selectOption('area', 'Direito Penal', 'Direito Penal', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 truncate">Direito Penal</button>
+                        <button onclick="selectOption('area', 'Direito Tributário', 'Direito Tributário', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 truncate">Direito Tributário</button>
+                        <button onclick="selectOption('area', 'Direito Empresarial', 'Direito Empresarial', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 truncate">Direito Empresarial</button>
+                        <button onclick="selectOption('area', 'Direito de Família', 'Direito de Família', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 truncate">Direito de Família</button>
+                        <button onclick="selectOption('area', 'Direito Administrativo', 'Direito Administrativo', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 truncate">Direito Administrativo</button>
+                        <button onclick="selectOption('area', 'Direito Previdenciário', 'Direito Previdenciário', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 truncate">Direito Previdenciário</button>
+                        <button onclick="selectOption('area', 'Direito Constitucional', 'Direito Constitucional', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 truncate">Direito Constitucional</button>
                     </div>
                 </div>
 
@@ -184,7 +191,12 @@
                     <div id="dropdown-type" class="hidden absolute top-[105%] left-0 mt-1 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl shadow-2xl py-1.5 w-full z-50 flex flex-col max-h-48 overflow-y-auto no-scrollbar text-xs font-bold text-slate-600 dark:text-slate-300">
                         <button onclick="selectOption('type', 'Análise/Documento', 'Análise Interna', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 truncate">Análise Interna</button>
                         <button onclick="selectOption('type', 'Petição Inicial', 'Petição Inicial', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 truncate">Petição Inicial</button>
+                        <button onclick="selectOption('type', 'Contestação', 'Contestação', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 truncate">Contestação</button>
                         <button onclick="selectOption('type', 'Recurso', 'Recurso (Apelação/RO)', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 truncate">Recurso (Apelação/RO)</button>
+                        <button onclick="selectOption('type', 'Alegações Finais', 'Alegações Finais', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 truncate">Alegações Finais</button>
+                        <button onclick="selectOption('type', 'Contrato/Acordo', 'Contrato / Acordo', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 truncate">Contrato / Acordo</button>
+                        <button onclick="selectOption('type', 'Parecer Jurídico', 'Parecer Jurídico', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 truncate">Parecer Jurídico</button>
+                        <button onclick="selectOption('type', 'Notificação Extrajudicial', 'Notificação Extrajudicial', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 truncate">Notificação Extrajudicial</button>
                     </div>
                 </div>
 
@@ -211,27 +223,30 @@
                     <div id="dropdown-obj" class="hidden absolute top-[105%] left-0 mt-1 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl shadow-2xl py-1.5 w-full z-50 flex flex-col max-h-48 overflow-y-auto no-scrollbar text-xs font-bold text-slate-600 dark:text-slate-300">
                         <button onclick="selectOption('obj', 'Auditar/Resumir', 'Auditoria Geral', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 truncate">Auditoria Geral</button>
                         <button onclick="selectOption('obj', 'Encontrar Contradições', 'Achar Contradições', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 truncate">Achar Contradições</button>
+                        <button onclick="selectOption('obj', 'Elaborar Minuta', 'Elaborar Minuta', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 truncate">Elaborar Minuta</button>
                     </div>
                 </div>
             </div>
 
-            <div class="flex flex-1 gap-4 overflow-hidden h-full relative">
+            <div class="flex flex-1 gap-4 overflow-hidden h-full">
                 
                 <div id="center-preview-container" class="flex-1 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-xs flex flex-col overflow-hidden h-full">
-                    <div class="flex items-center justify-between px-5 py-2 border-b border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900">
+                    <div class="flex items-center justify-between px-5 py-3 border-b border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900">
                         <div class="flex items-center gap-2">
                             <h2 id="active-note-title" class="text-sm font-bold text-slate-800 dark:text-white truncate max-w-xs">Selecione um arquivo principal</h2>
-                            <button id="btn-favorite-star" onclick="toggleActiveFileFavorite()" class="text-slate-300 hover:text-amber-500"><i data-lucide="star" class="w-4 h-4"></i></button>
+                            <button id="btn-favorite-star" onclick="toggleActiveFileFavorite()" class="text-slate-300 dark:text-slate-600 hover:text-amber-500"><i data-lucide="star" class="w-4 h-4"></i></button>
                         </div>
-                        
                         <div class="flex bg-slate-100 dark:bg-slate-800 p-0.5 rounded-lg text-[9px] font-black mr-2">
                             <button id="btn-tab-main-formatted" onclick="setMainTab('formatted')" class="px-2 py-1 bg-white dark:bg-slate-700 dark:text-white rounded-md shadow-xs">Original</button>
                             <button id="btn-tab-main-raw" onclick="setMainTab('raw')" class="px-2 py-1 text-slate-400">Markdown</button>
                         </div>
+                        <div class="flex items-center gap-1.5">
+                            <button onclick="downloadActiveFile()" class="p-1.5 text-slate-400 hover:text-slate-600"><i data-lucide="download" class="w-4 h-4"></i></button>
+                            <button onclick="printActiveFile()" class="p-1.5 text-slate-400 hover:text-slate-600"><i data-lucide="printer" class="w-4 h-4"></i></button>
+                        </div>
                     </div>
-                    
-                    <div class="flex flex-1 p-3 bg-[#fafafa] dark:bg-slate-950 overflow-hidden h-full relative">
-                        <div id="view-doc-main" class="w-full h-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl overflow-y-auto p-5 text-xs text-slate-700 dark:text-slate-300 font-serif leading-relaxed select-text shadow-xs">
+                    <div class="flex flex-1 p-4 bg-[#fafafa] dark:bg-slate-950 overflow-hidden h-full relative">
+                        <div id="view-doc-main" class="w-full h-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl overflow-y-auto p-6 text-xs text-slate-700 dark:text-slate-300 font-serif leading-relaxed select-text shadow-sm h-full">
                             <div class="text-center text-slate-400 my-20">Nenhum documento aberto no monitor principal.</div>
                         </div>
                         <div id="view-raw-main" class="hidden w-full h-full bg-slate-900 text-blue-400 border border-slate-800 rounded-xl p-4 font-mono text-xs whitespace-pre-wrap overflow-y-auto select-text"></div>
@@ -254,7 +269,7 @@
 
                     <div id="pane-comparison-doc" class="flex-1 flex flex-col overflow-hidden p-4 bg-[#fafafa] dark:bg-slate-950 h-full">
                         <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-2 mb-2 flex items-center justify-between shadow-xs">
-                            <span id="comp-note-title" class="text-xs font-bold text-slate-400 truncate pr-2">Arraste outro arquivo aqui...</span>
+                            <span id="comp-note-title" class="text-xs font-bold text-slate-400 truncate pr-2">Arraste outro arquivo aqui para comparar...</span>
                             <div class="flex bg-slate-100 dark:bg-slate-800 p-0.5 rounded-lg text-[9px] font-black mr-2">
                                 <button id="btn-tab-comp-formatted" onclick="setCompTextTab('formatted')" class="px-2 py-0.5 bg-white dark:bg-slate-700 rounded-md shadow-xs">Texto</button>
                                 <button id="btn-tab-comp-raw" onclick="setCompTextTab('raw')" class="px-2 py-0.5 text-slate-400">Código</button>
@@ -313,6 +328,14 @@
     <script>
         lucide.createIcons();
 
+        document.addEventListener('keydown', (e) => {
+            if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
+                e.preventDefault();
+                const sb = document.getElementById('global-search-bar');
+                if (sb) { sb.focus(); sb.select(); }
+            }
+        });
+
         const messagesContainer = document.getElementById("chat-messages");
         const chatInput = document.getElementById("chat-input");
         const btnSend = document.getElementById("btn-send");
@@ -350,6 +373,13 @@
         let collapsedFolders = JSON.parse(localStorage.getItem("bms_collapsed_folders") || "{}");
         let highlightedNodes = []; 
 
+        if(chatInput) {
+            chatInput.addEventListener("input", function() {
+                this.style.height = "auto";
+                this.style.height = this.scrollHeight + "px";
+            });
+        }
+
         const sidebarLeft = document.getElementById('sidebar-left');
         const sidebarComparison = document.getElementById('sidebar-comparison');
         const sidebarRight = document.getElementById('sidebar-right');
@@ -361,16 +391,15 @@
 
         let isResizingLeft = false, isResizingCenter = false, isResizingRight = false;
 
-        resizerLeft?.addEventListener('mousedown', (e) => { isResizingLeft = true; document.body.style.cursor = 'col-resize'; e.preventDefault(); });
-        resizerCenter?.addEventListener('mousedown', (e) => { isResizingCenter = true; document.body.style.cursor = 'col-resize'; e.preventDefault(); });
-        resizerRight?.addEventListener('mousedown', (e) => { isResizingRight = true; document.body.style.cursor = 'col-resize'; e.preventDefault(); });
+        if(resizerLeft) resizerLeft.addEventListener('mousedown', (e) => { isResizingLeft = true; document.body.style.cursor = 'col-resize'; e.preventDefault(); });
+        if(resizerCenter) resizerCenter.addEventListener('mousedown', (e) => { isResizingCenter = true; document.body.style.cursor = 'col-resize'; e.preventDefault(); });
+        if(resizerRight) resizerRight.addEventListener('mousedown', (e) => { isResizingRight = true; document.body.style.cursor = 'col-resize'; e.preventDefault(); });
 
         document.addEventListener('mousemove', (e) => {
             if (isResizingLeft && sidebarLeft) {
                 let w = e.clientX; if (w > 150 && w < window.innerWidth * 0.3) sidebarLeft.style.width = w + "px";
             }
-            if (isResizingCenter && sidebarComparison && centerPanel) {
-                let leftBounds = sidebarLeft ? sidebarLeft.clientWidth : 240;
+            if (isResizingCenter && sidebarComparison) {
                 let calculatedWidth = window.innerWidth - e.clientX - (sidebarRight ? sidebarRight.clientWidth : 320);
                 if (calculatedWidth > 200 && calculatedWidth < window.innerWidth * 0.5) sidebarComparison.style.width = calculatedWidth + "px";
             }
@@ -394,20 +423,144 @@
             if (canvas) drawGraph(); 
         }
 
-        function closeAllDropdownsMenu() {
-            filterDropdown?.classList.add("hidden");
-            document.getElementById("custom-context-menu")?.classList.add("hidden");
-            document.getElementById("dropdown-area")?.classList.add("hidden");
-            document.getElementById("dropdown-type")?.classList.add("hidden");
-            document.getElementById("dropdown-phase")?.classList.add("hidden");
-            document.getElementById("dropdown-obj")?.classList.add("hidden");
-            document.getElementById("dropdown-upload")?.classList.add("hidden");
+        function openSpeedTestModal() {
+            const modal = document.getElementById("speedtest-modal");
+            if(!modal) return;
+            modal.classList.remove("hidden");
+            setTimeout(() => {
+                modal.classList.remove("opacity-0");
+                document.getElementById("speedtest-content")?.classList.remove("scale-95");
+            }, 10);
+            document.getElementById("st-state-1")?.classList.remove("hidden");
+            document.getElementById("st-state-2")?.classList.add("hidden");
+            document.getElementById("st-state-3")?.classList.add("hidden");
         }
 
-        function toggleFilterDropdown(e) { e.stopPropagation(); closeAllDropdownsMenu(); filterDropdown?.classList.remove("hidden"); }
-        function toggleCustomDropdown(id, e) { e.stopPropagation(); const el = document.getElementById(id); const isHidden = el?.classList.contains("hidden"); closeAllDropdownsMenu(); if (isHidden) el?.classList.remove("hidden"); }
-        function selectOption(category, value, label, e) { e.stopPropagation(); const vi = document.getElementById(`ctx-${category}`); const ls = document.getElementById(`label-ctx-${category}`); if(vi) vi.value = value; if(ls) ls.innerText = label; closeAllDropdownsMenu(); }
-        function changeFilter(type) { currentFilterType = type; closeAllDropdownsMenu(); buildNotesTree(); }
+        function closeSpeedTest() {
+            const modal = document.getElementById("speedtest-modal");
+            if(!modal) return;
+            modal.classList.add("opacity-0");
+            document.getElementById("speedtest-content")?.classList.add("scale-95");
+            setTimeout(() => { modal.classList.add("hidden"); }, 300);
+        }
+
+        function updateSpeedometer(mbps) {
+            const valEl = document.getElementById("st-value");
+            if(valEl) valEl.innerText = mbps.toFixed(1);
+            let maxSpeed = 100;
+            let mapped = Math.min(Math.max(mbps, 0), maxSpeed);
+            let rot = -90 + (mapped / maxSpeed) * 180;
+            const needle = document.getElementById("st-needle");
+            if(needle) needle.style.transform = `translateX(-50%) rotate(${rot}deg)`;
+            let offset = 125 - (mapped / maxSpeed) * 125;
+            const prog = document.getElementById("st-progress");
+            if(prog) prog.style.strokeDashoffset = offset;
+        }
+
+        async function startSpeedTest() {
+            document.getElementById("st-state-1")?.classList.add("hidden");
+            document.getElementById("st-state-2")?.classList.remove("hidden");
+            updateSpeedometer(0);
+            try {
+                const res = await fetch('/api/speedtest?cacheBust=' + Date.now());
+                if (!res.ok) throw new Error("Falha");
+                const reader = res.body.getReader();
+                let loaded = 0; const startTime = Date.now(); let lastUiUpdate = startTime;
+                while(true) {
+                    const {done, value} = await reader.read(); if (done) break;
+                    loaded += value.length; const now = Date.now();
+                    if (now - lastUiUpdate > 100) {
+                        const duration = (now - startTime) / 1000;
+                        const mbps = ((loaded * 8) / 1000000) / duration;
+                        updateSpeedometer(mbps); lastUiUpdate = now;
+                    }
+                }
+                const finalDuration = (Date.now() - startTime) / 1000;
+                const finalMbps = ((loaded * 8) / 1000000) / finalDuration;
+                updateSpeedometer(finalMbps);
+                setTimeout(() => {
+                    document.getElementById("st-state-2")?.classList.add("hidden");
+                    document.getElementById("st-state-3")?.classList.remove("hidden");
+                    const finVal = document.getElementById("st-final-value");
+                    if(finVal) finVal.innerText = finalMbps.toFixed(1);
+                }, 800);
+            } catch (e) { closeSpeedTest(); }
+        }
+
+        function setComparisonMode(mode) {
+            const btnC = document.getElementById("btn-tab-comp");
+            const btnG = document.getElementById("btn-tab-graph");
+            const paneC = document.getElementById("pane-comparison-doc");
+            const paneG = document.getElementById("pane-comparison-graph");
+            if (mode === 'compare') {
+                paneC?.classList.remove("hidden"); paneG?.classList.add("hidden");
+                if(btnC) btnC.className = "px-3 py-1 bg-white dark:bg-slate-700 dark:text-white rounded-md shadow-xs";
+                if(btnG) btnG.className = "px-3 py-1 text-slate-500 dark:text-slate-400";
+            } else {
+                paneC?.classList.add("hidden"); paneG?.classList.remove("hidden");
+                if(btnG) btnG.className = "px-3 py-1 bg-white dark:bg-slate-700 dark:text-white rounded-md shadow-xs";
+                if(btnC) btnC.className = "px-3 py-1 text-slate-500 dark:text-slate-400";
+                resizeCanvas(); reloadGlobalGraph();
+            }
+        }
+
+        function openMenuComparison() { if(contextMenuSelectedPath) loadComparisonDoc(contextMenuSelectedPath); closeAllDropdownsMenu(); }
+
+        async function loadComparisonDoc(filename) {
+            comparisonFileId = filename;
+            const titleSpan = document.getElementById("comp-note-title");
+            const fBody = document.getElementById("comp-view-body-formatted");
+            const rBody = document.getElementById("comp-view-body-raw");
+            if(titleSpan) titleSpan.innerText = filename.split('/').pop();
+            if(fBody) fBody.innerHTML = `<div class="text-center text-slate-400 py-10 animate-pulse">Indexando bloco...</div>`;
+            try {
+                const res = await fetch(`/api/note-content?file=${encodeURIComponent(filename)}`);
+                const data = await res.json(); compContentBuffer = data.content || "";
+                if(fBody) fBody.innerHTML = renderMarkdownHTML(compContentBuffer, filename);
+                if(rBody) rBody.innerText = compContentBuffer;
+                setCompTextTab('formatted');
+            } catch(e){ if(fBody) fBody.innerText = "Falha."; }
+        }
+
+        function clearComparisonDoc() {
+            comparisonFileId = null;
+            const titleEl = document.getElementById("comp-note-title");
+            const bodyEl = document.getElementById("comp-view-body-formatted");
+            if(titleEl) titleEl.innerText = "Arraste outro arquivo aqui para comparar...";
+            if(bodyEl) bodyEl.innerHTML = `<div class="text-center text-slate-300 my-20 dark:text-slate-700">Painel secundário inativo.</div>`;
+        }
+
+        function renderMarkdownHTML(mdText, filename) {
+            if(!mdText) return `<div class="text-center text-slate-400">Documento sem registros.</div>`;
+            const tagRegex = /#([a-zA-Z0-9À-ÿ_-]+)/g; let tags = []; let m;
+            while((m = tagRegex.exec(mdText)) !== null) { tags.push(`#${m[1]}`); }
+            let cleanText = mdText.replace(/\[\[(.*?)\]\]/g, '<span class="text-blue-500 font-bold cursor-pointer hover:underline" onclick="loadNoteContent(\'$1\')">$1</span>');
+            let tagHeader = "";
+            if(tags.length > 0) {
+                tagHeader = `<div class="flex flex-wrap gap-1.5 mb-4 border-b border-slate-100 dark:border-slate-800 pb-2.5">` + 
+                    tags.map(t => `<span class="bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-900 text-[10px] font-black px-2 py-0.5 rounded-md">${t}</span>`).join('') + `</div>`;
+            }
+            return `<div class="font-serif leading-relaxed text-xs select-text">${tagHeader}<div class="whitespace-pre-wrap text-slate-800 dark:text-slate-200">${cleanText}</div></div>`;
+        }
+
+        async function loadNoteContent(filename) {
+            selectedFileId = filename;
+            if(activeNoteTitle) activeNoteTitle.innerText = filename.split('/').pop().replace(/\.(md|pdf|txt)$/i, "");
+            highlightSelectedRow(filename); setMainTab('formatted');
+            if(viewDocMain) viewDocMain.innerHTML = `<div class="text-center text-slate-400 my-20 animate-pulse">Indexando bloco...</div>`;
+            if (filename.toLowerCase().endsWith('.pdf')) {
+                if(viewDocMain) viewDocMain.innerHTML = `<iframe src="/api/note-raw?file=${encodeURIComponent(filename)}" class="w-full h-[400px] border-0 rounded-xl bg-white"></iframe>`;
+                if(viewRawMain) viewRawMain.innerText = "[Binário PDF]";
+                updateFavoriteStarUI(); return;
+            }
+            try {
+                const res = await fetch(`/api/note-content?file=${encodeURIComponent(filename)}`);
+                const data = await res.json(); rawContentBuffer = data.content || "";
+                if(viewDocMain) viewDocMain.innerHTML = renderMarkdownHTML(rawContentBuffer, filename);
+                if(viewRawMain) viewRawMain.innerText = rawContentBuffer;
+                updateFavoriteStarUI();
+            } catch(e) { if(viewDocMain) viewDocMain.innerHTML = "Erro."; }
+        }
 
         function setMainTab(tab) {
             const btnForm = document.getElementById("btn-tab-main-formatted");
@@ -439,129 +592,64 @@
             }
         }
 
-        function setComparisonMode(mode) {
-            const btnC = document.getElementById("btn-tab-comp");
-            const btnG = document.getElementById("btn-tab-graph");
-            const paneC = document.getElementById("pane-comparison-doc");
-            const paneG = document.getElementById("pane-comparison-graph");
-            if (mode === 'compare') {
-                paneC?.classList.remove("hidden"); paneG?.classList.add("hidden");
-                if(btnC) btnC.className = "px-3 py-1 bg-white dark:bg-slate-700 dark:text-white rounded-md shadow-xs";
-                if(btnG) btnG.className = "px-3 py-1 text-slate-500 dark:text-slate-400";
-            } else {
-                paneC?.classList.add("hidden"); paneG?.classList.remove("hidden");
-                if(btnG) btnG.className = "px-3 py-1 bg-white dark:bg-slate-700 dark:text-white rounded-md shadow-xs";
-                if(btnC) btnC.className = "px-3 py-1 text-slate-500 dark:text-slate-400";
-                resizeCanvas(); reloadGlobalGraph();
-            }
+        function closeCustomModal() { document.getElementById("custom-dialog-modal")?.classList.add("hidden"); }
+        function openRenameModal() {
+            document.getElementById("custom-context-menu")?.classList.add("hidden");
+            const modal = document.getElementById("custom-dialog-modal"); if(!modal) return;
+            document.getElementById("modal-title").innerText = "Renomear / Mover Item";
+            document.getElementById("modal-body-content").innerHTML = `<input type="text" id="modal-input-field" value="${contextMenuSelectedPath.replace(/\/$/, "")}" class="w-full bg-slate-50 border dark:border-slate-700 dark:bg-slate-800 rounded-xl p-2 text-xs font-semibold text-slate-800 dark:text-white">`;
+            modal.classList.remove("hidden");
+            document.getElementById("modal-confirm-btn").onclick = async () => {
+                const newPath = document.getElementById("modal-input-field").value.trim();
+                if (newPath) { await renameItem(contextMenuSelectedPath, newPath); closeCustomModal(); }
+            };
         }
-
-        function openMenuComparison() {
-            if(contextMenuSelectedPath) loadComparisonDoc(contextMenuSelectedPath);
-            closeAllDropdownsMenu();
+        function openDeleteModal() {
+            document.getElementById("custom-context-menu")?.classList.add("hidden");
+            const modal = document.getElementById("custom-dialog-modal"); if(!modal) return;
+            document.getElementById("modal-title").innerText = "Confirmar Exclusão";
+            document.getElementById("modal-body-content").innerHTML = `<p>Excluir permanentemente <strong>${contextMenuSelectedPath.replace(/\/$/, "")}</strong>?</p>`;
+            modal.classList.remove("hidden");
+            document.getElementById("modal-confirm-btn").onclick = async () => { await deleteItem(contextMenuSelectedPath); closeCustomModal(); };
         }
-
-        async function loadComparisonDoc(filename) {
-            comparisonFileId = filename;
-            const titleSpan = document.getElementById("comp-note-title");
-            const fBody = document.getElementById("comp-view-body-formatted");
-            const rBody = document.getElementById("comp-view-body-raw");
-            if(titleSpan) titleSpan.innerText = filename.split('/').pop();
-            if(fBody) fBody.innerHTML = `<div class="text-center text-slate-400 py-10 animate-pulse">Indexando bloco...</div>`;
-            try {
-                const res = await fetch(`/api/note-content?file=${encodeURIComponent(filename)}`);
-                const data = await res.json();
-                compContentBuffer = data.content || "";
-                if(fBody) fBody.innerHTML = renderMarkdownHTML(compContentBuffer, filename);
-                if(rBody) rBody.innerText = compContentBuffer;
-            } catch(e){ if(fBody) fBody.innerText = "Erro local."; }
+        function createNewFolderManual(e) {
+            if(e) e.stopPropagation();
+            let context = "";
+            if (selectedFileId && selectedFileId.endsWith("/")) context = selectedFileId;
+            else if (selectedFileId && selectedFileId.includes("/")) context = selectedFileId.substring(0, selectedFileId.lastIndexOf("/")) + "/";
+            const modal = document.getElementById("custom-dialog-modal"); if(!modal) return;
+            document.getElementById("modal-title").innerText = "Criar Nova Pasta";
+            document.getElementById("modal-body-content").innerHTML = `<input type="text" id="modal-input-field" placeholder="Nome da subpasta..." class="w-full bg-slate-50 border dark:border-slate-700 dark:bg-slate-800 rounded-xl p-2 text-xs text-slate-800 dark:text-white">`;
+            modal.classList.remove("hidden");
+            document.getElementById("modal-confirm-btn").onclick = async () => {
+                const name = document.getElementById("modal-input-field").value.trim();
+                if (name) {
+                    try { const res = await fetch("/api/create-folder", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ foldername: context + name }) }); if (res.ok) { buildNotesTree(); reloadGlobalGraph(); } } catch(err){}
+                    closeCustomModal();
+                }
+            };
         }
+        async function deleteItem(p) { try { const res = await fetch("/api/delete-item", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ targetPath: p }) }); if (res.ok) { if(selectedFileId === p || selectedFileId === p + "/") selectedFileId = null; buildNotesTree(); reloadGlobalGraph(); } } catch(err){} }
+        async function renameItem(oldP, newP) { try { const res = await fetch("/api/rename-item", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ oldPath: oldP, newPath: newP }) }); if (res.ok) { if(selectedFileId === oldP || selectedFileId === oldP + "/") selectedFileId = newP; buildNotesTree(); reloadGlobalGraph(); } } catch(err){} }
 
-        // RENDERIZADOR MARKDOWN E FRONTMATTER LOCAL (CUSTO ZERO TOKENS)
-        function renderMarkdownHTML(mdText, filename) {
-            if(!mdText) return `<div class="text-center text-slate-400">Documento sem conteúdo estruturado.</div>`;
-            
-            // Mineração de Tags locais para Frontmatter
-            const tagRegex = /#([a-zA-Z0-9À-ÿ_-]+)/g;
-            let tags = []; let m;
-            while((m = tagRegex.exec(mdText)) !== null) { tags.push(`#${m[1]}`); }
-            
-            let cleanText = mdText.replace(/\[\[(.*?)\]\]/g, '<span class="text-blue-500 font-bold cursor-pointer hover:underline" onclick="loadNoteContent(\'$1\')">$1</span>');
-            
-            let tagHeader = "";
-            if(tags.length > 0) {
-                tagHeader = `<div class="flex flex-wrap gap-1.5 mb-4 border-b border-slate-100 dark:border-slate-800 pb-2.5">` + 
-                    tags.map(t => `<span class="bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-900 text-[10px] font-black px-2 py-0.5 rounded-md">${t}</span>`).join('') + 
-                    `</div>`;
-            }
-
-            return `
-                <div class="font-serif leading-relaxed text-xs select-text">
-                    ${tagHeader}
-                    <div class="whitespace-pre-wrap text-slate-800 dark:text-slate-200">${cleanText}</div>
-                </div>
-            `;
-        }
-
-        async function loadNoteContent(filename) {
-            selectedFileId = filename;
-            if(activeNoteTitle) activeNoteTitle.innerText = filename.split('/').pop().replace(/\.(md|pdf|txt)$/i, "");
-            highlightSelectedRow(filename);
-            setMainTab('formatted');
-
-            if(viewDocMain) viewDocMain.innerHTML = `<div class="text-center text-slate-400 my-20 animate-pulse">Carregando volumes...</div>`;
-            if(viewRawMain) viewRawMain.innerText = "Processando texto puro...";
-
-            if (filename.toLowerCase().endsWith('.pdf')) {
-                if(viewDocMain) viewDocMain.innerHTML = `<iframe src="/api/note-raw?file=${encodeURIComponent(filename)}" class="w-full h-[400px] border-0 rounded-xl bg-white"></iframe>`;
-                if(viewRawMain) viewRawMain.innerText = "[Binário PDF ativo]";
-                updateFavoriteStarUI(); return;
-            }
-
-            try {
-                const res = await fetch(`/api/note-content?file=${encodeURIComponent(filename)}`);
-                const data = await res.json();
-                rawContentBuffer = data.content || "";
-                if(viewDocMain) viewDocMain.innerHTML = renderMarkdownHTML(rawContentBuffer, filename);
-                if(viewRawMain) viewRawMain.innerText = rawContentBuffer;
-                updateFavoriteStarUI();
-            } catch(e) { if(viewDocMain) viewDocMain.innerHTML = "Erro."; }
-        }
-
-        function clearTreeSelection(e) {
-            if (e.target.id === "file-tree" || e.target.tagName === "ASIDE") {
-                selectedFileId = null;
-                if(activeNoteTitle) activeNoteTitle.innerText = "Selecione um arquivo do cofre";
-                if(viewDocMain) viewDocMain.innerHTML = `<div class="text-center text-slate-400 my-20 dark:text-slate-500">Raiz ativa. Arraste e organize os arquivos.</div>`;
-                updateFavoriteStarUI(); buildNotesTree();
-            }
-        }
-
-        function toggleActiveFileFavorite() {
-            if (!selectedFileId) return;
-            const cleanPath = selectedFileId.replace(/\/$/, "");
-            if (favoriteItems[cleanPath]) delete favoriteItems[cleanPath];
-            else favoriteItems[cleanPath] = true;
-            localStorage.setItem("bms_favorites_map", JSON.stringify(favoriteItems));
-            updateFavoriteStarUI(); buildNotesTree();
+        function highlightSelectedRow(targetFilename) {
+            document.querySelectorAll(".tree-row-container").forEach(row => {
+                if (!targetFilename) { row.className = "tree-row-container group flex items-center justify-between w-full rounded-xl p-0.5 border border-transparent hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300"; return; }
+                row.className = (row.getAttribute("data-path").replace(/\/$/, "") === targetFilename.replace(/\/$/, "")) ? "tree-row-container group flex items-center justify-between w-full rounded-xl p-0.5 border text-left bg-blue-50/50 border-blue-500 text-blue-600 shadow-xs dark:bg-blue-950/40" : "tree-row-container group flex items-center justify-between w-full rounded-xl p-0.5 border border-transparent hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300";
+            });
         }
 
         async function buildNotesTree() {
             try {
-                const res = await fetch("/api/notes");
-                const data = await res.json();
+                const res = await fetch("/api/notes"); const data = await res.json();
                 if (data.items && fileTree) {
-                    fileTree.innerHTML = "";
-                    let items = data.items;
-                    items.sort((a, b) => a.path.localeCompare(b.path));
-
+                    fileTree.innerHTML = ""; let items = data.items; items.sort((a, b) => a.path.localeCompare(b.path));
                     if (currentFilterType === "md") items = items.filter(i => i.type === "directory" || i.path.endsWith(".md"));
                     if (currentFilterType === "pdf") items = items.filter(i => i.type === "directory" || i.path.endsWith(".pdf"));
-
+                    
                     items.forEach(item => {
                         const cleanItemPath = item.path.replace(/\/$/, "");
-                        let pathParts = cleanItemPath.split('/');
-                        let isHidden = false; let currentPathCheck = "";
+                        let pathParts = cleanItemPath.split('/'); let isHidden = false; let currentPathCheck = "";
                         for (let i = 0; i < pathParts.length - 1; i++) {
                             currentPathCheck += (i === 0 ? "" : "/") + pathParts[i];
                             if (collapsedFolders[currentPathCheck]) { isHidden = true; break; }
@@ -571,53 +659,35 @@
                         const row = document.createElement("div");
                         const cleanSelectedPath = selectedFileId ? selectedFileId.replace(/\/$/, "") : "";
                         const isSelected = (cleanItemPath === cleanSelectedPath);
-                        
-                        row.className = `tree-row-container group flex items-center justify-between w-full rounded-xl p-0.5 border transition-all text-left ${isSelected ? 'bg-blue-50/50 dark:bg-blue-950/30 border-blue-500 dark:border-blue-400 text-blue-600 dark:text-blue-400 shadow-xs' : 'border-transparent hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300'}`;
+                        row.className = `tree-row-container group flex items-center justify-between w-full rounded-xl p-0.5 border text-left ${isSelected ? 'bg-blue-50/50 dark:bg-blue-950/30 border-blue-500 text-blue-600 shadow-xs' : 'border-transparent hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300'}`;
                         row.setAttribute("data-path", item.path);
 
-                        const isDir = item.type === "directory";
-                        row.draggable = true;
-                        
-                        row.ondragstart = (e) => { e.dataTransfer.setData("text/plain", item.path); };
+                        const isDir = item.type === "directory"; row.draggable = true;
+                        row.ondragstart = (e) => e.dataTransfer.setData("text/plain", item.path);
                         row.ondragover = (e) => { e.preventDefault(); if(isDir) e.currentTarget.classList.add('bg-blue-50/40'); };
-                        row.ondragleave = (e) => { e.currentTarget.classList.remove('bg-blue-50/40'); };
+                        row.ondragleave = (e) => e.currentTarget.classList.remove('bg-blue-50/40');
                         row.ondrop = async (e) => {
                             e.preventDefault(); e.currentTarget.classList.remove('bg-blue-50/40');
                             let targetFolder = isDir ? item.path : "";
                             if (!isDir) { const parts = item.path.split('/'); parts.pop(); targetFolder = parts.length > 0 ? parts.join('/') + '/' : ''; }
                             const draggedPath = e.dataTransfer.getData("text/plain");
-                            if (draggedPath) {
-                                if (draggedPath === item.path) return;
-                                const cleanDragged = draggedPath.replace(/\/$/, "");
-                                await renameItem(cleanDragged, targetFolder + cleanDragged.split('/').pop());
-                            } else if (e.dataTransfer.items) { await handleOSDrop(e, targetFolder); }
+                            if (draggedPath && draggedPath !== item.path) await renameItem(draggedPath.replace(/\/$/, ""), targetFolder + draggedPath.replace(/\/$/, "").split('/').pop());
                         };
 
-                        const btn = document.createElement("button");
-                        const depth = (item.path.match(/\//g) || []).length - (isDir ? 1 : 0);
+                        const btn = document.createElement("button"); const depth = (item.path.match(/\//g) || []).length - (isDir ? 1 : 0);
                         btn.className = "flex-1 text-left py-1.5 flex items-center gap-1.5 font-bold truncate text-xs focus:outline-none";
                         btn.style.paddingLeft = `${depth * 14 + 4}px`;
-                        
                         const icon = isDir ? "folder" : (item.path.endsWith('.pdf') ? "file-text" : "file");
-                        const iconColor = isDir ? "text-amber-500" : (item.path.endsWith('.pdf') ? "text-red-400" : (isSelected ? "text-blue-500" : "text-slate-400"));
-                        const hasStar = !!favoriteItems[cleanItemPath];
-                        const starBadge = hasStar ? `<i data-lucide="star" class="w-3 h-3 text-amber-500 fill-amber-500 inline shrink-0 ml-1"></i>` : "";
                         const isCollapsed = !!collapsedFolders[cleanItemPath];
                         const chevronIcon = isDir ? `<i data-lucide="${isCollapsed ? 'chevron-right' : 'chevron-down'}" class="w-3.5 h-3.5 text-slate-400 shrink-0"></i>` : `<div class="w-3.5 shrink-0"></div>`;
-
-                        btn.innerHTML = `${chevronIcon}<i data-lucide="${icon}" class="w-3.5 h-3.5 ${iconColor} shrink-0"></i> <span class="truncate">${cleanItemPath.split('/').pop()}</span> ${starBadge}`;
+                        btn.innerHTML = `${chevronIcon}<i data-lucide="${icon}" class="w-3.5 h-3.5 ${isDir?'text-amber-500':'text-slate-400'} shrink-0"></i> <span class="truncate">${cleanItemPath.split('/').pop()}</span>`;
                         
                         if (!isDir) btn.onclick = (e) => { e.stopPropagation(); loadNoteContent(item.path); };
-                        else btn.onclick = (e) => {
-                            e.stopPropagation(); collapsedFolders[cleanItemPath] = !collapsedFolders[cleanItemPath];
-                            localStorage.setItem("bms_collapsed_folders", JSON.stringify(collapsedFolders));
-                            selectedFileId = item.path; buildNotesTree();
-                        };
+                        else btn.onclick = (e) => { e.stopPropagation(); collapsedFolders[cleanItemPath] = !collapsedFolders[cleanItemPath]; localStorage.setItem("bms_collapsed_folders", JSON.stringify(collapsedFolders)); selectedFileId = item.path; buildNotesTree(); };
 
-                        const menuBtn = document.createElement("button");
-                        menuBtn.className = "opacity-0 group-hover:opacity-100 p-1 text-slate-400 hover:text-blue-500 rounded transition-all focus:outline-none";
+                        const menuBtn = document.createElement("button"); menuBtn.className = "opacity-0 group-hover:opacity-100 p-1 text-slate-400 hover:text-blue-500 rounded transition-all";
                         menuBtn.innerHTML = `<i data-lucide="more-horizontal" class="w-3.5 h-3.5"></i>`;
-                        menuBtn.onclick = (e) => { triggerInlineContextMenu(e, item.path); };
+                        menuBtn.onclick = (e) => triggerInlineContextMenu(e, item.path);
 
                         row.appendChild(btn); row.appendChild(menuBtn); fileTree.appendChild(row);
                     });
@@ -626,127 +696,122 @@
             } catch(e){}
         }
 
-        // MOTOR FÍSICO EXPANSIVO EQUILIBRADO
+        function initPhysicsNodes(data) {
+            if(!canvas) return;
+            const w = canvas.parentElement.clientWidth || 500, h = canvas.parentElement.clientHeight || 230;
+            canvas.width = w; canvas.height = h;
+            const existing = new Map(graphData.nodes.map(n => [n.id, n]));
+            graphData.nodes = data.nodes.map(n => {
+                const old = existing.get(n.id);
+                return { id: n.id, label: n.label, type: n.type, x: old ? old.x : w/2 + (Math.random()-0.5)*160, y: old ? old.y : h/2 + (Math.random()-0.5)*160, vx:0, vy:0 };
+            });
+            graphData.edges = data.edges.map(e => ({ sourceNode: graphData.nodes.find(n => n.id === e.source), targetNode: graphData.nodes.find(n => n.id === e.target) })).filter(e => e.sourceNode && e.targetNode);
+        }
+
         function updatePhysics() {
-            if (!canvas) return;
-            const centerX = canvas.width / 2; const centerY = canvas.height / 2;
-            
+            if(!canvas || graphData.nodes.length === 0) return;
+            const cx = canvas.width / 2, cy = canvas.height / 2;
             for (let i = 0; i < graphData.nodes.length; i++) {
                 let n1 = graphData.nodes[i];
                 for (let j = i + 1; j < graphData.nodes.length; j++) {
                     let n2 = graphData.nodes[j];
-                    let dx = n2.x - n1.x; let dy = n2.y - n1.y; 
-                    if (dx === 0) dx = 0.1;
+                    let dx = n2.x - n1.x; let dy = n2.y - n1.y; if(dx===0) dx=0.1;
                     let dist = Math.sqrt(dx*dx + dy*dy);
-                    if (dist < 180) {
-                        let force = 400 / (dist * dist + 8); // REQUISITO 4: Repulsão ampliada para espalhar nós
+                    if (dist < 150) {
+                        let force = 250 / (dist * dist + 1);
                         if (n1 !== draggedNode) { n1.vx -= (dx/dist)*force; n1.vy -= (dy/dist)*force; }
                         if (n2 !== draggedNode) { n2.vx += (dx/dist)*force; n2.vy += (dy/dist)*force; }
                     }
                 }
             }
-            graphData.edges.forEach(edge => {
-                let dx = edge.targetNode.x - edge.sourceNode.x; let dy = edge.targetNode.y - edge.sourceNode.y;
+            graphData.edges.forEach(e => {
+                let dx = e.targetNode.x - e.sourceNode.x; let dy = edge.targetNode.y - edge.sourceNode.y;
                 let dist = Math.sqrt(dx*dx + dy*dy);
                 if (dist > 0) {
-                    let force = 0.012 * dist;
-                    if (edge.sourceNode !== draggedNode) { edge.sourceNode.vx += (dx / dist) * force; edge.sourceNode.vy += (dy / dist) * force; }
-                    if (edge.targetNode !== draggedNode) { edge.targetNode.vx -= (dx / dist) * force; edge.targetNode.vy -= (dy / dist) * force; }
+                    let force = 0.015 * dist;
+                    if (edge.sourceNode !== draggedNode) { edge.sourceNode.vx += (dx/dist)*force; edge.sourceNode.vy += (dy/dist)*force; }
+                    if (edge.targetNode !== draggedNode) { edge.targetNode.vx -= (dx/dist)*force; edge.targetNode.vy -= (dy/dist)*force; }
                 }
             });
-            graphData.nodes.forEach(node => {
-                if (node === draggedNode) return;
-                node.vx += (centerX - node.x) * 0.002; // Tração central elástica leve
-                node.vy += (centerY - node.y) * 0.002;
-                node.vx += (Math.random() - 0.5) * 0.14;
-                node.vy += (Math.random() - 0.5) * 0.14;
-                node.x += node.vx; node.y += node.vy;
-                
-                const padding = 15;
-                if (node.x < padding) { node.x = padding; node.vx *= -1; }
-                if (node.y < padding) { node.y = padding; node.vy *= -1; }
-                if (node.x > canvas.width - padding) { node.x = canvas.width - padding; node.vx *= -1; }
+            graphData.nodes.forEach(n => {
+                if (n === draggedNode) return;
+                n.vx += (centerX - n.x) * 0.001; n.vy += (centerY - n.y) * 0.001;
+                n.vx += (Math.random() - 0.5) * 0.15; n.vy += (Math.random() - 0.5) * 0.15;
+                n.x += n.vx; n.y += node.vy;
+                const p = 15;
+                if (n.x < p) { n.x = padding; n.vx *= -1; } if (n.y < padding) { n.y = padding; n.vy *= -1; }
+                if (n.x > canvas.width - padding) { n.x = canvas.width - padding; n.vx *= -1; }
                 if (node.y > canvas.height - padding) { node.y = canvas.height - padding; node.vy *= -1; }
                 node.vx *= 0.90; node.vy *= 0.90;
             });
         }
 
         function drawGraph() {
-            if (!ctx || !canvas) return;
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            if(!ctx || !canvas) return; ctx.clearRect(0, 0, canvas.width, canvas.height);
             const isDark = document.documentElement.classList.contains("dark");
             ctx.lineWidth = 1.2; ctx.strokeStyle = isDark ? "#334155" : "#e2e8f0";
-            
-            graphData.edges.forEach(edge => {
-                ctx.beginPath(); ctx.moveTo(edge.sourceNode.x, edge.sourceNode.y); ctx.lineTo(edge.targetNode.x, edge.targetNode.y); ctx.stroke();
-            });
+            graphData.edges.forEach(e => { ctx.beginPath(); ctx.moveTo(e.sourceNode.x, e.sourceNode.y); ctx.lineTo(edge.targetNode.x, edge.targetNode.y); ctx.stroke(); });
             graphData.nodes.forEach(node => {
-                const act = (selectedFileId === node.id);
                 ctx.beginPath();
-                let radius = node.type === "tag" ? 6.5 : 4.5;
-                if (act) radius = 7.5;
+                let radius = node.type === "tag" ? 6.0 : 4.5;
+                if (selectedFileId === node.id) radius = 7.0;
                 ctx.arc(node.x, node.y, radius, 0, 2*Math.PI);
-                
-                if (node.type === "tag") ctx.fillStyle = "#8bc34a"; // REQUISITO 4: Nós #Tags em Verde-Limão
-                else ctx.fillStyle = act ? "#2563eb" : (isDark ? "#3b82f6" : "#64748b");
-                ctx.fill();
-                
-                ctx.font = act ? "bold 10px sans-serif" : "10px sans-serif";
-                ctx.fillStyle = isDark ? "#cbd5e1" : "#334155";
-                ctx.textAlign = "center"; ctx.fillText(node.label, node.x, node.y + 15);
+                ctx.fillStyle = node.type === "tag" ? "#8bc34a" : (isDark ? "#3b82f6" : "#64748b");
+                ctx.fill(); ctx.fillStyle = isDark ? "#cbd5e1" : "#334155";
+                ctx.font = "9px sans-serif"; ctx.textAlign = "center"; ctx.fillText(node.label, node.x, node.y + 14);
             });
         }
 
         function anim() { updatePhysics(); drawGraph(); requestAnimationFrame(anim); }
-        if (canvas) requestAnimationFrame(anim);
+        if(canvas) requestAnimationFrame(anim);
 
-        async function reloadGlobalGraph() {
-            try {
-                const res = await fetch("/api/graph-data");
-                const data = await res.json();
-                if (!canvas) return;
-                const w = canvas.width, h = canvas.height;
-                graphData.nodes = data.nodes.map(n => ({ id: n.id, label: n.label, type: n.type, x: w/2 + (Math.random()-0.5)*150, y: h/2 + (Math.random()-0.5)*150, vx:0, vy:0 }));
-                graphData.edges = data.edges.map(e => ({ sourceNode: graphData.nodes.find(n => n.id === e.source), targetNode: graphData.nodes.find(n => n.id === e.target) })).filter(e => e.sourceNode && e.targetNode);
-            } catch(e){}
-        }
+        async function reloadGlobalGraph() { try { const res = await fetch("/api/graph-data"); const data = await res.json(); initPhysicsNodes(data); } catch(e){} }
 
         async function processUploadBatch(fileList) {
-            let baseFolder = "";
-            if (selectedFileId && selectedFileId.endsWith("/")) baseFolder = selectedFileId;
+            let baseFolder = ""; if (selectedFileId && selectedFileId.endsWith("/")) baseFolder = selectedFileId;
             for (let i = 0; i < fileList.length; i++) {
-                const file = fileList[i];
-                const relativePath = file.webkitRelativePath || file.name;
-                await fetch(`/api/upload-vault?file=${encodeURIComponent(baseFolder + relativePath)}`, { method: "POST", body: file });
+                const file = fileList[i]; const finalPath = baseFolder + (file.webkitRelativePath || file.name);
+                try { await fetch(`/api/upload-vault?file=${encodeURIComponent(finalPath)}`, { method: "POST", body: file }); } catch(e){}
             }
-            buildNotesTree(); reloadGlobalGraph();
+            await buildNotesTree(); await reloadGlobalGraph();
+        }
+
+        const upV = document.getElementById("global-vault-upload");
+        const upF = document.getElementById("global-folder-upload");
+        if(upV) upV.onchange = async (e) => { await processUploadBatch(e.target.files); e.target.value = ""; };
+        if(btnFolderUp) upF.onchange = async (e) => { await processUploadBatch(e.target.files); e.target.value = ""; };
+
+        const btnAttach = document.getElementById("btn-chat-attach");
+        const ctxUpload = document.getElementById("chat-context-upload");
+        if(btnAttach && ctxUpload) {
+            btnAttach.onclick = () => ctxUpload.click();
+            ctxUpload.onchange = (e) => {
+                const file = e.target.files[0]; if (!file) return;
+                const reader = new FileReader(); reader.onload = (event) => {
+                    pendingChatAttachment = { name: file.name, content: event.target.result };
+                    document.getElementById("chat-attachment-name").innerText = file.name;
+                    document.getElementById("chat-attachment-area")?.classList.remove("hidden");
+                }; reader.readAsText(file);
+            };
         }
 
         async function sendChatMessage() {
-            let query = chatInput.value.trim(); if (!query) return;
-            const pwd = appPassword.value.trim(); if (!pwd) return alert("Por favor, insira o token.");
+            let query = chatInput.value.trim(); if (!query || !appPassword) return;
+            const pwd = appPassword.value.trim(); if (!pwd) return alert("Falta token.");
             renderMessageBlock("user", query); chatInput.value = ""; chatInput.style.height = "auto";
-            
-            const fullPrompt = `[Área: ${document.getElementById("ctx-area").value}, Peça: ${document.getElementById("ctx-type").value}, Fase: ${document.getElementById("ctx-phase").value}, Foco: ${document.getElementById("ctx-obj").value}]\nInstrução: ${query}`;
-            chatHistory.push({ role: "user", content: fullPrompt });
-            
-            const tempId = renderMessageBlock("assistant", "Processando parecer...");
+            let sysContext = `[Diretriz] Área: ${document.getElementById("ctx-area")?.value}, Peça: ${document.getElementById("ctx-type")?.value}\n`;
+            if (selectedFileId) sysContext += `[Arquivo Ativo: ${selectedFileId}]\n`;
+            chatHistory.push({ role: "user", content: sysContext + query });
+            const tid = renderMessageBlock("assistant", "Processando...");
             try {
                 const res = await fetch("/api/chat", { method: "POST", headers: { "Content-Type": "application/json", "x-app-password": pwd }, body: JSON.stringify({ messages: chatHistory }) });
-                const data = await res.json(); document.getElementById(tempId)?.remove();
-                if (data.reply) {
-                    renderMessageBlock("assistant", data.reply);
-                    chatHistory.push({ role: "assistant", content: data.reply });
-                    buildNotesTree(); reloadGlobalGraph();
-                }
-            } catch (err) { document.getElementById(tempId).innerText = "Falha local de rede."; }
+                const data = await res.json(); document.getElementById(tid)?.remove();
+                if (data.reply) { renderMessageBlock("assistant", data.reply); chatHistory.push({ role: "assistant", content: data.reply }); buildNotesTree(); reloadGlobalGraph(); }
+            } catch(e) { document.getElementById(tid).innerText = "Erro."; }
         }
 
-        document.getElementById("global-vault-upload").onchange = (e) => processUploadBatch(e.target.files);
-        document.getElementById("global-folder-upload").onchange = (e) => processUploadBatch(e.target.files);
-        btnSend.onclick = sendChatMessage;
-        chatInput.onkeydown = (e) => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); sendChatMessage(); } };
-
+        if(btnSend) btnSend.onclick = sendChatMessage;
+        if(chatInput) chatInput.onkeydown = (e) => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); sendChatMessage(); } };
         buildNotesTree();
     </script>
 </body>
