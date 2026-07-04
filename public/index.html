@@ -148,6 +148,7 @@
     </header>
 
     <div class="flex flex-1 overflow-hidden relative" onclick="closeAllDropdownsMenu()">
+        
         <aside id="sidebar-left" class="w-64 bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 flex flex-col overflow-hidden p-4 relative flex-shrink-0" onclick="clearTreeSelection(event)">
             <div class="flex items-center justify-between mb-4 px-1">
                 <span class="text-xs font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest">Processos e Cofre</span>
@@ -193,9 +194,9 @@
 
         <div id="resizer-left" class="w-1.5 bg-transparent hover:bg-blue-500 cursor-col-resize z-10 flex-shrink-0 transition-colors"></div>
 
-        <main id="center-panel" class="flex-1 flex flex-col min-w-[300px] overflow-y-auto p-5 gap-4 no-scrollbar">
+        <div class="flex-1 flex flex-col min-w-[400px] overflow-hidden p-5 gap-4">
             
-            <div class="grid grid-cols-4 gap-4 flex-shrink-0">
+            <div class="grid grid-cols-4 gap-4 w-full flex-shrink-0">
                 <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-3 flex items-center shadow-xs relative cursor-pointer" onclick="toggleCustomDropdown('dropdown-area', event)">
                     <div class="p-2 bg-blue-50 dark:bg-slate-800 text-blue-600 dark:text-blue-400 rounded-lg mr-3"><i data-lucide="scale" class="w-4 h-4"></i></div>
                     <div class="flex-1 min-w-0">
@@ -280,46 +281,41 @@
                 </div>
             </div>
 
-            <div class="flex flex-1 gap-4 overflow-hidden">
+            <div class="flex flex-1 gap-4 overflow-hidden h-full">
                 
                 <div id="center-preview-container" onclick="selectMonitor('main')" class="flex-1 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-xs flex flex-col overflow-hidden h-full ring-2 ring-blue-500 cursor-pointer relative transition-all">
-                    
-                    <div class="absolute top-0 left-1/2 -translate-x-1/2 px-3 py-0.5 bg-blue-600 text-white text-[9px] font-black uppercase rounded-b-md shadow-md z-10 hidden" id="dot-active-main">Foco Ativo</div>
+                    <div class="flex items-center justify-between px-5 py-3 border-b border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900">
+                        <div class="flex items-center gap-2">
+                            <div class="w-2 h-2 bg-blue-500 rounded-full animate-ping mr-1" id="dot-active-main"></div>
+                            <h2 id="active-note-title" class="text-sm font-bold text-slate-800 dark:text-white truncate max-w-xs">Selecione um arquivo principal</h2>
+                            <button id="btn-favorite-star" onclick="toggleActiveFileFavorite()" class="text-slate-300 hover:text-amber-500 focus:outline-none"><i data-lucide="star" class="w-4 h-4"></i></button>
+                        </div>
+                        
+                        <div class="flex bg-slate-100 dark:bg-slate-800 p-0.5 rounded-lg text-[9px] font-black mr-2">
+                            <button id="btn-tab-main-formatted" onclick="setMainTab('formatted')" class="px-2 py-1 bg-white dark:bg-slate-700 dark:text-white rounded-md shadow-xs transition-colors">Original</button>
+                            <button id="btn-tab-main-raw" onclick="setMainTab('raw')" class="px-2 py-1 text-slate-400 transition-colors">Markdown</button>
+                        </div>
 
-                    <div class="flex items-center justify-between px-5 py-3.5 border-b border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900">
-                        <div class="flex items-center gap-2.5">
-                            <h2 id="active-note-title" class="text-sm font-bold text-slate-800 dark:text-white truncate max-w-[200px]">Selecione um arquivo principal</h2>
-                            <button id="btn-favorite-star" onclick="toggleActiveFileFavorite()" class="text-slate-300 dark:text-slate-600 hover:text-amber-500 dark:hover:text-amber-400 transition-colors focus:outline-none"><i data-lucide="star" class="w-4 h-4"></i></button>
-                        </div>
-                        
-                        <div class="flex bg-slate-100 dark:bg-slate-800 p-0.5 rounded-lg text-[9px] font-black mx-2 flex-shrink-0">
-                            <button id="btn-tab-main-formatted" onclick="setMainTab('formatted')" class="px-3 py-1 bg-white dark:bg-slate-700 dark:text-white rounded-md shadow-xs transition-colors">Original</button>
-                            <button id="btn-tab-main-raw" onclick="setMainTab('raw')" class="px-3 py-1 text-slate-500 dark:text-slate-400 transition-colors">Markdown</button>
-                        </div>
-                        
                         <div class="flex items-center gap-1.5">
-                            <button onclick="downloadActiveFile()" class="p-1.5 text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-all" title="Download"><i data-lucide="download" class="w-4 h-4"></i></button>
-                            <button onclick="printActiveFile()" class="p-1.5 text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-all" title="Imprimir"><i data-lucide="printer" class="w-4 h-4"></i></button>
-                            <button onclick="fullscreenActiveFile()" class="p-1.5 text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-all" title="Tela Cheia"><i data-lucide="maximize-2" class="w-4 h-4"></i></button>
+                            <button onclick="downloadActiveFile()" class="p-1.5 text-slate-400 hover:text-slate-600"><i data-lucide="download" class="w-4 h-4"></i></button>
+                            <button onclick="printActiveFile()" class="p-1.5 text-slate-400 hover:text-slate-600"><i data-lucide="printer" class="w-4 h-4"></i></button>
+                            <button onclick="fullscreenActiveFile()" class="p-1.5 text-slate-400 hover:text-slate-600"><i data-lucide="maximize-2" class="w-4 h-4"></i></button>
                         </div>
                     </div>
-
-                    <div class="flex flex-1 p-5 bg-[#fafafa] dark:bg-slate-950 overflow-hidden relative">
-                        <div id="view-doc" class="w-full h-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl overflow-y-auto p-6 font-serif text-xs text-slate-700 dark:text-slate-300 leading-relaxed select-text shadow-sm">
+                    <div class="flex flex-1 p-4 bg-[#fafafa] dark:bg-slate-950 overflow-hidden h-full relative font-serif">
+                        <div id="view-doc-main" class="w-full h-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl overflow-y-auto p-6 text-xs text-slate-700 dark:text-slate-300 leading-relaxed select-text shadow-sm h-full">
                             <div class="text-center text-slate-400 my-20">Nenhum documento aberto no monitor principal.</div>
                         </div>
-                        <div id="view-raw" class="hidden w-full h-full bg-slate-950 border border-slate-800 text-blue-400 rounded-xl overflow-y-auto p-4 font-mono text-xs whitespace-pre-wrap select-text"></div>
+                        <div id="view-raw-main" class="hidden w-full h-full bg-slate-950 border border-slate-800 text-blue-400 rounded-xl p-4 font-mono text-xs whitespace-pre-wrap overflow-y-auto select-text"></div>
                     </div>
                 </div>
 
                 <div id="resizer-center" class="w-1.5 bg-transparent hover:bg-blue-500 cursor-col-resize z-10 flex-shrink-0 transition-colors"></div>
 
-                <section id="sidebar-comparison" onclick="selectMonitor('comp')" class="flex-1 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-xs flex flex-col overflow-hidden h-full cursor-pointer transition-all relative">
-                    
-                    <div class="absolute top-0 left-1/2 -translate-x-1/2 px-3 py-0.5 bg-blue-600 text-white text-[9px] font-black uppercase rounded-b-md shadow-md z-10 hidden" id="dot-active-comp">Foco Ativo</div>
-
-                    <div class="p-3 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between bg-slate-50 dark:bg-slate-900 flex-shrink-0">
+                <section id="sidebar-comparison" onclick="selectMonitor('comp')" class="w-[45%] bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl flex flex-col overflow-hidden shadow-xs h-full flex-shrink-0 transition-all cursor-pointer">
+                    <div class="p-3.5 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between bg-slate-50 dark:bg-slate-900 flex-shrink-0">
                         <div class="flex items-center gap-2">
+                            <div class="w-2 h-2 bg-blue-500 rounded-full hidden mr-1" id="dot-active-comp"></div>
                             <div class="p-1.5 bg-blue-600 text-white rounded-lg"><i data-lucide="git-compare" class="w-4 h-4"></i></div>
                             <span class="font-black text-xs uppercase tracking-wider dark:text-white">Módulo de Correlação</span>
                         </div>
@@ -329,9 +325,9 @@
                         </div>
                     </div>
 
-                    <div id="pane-comparison-doc" class="flex-1 flex flex-col overflow-hidden p-5 bg-[#fafafa] dark:bg-slate-950">
-                        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-2 mb-3 flex items-center justify-between shadow-xs">
-                            <span id="comp-note-title" class="text-xs font-bold text-slate-400 truncate pr-2 px-2">Selecione este monitor e abra um arquivo...</span>
+                    <div id="pane-comparison-doc" class="flex-1 flex flex-col overflow-hidden p-4 bg-[#fafafa] dark:bg-slate-950 h-full">
+                        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-2.5 mb-3 flex items-center justify-between shadow-xs">
+                            <span id="comp-note-title" class="text-xs font-bold text-slate-400 truncate pr-2">Selecione este monitor e abra um arquivo...</span>
                             <div class="flex items-center gap-2">
                                 <div class="flex bg-slate-100 dark:bg-slate-800 p-0.5 rounded-lg text-[9px] font-black">
                                     <button id="btn-tab-comp-formatted" onclick="setCompTextTab('formatted')" class="px-2 py-0.5 bg-white dark:bg-slate-700 dark:text-white rounded-md shadow-xs transition-colors">Original</button>
@@ -342,20 +338,19 @@
                         </div>
                         <div class="flex-1 relative overflow-hidden font-serif">
                             <div id="view-doc-comp" class="w-full h-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl overflow-y-auto p-6 text-xs text-slate-700 dark:text-slate-300 select-text leading-relaxed shadow-sm">
-                                <div class="text-center text-slate-300 my-20 dark:text-slate-700">Painel secundário inativo. Clique neste quadro e escolha um arquivo da árvore.</div>
+                                <div class="text-center text-slate-300 my-20 dark:text-slate-700">Painel secundário inativo. Selecione este monitor e clique em um arquivo na árvore.</div>
                             </div>
-                            <div id="view-raw-comp" class="hidden w-full h-full bg-slate-950 border border-slate-800 text-blue-400 rounded-xl overflow-y-auto p-4 font-mono text-xs whitespace-pre-wrap select-text"></div>
+                            <div id="view-raw-comp" class="hidden w-full h-full bg-slate-950 border border-slate-800 text-blue-400 rounded-xl p-4 font-mono text-xs whitespace-pre-wrap overflow-y-auto select-text"></div>
                         </div>
                     </div>
 
-                    <div id="pane-comparison-graph" class="hidden flex-1 flex flex-col overflow-hidden relative bg-slate-50 dark:bg-slate-950">
+                    <div id="pane-comparison-graph" class="hidden flex-1 flex flex-col overflow-hidden relative bg-slate-50 dark:bg-slate-950 h-full w-full">
                         <canvas id="graph-canvas" class="w-full h-full block cursor-grab active:cursor-grabbing"></canvas>
                         <div class="absolute top-2 left-2 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xs px-2 py-1 rounded-md text-[9px] font-bold border border-slate-200 dark:border-slate-800 tracking-wide uppercase text-slate-400">Indexador de #Tags e Temas</div>
                     </div>
                 </section>
-
             </div>
-        </main>
+        </div>
 
         <div id="resizer-right" class="w-1.5 bg-transparent hover:bg-blue-500 cursor-col-resize z-10 flex-shrink-0 transition-colors"></div>
 
@@ -365,7 +360,7 @@
                     <div class="w-9 h-9 bg-blue-600 rounded-xl flex items-center justify-center text-white font-bold"><i data-lucide="bot" class="w-4 h-4"></i></div>
                     <div>
                         <h3 class="font-bold text-xs text-slate-800 dark:text-white">Assistente BMS</h3>
-                        <div class="flex items-center gap-1"><div class="w-1.5 h-1.5 bg-green-500 rounded-full"></div><span class="text-[10px] text-slate-400 dark:text-slate-500 font-bold uppercase">Cofre Integrado</span></div>
+                        <div class="flex items-center gap-1"><div class="w-1.5 h-1.5 bg-green-500 rounded-full"></div><span class="text-[10px] text-slate-400 font-bold uppercase">Cofre Ativo</span></div>
                     </div>
                 </div>
             </div>
@@ -406,43 +401,51 @@
         document.addEventListener('keydown', (e) => {
             if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
                 e.preventDefault();
-                document.getElementById('global-search-bar').focus();
+                const sb = document.getElementById('global-search-bar');
+                if (sb) { sb.focus(); sb.select(); }
             }
         });
 
         function openSpeedTestModal() {
             const modal = document.getElementById("speedtest-modal");
-            modal.classList.remove("hidden");
-            setTimeout(() => {
-                modal.classList.remove("opacity-0");
-                document.getElementById("speedtest-content").classList.remove("scale-95");
-            }, 10);
-            
-            document.getElementById("st-state-1").classList.remove("hidden");
-            document.getElementById("st-state-2").classList.add("hidden");
-            document.getElementById("st-state-3").classList.add("hidden");
+            if(modal) {
+                modal.classList.remove("hidden");
+                setTimeout(() => {
+                    modal.classList.remove("opacity-0");
+                    document.getElementById("speedtest-content")?.classList.remove("scale-95");
+                }, 10);
+                
+                document.getElementById("st-state-1")?.classList.remove("hidden");
+                document.getElementById("st-state-2")?.classList.add("hidden");
+                document.getElementById("st-state-3")?.classList.add("hidden");
+            }
         }
 
         function closeSpeedTest() {
             const modal = document.getElementById("speedtest-modal");
-            modal.classList.add("opacity-0");
-            document.getElementById("speedtest-content").classList.add("scale-95");
-            setTimeout(() => { modal.classList.add("hidden"); }, 300);
+            if(modal) {
+                modal.classList.add("opacity-0");
+                document.getElementById("speedtest-content")?.classList.add("scale-95");
+                setTimeout(() => { modal.classList.add("hidden"); }, 300);
+            }
         }
 
         function updateSpeedometer(mbps) {
-            document.getElementById("st-value").innerText = mbps.toFixed(1);
+            const elValue = document.getElementById("st-value");
+            const elNeedle = document.getElementById("st-needle");
+            const elProgress = document.getElementById("st-progress");
+            if(elValue) elValue.innerText = mbps.toFixed(1);
             let maxSpeed = 100;
             let mapped = Math.min(Math.max(mbps, 0), maxSpeed);
             let rot = -90 + (mapped / maxSpeed) * 180;
-            document.getElementById("st-needle").style.transform = `translateX(-50%) rotate(${rot}deg)`;
+            if(elNeedle) elNeedle.style.transform = `translateX(-50%) rotate(${rot}deg)`;
             let offset = 125 - (mapped / maxSpeed) * 125;
-            document.getElementById("st-progress").style.strokeDashoffset = offset;
+            if(elProgress) elProgress.style.strokeDashoffset = offset;
         }
 
         async function startSpeedTest() {
-            document.getElementById("st-state-1").classList.add("hidden");
-            document.getElementById("st-state-2").classList.remove("hidden");
+            document.getElementById("st-state-1")?.classList.add("hidden");
+            document.getElementById("st-state-2")?.classList.remove("hidden");
             updateSpeedometer(0);
 
             try {
@@ -474,9 +477,10 @@
                 
                 updateSpeedometer(finalMbps);
                 setTimeout(() => {
-                    document.getElementById("st-state-2").classList.add("hidden");
-                    document.getElementById("st-state-3").classList.remove("hidden");
-                    document.getElementById("st-final-value").innerText = finalMbps.toFixed(1);
+                    document.getElementById("st-state-2")?.classList.add("hidden");
+                    document.getElementById("st-state-3")?.classList.remove("hidden");
+                    const elFinal = document.getElementById("st-final-value");
+                    if(elFinal) elFinal.innerText = finalMbps.toFixed(1);
                 }, 800);
             } catch (e) {
                 alert("Erro ao testar velocidade. Verifique sua conexão local.");
@@ -496,13 +500,12 @@
         const serverStatusDot = document.getElementById("server-status-dot");
         const serverStatusText = document.getElementById("server-status-text");
 
-        const viewDoc = document.getElementById("view-doc");
-        const viewRaw = document.getElementById("view-raw");
+        const viewDocMain = document.getElementById("view-doc-main");
+        const viewRawMain = document.getElementById("view-raw-main");
         const activeNoteTitle = document.getElementById("active-note-title");
         const favoriteStarBtn = document.getElementById("btn-favorite-star");
 
-        const btnVaultUpload = document.getElementById("btn-vault-upload");
-        const globalVaultUpload = document.getElementById("global-vault-upload");
+        const btnVaultUpload = document.getElementById("global-vault-upload");
         const globalFolderUpload = document.getElementById("global-folder-upload");
         const btnChatAttach = document.getElementById("btn-chat-attach");
         const chatContextUpload = document.getElementById("chat-context-upload");
@@ -511,7 +514,7 @@
         const btnRemoveAttachment = document.getElementById("btn-remove-attachment");
 
         const canvas = document.getElementById("graph-canvas");
-        const ctx = canvas.getContext("2d");
+        const ctx = canvas ? canvas.getContext("2d") : null;
 
         let chatHistory = [];
         let pendingChatAttachment = null;
@@ -536,25 +539,29 @@
         let isResizingLeft = false;
         let isResizingRight = false;
 
-        resizerLeft.addEventListener('mousedown', (e) => {
-            isResizingLeft = true;
-            document.body.style.cursor = 'col-resize';
-            e.preventDefault();
-        });
+        if (resizerLeft) {
+            resizerLeft.addEventListener('mousedown', (e) => {
+                isResizingLeft = true;
+                document.body.style.cursor = 'col-resize';
+                e.preventDefault();
+            });
+        }
 
-        resizerRight.addEventListener('mousedown', (e) => {
-            isResizingRight = true;
-            document.body.style.cursor = 'col-resize';
-            e.preventDefault();
-        });
+        if (resizerRight) {
+            resizerRight.addEventListener('mousedown', (e) => {
+                isResizingRight = true;
+                document.body.style.cursor = 'col-resize';
+                e.preventDefault();
+            });
+        }
 
         document.addEventListener('mousemove', (e) => {
             if (!isResizingLeft && !isResizingRight) return;
-            if (isResizingLeft) {
+            if (isResizingLeft && sidebarLeft) {
                 const newWidth = e.clientX;
                 if (newWidth > 180 && newWidth < window.innerWidth * 0.5) sidebarLeft.style.width = `${newWidth}px`;
             }
-            if (isResizingRight) {
+            if (isResizingRight && sidebarRight) {
                 const newWidth = window.innerWidth - e.clientX;
                 if (newWidth > 220 && newWidth < window.innerWidth * 0.5) sidebarRight.style.width = `${newWidth}px`;
             }
@@ -580,8 +587,8 @@
         resizeCanvas();
 
         function closeAllDropdownsMenu() {
-            filterDropdown.classList.add("hidden");
-            document.getElementById("custom-context-menu").classList.add("hidden");
+            filterDropdown?.classList.add("hidden");
+            document.getElementById("custom-context-menu")?.classList.add("hidden");
             document.getElementById("dropdown-area")?.classList.add("hidden");
             document.getElementById("dropdown-type")?.classList.add("hidden");
             document.getElementById("dropdown-phase")?.classList.add("hidden");
@@ -592,22 +599,27 @@
         function toggleFilterDropdown(e) {
             e.stopPropagation();
             closeAllDropdownsMenu();
-            filterDropdown.classList.remove("hidden");
+            filterDropdown?.classList.remove("hidden");
         }
 
         function toggleCustomDropdown(id, e) {
             e.stopPropagation();
             const el = document.getElementById(id);
-            const isHidden = el.classList.contains("hidden");
-            closeAllDropdownsMenu();
-            if (isHidden) el.classList.remove("hidden");
+            if(el) {
+                const isHidden = el.classList.contains("hidden");
+                closeAllDropdownsMenu();
+                if (isHidden) el.classList.remove("hidden");
+            }
         }
 
         function selectOption(category, value, label, e) {
             e.stopPropagation();
-            document.getElementById(`ctx-${category}`).value = value;
-            document.getElementById(`label-ctx-${category}`).innerText = label;
-            document.getElementById(`dropdown-${category}`).classList.add("hidden");
+            const vi = document.getElementById(`ctx-${category}`);
+            const ls = document.getElementById(`label-ctx-${category}`);
+            const dp = document.getElementById(`dropdown-${category}`);
+            if(vi) vi.value = value;
+            if(ls) ls.innerText = label;
+            if(dp) dp.classList.add("hidden");
         }
 
         function changeFilter(type) {
@@ -619,9 +631,9 @@
         function clearTreeSelection(e) {
             if (e.target.id === "file-tree" || e.target.tagName === "ASIDE") {
                 selectedFileId = null;
-                activeNoteTitle.innerText = "Selecione um arquivo do cofre";
+                if(activeNoteTitle) activeNoteTitle.innerText = "Selecione um arquivo principal";
                 rawContentBuffer = "";
-                viewDoc.innerHTML = `<div class="text-center text-slate-400 my-20 dark:text-slate-500">Raiz selecionada. Novos diretórios e uploads serão gravados na pasta principal.</div>`;
+                if(viewDocMain) viewDocMain.innerHTML = `<div class="text-center text-slate-400 my-20 dark:text-slate-500">Raiz selecionada. Organize e mova seus arquivos.</div>`;
                 updateFavoriteStarUI();
                 buildNotesTree();
             }
@@ -641,9 +653,8 @@
         }
 
         function updateFavoriteStarUI() {
-            if (!selectedFileId) {
-                favoriteStarBtn.className = "text-slate-300 dark:text-slate-600 focus:outline-none";
-                favoriteStarBtn.innerHTML = `<i data-lucide="star" class="w-4 h-4"></i>`;
+            if (!selectedFileId || !favoriteStarBtn) {
+                if(favoriteStarBtn) favoriteStarBtn.innerHTML = `<i data-lucide="star" class="w-4 h-4"></i>`;
                 lucide.createIcons();
                 return;
             }
@@ -664,26 +675,27 @@
             const blob = new Blob([rawContentBuffer], { type: "text/markdown;charset=utf-8" });
             const link = document.createElement("a");
             link.href = URL.createObjectURL(blob);
-            link.download = selectedFileId.replace(/\/$/, "").split('/').pop();
+            link.download = selectedFileId.split('/').pop();
             link.click();
         }
 
         function printActiveFile() {
-            if (!selectedFileId) return;
+            if (!selectedFileId || !viewDocMain) return;
             const printWindow = window.open("", "_blank");
-            const content = document.getElementById("view-doc-main") ? document.getElementById("view-doc-main").innerHTML : viewDoc.innerHTML;
-            printWindow.document.write(`<html><head><title>BMS - Imprimir</title></head><body style="font-family:serif;padding:30px;line-height:1.6;">${content}</body></html>`);
+            printWindow.document.write(`<html><head><title>BMS - Imprimir</title></head><body style="font-family:serif;padding:30px;line-height:1.6;">${viewDocMain.innerHTML}</body></html>`);
             printWindow.document.close();
             printWindow.print();
         }
 
         function fullscreenActiveFile() {
             const container = document.getElementById("center-preview-container");
+            if(!container) return;
             if (!document.fullscreenElement) container.requestFullscreen().catch(err => console.error(err));
             else document.exitFullscreen();
         }
 
         async function checkRealServerStatus() {
+            if(!serverStatusBadge) return;
             try {
                 const res = await fetch("/api/status");
                 if (res.ok) {
@@ -703,6 +715,7 @@
         checkRealServerStatus();
 
         function searchFileTree() {
+            if(!globalSearchBar || !fileTree) return;
             const query = globalSearchBar.value.toLowerCase().trim();
             const rows = fileTree.querySelectorAll(".tree-row-container");
             rows.forEach(row => {
@@ -716,18 +729,21 @@
             contextMenuSelectedPath = path;
             const menu = document.getElementById("custom-context-menu");
             closeAllDropdownsMenu();
-            menu.classList.remove("hidden");
-            menu.style.left = `${e.clientX - 160}px`;
-            menu.style.top = `${e.clientY + 10}px`;
+            if(menu) {
+                menu.classList.remove("hidden");
+                menu.style.left = `${e.clientX - 160}px`;
+                menu.style.top = `${e.clientY + 10}px`;
+            }
         }
 
         function closeCustomModal() {
-            document.getElementById("custom-dialog-modal").classList.add("hidden");
+            document.getElementById("custom-dialog-modal")?.classList.add("hidden");
         }
 
         function openRenameModal() {
-            document.getElementById("custom-context-menu").classList.add("hidden");
+            document.getElementById("custom-context-menu")?.classList.add("hidden");
             const modal = document.getElementById("custom-dialog-modal");
+            if(!modal) return;
             document.getElementById("modal-title").innerText = "Renomear / Mover Item";
             document.getElementById("modal-body-content").innerHTML = `
                 <p class="mb-1">Insira o novo caminho completo do registro:</p>
@@ -744,8 +760,9 @@
         }
 
         function openDeleteModal() {
-            document.getElementById("custom-context-menu").classList.add("hidden");
+            document.getElementById("custom-context-menu")?.classList.add("hidden");
             const modal = document.getElementById("custom-dialog-modal");
+            if(!modal) return;
             document.getElementById("modal-title").innerText = "Confirmar Exclusão";
             document.getElementById("modal-body-content").innerHTML = `<p>Tem certeza que deseja apagar permanentemente o item <strong>${contextMenuSelectedPath.replace(/\/$/, "")}</strong> do cofre?</p>`;
             modal.classList.remove("hidden");
@@ -776,6 +793,7 @@
             else if (selectedFileId && selectedFileId.includes("/")) context = selectedFileId.substring(0, selectedFileId.lastIndexOf("/")) + "/";
             
             const modal = document.getElementById("custom-dialog-modal");
+            if(!modal) return;
             document.getElementById("modal-title").innerText = "Criar Nova Pasta";
             document.getElementById("modal-body-content").innerHTML = `
                 <p class="mb-1">${context ? 'Subpasta em ' + context : 'Pasta na raiz do cofre:'}</p>
@@ -821,10 +839,7 @@
             } catch (err) { console.error(err); }
         }
 
-        function switchTab(type) {
-            // Preservado para compatibilidade se algo chamar
-        }
-
+        // LÓGICA DE DRAG AND DROP
         async function handleOSDrop(e, targetFolder = "") {
             const items = e.dataTransfer.items;
             if (!items) return;
@@ -877,7 +892,7 @@
             try {
                 const res = await fetch("/api/notes");
                 const data = await res.json();
-                if (data.items) {
+                if (data.items && fileTree) {
                     fileTree.innerHTML = "";
                     let items = data.items;
                     
@@ -919,8 +934,7 @@
 
                         const row = document.createElement("div");
                         const cleanSelectedPath = selectedFileId ? selectedFileId.replace(/\/$/, "") : "";
-                        const cleanCompPath = (typeof comparisonFileId !== 'undefined' && comparisonFileId) ? comparisonFileId.replace(/\/$/, "") : "";
-                        const isSelected = (cleanItemPath === cleanSelectedPath || cleanItemPath === cleanCompPath);
+                        const isSelected = (cleanItemPath === cleanSelectedPath);
                         
                         row.className = `tree-row-container group flex items-center justify-between w-full rounded-xl p-0.5 border transition-all text-left ${isSelected ? 'bg-blue-50/50 dark:bg-blue-950/30 border-blue-500 dark:border-blue-400 text-blue-600 dark:text-blue-400 shadow-xs' : 'border-transparent hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300'}`;
                         row.setAttribute("data-path", item.path);
@@ -999,7 +1013,7 @@
                                 localStorage.setItem("bms_collapsed_folders", JSON.stringify(collapsedFolders));
 
                                 selectedFileId = item.path; 
-                                activeNoteTitle.innerText = displayName;
+                                if(activeNoteTitle) activeNoteTitle.innerText = displayName;
                                 updateFavoriteStarUI();
                                 buildNotesTree();
                             };
@@ -1019,16 +1033,128 @@
             } catch (err) { console.error(err); }
         }
 
+        // FÍSICA E GRAPH (1461 ORIGINAL BASE + OVERRIDE DE EXPANSÃO)
         function initPhysicsNodes(data) {
-            // Preservado para compatibilidade, será sobrescrito pelo override abaixo
+            if(!canvas || !canvas.parentElement) return;
+            const w = canvas.parentElement.clientWidth > 10 ? canvas.parentElement.clientWidth : 500; 
+            const h = canvas.parentElement.clientHeight > 10 ? canvas.parentElement.clientHeight : 230;
+            canvas.width = w; 
+            canvas.height = h;
+
+            const existingNodesMap = new Map(graphData.nodes.map(n => [n.id, n]));
+            graphData.nodes = data.nodes.map(n => {
+                const old = existingNodesMap.get(n.id);
+                return { 
+                    id: n.id, label: n.label, type: n.type,
+                    x: old ? old.x : w / 2 + (Math.random() - 0.5) * 160, 
+                    y: old ? old.y : h / 2 + (Math.random() - 0.5) * 160, 
+                    vx: 0, vy: 0, radius: 5 
+                };
+            });
+            graphData.edges = data.edges.map(e => ({ 
+                sourceNode: graphData.nodes.find(n => n.id === e.source), 
+                targetNode: graphData.nodes.find(n => n.id === e.target)
+            })).filter(e => e.sourceNode && e.targetNode);
         }
 
         function updatePhysics() {
-            // Preservado para compatibilidade, será sobrescrito pelo override abaixo
+            if(!canvas || graphData.nodes.length === 0) return;
+            const cx = canvas.width / 2; 
+            const cy = canvas.height / 2;
+            
+            for (let i = 0; i < graphData.nodes.length; i++) {
+                let n1 = graphData.nodes[i];
+                for (let j = i + 1; j < graphData.nodes.length; j++) {
+                    let n2 = graphData.nodes[j];
+                    let dx = n2.x - n1.x; 
+                    let dy = n2.y - n1.y; 
+                    if (dx === 0 && dy === 0) { dx = 0.1; dy = 0.1; }
+                    let dist = Math.sqrt(dx*dx + dy*dy);
+                    if (dist < 180) {
+                        let force = 350 / (dist * dist + 5);
+                        let fx = (dx / dist) * force;
+                        let fy = (dy / dist) * force;
+                        if (n1 !== draggedNode) { n1.vx -= fx; n1.vy -= fy; }
+                        if (n2 !== draggedNode) { n2.vx += fx; n2.vy += fy; }
+                    }
+                }
+            }
+            graphData.edges.forEach(edge => {
+                let dx = edge.targetNode.x - edge.sourceNode.x; 
+                let dy = edge.targetNode.y - edge.sourceNode.y;
+                let dist = Math.sqrt(dx*dx + dy*dy);
+                if (dist > 0) {
+                    let force = 0.015 * dist; 
+                    if (edge.sourceNode !== draggedNode) { edge.sourceNode.vx += (dx / dist) * force; edge.sourceNode.vy += (dy / dist) * force; }
+                    if (edge.targetNode !== draggedNode) { edge.targetNode.vx -= (dx / dist) * force; edge.targetNode.vy -= (dy / dist) * force; }
+                }
+            });
+            graphData.nodes.forEach(node => {
+                if (node === draggedNode) return;
+                
+                node.vx += (cx - node.x) * 0.0015;
+                node.vy += (cy - node.y) * 0.0015;
+
+                node.vx += (Math.random() - 0.5) * 0.15;
+                node.vy += (Math.random() - 0.5) * 0.15;
+
+                node.x += node.vx; 
+                node.y += node.vy; 
+
+                const padding = 15;
+                if (node.x < padding) { node.x = padding; node.vx *= -1; }
+                if (node.y < padding) { node.y = padding; node.vy *= -1; }
+                if (node.x > canvas.width - padding) { node.x = canvas.width - padding; node.vx *= -1; }
+                if (node.y > canvas.height - padding) { node.y = canvas.height - padding; node.vy *= -1; }
+                
+                node.vx *= 0.90; 
+                node.vy *= 0.90;
+            });
         }
 
         function drawGraph() {
-            // Preservado para compatibilidade, será sobrescrito pelo override abaixo
+            if(!ctx || !canvas) return;
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            const isDark = document.documentElement.classList.contains("dark");
+            
+            ctx.lineWidth = 1.2;
+            ctx.strokeStyle = isDark ? "#334155" : "#e2e8f0";
+            graphData.edges.forEach(edge => { 
+                ctx.beginPath(); 
+                ctx.moveTo(edge.sourceNode.x, edge.sourceNode.y); 
+                ctx.lineTo(edge.targetNode.x, edge.targetNode.y); 
+                ctx.stroke(); 
+            });
+            
+            graphData.nodes.forEach(node => {
+                const cleanNodeId = node.id.replace(/\/$/, "");
+                const cleanSelectedId = selectedFileId ? selectedFileId.replace(/\/$/, "") : "";
+                const act = (cleanSelectedId === cleanNodeId || comparisonFileId === cleanNodeId);
+                const isHighlighted = highlightedNodes.includes(cleanNodeId);
+                
+                ctx.beginPath(); 
+                let radius = node.type === "tag" ? 6.0 : 4.5;
+                if (act) radius = 7.0;
+                if (isHighlighted) radius = 9.0;
+                
+                ctx.arc(node.x, node.y, radius, 0, 2*Math.PI);
+                
+                if (isHighlighted) {
+                    ctx.fillStyle = "#f59e0b"; 
+                } else if (act) {
+                    ctx.fillStyle = "#2563eb"; 
+                } else if (node.type === "tag") {
+                    ctx.fillStyle = "#8bc34a"; // Tags verdes
+                } else {
+                    ctx.fillStyle = isDark ? "#64748b" : "#94a3b8"; 
+                }
+                ctx.fill();
+                
+                ctx.font = (act || isHighlighted) ? "bold 11px sans-serif" : "9px sans-serif"; 
+                ctx.fillStyle = isDark ? "#cbd5e1" : "#334155";
+                ctx.textAlign = "center"; 
+                ctx.fillText(node.label, node.x, node.y + 16);
+            });
         }
 
         function anim() { 
@@ -1036,9 +1162,9 @@
             drawGraph(); 
             requestAnimationFrame(anim); 
         }
-        requestAnimationFrame(anim);
+        if(canvas) requestAnimationFrame(anim);
 
-        if (canvas) {
+        if(canvas) {
             canvas.addEventListener("mousedown", (e) => {
                 const rect = canvas.getBoundingClientRect(); 
                 const mx = e.clientX - rect.left; 
@@ -1093,200 +1219,16 @@
             } catch(e){} 
         }
 
-        function generateLocalAnalysis(text) {
-            if (!text || text.trim() === "") return { summary: "Documento sem conteúdo para análise estrutural.", points: ["Nenhum dado legível identificado."] };
-
-            const cleanText = text.replace(/\[\[(.*?)\]\]/g, '$1').replace(/[#*`>]/g, '').trim();
-            const sentences = cleanText.split(/(?<=[.!?])\s+/).filter(s => s.length > 15);
-
-            if (sentences.length === 0) return { summary: "Conteúdo insuficiente para gerar uma síntese jurídica compreensível.", points: ["Texto excessivamente curto ou vazio."] };
-
-            let summary = sentences.slice(0, 2).join(' ');
-            if (summary.length > 180) summary = summary.substring(0, 177) + "...";
-
-            const keywords = ["prazo", "valor", "artigo", "lei", "juiz", "decisão", "recurso", "testemunha", "alega", "direito", "dever", "cita", "importante", "urgente", "pedido", "condena", "prova", "jurisprudência"];
-            let points = [];
-
-            for (let sentence of sentences) {
-                const lower = sentence.toLowerCase();
-                if (keywords.some(kw => lower.includes(kw))) {
-                    points.push(sentence.length > 90 ? sentence.substring(0, 87) + "..." : sentence);
-                }
-                if (points.length >= 3) break;
-            }
-
-            if (points.length === 0) {
-                points = sentences.slice(1, 4).map(s => s.length > 90 ? s.substring(0, 87) + "..." : s);
-            }
-            if (points.length === 0) points = ["Nenhum ponto de destaque específico detectado."];
-
-            return { summary, points };
-        }
-
-        async function loadNoteContent(filename) {
-            // Preservado, será sobrescrito pelo override no final para controle de dois monitores
-        }
-
-        async function processUploadBatch(fileList) {
-            let baseFolder = "";
-            if (selectedFileId && selectedFileId.endsWith("/")) baseFolder = selectedFileId;
-            else if (selectedFileId && selectedFileId.includes("/")) baseFolder = selectedFileId.substring(0, selectedFileId.lastIndexOf("/")) + "/";
-
-            let successCount = 0;
-            for (let i = 0; i < fileList.length; i++) {
-                const file = fileList[i];
-                const relativePath = file.webkitRelativePath || file.name;
-                const finalPath = baseFolder + relativePath;
-
-                try {
-                    const res = await fetch(`/api/upload-vault?file=${encodeURIComponent(finalPath)}`, { method: "POST", body: file });
-                    if (res.ok) successCount++;
-                } catch(err) { console.error(err); }
-            }
-            
-            await buildNotesTree(); 
-            await reloadGlobalGraph();
-        }
-
-        document.getElementById("global-vault-upload").onchange = (e) => {
-            if(e.target.files.length > 0) processUploadBatch(e.target.files);
-            e.target.value = "";
-        };
-
-        document.getElementById("global-folder-upload").onchange = (e) => {
-            if(e.target.files.length > 0) processUploadBatch(e.target.files);
-            e.target.value = "";
-        };
-
-        document.getElementById("btn-chat-attach").onclick = () => document.getElementById("chat-context-upload").click();
-        document.getElementById("chat-context-upload").onchange = (e) => {
-            const file = e.target.files[0]; if (!file) return;
-            const reader = new FileReader();
-            reader.onload = (event) => {
-                pendingChatAttachment = { name: file.name, content: event.target.result };
-                document.getElementById("chat-attachment-name").innerText = file.name;
-                document.getElementById("chat-attachment-area").classList.remove("hidden");
-            };
-            reader.readAsText(file);
-        };
-
-        document.getElementById("btn-remove-attachment").onclick = () => {
-            pendingChatAttachment = null;
-            document.getElementById("chat-attachment-area").classList.add("hidden");
-            document.getElementById("chat-context-upload").value = "";
-        };
-
-        async function sendChatMessage() {
-            let query = chatInput.value.trim();
-            if (!query) return;
-
-            const pwd = appPassword.value.trim();
-            if (!pwd) {
-                renderMessageBlock("assistant", "⚠️ **Acesso Negado:** Por favor, insira o Token de Validação Local no campo acima antes de enviar instruções.");
-                return;
-            }
-
-            renderMessageBlock("user", query);
-            chatInput.value = "";
-            
-            const ctxArea = document.getElementById("ctx-area").value;
-            const ctxType = document.getElementById("ctx-type").value;
-            const ctxPhase = document.getElementById("ctx-phase").value;
-            const ctxObj = document.getElementById("ctx-obj").value;
-
-            let sysContext = `[Diretriz Processual Selecionada na Interface]\n- Área Jurídica: ${ctxArea}\n- Tipo de Peça: ${ctxType}\n- Fase Atual: ${ctxPhase}\n- Objetivo: ${ctxObj}\nAdapte seu vocabulário e respostas a estas diretrizes.\n\n`;
-            
-            if (selectedFileId) sysContext += `[O usuário está visualizando e trabalhando no arquivo: Cofre/${selectedFileId.replace(/\/$/, "")}]\n\n`;
-            
-            if (pendingChatAttachment) {
-                sysContext += `[Arquivo anexado nesta mensagem: ${pendingChatAttachment.name}]\nConteúdo:\n${pendingChatAttachment.content}\n\n`;
-                document.getElementById("chat-attachment-area").classList.add("hidden");
-                document.getElementById("chat-context-upload").value = "";
-                pendingChatAttachment = null;
-            }
-            
-            const fullPrompt = `${sysContext}Instrução do usuário: ${query}`;
-            chatHistory.push({ role: "user", content: fullPrompt });
-
-            const tempId = renderMessageBlock("assistant", "Analisando conformidade e processando...");
-
-            try {
-                const res = await fetch("/api/chat", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json", "x-app-password": pwd },
-                    body: JSON.stringify({ messages: chatHistory })
-                });
-                const data = await res.json();
-                
-                const loaderBlock = document.getElementById(tempId);
-                if (loaderBlock) loaderBlock.remove();
-
-                if (data.error) {
-                    renderMessageBlock("assistant", `❌ Erro de Autenticação: ${data.error}`);
-                } else if (data.reply) {
-                    renderMessageBlock("assistant", data.reply);
-                    chatHistory.push({ role: "assistant", content: data.reply });
-                    
-                    if (data.citedFiles && data.citedFiles.length > 0) {
-                        highlightedNodes = data.citedFiles.map(f => f.replace(/\/$/, ""));
-                    } else {
-                        highlightedNodes = [];
-                    }
-
-                    buildNotesTree();
-                    reloadGlobalGraph();
-                }
-            } catch (err) {
-                const loaderBlock = document.getElementById(tempId);
-                if (loaderBlock) loaderBlock.remove();
-                renderMessageBlock("assistant", "❌ Falha crítica de conexão com o servidor local.");
-            }
-        }
-
-        function renderMessageBlock(role, text) {
-            msgCounter++;
-            const id = "msg-" + Date.now() + "-" + msgCounter;
-            
-            const wrapper = document.createElement("div");
-            wrapper.className = `w-full flex shrink-0 ${role === 'user' ? 'justify-end' : 'justify-start'}`;
-            wrapper.id = id;
-            
-            const bubble = document.createElement("div");
-            
-            let htmlText = text
-                .replace(/</g, "&lt;").replace(/>/g, "&gt;") 
-                .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" download class="text-blue-200 underline font-black hover:text-white transition-colors">$1</a>')
-                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-                .replace(/\n/g, '<br>');
-
-            if (role === "user") {
-                bubble.className = "bg-blue-600 text-white rounded-2xl rounded-tr-none p-3 text-xs max-w-[85%] font-semibold leading-relaxed whitespace-pre-wrap shadow-xs select-text text-left break-words";
-            } else {
-                bubble.className = "bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 rounded-2xl rounded-tl-none p-3 text-xs max-w-[85%] shadow-xs leading-relaxed whitespace-pre-wrap select-text text-left break-words";
-            }
-            
-            bubble.innerHTML = htmlText;
-            wrapper.appendChild(bubble);
-            messagesContainer.appendChild(wrapper);
-            messagesContainer.scrollTop = messagesContainer.scrollHeight;
-            return id;
-        }
-
-        document.getElementById("btn-send").onclick = sendChatMessage;
-        chatInput.onkeydown = (e) => { if (e.key === "Enter") sendChatMessage(); };
-
-        // -------------------------------------------------------------------------------------------------
-        // ========================== ATUALIZAÇÕES DA PLATAFORMA DE CORRELAÇÃO ==========================
-        // -------------------------------------------------------------------------------------------------
+        // =========================================================================
+        // NOVAS FUNÇÕES PARA OS DOIS MONITORES E RENDERIZAÇÃO
+        // =========================================================================
 
         let activeMonitor = "main";
         let compContentBuffer = "";
-        let comparisonFileId = null;
 
-        // Auto-Expansão da Caixa de Texto do Chat
-        const chatInputEl = document.getElementById("chat-input");
-        if(chatInputEl) {
-            chatInputEl.addEventListener("input", function() {
+        // Crescimento dinâmico da caixa do Chat
+        if(chatInput) {
+            chatInput.addEventListener("input", function() {
                 this.style.height = "auto";
                 this.style.height = this.scrollHeight + "px";
             });
@@ -1358,7 +1300,7 @@
             }
         };
 
-        window.setCompTab = function(tab) {
+        window.setCompTextTab = function(tab) {
             const btnForm = document.getElementById("btn-tab-comp-formatted");
             const btnRaw = document.getElementById("btn-tab-comp-raw");
             const vDoc = document.getElementById("view-doc-comp");
@@ -1366,13 +1308,13 @@
             if(tab === 'formatted') {
                 if(vDoc) vDoc.classList.remove("hidden");
                 if(vRaw) vRaw.classList.add("hidden");
-                if(btnForm) btnForm.className = "px-2 py-1 bg-white dark:bg-slate-700 dark:text-white rounded-md shadow-xs transition-all";
-                if(btnRaw) btnRaw.className = "px-2 py-1 text-slate-400 transition-all";
+                if(btnForm) btnForm.className = "px-2 py-0.5 bg-white dark:bg-slate-700 dark:text-white rounded-md shadow-xs transition-colors";
+                if(btnRaw) btnRaw.className = "px-2 py-0.5 text-slate-500 dark:text-slate-400 transition-colors";
             } else {
                 if(vDoc) vDoc.classList.add("hidden");
                 if(vRaw) vRaw.classList.remove("hidden");
-                if(btnRaw) btnRaw.className = "px-2 py-1 bg-white dark:bg-slate-700 dark:text-white rounded-md shadow-xs transition-all";
-                if(btnForm) btnForm.className = "px-2 py-1 text-slate-400 transition-all";
+                if(btnRaw) btnRaw.className = "px-2 py-0.5 bg-white dark:bg-slate-700 dark:text-white rounded-md shadow-xs transition-colors";
+                if(btnForm) btnForm.className = "px-2 py-0.5 text-slate-500 dark:text-slate-400 transition-colors";
             }
         };
 
@@ -1381,7 +1323,7 @@
             const tEl = document.getElementById("comp-note-title");
             if(tEl) tEl.innerText = "Selecione o terceiro menu";
             const dEl = document.getElementById("view-doc-comp");
-            if(dEl) dEl.innerHTML = `<div class="text-center text-slate-300 my-20 dark:text-slate-700">Painel secundário inativo. Selecione este monitor e clique em um arquivo na árvore.</div>`;
+            if(dEl) dEl.innerHTML = `<div class="text-center text-slate-300 my-20 dark:text-slate-700">Painel secundário inativo. Selecione este monitor e clique em um arquivo.</div>`;
             const rEl = document.getElementById("view-raw-comp");
             if(rEl) rEl.innerText = "";
             buildNotesTree();
@@ -1389,18 +1331,23 @@
 
         function renderMarkdownHTML(mdText, filename) {
             if(!mdText) return `<div class="text-center text-slate-400">Documento sem registros textuais.</div>`;
-            const tagRegex = /#([a-zA-Z0-9À-ÿ_-]+)/g; let tags = []; let m;
+            const tagRegex = /#([a-zA-Z0-9À-ÿ_-]+)/g; 
+            let tags = []; 
+            let m;
             while((m = tagRegex.exec(mdText)) !== null) { tags.push(`#${m[1]}`); }
+            
             let cleanText = mdText.replace(/\[\[(.*?)\]\]/g, '<span class="text-blue-500 font-bold cursor-pointer hover:underline" onclick="loadNoteContent(\'$1\')">$1</span>');
+            
             let tagHeader = "";
             if(tags.length > 0) {
                 tagHeader = `<div class="flex flex-wrap gap-1.5 mb-4 border-b border-slate-100 dark:border-slate-800 pb-2.5">` + 
                     tags.map(t => `<span class="bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-900 text-[10px] font-black px-2 py-0.5 rounded-md">${t}</span>`).join('') + `</div>`;
             }
+            
             return `
                 <div class="text-center border-b border-slate-200 dark:border-slate-700 pb-3 mb-4">
                     <h3 class="font-bold text-sm tracking-wide uppercase text-slate-800 dark:text-white">BMS SERVICE - PARECER JURÍDICO</h3>
-                    <p class="text-[10px] text-slate-400 mt-0.5">Identificador de Volume: Cofre/${filename}</p>
+                    <p class="text-[10px] text-slate-400 mt-0.5">Volume: Cofre/${filename}</p>
                 </div>
                 ${tagHeader}
                 <div class="whitespace-pre-wrap text-slate-800 dark:text-slate-200">${cleanText}</div>
@@ -1418,7 +1365,8 @@
                 setMainTab('formatted'); 
             } else { 
                 comparisonFileId = filename; 
-                setCompTab('formatted'); 
+                setCompTextTab('formatted'); 
+                setComparisonMode('compare');
             }
 
             const tEl = document.getElementById(targetTitleId);
@@ -1427,6 +1375,8 @@
             const dEl = document.getElementById(targetDocId);
             const rEl = document.getElementById(targetRawId);
             if(dEl) dEl.innerHTML = `<div class="text-center text-slate-400 my-20 animate-pulse">Indexando bloco documental...</div>`;
+
+            highlightSelectedRow(filename);
 
             if (isMain) {
                 updateFavoriteStarUI(); 
@@ -1459,85 +1409,196 @@
             }
         };
 
-        window.initPhysicsNodes = function(data) {
-            if(!canvas || !canvas.parentElement) return;
-            const w = canvas.parentElement.clientWidth > 10 ? canvas.parentElement.clientWidth : 500; 
-            const h = canvas.parentElement.clientHeight > 10 ? canvas.parentElement.clientHeight : 230;
-            canvas.width = w; canvas.height = h;
-
-            const existingNodesMap = new Map(graphData.nodes.map(n => [n.id, n]));
-            graphData.nodes = data.nodes.map(n => {
-                const old = existingNodesMap.get(n.id);
-                return { 
-                    id: n.id, label: n.label, type: n.type, 
-                    x: old ? old.x : w/2 + (Math.random()-0.5)*160, 
-                    y: old ? old.y : h/2 + (Math.random()-0.5)*160, 
-                    vx:0, vy:0 
-                };
-            });
-            graphData.edges = data.edges.map(e => ({ 
-                sourceNode: graphData.nodes.find(n => n.id === e.source), 
-                targetNode: graphData.nodes.find(n => n.id === e.target) 
-            })).filter(e => e.sourceNode && e.targetNode);
+        window.downloadCompFile = function() {
+            if (!comparisonFileId || !compContentBuffer) return;
+            const blob = new Blob([compContentBuffer], { type: "text/markdown;charset=utf-8" });
+            const link = document.createElement("a"); link.href = URL.createObjectURL(blob);
+            link.download = comparisonFileId.split('/').pop(); link.click();
         };
 
-        window.updatePhysics = function() {
-            if(!canvas || graphData.nodes.length === 0) return;
-            const cx = canvas.width / 2, cy = canvas.height / 2;
-            for (let i = 0; i < graphData.nodes.length; i++) {
-                let n1 = graphData.nodes[i];
-                for (let j = i + 1; j < graphData.nodes.length; j++) {
-                    let n2 = graphData.nodes[j];
-                    let dx = n2.x - n1.x; let dy = n2.y - n1.y; 
-                    if(dx === 0 && dy === 0) { dx = 0.1; dy = 0.1; }
-                    let dist = Math.sqrt(dx*dx + dy*dy);
-                    if (dist < 150) {
-                        let force = 350 / (dist * dist + 5);
-                        if (n1 !== draggedNode) { n1.vx -= (dx/dist)*force; n1.vy -= (dy/dist)*force; }
-                        if (n2 !== draggedNode) { n2.vx += (dx/dist)*force; n2.vy += (dy/dist)*force; }
-                    }
+        function highlightSelectedRow(targetFilename) {
+            document.querySelectorAll(".tree-row-container").forEach(row => {
+                const rowPath = row.getAttribute("data-path").replace(/\/$/, "");
+                const cleanMain = selectedFileId ? selectedFileId.replace(/\/$/, "") : "";
+                const cleanComp = comparisonFileId ? comparisonFileId.replace(/\/$/, "") : "";
+                
+                if (rowPath === cleanMain || rowPath === cleanComp) {
+                    row.className = "tree-row-container group flex items-center justify-between w-full rounded-xl p-0.5 border transition-all text-left bg-blue-50/50 dark:bg-blue-950/30 border-blue-500 dark:border-blue-400 text-blue-600 dark:text-blue-400 shadow-xs";
+                } else {
+                    row.className = "tree-row-container group flex items-center justify-between w-full rounded-xl p-0.5 border border-transparent hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300";
                 }
+            });
+        }
+
+        async function processUploadBatch(fileList) {
+            let baseFolder = "";
+            if (selectedFileId && selectedFileId.endsWith("/")) baseFolder = selectedFileId;
+            else if (selectedFileId && selectedFileId.includes("/")) baseFolder = selectedFileId.substring(0, selectedFileId.lastIndexOf("/")) + "/";
+
+            for (let i = 0; i < fileList.length; i++) {
+                const file = fileList[i];
+                const relativePath = file.webkitRelativePath || file.name;
+                const finalPath = baseFolder + relativePath;
+
+                try {
+                    await fetch(`/api/upload-vault?file=${encodeURIComponent(finalPath)}`, { method: "POST", body: file });
+                } catch(err){}
             }
-            graphData.edges.forEach(e => {
-                let dx = e.targetNode.x - e.sourceNode.x; let dy = e.targetNode.y - e.sourceNode.y;
-                let dist = Math.sqrt(dx*dx + dy*dy);
-                if (dist > 0) {
-                    let force = 0.012 * dist;
-                    if (e.sourceNode !== draggedNode) { e.sourceNode.vx += (dx / dist) * force; e.sourceNode.vy += (dy / dist) * force; }
-                    if (e.targetNode !== draggedNode) { e.targetNode.vx -= (dx / dist) * force; e.targetNode.vy -= (dy / dist) * force; }
-                }
-            });
-            graphData.nodes.forEach(n => {
-                if (n === draggedNode) return;
-                n.vx += (cx - n.x) * 0.0015; n.vy += (cy - n.y) * 0.0015;
-                n.vx += (Math.random() - 0.5) * 0.15; n.vy += (Math.random() - 0.5) * 0.15;
-                n.x += n.vx; n.y += n.vy;
-                const p = 15;
-                if (n.x < p) { n.x = p; n.vx *= -1; } 
-                if (n.y < p) { n.y = p; n.vy *= -1; }
-                if (n.x > canvas.width - p) { n.x = canvas.width - p; n.vx *= -1; }
-                if (n.y > canvas.height - p) { n.y = canvas.height - p; n.vy *= -1; }
-                n.vx *= 0.90; n.vy *= 0.90;
-            });
+            
+            await buildNotesTree(); 
+            await reloadGlobalGraph();
+        }
+
+        const upV = document.getElementById("global-vault-upload");
+        if(upV) upV.onchange = (e) => {
+            if(e.target.files.length > 0) processUploadBatch(e.target.files);
+            e.target.value = "";
         };
 
-        window.drawGraph = function() {
-            if(!ctx || !canvas) return; 
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            const isDark = document.documentElement.classList.contains("dark");
-            ctx.lineWidth = 1.2; ctx.strokeStyle = isDark ? "#334155" : "#e2e8f0";
-            graphData.edges.forEach(e => { ctx.beginPath(); ctx.moveTo(e.sourceNode.x, e.sourceNode.y); ctx.lineTo(e.targetNode.x, e.targetNode.y); ctx.stroke(); });
-            graphData.nodes.forEach(n => {
-                ctx.beginPath();
-                let radius = n.type === "tag" ? 6.0 : 4.5;
-                if (selectedFileId === n.id || comparisonFileId === n.id) radius = 7.0;
-                ctx.arc(n.x, n.y, radius, 0, 2*Math.PI);
-                ctx.fillStyle = n.type === "tag" ? "#8bc34a" : ((selectedFileId === n.id || comparisonFileId === n.id) ? "#2563eb" : (isDark ? "#3b82f6" : "#64748b"));
-                ctx.fill(); 
-                ctx.fillStyle = isDark ? "#cbd5e1" : "#334155";
-                ctx.font = "9px sans-serif"; ctx.textAlign = "center"; ctx.fillText(n.label, n.x, n.y + 14);
-            });
+        const upF = document.getElementById("global-folder-upload");
+        if(upF) upF.onchange = (e) => {
+            if(e.target.files.length > 0) processUploadBatch(e.target.files);
+            e.target.value = "";
         };
+
+        const btnAttach = document.getElementById("btn-chat-attach");
+        const ctxUpload = document.getElementById("chat-context-upload");
+        if(btnAttach && ctxUpload) {
+            btnAttach.onclick = () => ctxUpload.click();
+            ctxUpload.onchange = (e) => {
+                const file = e.target.files[0]; if (!file) return;
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    pendingChatAttachment = { name: file.name, content: event.target.result };
+                    const attName = document.getElementById("chat-attachment-name");
+                    const attArea = document.getElementById("chat-attachment-area");
+                    if(attName) attName.innerText = file.name;
+                    if(attArea) attArea.classList.remove("hidden");
+                };
+                reader.readAsText(file);
+            };
+        }
+
+        const btnRemAttach = document.getElementById("btn-remove-attachment");
+        if(btnRemAttach) {
+            btnRemAttach.onclick = () => {
+                pendingChatAttachment = null;
+                const attArea = document.getElementById("chat-attachment-area");
+                if(attArea) attArea.classList.add("hidden");
+                if(ctxUpload) ctxUpload.value = "";
+            };
+        }
+
+        async function sendChatMessage() {
+            if(!chatInput || !appPassword) return;
+            let query = chatInput.value.trim();
+            if (!query) return;
+
+            const pwd = appPassword.value.trim();
+            if (!pwd) {
+                renderMessageBlock("assistant", "⚠️ **Acesso Negado:** Por favor, insira o Token de Validação Local no campo acima antes de enviar instruções.");
+                return;
+            }
+
+            renderMessageBlock("user", query);
+            chatInput.value = "";
+            chatInput.style.height = "auto";
+            
+            const ctxArea = document.getElementById("ctx-area")?.value || "";
+            const ctxType = document.getElementById("ctx-type")?.value || "";
+            const ctxPhase = document.getElementById("ctx-phase")?.value || "";
+            const ctxObj = document.getElementById("ctx-obj")?.value || "";
+
+            let sysContext = `[Diretriz Processual Selecionada na Interface]\n- Área Jurídica: ${ctxArea}\n- Tipo de Peça: ${ctxType}\n- Fase Atual: ${ctxPhase}\n- Objetivo: ${ctxObj}\nAdapte seu vocabulário e respostas a estas diretrizes.\n\n`;
+            
+            if (selectedFileId) sysContext += `[O usuário está visualizando e trabalhando no arquivo: Cofre/${selectedFileId.replace(/\/$/, "")}]\n\n`;
+            
+            if (pendingChatAttachment) {
+                sysContext += `[Arquivo anexado nesta mensagem: ${pendingChatAttachment.name}]\nConteúdo:\n${pendingChatAttachment.content}\n\n`;
+                const attArea = document.getElementById("chat-attachment-area");
+                if(attArea) attArea.classList.add("hidden");
+                if(ctxUpload) ctxUpload.value = "";
+                pendingChatAttachment = null;
+            }
+            
+            const fullPrompt = `${sysContext}Instrução do usuário: ${query}`;
+            chatHistory.push({ role: "user", content: fullPrompt });
+
+            const tempId = renderMessageBlock("assistant", "Analisando conformidade e processando...");
+
+            try {
+                const res = await fetch("/api/chat", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json", "x-app-password": pwd },
+                    body: JSON.stringify({ messages: chatHistory })
+                });
+                const data = await res.json();
+                
+                const loaderBlock = document.getElementById(tempId);
+                if (loaderBlock) loaderBlock.remove();
+
+                if (data.error) {
+                    renderMessageBlock("assistant", `❌ Erro de Autenticação: ${data.error}`);
+                } else if (data.reply) {
+                    renderMessageBlock("assistant", data.reply);
+                    chatHistory.push({ role: "assistant", content: data.reply });
+                    
+                    if (data.citedFiles && data.citedFiles.length > 0) {
+                        highlightedNodes = data.citedFiles.map(f => f.replace(/\/$/, ""));
+                    } else {
+                        highlightedNodes = [];
+                    }
+
+                    buildNotesTree();
+                    reloadGlobalGraph();
+                }
+            } catch (err) {
+                const loaderBlock = document.getElementById(tempId);
+                if (loaderBlock) loaderBlock.remove();
+                renderMessageBlock("assistant", "❌ Falha crítica de conexão com o servidor local.");
+            }
+        }
+
+        function renderMessageBlock(role, text) {
+            msgCounter++;
+            const id = "msg-" + Date.now() + "-" + msgCounter;
+            
+            const wrapper = document.createElement("div");
+            wrapper.className = `w-full flex shrink-0 ${role === 'user' ? 'justify-end' : 'justify-start'}`;
+            wrapper.id = id;
+            
+            const bubble = document.createElement("div");
+            
+            let htmlText = text
+                .replace(/</g, "&lt;").replace(/>/g, "&gt;") 
+                .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" download class="text-blue-200 underline font-black hover:text-white transition-colors">$1</a>')
+                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                .replace(/\n/g, '<br>');
+
+            if (role === "user") {
+                bubble.className = "bg-blue-600 text-white rounded-2xl rounded-tr-none p-3 text-xs max-w-[85%] font-semibold leading-relaxed whitespace-pre-wrap shadow-xs select-text text-left break-words";
+            } else {
+                bubble.className = "bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 rounded-2xl rounded-tl-none p-3 text-xs max-w-[85%] shadow-xs leading-relaxed whitespace-pre-wrap select-text text-left break-words";
+            }
+            
+            bubble.innerHTML = htmlText;
+            wrapper.appendChild(bubble);
+            if(messagesContainer) {
+                messagesContainer.appendChild(wrapper);
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            }
+            return id;
+        }
+
+        if(btnSend) btnSend.onclick = sendChatMessage;
+        if(chatInput) {
+            chatInput.onkeydown = (e) => { 
+                if (e.key === "Enter" && !e.shiftKey) { 
+                    e.preventDefault(); 
+                    sendChatMessage(); 
+                } 
+            };
+        }
 
         buildNotesTree();
         reloadGlobalGraph();
