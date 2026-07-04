@@ -74,27 +74,61 @@ function readNoteLocal(filename) {
     return { filename, content: fs.readFileSync(safePath, "utf-8") };
 }
 
-// MOTOR MELHORADO PARA GARANTIR RETORNO, MESMO SEM CLAUDE
-async function generateMarkdownWithClaude(rawText, originalName) {
-    if (!rawText || rawText.trim().length === 0) {
-        return `> **Aviso de Sistema:** O extrator tentou ler o arquivo '${originalName}', mas nenhum texto real foi encontrado. É provável que este PDF seja uma imagem escaneada, necessitando de um motor OCR (Optical Character Recognition) externo para ler seu conteúdo.`;
-    }
-
-    if (!anthropic) {
-        return `> **Aviso de Sistema:** A Chave de API do Claude (ANTHROPIC_API_KEY) não foi detectada no servidor. Abaixo está o texto bruto extraído do arquivo '${originalName}' sem formatação de Inteligência Artificial:\n\n---\n\n${rawText}`;
-    }
+// O NOVO MOTOR DE TRANSCRIÇÃO VISUAL (OCR CLAUDE)
+async function processDocumentWithClaude(fileBuffer, fileExt, originalName) {
+    if (!anthropic) return `> **Aviso de Sistema:** Chave ANTHROPIC_API_KEY ausente. Não é possível rodar o motor OCR/Markdown.`;
 
     try {
+        let extractedText = "";
+
+        // TENTA LER PDF NATIVO PRIMEIRO
+        if (fileExt === '.pdf') {
+            const pdfData = await pdfParse(fileBuffer);
+            extractedText = pdfData.text;
+        } else if (fileExt === '.txt' || fileExt === '.csv') {
+            extractedText = fileBuffer.toString('utf-8');
+        }
+
+        const systemPrompt = "Você é um motor de indexação corporativa operando o Obsidian. Seu papel é transcrever ou reescrever documentos jurídicos em Markdown profissional. Corrija quebras de linha erradas, crie títulos (##) para seções principais e use formatação limpa. OBRIGATÓRIO: Crie uma seção '### Metadados' no final contendo de 3 a 5 #tags relevantes e links [[...]]. Retorne APENAS o código Markdown bruto. Não fale com o usuário.";
+
+        // SE NÃO TIVER TEXTO (PDF IMAGEM/ESCANEADO), CHAMA O MOTOR DE VISÃO
+        if (!extractedText || extractedText.trim().length < 50) {
+            
+            if (fileExt === '.pdf') {
+                console.log(`[MOTOR OCR] PDF '${originalName}' é imagem. Invocando Visão do Claude...`);
+                const base64PDF = fileBuffer.toString('base64');
+                
+                const response = await anthropic.messages.create({
+                    model: process.env.CLAUDE_MODEL || "claude-3-5-sonnet-20241022",
+                    max_tokens: 4000,
+                    system: systemPrompt,
+                    messages: [{
+                        role: "user",
+                        content: [
+                            { type: "text", text: `Transcreva visualmente o conteúdo do PDF abaixo para Markdown estruturado. Original: ${originalName}` },
+                            { type: "document", source: { type: "base64", media_type: "application/pdf", data: base64PDF } }
+                        ]
+                    }]
+                });
+                return response.content.find(c => c.type === "text")?.text || `> Erro da IA ao ler imagem.`;
+            } else {
+                return `> **Aviso de Sistema:** O arquivo '${originalName}' não possui texto legível e não é um PDF suportado para visão.`;
+            }
+        }
+
+        // SE TIVER TEXTO, GERA MARKDOWN NORMAL
+        console.log(`[MOTOR NATIVO] Lendo texto puro de '${originalName}'...`);
         const response = await anthropic.messages.create({
             model: process.env.CLAUDE_MODEL || "claude-3-5-sonnet-20241022",
             max_tokens: 4000,
-            system: "Você é um motor de indexação corporativa operando o Obsidian. Seu papel é reescrever textos extraídos (OCR/PDF) em Markdown profissional. Corrija quebras de linha erradas, crie títulos (##) para seções principais e use formatação limpa. OBRIGATÓRIO: Crie uma seção '### Metadados' no final contendo de 3 a 5 #tags relevantes e links [[...]]. Retorne APENAS o código Markdown bruto. Não fale com o usuário.",
-            messages: [{ role: "user", content: `Transforme o conteúdo abaixo em Markdown rico. Original: ${originalName}\n\nConteúdo:\n${rawText.substring(0, 60000)}` }]
+            system: systemPrompt,
+            messages: [{ role: "user", content: `Transforme o conteúdo abaixo em Markdown rico. Original: ${originalName}\n\nConteúdo:\n${extractedText.substring(0, 60000)}` }]
         });
-        return response.content.find(c => c.type === "text")?.text || `> Erro da IA ao formatar o texto bruto. O Claude retornou vazio. \n\n${rawText}`;
+        return response.content.find(c => c.type === "text")?.text || `> Erro da IA ao formatar texto.`;
+
     } catch (e) {
-        console.error("Erro no Auto-Markdown:", e);
-        return `> **Aviso de Sistema:** Falha de comunicação com a API da Anthropic durante a formatação. Abaixo está o texto bruto extraído:\n\n---\n\n${rawText}`;
+        console.error("Erro Crítico no Auto-Markdown/OCR:", e);
+        return `> **Erro de Processamento de IA:** O modelo falhou ao tentar ler '${originalName}'. Erro Técnico: ${e.message}`;
     }
 }
 
@@ -209,34 +243,19 @@ app.post("/api/upload-vault", async (req, res) => {
 
         fs.writeFileSync(safePath, fileBuffer);
 
-        const processFileToMarkdown = async () => {
-            try {
-                let extractedText = "";
-                if (rawTarget.toLowerCase().endsWith('.pdf')) {
-                    const pdfData = await pdfParse(fileBuffer);
-                    extractedText = pdfData.text;
-                } else if (rawTarget.toLowerCase().endsWith('.txt') || rawTarget.toLowerCase().endsWith('.csv')) {
-                    extractedText = fileBuffer.toString('utf-8');
-                }
-
-                const mdContent = await generateMarkdownWithClaude(extractedText, path.basename(rawTarget));
-                if (mdContent) {
-                    const mdPath = safePath.substring(0, safePath.lastIndexOf('.')) + ".md";
-                    fs.writeFileSync(mdPath, mdContent, "utf-8");
-                    return mdContent;
-                }
-            } catch(e) { 
-                console.error("Erro interno no ProcessFile:", e); 
-                return `> Erro no servidor: O interpretador nativo falhou completamente ao tentar ler o arquivo: ${e.message}`;
-            }
-            return "Extração falhou.";
+        const runAsyncEngine = async () => {
+            const ext = path.extname(rawTarget).toLowerCase();
+            const mdContent = await processDocumentWithClaude(fileBuffer, ext, path.basename(rawTarget));
+            const mdPath = safePath.substring(0, safePath.lastIndexOf('.')) + ".md";
+            fs.writeFileSync(mdPath, mdContent, "utf-8");
+            return mdContent;
         };
 
         if (isSync) {
-            const mdResult = await processFileToMarkdown();
+            const mdResult = await runAsyncEngine();
             res.json({ success: true, markdown: mdResult });
         } else {
-            processFileToMarkdown();
+            runAsyncEngine();
             res.json({ success: true, message: "Em processamento." });
         }
 
@@ -253,28 +272,17 @@ app.post("/api/sync-retroactive", async (req, res) => {
             if (fs.statSync(fullPath).isDirectory()) {
                 await scanAndConvert(fullPath);
             } else if (file.toLowerCase().endsWith('.pdf') || file.toLowerCase().endsWith('.txt')) {
-                const ext = path.extname(file);
+                const ext = path.extname(file).toLowerCase();
                 const baseName = file.substring(0, file.lastIndexOf(ext));
                 const mdPath = path.join(dir, baseName + ".md");
                 
                 if (!fs.existsSync(mdPath)) {
-                    console.log(`[RETROATIVO] Iniciando varredura em: ${file}`);
+                    console.log(`[RETROATIVO] Iniciando IA em: ${file}`);
                     try {
                         const buffer = fs.readFileSync(fullPath);
-                        let text = "";
-                        if (ext.toLowerCase() === '.pdf') {
-                            const pdfData = await pdfParse(buffer);
-                            text = pdfData.text;
-                        } else {
-                            text = buffer.toString('utf-8');
-                        }
-                        
-                        const mdContent = await generateMarkdownWithClaude(text, file);
-                        if (mdContent) {
-                            fs.writeFileSync(mdPath, mdContent, "utf-8");
-                            console.log(`[RETROATIVO] Salvo: ${baseName}.md`);
-                        }
-                        
+                        const mdContent = await processDocumentWithClaude(buffer, ext, file);
+                        fs.writeFileSync(mdPath, mdContent, "utf-8");
+                        console.log(`[RETROATIVO] Salvo: ${baseName}.md`);
                     } catch (e) { console.error(`[RETROATIVO] Falha no arquivo ${file}:`, e.message); }
                 }
             }
@@ -373,4 +381,4 @@ app.post("/api/chat", async (req, res) => {
 });
 
 app.use((err, req, res, next) => { res.status(500).json({ error: err.message }); });
-app.listen(3000, () => console.log("Servidor ativo com Sincronizador de PDF Avançado."));
+app.listen(3000, () => console.log("Servidor ativo com Sincronizador de PDF Visual/OCR."));
