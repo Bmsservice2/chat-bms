@@ -30,11 +30,13 @@
     <input type="file" id="global-folder-upload" class="hidden" webkitdirectory directory multiple />
     <input type="file" id="chat-context-upload" class="hidden" />
 
+    <!-- MENU DE OPÇÕES GLOBAIS DA ÁRVORE -->
     <div id="custom-context-menu" class="hidden absolute bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl shadow-2xl py-1.5 w-48 z-50 text-xs font-bold text-slate-600 dark:text-slate-300">
         <button onclick="openRenameModal()" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 flex items-center gap-2"><i data-lucide="edit-2" class="w-3.5 h-3.5 text-blue-500"></i> Renomear / Mover</button>
         <button onclick="openDeleteModal()" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 text-red-600 dark:text-red-400 flex items-center gap-2"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i> Apagar Registro</button>
     </div>
 
+    <!-- MODAL DE DIÁLOGO GERAL -->
     <div id="custom-dialog-modal" class="hidden fixed inset-0 bg-slate-950/40 dark:bg-slate-950/60 backdrop-blur-xs flex items-center justify-center z-50">
         <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-2xl p-5 w-80 max-w-full flex flex-col gap-4">
             <h3 id="modal-title" class="text-sm font-black text-slate-800 dark:text-white">Ação do Cofre</h3>
@@ -46,6 +48,7 @@
         </div>
     </div>
 
+    <!-- MODAL DO PLANO / CONTA -->
     <div id="account-settings-modal" class="hidden fixed inset-0 bg-slate-950/40 dark:bg-slate-950/60 backdrop-blur-xs flex items-center justify-center z-50">
         <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-2xl p-6 w-[400px] max-w-full flex flex-col gap-4">
             <div class="flex items-center gap-3 border-b border-slate-100 dark:border-slate-800 pb-4">
@@ -66,6 +69,7 @@
         </div>
     </div>
 
+    <!-- MODAL SPEEDTEST -->
     <div id="speedtest-modal" class="hidden fixed inset-0 bg-slate-950/40 dark:bg-slate-950/60 backdrop-blur-xs flex items-center justify-center z-50 transition-opacity duration-300 opacity-0">
         <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl shadow-2xl p-6 w-[350px] max-w-full flex flex-col gap-4 transform transition-all duration-300 scale-95" id="speedtest-content">
             <div id="st-state-1" class="flex flex-col items-center pt-2">
@@ -75,8 +79,8 @@
                 <h3 class="font-black text-slate-800 dark:text-white text-lg">Teste de Velocidade</h3>
                 <p class="text-center text-xs text-slate-500 dark:text-slate-400 font-medium mt-1 leading-relaxed">Sente que o sistema está lento? Faça um teste da velocidade da sua internet agora mesmo!</p>
                 <div class="flex w-full gap-2 text-xs font-bold mt-6">
-                    <button onclick="closeSpeedTest()" class="flex-1 py-3 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 rounded-xl">Cancelar</button>
-                    <button onclick="startSpeedTest()" class="flex-1 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-xl shadow-md">Iniciar Teste</button>
+                    <button onclick="closeSpeedTest()" class="flex-1 py-3 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 rounded-xl font-bold">Cancelar</button>
+                    <button onclick="startSpeedTest()" class="flex-1 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-xl shadow-md font-bold">Iniciar Teste</button>
                 </div>
             </div>
             <div id="st-state-2" class="hidden flex flex-col items-center py-4">
@@ -102,6 +106,7 @@
         </div>
     </div>
 
+    <!-- HEADER SUPERIOR PRINCIPAL -->
     <header class="bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 h-16 min-h-16 flex items-center justify-between px-6 z-20 shadow-xs">
         <div class="flex items-center gap-1.5">
             <div class="w-10 h-10 flex items-center justify-center mr-1">
@@ -125,7 +130,7 @@
 
             <div class="relative">
                 <button onclick="toggleCustomDropdown('dropdown-upload', event)" class="border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 text-xs font-bold px-4 py-2.5 rounded-xl flex items-center gap-2 hover:bg-slate-50 shadow-xs">
-                    <i data-lucide="upload-cloud" class="w-4 h-4 text-blue-600"></i> Upload Box
+                    <i data-lucide="upload-cloud" class="w-4 h-4 text-blue-600"></i> Upload Cofre
                 </button>
                 <div id="dropdown-upload" class="hidden absolute top-[105%] right-0 mt-1 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl shadow-2xl py-1.5 w-48 z-50 flex flex-col text-xs font-bold text-slate-600 dark:text-slate-300">
                     <button onclick="document.getElementById('global-vault-upload').click(); closeAllDropdownsMenu()" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 flex items-center gap-2"><i data-lucide="file-plus" class="w-4 h-4 text-blue-500"></i> Arquivos Avulsos</button>
@@ -141,14 +146,22 @@
         </div>
     </header>
 
+    <!-- CONTAINER INTEGRADO DAS COLUNAS -->
     <div class="flex flex-1 overflow-hidden relative" onclick="closeAllDropdownsMenu()">
         
+        <!-- COLUNA 1: GAVETA ESQUERDA -->
         <aside id="sidebar-left" class="w-64 bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 flex flex-col overflow-hidden p-4 flex-shrink-0" onclick="clearTreeSelection(event)">
             <div class="flex items-center justify-between mb-4 px-1">
                 <span class="text-xs font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest">Processos e Cofre</span>
                 <div class="flex gap-1 relative" onclick="e => e.stopPropagation()">
                     <button id="btn-filter-tree" onclick="toggleFilterDropdown(event)" class="p-1 text-slate-400 hover:text-blue-600 rounded-lg transition-colors"><i data-lucide="filter" class="w-3.5 h-3.5"></i></button>
                     <button onclick="createNewFolderManual(event)" class="p-1 text-slate-400 hover:text-blue-600 rounded-lg transition-colors"><i data-lucide="folder-plus" class="w-3.5 h-3.5"></i></button>
+                    
+                    <div id="filter-menu-dropdown" class="hidden absolute top-7 right-0 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl shadow-xl py-1 w-44 z-30 text-xs font-bold text-slate-600 dark:text-slate-300">
+                        <button onclick="changeFilter('all')" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-700 flex items-center gap-2">Mostrar Todos</button>
+                        <button onclick="changeFilter('md')" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-700 flex items-center gap-2">Apenas Texto (.md)</button>
+                        <button onclick="changeFilter('pdf')" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-700 flex items-center gap-2">Apenas PDFs (.pdf)</button>
+                    </div>
                 </div>
             </div>
 
@@ -175,8 +188,10 @@
 
         <div id="resizer-left" class="w-1.5 bg-transparent hover:bg-blue-500 cursor-col-resize z-10 flex-shrink-0 transition-colors"></div>
 
-        <div class="flex-1 flex flex-col min-w-[400px] overflow-hidden p-5 gap-4">
+        <!-- PAINEL CENTRAL COMPLETO -->
+        <div class="flex-1 flex flex-col min-w-[400px] overflow-hidden p-5 gap-4" id="center-panel">
             
+            <!-- MENUS DE PERSONALIZAÇÃO JURÍDICA RESTAURADOS COMPLETOS DO TOPO -->
             <div class="grid grid-cols-4 gap-4 w-full flex-shrink-0">
                 <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-3 flex items-center shadow-xs relative cursor-pointer" onclick="toggleCustomDropdown('dropdown-area', event)">
                     <div class="p-2 bg-blue-50 dark:bg-slate-800 text-blue-600 dark:text-blue-400 rounded-lg mr-3"><i data-lucide="scale" class="w-4 h-4"></i></div>
@@ -194,6 +209,8 @@
                         <button onclick="selectOption('area', 'Direito Empresarial', 'Direito Empresarial', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 truncate">Direito Empresarial</button>
                         <button onclick="selectOption('area', 'Direito de Família', 'Direito de Família', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 truncate">Direito de Família</button>
                         <button onclick="selectOption('area', 'Direito Administrativo', 'Direito Administrativo', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 truncate">Direito Administrativo</button>
+                        <button onclick="selectOption('area', 'Direito Previdenciário', 'Direito Previdenciário', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 truncate">Direito Previdenciário</button>
+                        <button onclick="selectOption('area', 'Direito Constitucional', 'Direito Constitucional', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 truncate">Direito Constitucional</button>
                     </div>
                 </div>
 
@@ -209,6 +226,10 @@
                         <button onclick="selectOption('type', 'Petição Inicial', 'Petição Inicial', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 truncate">Petição Inicial</button>
                         <button onclick="selectOption('type', 'Contestação', 'Contestação', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 truncate">Contestação</button>
                         <button onclick="selectOption('type', 'Recurso', 'Recurso (Apelação/RO)', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 truncate">Recurso (Apelação/RO)</button>
+                        <button onclick="selectOption('type', 'Alegações Finais', 'Alegações Finais', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 truncate">Alegações Finais</button>
+                        <button onclick="selectOption('type', 'Contrato/Acordo', 'Contrato / Acordo', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 truncate">Contrato / Acordo</button>
+                        <button onclick="selectOption('type', 'Parecer Jurídico', 'Parecer Jurídico', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 truncate">Parecer Jurídico</button>
+                        <button onclick="selectOption('type', 'Notificação Extrajudicial', 'Notificação Extrajudicial', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 truncate">Notificação Extrajudicial</button>
                     </div>
                 </div>
 
@@ -222,6 +243,10 @@
                     <div id="dropdown-phase" class="hidden absolute top-[105%] left-0 mt-1 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl shadow-2xl py-1.5 w-full z-50 flex flex-col max-h-48 overflow-y-auto no-scrollbar text-xs font-bold text-slate-600 dark:text-slate-300">
                         <button onclick="selectOption('phase', 'Fase de Estudo', 'Fase de Estudo', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 truncate">Fase de Estudo</button>
                         <button onclick="selectOption('phase', 'Fase de Conhecimento', 'Fase de Conhecimento', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 truncate">Fase de Conhecimento</button>
+                        <button onclick="selectOption('phase', 'Fase de Instrução/Provas', 'Fase de Instrução', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 truncate">Fase de Instrução</button>
+                        <button onclick="selectOption('phase', 'Fase Recursal', 'Fase Recursal', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 truncate">Fase Recursal</button>
+                        <button onclick="selectOption('phase', 'Fase de Execução', 'Fase de Execução', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 truncate">Fase de Execução</button>
+                        <button onclick="selectOption('phase', 'Acordo ou Mediação', 'Acordo/Mediação', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 truncate">Acordo/Mediação</button>
                     </div>
                 </div>
 
@@ -235,12 +260,18 @@
                     <div id="dropdown-obj" class="hidden absolute top-[105%] left-0 mt-1 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl shadow-2xl py-1.5 w-full z-50 flex flex-col max-h-48 overflow-y-auto no-scrollbar text-xs font-bold text-slate-600 dark:text-slate-300">
                         <button onclick="selectOption('obj', 'Auditar/Resumir', 'Auditoria Geral', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 truncate">Auditoria Geral</button>
                         <button onclick="selectOption('obj', 'Encontrar Contradições', 'Achar Contradições', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 truncate">Achar Contradições</button>
+                        <button onclick="selectOption('obj', 'Elaborar Minuta', 'Elaborar Minuta', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 truncate">Elaborar Minuta</button>
+                        <button onclick="selectOption('obj', 'Análise de Risco Jurídico', 'Análise de Risco', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 truncate">Análise de Risco</button>
+                        <button onclick="selectOption('obj', 'Pesquisa Jurisprudencial', 'Levantar Jurisprudência', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 truncate">Levantar Jurisprudência</button>
+                        <button onclick="selectOption('obj', 'Sistematizar Fatos', 'Resumir Fatos/Prazos', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 truncate">Resumir Fatos/Prazos</button>
                     </div>
                 </div>
             </div>
 
-            <div class="flex flex-1 gap-4 overflow-hidden h-full">
+            <!-- MONITORES DE VISUALIZAÇÃO COMPARTILHADOS EM PARALELO -->
+            <div class="flex flex-1 gap-4 overflow-hidden h-full relative">
                 
+                <!-- MONITOR ESQUERDA (PRINCIPAL) -->
                 <div id="center-preview-container" onclick="selectMonitor('main')" class="flex-1 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-xs flex flex-col overflow-hidden h-full transition-all ring-2 ring-blue-600 dark:ring-blue-500 cursor-pointer">
                     <div class="flex items-center justify-between px-5 py-3 border-b border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900">
                         <div class="flex items-center gap-2">
@@ -267,6 +298,7 @@
 
                 <div id="resizer-center" class="w-1.5 bg-transparent hover:bg-blue-500 cursor-col-resize z-10 flex-shrink-0 transition-colors"></div>
 
+                <!-- REQUISITO 1: MONITOR DIREITA (TERCEIRO MENU - CÓPIA EXATA E INDEPENDENTE DO MONITOR PRINCIPAL) -->
                 <div id="sidebar-comparison" onclick="selectMonitor('comp')" class="w-[45%] bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl flex flex-col overflow-hidden shadow-xs h-full flex-shrink-0 transition-all cursor-pointer">
                     <div class="flex items-center justify-between px-5 py-3 border-b border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900">
                         <div class="flex items-center gap-2">
@@ -295,6 +327,7 @@
 
         <div id="resizer-right" class="w-1.5 bg-transparent hover:bg-blue-500 cursor-col-resize z-10 flex-shrink-0 transition-colors"></div>
 
+        <!-- COLUNA 4: PAINEL DE ASSISTENTE CHAT -->
         <aside id="sidebar-right" class="w-80 bg-white dark:bg-slate-900 border-l border-slate-200 dark:border-slate-800 flex flex-col overflow-hidden shadow-2xl flex-shrink-0">
             <div class="p-4 border-b border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-900 flex items-center justify-between">
                 <div class="flex items-center gap-2.5">
@@ -328,8 +361,18 @@
         </aside>
     </div>
 
+    <!-- CODE SCRIPT REVISADO E BLINDADO CONTRA SINTAXES CORROMPIDAS -->
     <script>
         lucide.createIcons();
+
+        // ATALHO CTRL+K
+        document.addEventListener('keydown', (e) => {
+            if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
+                e.preventDefault();
+                const sb = document.getElementById('global-search-bar');
+                if (sb) { sb.focus(); sb.select(); }
+            }
+        });
 
         const messagesContainer = document.getElementById("chat-messages");
         const chatInput = document.getElementById("chat-input");
@@ -365,6 +408,7 @@
         
         let favoriteItems = JSON.parse(localStorage.getItem("bms_favorites_map") || "{}");
         let collapsedFolders = JSON.parse(localStorage.getItem("bms_collapsed_folders") || "{}");
+        let highlightedNodes = []; 
 
         if(chatInput) {
             chatInput.addEventListener("input", function() {
@@ -530,13 +574,13 @@
         function clearComparisonDoc() {
             comparisonFileId = null;
             if(compNoteTitle) compNoteTitle.innerText = "Selecione o terceiro menu";
-            if(viewDocComp) viewDocComp.innerHTML = `<div class="text-center text-slate-400 my-20">Painel secundário inativo. Selecione este monitor e clique em um arquivo.</div>`;
+            if(viewDocComp) viewDocComp.innerHTML = `<div class="text-center text-slate-400 my-20">Painel secundário inativo. Selecione este monitor e clique em um arquivo para carregar aqui.</div>`;
             if(viewRawComp) viewRawComp.innerText = "";
         }
 
         function renderMarkdownHTML(mdText, filename) {
             if(!mdText) return `<div class="text-center text-slate-400">Documento sem registros textuais.</div>`;
-            let cleanText = mdText.replace(/\[\[(.*?)\]\]/g, '<span class="text-blue-500 font-bold cursor-pointer hover:underline" onclick="loadNoteContent(\'$1\')">$1</span>');
+            let cleanText = mdText.replace(/\[\[(.*?)\]\]/g, '<span class="text-blue-500 font-bold cursor-pointer hover:underline" onclick="loadNoteContent('$1')">$1</span>');
             return `<div class="whitespace-pre-wrap text-slate-800 dark:text-slate-200">${cleanText}</div>`;
         }
 
@@ -668,7 +712,7 @@
 
         function highlightSelectedRow(targetFilename) {
             document.querySelectorAll(".tree-row-container").forEach(row => {
-                if (!targetFilename) { row.className = "tree-row-container group flex items-center justify-between w-full rounded-xl p-0.5 border border-transparent hover:bg-slate-100 dark:hover:bg-slate-800 transition-all text-left text-slate-600 dark:text-slate-300"; return; }
+                if (!targetFilename) { row.className = "tree-row-container group flex items-center justify-between w-full rounded-xl p-0.5 border border-transparent hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300"; return; }
                 const rowPath = row.getAttribute("data-path").replace(/\/$/, "");
                 const cleanTarget = targetFilename.replace(/\/$/, "");
                 if (rowPath === cleanTarget) {
@@ -711,13 +755,9 @@
             await buildNotesTree();
         }
 
-        const upV = document.getElementById("global-vault-upload");
-        const upF = document.getElementById("global-folder-upload");
         if(upV) upV.onchange = async (e) => { await processUploadBatch(e.target.files); e.target.value = ""; };
         if(upF) upF.onchange = async (e) => { await processUploadBatch(e.target.files); e.target.value = ""; };
 
-        const btnAttach = document.getElementById("btn-chat-attach");
-        const ctxUpload = document.getElementById("chat-context-upload");
         if(btnAttach && ctxUpload) {
             btnAttach.onclick = () => ctxUpload.click();
             ctxUpload.onchange = (e) => {
@@ -732,13 +772,85 @@
             };
         }
 
-        const btnRemAttach = document.getElementById("btn-remove-attachment");
         if(btnRemAttach) {
             btnRemAttach.onclick = () => {
                 pendingChatAttachment = null;
                 document.getElementById("chat-attachment-area")?.classList.add("hidden");
                 if(ctxUpload) ctxUpload.value = "";
             };
+        }
+
+        async function buildNotesTree() {
+            try {
+                const res = await fetch("/api/notes"); const data = await res.json();
+                if (data.items && fileTree) {
+                    fileTree.innerHTML = ""; let items = data.items; items.sort((a, b) => a.path.localeCompare(b.path));
+                    if (currentFilterType === "md") items = items.filter(i => i.type === "directory" || i.path.endsWith(".md"));
+                    if (currentFilterType === "pdf") items = items.filter(i => i.type === "directory" || i.path.endsWith(".pdf"));
+                    
+                    fileTree.ondragover = (e) => { e.preventDefault(); };
+                    fileTree.ondrop = async (e) => {
+                        e.preventDefault();
+                        if (e.target === fileTree) {
+                            const draggedPath = e.dataTransfer.getData("text/plain");
+                            if (draggedPath) {
+                                const cleanDragged = draggedPath.replace(/\/$/, "");
+                                const itemName = cleanDragged.split('/').pop();
+                                if (cleanDragged !== itemName) await renameItem(cleanDragged, itemName);
+                            } else if (e.dataTransfer.items) { await handleOSDrop(e, ""); }
+                        }
+                    };
+
+                    items.forEach(item => {
+                        const cleanItemPath = item.path.replace(/\/$/, "");
+                        let pathParts = cleanItemPath.split('/'); let isHidden = false; let currentPathCheck = "";
+                        for (let i = 0; i < pathParts.length - 1; i++) {
+                            currentPathCheck += (i === 0 ? "" : "/") + pathParts[i];
+                            if (collapsedFolders[currentPathCheck]) { isHidden = true; break; }
+                        }
+                        if (isHidden) return;
+
+                        const row = document.createElement("div");
+                        const cleanSelectedPath = selectedFileId ? selectedFileId.replace(/\/$/, "") : "";
+                        const isSelected = (cleanItemPath === cleanSelectedPath);
+                        row.className = `tree-row-container group flex items-center justify-between w-full rounded-xl p-0.5 border text-left ${isSelected ? 'bg-blue-50/50 dark:bg-blue-950/30 border-blue-500 text-blue-600 shadow-xs' : 'border-transparent hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300'}`;
+                        row.setAttribute("data-path", item.path);
+
+                        const isDir = item.type === "directory"; row.draggable = true;
+                        row.ondragstart = (e) => e.dataTransfer.setData("text/plain", item.path);
+                        row.ondragover = (e) => { e.preventDefault(); if(isDir) e.currentTarget.classList.add('bg-blue-50/40'); };
+                        row.ondragleave = (e) => e.currentTarget.classList.remove('bg-blue-50/40');
+                        row.ondrop = async (e) => {
+                            e.preventDefault(); e.currentTarget.classList.remove('bg-blue-50/40');
+                            let targetFolder = isDir ? item.path : "";
+                            if (!isDir) { const parts = item.path.split('/'); parts.pop(); targetFolder = parts.length > 0 ? parts.join('/') + '/' : ''; }
+                            const draggedPath = e.dataTransfer.getData("text/plain");
+                            if (draggedPath && draggedPath !== item.path) await renameItem(draggedPath.replace(/\/$/, ""), targetFolder + draggedPath.replace(/\/$/, "").split('/').pop());
+                        };
+
+                        const btn = document.createElement("button"); const depth = (item.path.match(/\//g) || []).length - (isDir ? 1 : 0);
+                        btn.className = "flex-1 text-left py-1.5 flex items-center gap-1.5 font-bold truncate text-xs focus:outline-none";
+                        btn.style.paddingLeft = `${depth * 14 + 4}px`;
+                        const icon = isDir ? "folder" : (item.path.endsWith('.pdf') ? "file-text" : "file");
+                        const iconColor = isDir ? "text-amber-500" : (item.path.endsWith('.pdf') ? "text-red-400" : (isSelected ? "text-blue-500" : "text-slate-400"));
+                        const hasStar = !!favoriteItems[cleanItemPath];
+                        const starBadge = hasStar ? `<i data-lucide="star" class="w-3 h-3 text-amber-500 fill-amber-500 inline shrink-0 ml-1"></i>` : "";
+                        const isCollapsed = !!collapsedFolders[cleanItemPath];
+                        const chevronIcon = isDir ? `<i data-lucide="${isCollapsed ? 'chevron-right' : 'chevron-down'}" class="w-3.5 h-3.5 text-slate-400 shrink-0"></i>` : `<div class="w-3.5 shrink-0"></div>`;
+                        btn.innerHTML = `${chevronIcon}<i data-lucide="${icon}" class="w-3.5 h-3.5 ${iconColor} shrink-0"></i> <span class="truncate">${cleanItemPath.split('/').pop()}</span> ${starBadge}`;
+                        
+                        if (!isDir) btn.onclick = (e) => { e.stopPropagation(); loadNoteContent(item.path); };
+                        else btn.onclick = (e) => { e.stopPropagation(); collapsedFolders[cleanItemPath] = !collapsedFolders[cleanItemPath]; localStorage.setItem("bms_collapsed_folders", JSON.stringify(collapsedFolders)); selectedFileId = item.path; buildNotesTree(); };
+
+                        const menuBtn = document.createElement("button"); menuBtn.className = "opacity-0 group-hover:opacity-100 p-1 text-slate-400 hover:text-blue-500 rounded transition-all focus:outline-none";
+                        menuBtn.innerHTML = `<i data-lucide="more-horizontal" class="w-3.5 h-3.5"></i>`;
+                        menuBtn.onclick = (e) => triggerInlineContextMenu(e, item.path);
+
+                        row.appendChild(btn); row.appendChild(menuBtn); fileTree.appendChild(row);
+                    });
+                    lucide.createIcons();
+                }
+            } catch(e){}
         }
 
         function clearTreeSelection(e) {
@@ -774,46 +886,16 @@
             const pwd = appPassword.value.trim(); if (!pwd) return alert("Por favor, insira o Token de Validação.");
             renderMessageBlock("user", query); chatInput.value = ""; chatInput.style.height = "auto";
             
-            const fullPrompt = `[Área: ${document.getElementById("ctx-area").value}, Peça: ${document.getElementById("ctx-type").value}, Fase: ${document.getElementById("ctx-phase").value}, Foco: ${document.getElementById("ctx-obj").value}]\nInstrução: ${query}`;
+            const fullPrompt = `[Área: ${document.getElementById("ctx-area").value}, Peça: ${document.getElementById("ctx-type").value}, Fase: ${document.getElementById("ctx-phase").value}, Foco: ${document.getElementById("ctx-obj").value}]
+Instrução: ${query}`;
             chatHistory.push({ role: "user", content: fullPrompt });
             
             const tempId = renderMessageBlock("assistant", "Processando parecer...");
             try {
                 const res = await fetch("/api/chat", { method: "POST", headers: { "Content-Type": "application/json", "x-app-password": pwd }, body: JSON.stringify({ messages: chatHistory }) });
                 const data = await res.json(); document.getElementById(tempId)?.remove();
-                if (data.reply) {
-                    renderMessageBlock("assistant", data.reply);
-                    chatHistory.push({ role: "assistant", content: data.reply });
-                    buildNotesTree();
-                }
+                if (data.reply) { renderMessageBlock("assistant", data.reply); chatHistory.push({ role: "assistant", content: data.reply }); buildNotesTree(); }
             } catch (err) { document.getElementById(tempId).innerText = "Falha local de rede."; }
-        }
-
-        function renderMessageBlock(role, text) {
-            msgCounter++; const id = "msg-" + Date.now() + "-" + msgCounter;
-            const wrapper = document.createElement("div");
-            wrapper.className = `w-full flex shrink-0 ${role === 'user' ? 'justify-end' : 'justify-start'}`;
-            wrapper.id = id;
-            const bubble = document.createElement("div");
-            
-            let htmlText = text.replace(/</g, "&lt;").replace(/>/g, "&gt;") 
-                .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" download class="text-blue-200 underline font-black hover:text-white transition-colors">$1</a>')
-                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-                .replace(/\n/g, '<br>');
-
-            if (role === "user") {
-                bubble.className = "bg-blue-600 text-white rounded-2xl rounded-tr-none p-3 text-xs max-w-[85%] font-semibold leading-relaxed whitespace-pre-wrap shadow-xs select-text text-left break-words";
-            } else {
-                bubble.className = "bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 rounded-2xl rounded-tl-none p-3 text-xs max-w-[85%] shadow-xs leading-relaxed whitespace-pre-wrap select-text text-left break-words";
-            }
-            
-            bubble.innerHTML = htmlText;
-            wrapper.appendChild(bubble);
-            if(messagesContainer) {
-                messagesContainer.appendChild(wrapper);
-                messagesContainer.scrollTop = messagesContainer.scrollHeight;
-            }
-            return id;
         }
 
         if(btnSend) btnSend.onclick = sendChatMessage;
