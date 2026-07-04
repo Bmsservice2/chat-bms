@@ -31,9 +31,15 @@
     <input type="file" id="chat-context-upload" class="hidden" />
 
     <div id="custom-context-menu" class="hidden absolute bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl shadow-2xl py-1.5 w-48 z-50 text-xs font-bold text-slate-600 dark:text-slate-300">
-        <button onclick="openRenameModal()" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 flex items-center gap-2"><i data-lucide="edit-2" class="w-3.5 h-3.5 text-blue-500"></i> Renomear / Mover</button>
-        <button onclick="openMenuComparison()" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 flex items-center gap-2 text-blue-600"><i data-lucide="git-compare" class="w-3.5 h-3.5"></i> Abrir na Comparação</button>
-        <button onclick="openDeleteModal()" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 text-red-600 dark:text-red-400 flex items-center gap-2"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i> Apagar Registro</button>
+        <button onclick="openRenameModal()" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 flex items-center gap-2">
+            <i data-lucide="edit-2" class="w-3.5 h-3.5 text-blue-500"></i> Renomear / Mover
+        </button>
+        <button onclick="openMenuComparison()" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 flex items-center gap-2 text-blue-600">
+            <i data-lucide="git-compare" class="w-3.5 h-3.5"></i> Abrir na Comparação
+        </button>
+        <button onclick="openDeleteModal()" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 text-red-600 dark:text-red-400 flex items-center gap-2">
+            <i data-lucide="trash-2" class="w-3.5 h-3.5"></i> Apagar Registro
+        </button>
     </div>
 
     <div id="custom-dialog-modal" class="hidden fixed inset-0 bg-slate-950/40 dark:bg-slate-950/60 backdrop-blur-xs flex items-center justify-center z-50">
@@ -60,12 +66,21 @@
             <button id="btn-retroactive" onclick="triggerRetroactiveMD()" class="w-full px-4 py-2.5 bg-amber-500 hover:bg-amber-600 text-white font-bold rounded-xl transition-all shadow-sm flex items-center justify-center gap-2 mb-2">
                 <i data-lucide="refresh-cw" class="w-4 h-4"></i> Gerar Markdown de PDFs
             </button>
-            <p class="text-[9px] text-slate-400 text-center mb-4 leading-tight">Uma IA processará todos os seus arquivos PDFs em segundo plano, criando gêmeos estruturados em MD.</p>
+            <p class="text-[9px] text-slate-400 text-center mb-4 leading-tight">A IA varrerá seu cofre e apagará os arquivos com erro antigo, recriando o texto perfeitamente usando OCR Visual.</p>
 
             <div class="flex flex-col gap-2 text-xs font-semibold text-slate-600 dark:text-slate-400">
-                <div class="flex justify-between p-2 bg-slate-50 dark:bg-slate-800/50 rounded-lg"><span>Plano Habilitado:</span> <span class="text-emerald-600 dark:text-emerald-400">Profissional (Ilimitado)</span></div>
-                <div class="flex justify-between p-2 bg-slate-50 dark:bg-slate-800/50 rounded-lg"><span>Tokens Restantes:</span> <span>Infinitos (Local Mode)</span></div>
-                <div class="flex justify-between p-2 bg-slate-50 dark:bg-slate-800/50 rounded-lg"><span>Status da VPS:</span> <span class="text-blue-500">Conectado / Alta Prioridade</span></div>
+                <div class="flex justify-between p-2 bg-slate-50 dark:bg-slate-800/50 rounded-lg">
+                    <span>Plano Habilitado:</span> 
+                    <span class="text-emerald-600 dark:text-emerald-400">Profissional (Ilimitado)</span>
+                </div>
+                <div class="flex justify-between p-2 bg-slate-50 dark:bg-slate-800/50 rounded-lg">
+                    <span>Tokens Restantes:</span> 
+                    <span>Infinitos (Local Mode)</span>
+                </div>
+                <div class="flex justify-between p-2 bg-slate-50 dark:bg-slate-800/50 rounded-lg">
+                    <span>Status da VPS:</span> 
+                    <span class="text-blue-500">Conectado / Alta Prioridade</span>
+                </div>
             </div>
             <div class="flex justify-end gap-2 text-xs font-bold mt-2 pt-4 border-t border-slate-100 dark:border-slate-800">
                 <button onclick="document.getElementById('account-settings-modal').classList.add('hidden')" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl transition-all w-full">Fechar Painel</button>
@@ -78,33 +93,44 @@
             <div id="st-state-1" class="flex flex-col items-center pt-2">
                 <div class="w-14 h-14 bg-blue-100 dark:bg-blue-900/50 rounded-full flex items-center justify-center text-blue-600 dark:text-blue-400 mb-3 relative">
                     <i data-lucide="wifi" class="w-7 h-7"></i>
+                    <div class="absolute inset-0 border-2 border-blue-400 dark:border-blue-500 rounded-full animate-ping opacity-20"></div>
                 </div>
                 <h3 class="font-black text-slate-800 dark:text-white text-lg">Teste de Velocidade</h3>
                 <p class="text-center text-xs text-slate-500 dark:text-slate-400 font-medium mt-1 leading-relaxed">Sente que o sistema está lento? Faça um teste da velocidade da sua internet agora mesmo!</p>
                 <div class="flex w-full gap-2 text-xs font-bold mt-6">
-                    <button onclick="closeSpeedTest()" class="flex-1 py-3 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 rounded-xl font-bold">Cancelar</button>
-                    <button onclick="startSpeedTest()" class="flex-1 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-xl shadow-md font-bold">Iniciar Teste</button>
+                    <button onclick="closeSpeedTest()" class="flex-1 py-3 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-xl transition-all">Cancelar</button>
+                    <button onclick="startSpeedTest()" class="flex-1 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-xl shadow-md transition-all shadow-blue-500/30">Iniciar Teste</button>
                 </div>
             </div>
+            
             <div id="st-state-2" class="hidden flex flex-col items-center py-4">
                 <h3 class="font-black text-slate-800 dark:text-white text-sm mb-6 uppercase tracking-widest text-slate-400">Medindo Banda...</h3>
                 <div class="relative w-56 h-28 overflow-hidden mb-2">
                     <svg viewBox="0 0 100 50" class="w-full h-full">
                         <path d="M 10 50 A 40 40 0 0 1 90 50" fill="none" stroke="currentColor" stroke-width="8" class="text-slate-100 dark:text-slate-800" stroke-linecap="round"></path>
                         <path d="M 10 50 A 40 40 0 0 1 90 50" fill="none" stroke="url(#gradient)" stroke-width="8" class="text-blue-500" stroke-dasharray="125" stroke-dashoffset="125" id="st-progress" stroke-linecap="round" style="transition: stroke-dashoffset 0.2s ease-out;"></path>
-                        <defs><linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#3b82f6" /><stop offset="100%" stop-color="#10b981" /></linearGradient></defs>
+                        <defs>
+                            <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                                <stop offset="0%" stop-color="#3b82f6" />
+                                <stop offset="100%" stop-color="#10b981" />
+                            </linearGradient>
+                        </defs>
                     </svg>
                     <div id="st-needle" class="absolute bottom-0 left-1/2 w-[3px] h-[85px] bg-slate-800 dark:bg-white origin-bottom -translate-x-1/2 transform -rotate-90 transition-transform duration-200 ease-out rounded-full shadow-sm z-10"></div>
                 </div>
                 <div class="text-4xl font-black text-slate-800 dark:text-white mt-4 font-mono"><span id="st-value">0.0</span></div>
             </div>
+            
             <div id="st-state-3" class="hidden flex flex-col items-center pt-2">
-                <div class="w-16 h-16 bg-emerald-100 dark:bg-emerald-950/40 rounded-full flex items-center justify-center text-emerald-600 dark:text-emerald-400 mb-3"><i data-lucide="check-circle-2" class="w-8 h-8"></i></div>
+                <div class="w-16 h-16 bg-emerald-100 dark:bg-emerald-950/40 rounded-full flex items-center justify-center text-emerald-600 dark:text-emerald-400 mb-3">
+                    <i data-lucide="check-circle-2" class="w-8 h-8"></i>
+                </div>
                 <h3 class="font-black text-slate-800 dark:text-white text-lg">Teste Concluído!</h3>
-                <div class="bg-slate-50 dark:bg-slate-800 rounded-2xl p-5 w-full mt-4 border border-slate-100">
+                <div class="bg-slate-50 dark:bg-slate-800 rounded-2xl p-5 w-full mt-4 border border-slate-100 dark:border-slate-700">
+                    <p class="text-center text-[10px] uppercase font-bold text-slate-400 mb-1 tracking-widest">Sua Velocidade</p>
                     <p class="text-center text-3xl font-black text-slate-800 dark:text-white font-mono"><span id="st-final-value">0.0</span> <span class="text-sm font-sans text-slate-400">Mbps</span></p>
                 </div>
-                <button onclick="closeSpeedTest()" class="w-full mt-5 py-3 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-xl font-bold text-xs hover:bg-slate-200">Concluir</button>
+                <button onclick="closeSpeedTest()" class="w-full mt-5 py-3 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-xl transition-all font-bold text-xs">Concluir</button>
             </div>
         </div>
     </div>
@@ -127,7 +153,8 @@
 
         <div class="flex items-center gap-3">
             <button onclick="toggleDarkMode()" class="p-2.5 border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 rounded-xl hover:bg-slate-50 shadow-xs active:scale-95 transition-all">
-                <i data-lucide="moon" class="w-4 h-4 dark:hidden"></i><i data-lucide="sun" class="w-4 h-4 hidden dark:block"></i>
+                <i data-lucide="moon" class="w-4 h-4 dark:hidden"></i>
+                <i data-lucide="sun" class="w-4 h-4 hidden dark:block"></i>
             </button>
 
             <div class="relative">
@@ -135,12 +162,17 @@
                     <i data-lucide="upload-cloud" class="w-4 h-4 text-blue-600"></i> Upload Box
                 </button>
                 <div id="dropdown-upload" class="hidden absolute top-[105%] right-0 mt-1 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl shadow-2xl py-1.5 w-48 z-50 flex flex-col text-xs font-bold text-slate-600 dark:text-slate-300">
-                    <button onclick="document.getElementById('global-vault-upload').click(); closeAllDropdownsMenu()" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 flex items-center gap-2"><i data-lucide="file-plus" class="w-4 h-4 text-blue-500"></i> Arquivos Avulsos</button>
-                    <button onclick="document.getElementById('global-folder-upload').click(); closeAllDropdownsMenu()" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 flex items-center gap-2"><i data-lucide="folder-plus" class="w-4 h-4 text-amber-500"></i> Pasta Completa</button>
+                    <button onclick="document.getElementById('global-vault-upload').click(); closeAllDropdownsMenu()" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 flex items-center gap-2">
+                        <i data-lucide="file-plus" class="w-4 h-4 text-blue-500"></i> Arquivos Avulsos
+                    </button>
+                    <button onclick="document.getElementById('global-folder-upload').click(); closeAllDropdownsMenu()" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 flex items-center gap-2">
+                        <i data-lucide="folder-plus" class="w-4 h-4 text-amber-500"></i> Pasta Completa
+                    </button>
                 </div>
             </div>
             
             <div class="w-px h-6 bg-slate-200 dark:bg-slate-800 mx-1"></div>
+            
             <div id="server-status-badge" class="flex items-center gap-2 bg-slate-100 dark:bg-slate-800 px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 shadow-xs transition-all">
                 <div id="server-status-dot" class="w-2 h-2 bg-slate-400 rounded-full"></div>
                 <span id="server-status-text" class="text-[10px] font-black uppercase tracking-wide text-slate-500 dark:text-slate-400">Checando...</span>
@@ -150,17 +182,21 @@
 
     <div class="flex flex-1 overflow-hidden relative" onclick="closeAllDropdownsMenu()">
         
-        <aside id="sidebar-left" class="w-64 bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 flex flex-col overflow-hidden p-4 relative flex-shrink-0" onclick="clearTreeSelection(event)">
+        <aside id="sidebar-left" class="w-64 bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 flex flex-col overflow-hidden p-4 flex-shrink-0 relative" onclick="clearTreeSelection(event)">
             <div class="flex items-center justify-between mb-4 px-1">
                 <span class="text-xs font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest">Processos e Cofre</span>
                 <div class="flex gap-1 relative" onclick="e => e.stopPropagation()">
-                    <button id="btn-filter-tree" onclick="toggleFilterDropdown(event)" class="p-1 text-slate-400 hover:text-blue-600 rounded-lg transition-colors"><i data-lucide="filter" class="w-3.5 h-3.5"></i></button>
-                    <button onclick="createNewFolderManual(event)" class="p-1 text-slate-400 hover:text-blue-600 rounded-lg transition-colors"><i data-lucide="folder-plus" class="w-3.5 h-3.5"></i></button>
+                    <button id="btn-filter-tree" onclick="toggleFilterDropdown(event)" class="p-1 text-slate-400 hover:text-blue-600 rounded-lg transition-colors">
+                        <i data-lucide="filter" class="w-3.5 h-3.5"></i>
+                    </button>
+                    <button onclick="createNewFolderManual(event)" class="p-1 text-slate-400 hover:text-blue-600 rounded-lg transition-colors">
+                        <i data-lucide="folder-plus" class="w-3.5 h-3.5"></i>
+                    </button>
                     
                     <div id="filter-menu-dropdown" class="hidden absolute top-7 right-0 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl shadow-xl py-1 w-44 z-30 text-xs font-bold text-slate-600 dark:text-slate-300">
-                        <button onclick="changeFilter('all')" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 flex items-center gap-2">Mostrar Todos</button>
-                        <button onclick="changeFilter('md')" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 flex items-center gap-2">Apenas Texto (.md)</button>
-                        <button onclick="changeFilter('pdf')" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 flex items-center gap-2">Apenas PDFs (.pdf)</button>
+                        <button onclick="changeFilter('all')" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-700 flex items-center gap-2">Mostrar Todos</button>
+                        <button onclick="changeFilter('md')" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-700 flex items-center gap-2">Apenas Texto (.md)</button>
+                        <button onclick="changeFilter('pdf')" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-700 flex items-center gap-2">Apenas PDFs (.pdf)</button>
                     </div>
                 </div>
             </div>
@@ -170,18 +206,24 @@
             <div class="mt-2">
                 <div onclick="openSpeedTestModal()" class="mb-2 bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-800 rounded-xl p-2.5 cursor-pointer hover:ring-2 hover:ring-blue-500/50 flex items-center justify-between group transition-all">
                     <div class="flex items-center gap-2">
-                        <div class="p-1.5 bg-blue-100 dark:bg-blue-900/50 text-blue-600 dark:text-blue-400 rounded-md"><i data-lucide="wifi" class="w-3.5 h-3.5"></i></div>
+                        <div class="p-1.5 bg-blue-100 dark:bg-blue-900/50 text-blue-600 dark:text-blue-400 rounded-md">
+                            <i data-lucide="wifi" class="w-3.5 h-3.5"></i>
+                        </div>
                         <span class="text-[10px] font-bold text-slate-700 dark:text-slate-300">O sistema está lento?</span>
                     </div>
-                    <i data-lucide="chevron-right" class="w-3.5 h-3.5 text-slate-400 group-hover:text-blue-500"></i>
+                    <i data-lucide="chevron-right" class="w-3.5 h-3.5 text-slate-400 group-hover:text-blue-500 transition-colors"></i>
                 </div>
 
                 <div onclick="document.getElementById('account-settings-modal').classList.remove('hidden')" class="bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-800 rounded-2xl p-3.5 cursor-pointer hover:ring-2 hover:ring-blue-500/50 transition-all">
                     <div class="flex items-center justify-between mb-1.5">
-                        <span class="text-[11px] font-bold text-slate-700 dark:text-slate-300 flex items-center gap-1.5"><i data-lucide="shield-check" class="w-3.5 h-3.5 text-blue-600"></i> Plano Profissional</span>
+                        <span class="text-[11px] font-bold text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
+                            <i data-lucide="shield-check" class="w-3.5 h-3.5 text-blue-600"></i> Plano Profissional
+                        </span>
                         <span class="text-[10px] bg-emerald-100 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-300 font-extrabold px-1.5 py-0.5 rounded-md">TESTE</span>
                     </div>
-                    <div class="w-full bg-slate-200 dark:bg-slate-700 h-2 rounded-full overflow-hidden mb-1"><div class="bg-blue-600 h-full w-[10%] rounded-full"></div></div>
+                    <div class="w-full bg-slate-200 dark:bg-slate-700 h-2 rounded-full overflow-hidden mb-1">
+                        <div class="bg-blue-600 h-full w-[10%] rounded-full"></div>
+                    </div>
                 </div>
             </div>
         </aside>
@@ -191,6 +233,7 @@
         <div class="flex-1 flex flex-col min-w-[400px] overflow-hidden p-5 gap-4" id="center-panel">
             
             <div class="grid grid-cols-4 gap-4 w-full flex-shrink-0">
+                
                 <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-3 flex items-center shadow-xs relative cursor-pointer" onclick="toggleCustomDropdown('dropdown-area', event)">
                     <div class="p-2 bg-blue-50 dark:bg-slate-800 text-blue-600 dark:text-blue-400 rounded-lg mr-3"><i data-lucide="scale" class="w-4 h-4"></i></div>
                     <div class="flex-1 min-w-0">
@@ -220,6 +263,7 @@
                         <button onclick="selectOption('type', 'Petição Inicial', 'Petição Inicial', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 truncate">Petição Inicial</button>
                         <button onclick="selectOption('type', 'Contestação', 'Contestação', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 truncate">Contestação</button>
                         <button onclick="selectOption('type', 'Recurso', 'Recurso (Apelação/RO)', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 truncate">Recurso (Apelação/RO)</button>
+                        <button onclick="selectOption('type', 'Alegações Finais', 'Alegações Finais', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 truncate">Alegações Finais</button>
                     </div>
                 </div>
 
@@ -247,13 +291,13 @@
                         <button onclick="selectOption('obj', 'Auditar/Resumir', 'Auditoria Geral', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 truncate">Auditoria Geral</button>
                         <button onclick="selectOption('obj', 'Encontrar Contradições', 'Achar Contradições', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 truncate">Achar Contradições</button>
                         <button onclick="selectOption('obj', 'Elaborar Minuta', 'Elaborar Minuta', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 truncate">Elaborar Minuta</button>
+                        <button onclick="selectOption('obj', 'Análise de Risco Jurídico', 'Análise de Risco', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 truncate">Análise de Risco</button>
                     </div>
                 </div>
             </div>
 
             <div class="flex flex-1 gap-4 overflow-hidden h-full relative mt-2">
                 
-                <!-- MONITOR 1 (PRINCIPAL) -->
                 <div id="center-preview-container" onclick="selectMonitor('main')" class="flex-1 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-xs flex flex-col overflow-hidden h-full ring-2 ring-blue-600 dark:ring-blue-500 cursor-pointer relative transition-all">
                     
                     <div class="absolute top-0 left-1/2 -translate-x-1/2 px-3 py-0.5 bg-blue-600 text-white text-[9px] font-black uppercase rounded-b-md shadow-md z-10" id="dot-active-main">Foco Ativo</div>
@@ -264,9 +308,15 @@
                             <button id="btn-favorite-star" onclick="toggleActiveFileFavorite()" class="text-slate-300 dark:text-slate-600 hover:text-amber-500 transition-colors focus:outline-none"><i data-lucide="star" class="w-4 h-4"></i></button>
                         </div>
                         
-                        <div class="flex bg-slate-100 dark:bg-slate-800 p-0.5 rounded-lg text-[9px] font-black mx-2 flex-shrink-0">
-                            <button id="btn-tab-main-formatted" onclick="setMainTab('formatted')" class="px-3 py-1 bg-white dark:bg-slate-700 dark:text-white rounded-md shadow-xs transition-colors">Original</button>
-                            <button id="btn-tab-main-raw" onclick="setMainTab('raw')" class="px-3 py-1 text-slate-500 dark:text-slate-400 transition-colors">Markdown</button>
+                        <div class="flex items-center gap-2 flex-shrink-0">
+                            <button id="btn-reprocess-main" onclick="reprocessMD('main')" class="hidden px-2 py-1 bg-amber-500 hover:bg-amber-600 text-white rounded-md transition-all text-[9px] font-bold uppercase tracking-wider shadow-xs" title="Forçar a IA a reler este PDF">
+                                <i data-lucide="refresh-cw" class="w-3 h-3 inline"></i> Reler PDF
+                            </button>
+                            
+                            <div class="flex bg-slate-100 dark:bg-slate-800 p-0.5 rounded-lg text-[9px] font-black mx-2">
+                                <button id="btn-tab-main-formatted" onclick="setMainTab('formatted')" class="px-3 py-1 bg-white dark:bg-slate-700 dark:text-white rounded-md shadow-xs transition-colors">Original</button>
+                                <button id="btn-tab-main-raw" onclick="setMainTab('raw')" class="px-3 py-1 text-slate-500 dark:text-slate-400 transition-colors">Markdown</button>
+                            </div>
                         </div>
                         
                         <div class="flex items-center gap-1.5">
@@ -279,13 +329,12 @@
                         <div id="view-doc-main" class="w-full h-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl overflow-y-auto p-6 font-serif text-xs text-slate-700 dark:text-slate-300 leading-relaxed select-text shadow-sm">
                             <div class="text-center text-slate-400 my-20">Nenhum documento aberto no monitor principal.</div>
                         </div>
-                        <div id="view-raw-main" class="hidden w-full h-full bg-slate-950 dark:bg-slate-900 text-blue-500 dark:text-blue-400 border border-slate-800 rounded-xl p-4 font-mono text-xs whitespace-pre-wrap overflow-y-auto select-text"></div>
+                        <div id="view-raw-main" class="hidden w-full h-full bg-slate-950 dark:bg-slate-900 text-blue-500 border border-slate-800 rounded-xl p-4 font-mono text-xs whitespace-pre-wrap overflow-y-auto select-text"></div>
                     </div>
                 </div>
 
                 <div id="resizer-center" class="w-1.5 bg-transparent hover:bg-blue-500 cursor-col-resize z-10 flex-shrink-0 transition-colors"></div>
 
-                <!-- MONITOR 2 (COMPARAÇÃO / MALHA NEURAL HÍBRIDA) -->
                 <section id="sidebar-comparison" onclick="selectMonitor('comp')" class="w-[45%] bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl flex flex-col overflow-hidden shadow-xs h-full flex-shrink-0 transition-all cursor-pointer relative">
                     
                     <div class="absolute top-0 left-1/2 -translate-x-1/2 px-3 py-0.5 bg-blue-600 text-white text-[9px] font-black uppercase rounded-b-md shadow-md z-10 hidden" id="dot-active-comp">Foco Ativo</div>
@@ -301,27 +350,30 @@
                         </div>
                     </div>
 
-                    <!-- MODO COMPARAÇÃO -->
                     <div id="pane-comparison-doc" class="flex-1 flex flex-col overflow-hidden p-5 bg-[#fafafa] dark:bg-slate-950">
                         <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-2.5 mb-3 flex items-center justify-between shadow-xs">
                             <span id="comp-note-title" class="text-xs font-bold text-slate-400 truncate pr-2 px-2">Selecione este monitor e abra um arquivo...</span>
                             <div class="flex items-center gap-2">
+                                
+                                <button id="btn-reprocess-comp" onclick="reprocessMD('comp')" class="hidden px-2 py-1 bg-amber-500 hover:bg-amber-600 text-white rounded-md transition-all text-[9px] font-bold uppercase tracking-wider shadow-xs" title="Forçar a IA a reler este PDF">
+                                    <i data-lucide="refresh-cw" class="w-3 h-3 inline"></i> Reler PDF
+                                </button>
+
                                 <div class="flex bg-slate-100 dark:bg-slate-800 p-0.5 rounded-lg text-[9px] font-black">
-                                    <button id="btn-tab-comp-formatted" onclick="setCompTextTab('formatted')" class="px-3 py-1 bg-white dark:bg-slate-700 dark:text-white rounded-md shadow-xs transition-colors">Original</button>
-                                    <button id="btn-tab-comp-raw" onclick="setCompTextTab('raw')" class="px-3 py-1 text-slate-500 dark:text-slate-400 transition-colors">Markdown</button>
+                                    <button id="btn-tab-comp-formatted" onclick="setCompTextTab('formatted')" class="px-2 py-0.5 bg-white dark:bg-slate-700 dark:text-white rounded-md shadow-xs transition-colors">Original</button>
+                                    <button id="btn-tab-comp-raw" onclick="setCompTextTab('raw')" class="px-2 py-0.5 text-slate-500 dark:text-slate-400 transition-colors">Markdown</button>
                                 </div>
                                 <button onclick="clearComparisonDoc()" class="text-slate-400 hover:text-red-500 mr-1"><i data-lucide="x" class="w-3.5 h-3.5"></i></button>
                             </div>
                         </div>
                         <div class="flex-1 relative overflow-hidden font-serif">
                             <div id="view-doc-comp" class="w-full h-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl overflow-y-auto p-6 text-xs text-slate-700 dark:text-slate-300 select-text leading-relaxed shadow-sm">
-                                <div class="text-center text-slate-300 my-20 dark:text-slate-700">Painel secundário inativo. Selecione este monitor e clique em um arquivo.</div>
+                                <div class="text-center text-slate-300 my-20 dark:text-slate-700">Painel secundário inativo. Selecione este monitor e clique em um arquivo na árvore.</div>
                             </div>
-                            <div id="view-raw-comp" class="hidden w-full h-full bg-slate-950 dark:bg-slate-900 text-blue-500 dark:text-blue-400 border border-slate-800 rounded-xl p-4 font-mono text-xs whitespace-pre-wrap overflow-y-auto select-text"></div>
+                            <div id="view-raw-comp" class="hidden w-full h-full bg-slate-950 dark:bg-slate-900 text-blue-500 border border-slate-200 dark:border-slate-800 rounded-xl p-4 font-mono text-xs whitespace-pre-wrap overflow-y-auto select-text"></div>
                         </div>
                     </div>
 
-                    <!-- MODO MALHA -->
                     <div id="pane-comparison-graph" class="hidden flex-1 flex flex-col overflow-hidden relative bg-slate-50 dark:bg-slate-950">
                         <canvas id="graph-canvas" class="w-full h-full block cursor-grab active:cursor-grabbing"></canvas>
                         <div class="absolute top-2 left-2 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xs px-2 py-1 rounded-md text-[9px] font-bold border border-slate-200 dark:border-slate-800 tracking-wide uppercase text-slate-400">Indexador de #Tags e Temas</div>
@@ -364,7 +416,7 @@
 
             <div class="p-3 border-t border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900">
                 <div class="relative flex items-end gap-2 bg-slate-50 dark:bg-slate-800 rounded-xl p-1.5 border border-slate-200 dark:border-slate-700 transition-all">
-                    <button id="btn-chat-attach" class="p-2 text-slate-400 dark:text-slate-500 hover:text-blue-600 mb-0.5 rounded-xl"><i data-lucide="paperclip" class="w-4 h-4"></i></button>
+                    <button id="btn-chat-attach" class="p-2 text-slate-400 hover:text-blue-600 mb-0.5 rounded-xl"><i data-lucide="paperclip" class="w-4 h-4"></i></button>
                     <textarea id="chat-input" rows="1" placeholder="Pergunte ao Assistente BMS..." class="flex-1 bg-transparent py-2 px-1 text-xs font-semibold focus:outline-none text-slate-800 dark:text-slate-100 resize-none max-h-32 no-scrollbar leading-relaxed" style="height: auto;"></textarea>
                     <button id="btn-send" class="p-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg mb-0.5 transition-all shadow-sm">
                         <i data-lucide="send" class="w-3.5 h-3.5"></i>
@@ -374,86 +426,20 @@
         </aside>
     </div>
 
-    <!-- O CÓDIGO JS NATIVO INTACTO DE 1461 LINHAS + NOVIDADES -->
     <script>
         lucide.createIcons();
 
+        // 1. ATALHO CTRL+K PARA O APP
         document.addEventListener('keydown', (e) => {
             if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
                 e.preventDefault();
                 const sb = document.getElementById('global-search-bar');
-                if (sb) { sb.focus(); sb.select(); }
+                if (sb) { 
+                    sb.focus(); 
+                    sb.select(); 
+                }
             }
         });
-
-        function openSpeedTestModal() {
-            const modal = document.getElementById("speedtest-modal");
-            if(modal) {
-                modal.classList.remove("hidden");
-                setTimeout(() => {
-                    modal.classList.remove("opacity-0");
-                    document.getElementById("speedtest-content")?.classList.remove("scale-95");
-                }, 10);
-                document.getElementById("st-state-1")?.classList.remove("hidden");
-                document.getElementById("st-state-2")?.classList.add("hidden");
-                document.getElementById("st-state-3")?.classList.add("hidden");
-            }
-        }
-
-        function closeSpeedTest() {
-            const modal = document.getElementById("speedtest-modal");
-            if(modal) {
-                modal.classList.add("opacity-0");
-                document.getElementById("speedtest-content")?.classList.add("scale-95");
-                setTimeout(() => { modal.classList.add("hidden"); }, 300);
-            }
-        }
-
-        function updateSpeedometer(mbps) {
-            const elValue = document.getElementById("st-value");
-            const elNeedle = document.getElementById("st-needle");
-            const elProgress = document.getElementById("st-progress");
-            if(elValue) elValue.innerText = mbps.toFixed(1);
-            let maxSpeed = 100;
-            let mapped = Math.min(Math.max(mbps, 0), maxSpeed);
-            let rot = -90 + (mapped / maxSpeed) * 180;
-            if(elNeedle) elNeedle.style.transform = `translateX(-50%) rotate(${rot}deg)`;
-            let offset = 125 - (mapped / maxSpeed) * 125;
-            if(elProgress) elProgress.style.strokeDashoffset = offset;
-        }
-
-        async function startSpeedTest() {
-            document.getElementById("st-state-1")?.classList.add("hidden");
-            document.getElementById("st-state-2")?.classList.remove("hidden");
-            updateSpeedometer(0);
-
-            try {
-                const res = await fetch('/api/speedtest?cacheBust=' + Date.now());
-                if (!res.ok) throw new Error("Falha no servidor");
-                const reader = res.body.getReader(); let loaded = 0; const startTime = Date.now(); let lastUiUpdate = startTime;
-                while(true) {
-                    const {done, value} = await reader.read(); if (done) break;
-                    loaded += value.length; const now = Date.now();
-                    if (now - lastUiUpdate > 100) {
-                        const duration = (now - startTime) / 1000;
-                        const mbps = ((loaded * 8) / 1000000) / duration;
-                        updateSpeedometer(mbps); lastUiUpdate = now;
-                    }
-                }
-                const finalDuration = (Date.now() - startTime) / 1000;
-                const finalMbps = ((loaded * 8) / 1000000) / finalDuration;
-                updateSpeedometer(finalMbps);
-                setTimeout(() => {
-                    document.getElementById("st-state-2")?.classList.add("hidden");
-                    document.getElementById("st-state-3")?.classList.remove("hidden");
-                    const elFinal = document.getElementById("st-final-value");
-                    if(elFinal) elFinal.innerText = finalMbps.toFixed(1);
-                }, 800);
-            } catch (e) {
-                alert("Erro ao testar velocidade. Verifique sua conexão local.");
-                closeSpeedTest();
-            }
-        }
 
         const messagesContainer = document.getElementById("chat-messages");
         const chatInput = document.getElementById("chat-input");
@@ -469,16 +455,12 @@
 
         const viewDocMain = document.getElementById("view-doc-main");
         const viewRawMain = document.getElementById("view-raw-main");
-        const activeNoteTitle = document.getElementById("active-note-title");
-        const favoriteStarBtn = document.getElementById("btn-favorite-star");
+        const viewDocComp = document.getElementById("view-doc-comp");
+        const viewRawComp = document.getElementById("view-raw-comp");
 
-        const btnVaultUpload = document.getElementById("global-vault-upload");
-        const globalFolderUpload = document.getElementById("global-folder-upload");
-        const btnChatAttach = document.getElementById("btn-chat-attach");
-        const chatContextUpload = document.getElementById("chat-context-upload");
-        const chatAttachmentArea = document.getElementById("chat-attachment-area");
-        const chatAttachmentName = document.getElementById("chat-attachment-name");
-        const btnRemoveAttachment = document.getElementById("btn-remove-attachment");
+        const activeNoteTitle = document.getElementById("active-note-title");
+        const compNoteTitle = document.getElementById("comp-note-title");
+        const favoriteStarBtn = document.getElementById("btn-favorite-star");
 
         const canvas = document.getElementById("graph-canvas");
         const ctx = canvas ? canvas.getContext("2d") : null;
@@ -486,10 +468,12 @@
         let chatHistory = [];
         let pendingChatAttachment = null;
         let selectedFileId = null;
+        let comparisonFileId = null; 
         let graphData = { nodes: [], edges: [] };
         let draggedNode = null;
         let currentFilterType = "all";
         let rawContentBuffer = "";
+        let compContentBuffer = "";
         let contextMenuSelectedPath = null;
         let msgCounter = 0;
         let isDraggingNode = false;
@@ -498,60 +482,193 @@
         let collapsedFolders = JSON.parse(localStorage.getItem("bms_collapsed_folders") || "{}");
         let highlightedNodes = []; 
 
+        let activeMonitor = "main"; // Mecânica de Foco Ativo dos Monitores
+
+        // Expansão dinâmica do chat
+        if (chatInput) {
+            chatInput.addEventListener("input", function() {
+                this.style.height = "auto";
+                this.style.height = this.scrollHeight + "px";
+            });
+        }
+
+        // =========================================================================
+        // REDIMENSIONADOR (SPLITTER) ENTRE AS 4 COLUNAS
+        // =========================================================================
+
         const sidebarLeft = document.getElementById('sidebar-left');
+        const sidebarComparison = document.getElementById('sidebar-comparison');
         const sidebarRight = document.getElementById('sidebar-right');
+        
         const resizerLeft = document.getElementById('resizer-left');
+        const resizerCenter = document.getElementById('resizer-center');
         const resizerRight = document.getElementById('resizer-right');
 
         let isResizingLeft = false;
+        let isResizingCenter = false;
         let isResizingRight = false;
 
         if (resizerLeft) {
-            resizerLeft.addEventListener('mousedown', (e) => {
-                isResizingLeft = true;
-                document.body.style.cursor = 'col-resize';
-                e.preventDefault();
+            resizerLeft.addEventListener('mousedown', (e) => { 
+                isResizingLeft = true; 
+                document.body.style.cursor = 'col-resize'; 
+                e.preventDefault(); 
+            });
+        }
+        
+        if (resizerCenter) {
+            resizerCenter.addEventListener('mousedown', (e) => { 
+                isResizingCenter = true; 
+                document.body.style.cursor = 'col-resize'; 
+                e.preventDefault(); 
             });
         }
 
         if (resizerRight) {
-            resizerRight.addEventListener('mousedown', (e) => {
-                isResizingRight = true;
-                document.body.style.cursor = 'col-resize';
-                e.preventDefault();
+            resizerRight.addEventListener('mousedown', (e) => { 
+                isResizingRight = true; 
+                document.body.style.cursor = 'col-resize'; 
+                e.preventDefault(); 
             });
         }
 
         document.addEventListener('mousemove', (e) => {
-            if (!isResizingLeft && !isResizingRight) return;
             if (isResizingLeft && sidebarLeft) {
-                const newWidth = e.clientX;
-                if (newWidth > 180 && newWidth < window.innerWidth * 0.5) sidebarLeft.style.width = `${newWidth}px`;
+                let w = e.clientX; 
+                if (w > 150 && w < window.innerWidth * 0.3) {
+                    sidebarLeft.style.width = w + "px";
+                }
+            }
+            if (isResizingCenter && sidebarComparison) {
+                let calculatedWidth = window.innerWidth - e.clientX - (sidebarRight ? sidebarRight.clientWidth : 320);
+                if (calculatedWidth > 200 && calculatedWidth < window.innerWidth * 0.5) {
+                    sidebarComparison.style.width = calculatedWidth + "px";
+                }
             }
             if (isResizingRight && sidebarRight) {
-                const newWidth = window.innerWidth - e.clientX;
-                if (newWidth > 220 && newWidth < window.innerWidth * 0.5) sidebarRight.style.width = `${newWidth}px`;
-            }
-            if (canvas) resizeCanvas();
-        });
-
-        document.addEventListener('mouseup', () => {
-            if (isResizingLeft || isResizingRight) {
-                isResizingLeft = false;
-                isResizingRight = false;
-                document.body.style.cursor = 'default';
-                resizeCanvas();
+                let w = window.innerWidth - e.clientX; 
+                if (w > 200 && w < window.innerWidth * 0.3) {
+                    sidebarRight.style.width = w + "px";
+                }
             }
         });
 
-        function resizeCanvas() {
-            if(canvas && canvas.parentElement) {
-                canvas.width = canvas.parentElement.clientWidth;
-                canvas.height = canvas.parentElement.clientHeight;
+        document.addEventListener('mouseup', () => { 
+            isResizingLeft = false;
+            isResizingCenter = false;
+            isResizingRight = false; 
+            document.body.style.cursor = 'default'; 
+        });
+
+        function resizeCanvas() { 
+            if (canvas && canvas.parentElement) { 
+                canvas.width = canvas.parentElement.clientWidth; 
+                canvas.height = canvas.parentElement.clientHeight; 
+            } 
+        }
+        window.addEventListener("resize", resizeCanvas); 
+        resizeCanvas();
+
+        function toggleDarkMode() {
+            if (document.documentElement.classList.contains("dark")) {
+                document.documentElement.classList.remove("dark"); 
+                localStorage.setItem("theme", "light");
+            } else {
+                document.documentElement.classList.add("dark"); 
+                localStorage.setItem("theme", "dark");
             }
         }
-        window.addEventListener("resize", resizeCanvas);
-        resizeCanvas();
+
+        // =========================================================================
+        // SPEEDTEST MODAL
+        // =========================================================================
+
+        function openSpeedTestModal() {
+            const modal = document.getElementById("speedtest-modal"); 
+            if(!modal) return;
+            modal.classList.remove("hidden");
+            setTimeout(() => {
+                modal.classList.remove("opacity-0");
+                document.getElementById("speedtest-content")?.classList.remove("scale-95");
+            }, 10);
+            
+            document.getElementById("st-state-1")?.classList.remove("hidden");
+            document.getElementById("st-state-2")?.classList.add("hidden");
+            document.getElementById("st-state-3")?.classList.add("hidden");
+        }
+
+        function closeSpeedTest() {
+            const modal = document.getElementById("speedtest-modal"); 
+            if(!modal) return;
+            modal.classList.add("opacity-0"); 
+            document.getElementById("speedtest-content")?.classList.add("scale-95");
+            setTimeout(() => { modal.classList.add("hidden"); }, 300);
+        }
+
+        function updateSpeedometer(mbps) {
+            const valEl = document.getElementById("st-value"); 
+            if(valEl) valEl.innerText = mbps.toFixed(1);
+            
+            let maxSpeed = 100; 
+            let mapped = Math.min(Math.max(mbps, 0), maxSpeed);
+            let rot = -90 + (mapped / maxSpeed) * 180;
+            
+            const needle = document.getElementById("st-needle"); 
+            if(needle) needle.style.transform = `translateX(-50%) rotate(${rot}deg)`;
+            
+            let offset = 125 - (mapped / maxSpeed) * 125;
+            const prog = document.getElementById("st-progress"); 
+            if(prog) prog.style.strokeDashoffset = offset;
+        }
+
+        async function startSpeedTest() {
+            document.getElementById("st-state-1")?.classList.add("hidden");
+            document.getElementById("st-state-2")?.classList.remove("hidden");
+            updateSpeedometer(0);
+
+            try {
+                const res = await fetch('/api/speedtest?cacheBust=' + Date.now());
+                if (!res.ok) throw new Error("Falha no servidor");
+                
+                const reader = res.body.getReader(); 
+                let loaded = 0; 
+                const startTime = Date.now(); 
+                let lastUiUpdate = startTime;
+                
+                while(true) {
+                    const {done, value} = await reader.read(); 
+                    if (done) break;
+                    
+                    loaded += value.length; 
+                    const now = Date.now();
+                    
+                    if (now - lastUiUpdate > 100) {
+                        const duration = (now - startTime) / 1000;
+                        const mbps = ((loaded * 8) / 1000000) / duration;
+                        updateSpeedometer(mbps); 
+                        lastUiUpdate = now;
+                    }
+                }
+                
+                const finalDuration = (Date.now() - startTime) / 1000;
+                const finalMbps = ((loaded * 8) / 1000000) / finalDuration;
+                updateSpeedometer(finalMbps);
+                
+                setTimeout(() => {
+                    document.getElementById("st-state-2")?.classList.add("hidden");
+                    document.getElementById("st-state-3")?.classList.remove("hidden");
+                    const finVal = document.getElementById("st-final-value"); 
+                    if(finVal) finVal.innerText = finalMbps.toFixed(1);
+                }, 800);
+            } catch (e) {
+                alert("Erro ao testar velocidade. Verifique sua conexão local.");
+                closeSpeedTest();
+            }
+        }
+
+        // =========================================================================
+        // DROPDOWNS E FILTROS DA INTERFACE
+        // =========================================================================
 
         function closeAllDropdownsMenu() {
             filterDropdown?.classList.add("hidden");
@@ -563,704 +680,60 @@
             document.getElementById("dropdown-upload")?.classList.add("hidden");
         }
 
-        function toggleFilterDropdown(e) {
-            e.stopPropagation();
-            closeAllDropdownsMenu();
-            filterDropdown?.classList.remove("hidden");
+        function toggleFilterDropdown(e) { 
+            e.stopPropagation(); 
+            closeAllDropdownsMenu(); 
+            filterDropdown?.classList.remove("hidden"); 
         }
 
-        function toggleCustomDropdown(id, e) {
-            e.stopPropagation();
-            const el = document.getElementById(id);
+        function toggleCustomDropdown(id, e) { 
+            e.stopPropagation(); 
+            const el = document.getElementById(id); 
             if(el) {
-                const isHidden = el.classList.contains("hidden");
-                closeAllDropdownsMenu();
-                if (isHidden) el.classList.remove("hidden");
+                const isHidden = el.classList.contains("hidden"); 
+                closeAllDropdownsMenu(); 
+                if (isHidden) el.classList.remove("hidden"); 
             }
         }
 
-        function selectOption(category, value, label, e) {
-            e.stopPropagation();
-            const vi = document.getElementById(`ctx-${category}`);
-            const ls = document.getElementById(`label-ctx-${category}`);
+        function selectOption(category, value, label, e) { 
+            e.stopPropagation(); 
+            const vi = document.getElementById(`ctx-${category}`); 
+            const ls = document.getElementById(`label-ctx-${category}`); 
             const dp = document.getElementById(`dropdown-${category}`);
-            if(vi) vi.value = value;
-            if(ls) ls.innerText = label;
-            if(dp) dp.classList.add("hidden");
+            if(vi) vi.value = value; 
+            if(ls) ls.innerText = label; 
+            if(dp) dp.classList.add("hidden"); 
         }
 
-        function changeFilter(type) {
-            currentFilterType = type;
-            closeAllDropdownsMenu();
-            buildNotesTree();
-        }
-
-        function clearTreeSelection(e) {
-            if (e.target.id === "file-tree" || e.target.tagName === "ASIDE") {
-                selectedFileId = null;
-                if(activeNoteTitle) activeNoteTitle.innerText = "Selecione um arquivo principal";
-                rawContentBuffer = "";
-                if(viewDocMain) viewDocMain.innerHTML = `<div class="text-center text-slate-400 my-20 dark:text-slate-500">Raiz selecionada. Novos diretórios e uploads serão gravados na pasta principal.</div>`;
-                updateFavoriteStarUI();
-                buildNotesTree();
-            }
-        }
-
-        function toggleActiveFileFavorite() {
-            if (!selectedFileId) return;
-            const cleanPath = selectedFileId.replace(/\/$/, "");
-            if (favoriteItems[cleanPath]) {
-                delete favoriteItems[cleanPath];
-            } else {
-                favoriteItems[cleanPath] = true;
-            }
-            localStorage.setItem("bms_favorites_map", JSON.stringify(favoriteItems));
-            updateFavoriteStarUI();
-            buildNotesTree();
-        }
-
-        function updateFavoriteStarUI() {
-            if (!selectedFileId || !favoriteStarBtn) {
-                if(favoriteStarBtn) favoriteStarBtn.innerHTML = `<i data-lucide="star" class="w-4 h-4"></i>`;
-                lucide.createIcons();
-                return;
-            }
-            const cleanPath = selectedFileId.replace(/\/$/, "");
-            const hasStar = !!favoriteItems[cleanPath];
-            if (hasStar) {
-                favoriteStarBtn.className = "text-amber-500 dark:text-amber-400 focus:outline-none scale-110 transition-transform";
-                favoriteStarBtn.innerHTML = `<i data-lucide="star" class="w-4 h-4 fill-amber-500 dark:fill-amber-400"></i>`;
-            } else {
-                favoriteStarBtn.className = "text-slate-300 dark:text-slate-600 hover:text-amber-500 transition-colors focus:outline-none";
-                favoriteStarBtn.innerHTML = `<i data-lucide="star" class="w-4 h-4"></i>`;
-            }
-            lucide.createIcons();
-        }
-
-        function downloadActiveFile() {
-            if (!selectedFileId || !rawContentBuffer) return;
-            const blob = new Blob([rawContentBuffer], { type: "text/markdown;charset=utf-8" });
-            const link = document.createElement("a");
-            link.href = URL.createObjectURL(blob);
-            link.download = selectedFileId.replace(/\/$/, "").split('/').pop();
-            link.click();
-        }
-
-        function printActiveFile() {
-            if (!selectedFileId || !viewDocMain) return;
-            const printWindow = window.open("", "_blank");
-            const content = document.getElementById("view-doc-main") ? document.getElementById("view-doc-main").innerHTML : viewDocMain.innerHTML;
-            printWindow.document.write(`<html><head><title>BMS - Imprimir</title></head><body style="font-family:serif;padding:30px;line-height:1.6;">${content}</body></html>`);
-            printWindow.document.close();
-            printWindow.print();
-        }
-
-        function fullscreenActiveFile() {
-            const container = document.getElementById("center-preview-container");
-            if(!container) return;
-            if (!document.fullscreenElement) container.requestFullscreen().catch(err => console.error(err));
-            else document.exitFullscreen();
-        }
-
-        async function checkRealServerStatus() {
-            if(!serverStatusBadge) return;
-            try {
-                const res = await fetch("/api/status");
-                if (res.ok) {
-                    serverStatusBadge.className = "flex items-center gap-2 bg-emerald-50 dark:bg-emerald-950/40 px-3 py-2 rounded-xl border border-emerald-100 dark:border-emerald-900 transition-all duration-300";
-                    serverStatusDot.className = "w-2 h-2 bg-emerald-500 rounded-full animate-pulse";
-                    serverStatusText.className = "text-[10px] font-black tracking-wide uppercase text-emerald-700 dark:text-emerald-400";
-                    serverStatusText.innerText = "SERVIDOR ATIVO";
-                } else { throw new Error(); }
-            } catch (err) {
-                serverStatusBadge.className = "flex items-center gap-2 bg-red-50 dark:bg-red-950/40 px-3 py-2 rounded-xl border border-red-100 dark:border-red-900 transition-all duration-300";
-                serverStatusDot.className = "w-2 h-2 bg-red-500 rounded-full animate-pulse";
-                serverStatusText.className = "text-[10px] font-black tracking-wide uppercase text-red-700 dark:text-red-400";
-                serverStatusText.innerText = "SERVIDOR INATIVO";
-            }
-        }
-        setInterval(checkRealServerStatus, 4000);
-        checkRealServerStatus();
-
-        function searchFileTree() {
-            if(!globalSearchBar || !fileTree) return;
-            const query = globalSearchBar.value.toLowerCase().trim();
-            const rows = fileTree.querySelectorAll(".tree-row-container");
-            rows.forEach(row => {
-                const text = row.getAttribute("data-path").toLowerCase();
-                row.classList.toggle("hidden", !text.includes(query));
-            });
-        }
-
-        function triggerInlineContextMenu(e, path) {
-            e.stopPropagation();
-            contextMenuSelectedPath = path;
-            const menu = document.getElementById("custom-context-menu");
-            closeAllDropdownsMenu();
-            if(menu) {
-                menu.classList.remove("hidden");
-                menu.style.left = `${e.clientX - 160}px`;
-                menu.style.top = `${e.clientY + 10}px`;
-            }
-        }
-
-        function closeCustomModal() {
-            document.getElementById("custom-dialog-modal")?.classList.add("hidden");
-        }
-
-        function openRenameModal() {
-            document.getElementById("custom-context-menu")?.classList.add("hidden");
-            const modal = document.getElementById("custom-dialog-modal");
-            if(!modal) return;
-            document.getElementById("modal-title").innerText = "Renomear / Mover Item";
-            document.getElementById("modal-body-content").innerHTML = `
-                <p class="mb-1">Insira o novo caminho completo do registro:</p>
-                <input type="text" id="modal-input-field" value="${contextMenuSelectedPath.replace(/\/$/, "")}" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-2 text-xs font-semibold focus:outline-none text-slate-800 dark:text-white">
-            `;
-            modal.classList.remove("hidden");
-            document.getElementById("modal-confirm-btn").onclick = async () => {
-                const newPath = document.getElementById("modal-input-field").value.trim();
-                if (newPath) {
-                    await renameItem(contextMenuSelectedPath, newPath);
-                    closeCustomModal();
-                }
-            };
-        }
-
-        function openDeleteModal() {
-            document.getElementById("custom-context-menu")?.classList.add("hidden");
-            const modal = document.getElementById("custom-dialog-modal");
-            if(!modal) return;
-            document.getElementById("modal-title").innerText = "Confirmar Exclusão";
-            document.getElementById("modal-body-content").innerHTML = `<p>Tem certeza que deseja apagar permanentemente o item <strong>${contextMenuSelectedPath.replace(/\/$/, "")}</strong> do cofre?</p>`;
-            modal.classList.remove("hidden");
-            document.getElementById("modal-confirm-btn").onclick = async () => {
-                await deleteItem(contextMenuSelectedPath);
-                closeCustomModal();
-            };
-        }
-
-        async function createFolderOnVPS(name) {
-            try {
-                const res = await fetch("/api/create-folder", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ foldername: name })
-                });
-                if (res.ok) {
-                    buildNotesTree();
-                    reloadGlobalGraph();
-                }
-            } catch (err) { console.error(err); }
-        }
-
-        function createNewFolderManual(e) {
-            if(e) e.stopPropagation();
-            let context = "";
-            if (selectedFileId && selectedFileId.endsWith("/")) context = selectedFileId;
-            else if (selectedFileId && selectedFileId.includes("/")) context = selectedFileId.substring(0, selectedFileId.lastIndexOf("/")) + "/";
-            
-            const modal = document.getElementById("custom-dialog-modal");
-            if(!modal) return;
-            document.getElementById("modal-title").innerText = "Criar Nova Pasta";
-            document.getElementById("modal-body-content").innerHTML = `
-                <p class="mb-1">${context ? 'Subpasta em ' + context : 'Pasta na raiz do cofre:'}</p>
-                <input type="text" id="modal-input-field" placeholder="Nome do diretório..." class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-2 text-xs font-semibold focus:outline-none text-slate-800 dark:text-white">
-            `;
-            modal.classList.remove("hidden");
-            document.getElementById("modal-confirm-btn").onclick = async () => {
-                const name = document.getElementById("modal-input-field").value.trim();
-                if (name) {
-                    await createFolderOnVPS(context + name);
-                    closeCustomModal();
-                }
-            };
-        }
-
-        async function deleteItem(p) {
-            try {
-                const res = await fetch("/api/delete-item", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ targetPath: p })
-                });
-                if (res.ok) {
-                    if(selectedFileId === p || selectedFileId === p + "/") selectedFileId = null;
-                    buildNotesTree();
-                    reloadGlobalGraph();
-                }
-            } catch (err) { console.error(err); }
-        }
-
-        async function renameItem(oldP, newP) {
-            try {
-                const res = await fetch("/api/rename-item", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ oldPath: oldP, newPath: newP })
-                });
-                if (res.ok) {
-                    if(selectedFileId === oldP || selectedFileId === oldP + "/") selectedFileId = newP;
-                    buildNotesTree();
-                    reloadGlobalGraph();
-                }
-            } catch (err) { console.error(err); }
-        }
-
-        async function handleOSDrop(e, targetFolder = "") {
-            const items = e.dataTransfer.items;
-            if (!items) return;
-            
-            let baseFolder = targetFolder;
-            if (baseFolder === "") {
-                if (selectedFileId && selectedFileId.endsWith("/")) baseFolder = selectedFileId;
-                else if (selectedFileId && selectedFileId.includes("/")) baseFolder = selectedFileId.substring(0, selectedFileId.lastIndexOf("/")) + "/";
-            }
-
-            let successCount = 0;
-
-            async function readEntry(entry, pathPrefix = "") {
-                if (entry.isFile) {
-                    return new Promise((resolve) => {
-                        entry.file(async (file) => {
-                            const finalPath = baseFolder + pathPrefix + file.name;
-                            try {
-                                const res = await fetch(`/api/upload-vault?file=${encodeURIComponent(finalPath)}`, { method: "POST", body: file });
-                                if (res.ok) successCount++;
-                            } catch(err){}
-                            resolve();
-                        });
-                    });
-                } else if (entry.isDirectory) {
-                    return new Promise((resolve) => {
-                        const dirReader = entry.createReader();
-                        dirReader.readEntries(async (entries) => {
-                            for (let i = 0; i < entries.length; i++) {
-                                await readEntry(entries[i], pathPrefix + entry.name + "/");
-                            }
-                            resolve();
-                        });
-                    });
-                }
-            }
-
-            let promises = [];
-            for (let i = 0; i < items.length; i++) {
-                const item = items[i].webkitGetAsEntry();
-                if (item) promises.push(readEntry(item));
-            }
-
-            await Promise.all(promises);
-            buildNotesTree();
-            reloadGlobalGraph();
-        }
-
-        async function buildNotesTree() {
-            try {
-                const res = await fetch("/api/notes");
-                const data = await res.json();
-                if (data.items) {
-                    fileTree.innerHTML = "";
-                    let items = data.items;
-                    
-                    items.sort((a, b) => a.path.localeCompare(b.path));
-
-                    if (currentFilterType === "md") items = items.filter(i => i.type === "directory" || i.path.endsWith(".md"));
-                    if (currentFilterType === "pdf") items = items.filter(i => i.type === "directory" || i.path.endsWith(".pdf"));
-
-                    fileTree.ondragover = (e) => { e.preventDefault(); };
-                    fileTree.ondrop = async (e) => {
-                        e.preventDefault();
-                        if (e.target === fileTree) {
-                            const draggedPath = e.dataTransfer.getData("text/plain");
-                            if (draggedPath) {
-                                const cleanDragged = draggedPath.replace(/\/$/, "");
-                                const itemName = cleanDragged.split('/').pop();
-                                if (cleanDragged !== itemName) await renameItem(cleanDragged, itemName);
-                            } else if (e.dataTransfer.items) {
-                                await handleOSDrop(e, "");
-                            }
-                        }
-                    };
-
-                    items.forEach(item => {
-                        const cleanItemPath = item.path.replace(/\/$/, "");
-                        let pathParts = cleanItemPath.split('/');
-                        let isHidden = false;
-                        let currentPathCheck = "";
-                        
-                        for (let i = 0; i < pathParts.length - 1; i++) {
-                            currentPathCheck += (i === 0 ? "" : "/") + pathParts[i];
-                            if (collapsedFolders[currentPathCheck]) {
-                                isHidden = true;
-                                break;
-                            }
-                        }
-
-                        if (isHidden) return;
-
-                        const row = document.createElement("div");
-                        const cleanSelectedPath = selectedFileId ? selectedFileId.replace(/\/$/, "") : "";
-                        const cleanCompPath = (typeof comparisonFileId !== 'undefined' && comparisonFileId) ? comparisonFileId.replace(/\/$/, "") : "";
-                        const isSelected = (cleanItemPath === cleanSelectedPath || cleanItemPath === cleanCompPath);
-                        
-                        row.className = `tree-row-container group flex items-center justify-between w-full rounded-xl p-0.5 border transition-all text-left ${isSelected ? 'bg-blue-50/50 dark:bg-blue-950/30 border-blue-500 dark:border-blue-400 text-blue-600 dark:text-blue-400 shadow-xs' : 'border-transparent hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300'}`;
-                        row.setAttribute("data-path", item.path);
-
-                        const isDir = item.type === "directory";
-                        row.draggable = true;
-                        
-                        row.ondragstart = (e) => {
-                            e.dataTransfer.setData("text/plain", item.path);
-                            e.currentTarget.classList.add("opacity-50");
-                        };
-                        row.ondragend = (e) => {
-                            e.currentTarget.classList.remove("opacity-50");
-                            document.querySelectorAll('.drag-over').forEach(el => el.classList.remove('drag-over', 'ring-2', 'ring-blue-500', 'bg-blue-50/50'));
-                        };
-                        row.ondragover = (e) => {
-                            e.preventDefault(); 
-                            if (isDir) e.currentTarget.classList.add('ring-2', 'ring-blue-500', 'bg-blue-50/50', 'drag-over');
-                        };
-                        row.ondragleave = (e) => {
-                            e.currentTarget.classList.remove('ring-2', 'ring-blue-500', 'bg-blue-50/50', 'drag-over');
-                        };
-                        row.ondrop = async (e) => {
-                            e.preventDefault();
-                            e.currentTarget.classList.remove('ring-2', 'ring-blue-500', 'bg-blue-50/50', 'drag-over');
-                            
-                            let targetFolder = isDir ? item.path : "";
-                            if (!isDir) {
-                                const parts = item.path.split('/');
-                                parts.pop();
-                                targetFolder = parts.length > 0 ? parts.join('/') + '/' : '';
-                            }
-
-                            const draggedPath = e.dataTransfer.getData("text/plain");
-                            if (draggedPath) {
-                                if (draggedPath === item.path) return;
-                                const cleanDragged = draggedPath.replace(/\/$/, "");
-                                const itemName = cleanDragged.split('/').pop();
-                                const newPath = targetFolder + itemName;
-                                if (cleanDragged !== newPath.replace(/\/$/, "")) {
-                                    await renameItem(cleanDragged, newPath);
-                                }
-                            } else if (e.dataTransfer.items) {
-                                await handleOSDrop(e, targetFolder);
-                            }
-                        };
-
-                        const btn = document.createElement("button");
-                        const depth = (item.path.match(/\//g) || []).length - (isDir ? 1 : 0);
-                        
-                        btn.className = "flex-1 text-left py-1.5 flex items-center gap-1.5 font-bold truncate text-xs focus:outline-none";
-                        btn.style.paddingLeft = `${depth * 14 + 4}px`;
-                        
-                        const icon = isDir ? "folder" : (item.path.endsWith('.pdf') ? "file-text" : "file");
-                        const iconColor = isDir ? "text-amber-500" : (item.path.endsWith('.pdf') ? "text-red-400" : (isSelected ? "text-blue-500" : "text-slate-400"));
-                        
-                        const hasStar = !!favoriteItems[cleanItemPath];
-                        const starBadge = hasStar ? `<i data-lucide="star" class="w-3 h-3 text-amber-500 fill-amber-500 inline shrink-0 ml-1"></i>` : "";
-
-                        const isCollapsed = !!collapsedFolders[cleanItemPath];
-                        const chevronIcon = isDir ? `<i data-lucide="${isCollapsed ? 'chevron-right' : 'chevron-down'}" class="w-3.5 h-3.5 text-slate-400 shrink-0"></i>` : `<div class="w-3.5 shrink-0"></div>`;
-
-                        const displayName = isDir ? item.path.slice(0, -1).split('/').pop() : item.path.split('/').pop();
-
-                        btn.innerHTML = `${chevronIcon}<i data-lucide="${icon}" class="w-3.5 h-3.5 ${iconColor} shrink-0"></i> <span class="truncate">${displayName}</span> ${starBadge}`;
-                        
-                        if (!isDir) {
-                            btn.onclick = (e) => { 
-                                e.stopPropagation(); 
-                                loadNoteContent(item.path); 
-                            };
-                        } else {
-                            btn.onclick = (e) => { 
-                                e.stopPropagation(); 
-                                collapsedFolders[cleanItemPath] = !collapsedFolders[cleanItemPath];
-                                localStorage.setItem("bms_collapsed_folders", JSON.stringify(collapsedFolders));
-
-                                selectedFileId = item.path; 
-                                activeNoteTitle.innerText = displayName;
-                                updateFavoriteStarUI();
-                                buildNotesTree();
-                            };
-                        }
-
-                        const menuBtn = document.createElement("button");
-                        menuBtn.className = "opacity-0 group-hover:opacity-100 p-1 text-slate-400 hover:text-blue-500 rounded transition-all focus:outline-none";
-                        menuBtn.innerHTML = `<i data-lucide="more-horizontal" class="w-3.5 h-3.5"></i>`;
-                        menuBtn.onclick = (e) => { triggerInlineContextMenu(e, item.path); };
-
-                        row.appendChild(btn);
-                        row.appendChild(menuBtn);
-                        fileTree.appendChild(row);
-                    });
-                    lucide.createIcons();
-                }
-            } catch (err) { console.error(err); }
-        }
-
-        function initPhysicsNodes(data) {
-            if(!canvas || !canvas.parentElement) return;
-            const w = canvas.parentElement.clientWidth > 10 ? canvas.parentElement.clientWidth : 500; 
-            const h = canvas.parentElement.clientHeight > 10 ? canvas.parentElement.clientHeight : 230;
-            canvas.width = w; 
-            canvas.height = h;
-
-            const existingNodesMap = new Map(graphData.nodes.map(n => [n.id, n]));
-            graphData.nodes = data.nodes.map(n => {
-                const old = existingNodesMap.get(n.id);
-                return { 
-                    id: n.id, label: n.label, type: n.type,
-                    x: old ? old.x : w / 2 + (Math.random() - 0.5) * 160, 
-                    y: old ? old.y : h / 2 + (Math.random() - 0.5) * 160, 
-                    vx: 0, vy: 0, radius: 5 
-                };
-            });
-            graphData.edges = data.edges.map(e => ({ 
-                sourceNode: graphData.nodes.find(n => n.id === e.source), 
-                targetNode: graphData.nodes.find(n => n.id === e.target)
-            })).filter(e => e.sourceNode && e.targetNode);
-        }
-
-        function updatePhysics() {
-            if(!canvas || graphData.nodes.length === 0) return;
-            const cx = canvas.width / 2; 
-            const cy = canvas.height / 2;
-            
-            for (let i = 0; i < graphData.nodes.length; i++) {
-                let n1 = graphData.nodes[i];
-                for (let j = i + 1; j < graphData.nodes.length; j++) {
-                    let n2 = graphData.nodes[j];
-                    let dx = n2.x - n1.x; 
-                    let dy = n2.y - n1.y; 
-                    if (dx === 0 && dy === 0) { dx = 0.1; dy = 0.1; }
-                    let dist = Math.sqrt(dx*dx + dy*dy);
-                    if (dist < 180) {
-                        let force = 350 / (dist * dist + 5);
-                        let fx = (dx / dist) * force;
-                        let fy = (dy / dist) * force;
-                        if (n1 !== draggedNode) { n1.vx -= fx; n1.vy -= fy; }
-                        if (n2 !== draggedNode) { n2.vx += fx; n2.vy += fy; }
-                    }
-                }
-            }
-            graphData.edges.forEach(edge => {
-                let dx = edge.targetNode.x - edge.sourceNode.x; 
-                let dy = edge.targetNode.y - edge.sourceNode.y;
-                let dist = Math.sqrt(dx*dx + dy*dy);
-                if (dist > 0) {
-                    let force = 0.015 * dist; 
-                    if (edge.sourceNode !== draggedNode) { edge.sourceNode.vx += (dx / dist) * force; edge.sourceNode.vy += (dy / dist) * force; }
-                    if (edge.targetNode !== draggedNode) { edge.targetNode.vx -= (dx / dist) * force; edge.targetNode.vy -= (dy / dist) * force; }
-                }
-            });
-            graphData.nodes.forEach(node => {
-                if (node === draggedNode) return;
-                
-                node.vx += (cx - node.x) * 0.0015;
-                node.vy += (cy - node.y) * 0.0015;
-
-                node.vx += (Math.random() - 0.5) * 0.15;
-                node.vy += (Math.random() - 0.5) * 0.15;
-
-                node.x += node.vx; 
-                node.y += node.vy; 
-
-                const padding = 15;
-                if (node.x < padding) { node.x = padding; node.vx *= -1; }
-                if (node.y < padding) { node.y = padding; node.vy *= -1; }
-                if (node.x > canvas.width - padding) { node.x = canvas.width - padding; node.vx *= -1; }
-                if (node.y > canvas.height - padding) { node.y = canvas.height - padding; node.vy *= -1; }
-                
-                node.vx *= 0.90; 
-                node.vy *= 0.90;
-            });
-        }
-
-        function drawGraph() {
-            if(!ctx || !canvas) return;
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            const isDark = document.documentElement.classList.contains("dark");
-            
-            ctx.lineWidth = 1.2;
-            ctx.strokeStyle = isDark ? "#334155" : "#e2e8f0";
-            graphData.edges.forEach(edge => { 
-                ctx.beginPath(); 
-                ctx.moveTo(edge.sourceNode.x, edge.sourceNode.y); 
-                ctx.lineTo(edge.targetNode.x, edge.targetNode.y); 
-                ctx.stroke(); 
-            });
-            
-            graphData.nodes.forEach(node => {
-                const cleanNodeId = node.id.replace(/\/$/, "");
-                const cleanSelectedId = selectedFileId ? selectedFileId.replace(/\/$/, "") : "";
-                const cleanCompId = comparisonFileId ? comparisonFileId.replace(/\/$/, "") : "";
-                const act = (cleanSelectedId === cleanNodeId || cleanCompId === cleanNodeId);
-                const isHighlighted = highlightedNodes.includes(cleanNodeId);
-                
-                ctx.beginPath(); 
-                let radius = node.type === "tag" ? 6.0 : 4.5;
-                if (act) radius = 7.0;
-                if (isHighlighted) radius = 9.0;
-                
-                ctx.arc(node.x, node.y, radius, 0, 2*Math.PI);
-                
-                if (isHighlighted) {
-                    ctx.fillStyle = "#f59e0b"; 
-                } else if (act) {
-                    ctx.fillStyle = "#2563eb"; 
-                } else if (node.type === "tag") {
-                    ctx.fillStyle = "#8bc34a"; // Tags verdes
-                } else {
-                    ctx.fillStyle = isDark ? "#64748b" : "#94a3b8"; 
-                }
-                ctx.fill();
-                
-                ctx.font = (act || isHighlighted) ? "bold 11px sans-serif" : "9px sans-serif"; 
-                ctx.fillStyle = isDark ? "#cbd5e1" : "#334155";
-                ctx.textAlign = "center"; 
-                ctx.fillText(node.label, node.x, node.y + 16);
-            });
-        }
-
-        function anim() { 
-            updatePhysics(); 
-            drawGraph(); 
-            requestAnimationFrame(anim); 
-        }
-        if(canvas) requestAnimationFrame(anim);
-
-        if(canvas) {
-            canvas.addEventListener("mousedown", (e) => {
-                const rect = canvas.getBoundingClientRect(); 
-                const mx = e.clientX - rect.left; 
-                const my = e.clientY - rect.top;
-                isDraggingNode = false;
-                for (let n of graphData.nodes) { 
-                    if (Math.sqrt((n.x - mx)**2 + (n.y - my)**2) < 18) { 
-                        draggedNode = n; 
-                        canvas.style.cursor = 'grabbing';
-                        break; 
-                    } 
-                }
-            });
-
-            canvas.addEventListener("mousemove", (e) => { 
-                const rect = canvas.getBoundingClientRect(); 
-                const mx = e.clientX - rect.left; 
-                const my = e.clientY - rect.top;
-
-                if (draggedNode) { 
-                    isDraggingNode = true;
-                    draggedNode.x = mx; 
-                    draggedNode.y = my; 
-                    canvas.style.cursor = 'grabbing';
-                } else {
-                    let isHovering = false;
-                    for (let n of graphData.nodes) { 
-                        if (Math.sqrt((n.x - mx)**2 + (n.y - my)**2) < 18) { 
-                            isHovering = true; 
-                            break; 
-                        } 
-                    }
-                    canvas.style.cursor = isHovering ? 'pointer' : 'default';
-                }
-            });
-
-            canvas.addEventListener("mouseup", () => { 
-                if (draggedNode && !isDraggingNode && draggedNode.type !== "tag") {
-                    loadNoteContent(draggedNode.id);
-                }
-                draggedNode = null; 
-                isDraggingNode = false;
-                if (canvas) canvas.style.cursor = 'default';
-            });
-        }
-
-        async function reloadGlobalGraph() { 
-            try { 
-                const res = await fetch("/api/graph-data"); 
-                const data = await res.json(); 
-                initPhysicsNodes(data); 
-            } catch(e){} 
+        function changeFilter(type) { 
+            currentFilterType = type; 
+            closeAllDropdownsMenu(); 
+            buildNotesTree(); 
         }
 
         // =========================================================================
-        // ATUALIZAÇÕES DA PLATAFORMA DE CORRELAÇÃO (DUPLO MONITOR & AUTO-MARKDOWN PDF)
+        // GESTÃO DE MONITORES ATIVOS (FOCO E ABAS)
         // =========================================================================
-
-        let activeMonitor = "main";
-        let compContentBuffer = "";
-
-        if(chatInput) {
-            chatInput.addEventListener("input", function() {
-                this.style.height = "auto";
-                this.style.height = this.scrollHeight + "px";
-            });
-        }
-
-        window.triggerRetroactiveMD = async function() {
-            const btn = document.getElementById("btn-retroactive");
-            if(!btn) return;
-            btn.innerHTML = `<i data-lucide="loader" class="w-4 h-4 inline-block mr-1 animate-spin"></i> Processando Cofre...`;
-            btn.classList.add("opacity-50", "pointer-events-none");
-            try {
-                await fetch("/api/sync-retroactive", { method: "POST" });
-                alert("Processo de conversão iniciado no Servidor! Acompanhe os novos arquivos .md aparecerem automaticamente na árvore.");
-            } catch(e) {
-                alert("Erro ao iniciar sincronização.");
-            }
-            btn.innerHTML = `<i data-lucide="check" class="w-4 h-4 inline-block mr-1"></i> Varredura Iniciada`;
-            lucide.createIcons();
-        };
-
-        window.openMenuComparison = function() {
-            if(contextMenuSelectedPath) {
-                selectMonitor('comp');
-                loadNoteContent(contextMenuSelectedPath);
-            }
-            closeAllDropdownsMenu();
-        };
-
-        window.selectMonitor = function(monitor) {
-            activeMonitor = monitor;
-            const mainBox = document.getElementById("center-preview-container");
-            const compBox = document.getElementById("sidebar-comparison");
-            const dotMain = document.getElementById("dot-active-main");
-            const dotComp = document.getElementById("dot-active-comp");
-
-            if (monitor === "main") {
-                if(mainBox) mainBox.classList.add("ring-2", "ring-blue-600", "dark:ring-blue-500");
-                if(compBox) compBox.classList.remove("ring-2", "ring-blue-600", "dark:ring-blue-500");
-                if(dotMain) dotMain.classList.remove("hidden");
-                if(dotComp) dotComp.classList.add("hidden");
-            } else {
-                if(compBox) compBox.classList.add("ring-2", "ring-blue-600", "dark:ring-blue-500");
-                if(mainBox) mainBox.classList.remove("ring-2", "ring-blue-600", "dark:ring-blue-500");
-                if(dotComp) dotComp.classList.remove("hidden");
-                if(dotMain) dotMain.classList.add("hidden");
-            }
-        };
 
         window.setComparisonMode = function(mode) {
-            const btnComp = document.getElementById("btn-tab-comp");
-            const btnGraph = document.getElementById("btn-tab-graph");
-            const paneComp = document.getElementById("pane-comparison-doc");
-            const paneGraph = document.getElementById("pane-comparison-graph");
+            const btnC = document.getElementById("btn-tab-comp");
+            const btnG = document.getElementById("btn-tab-graph");
+            const paneC = document.getElementById("pane-comparison-doc");
+            const paneG = document.getElementById("pane-comparison-graph");
 
             if (mode === 'compare') {
-                if(paneComp) paneComp.classList.remove("hidden");
-                if(paneGraph) paneGraph.classList.add("hidden");
-                if(btnComp) btnComp.className = "px-3 py-1 bg-white dark:bg-slate-700 dark:text-white rounded-md shadow-xs transition-colors";
-                if(btnGraph) btnGraph.className = "px-3 py-1 text-slate-500 dark:text-slate-400 transition-colors";
+                paneC?.classList.remove("hidden"); 
+                paneG?.classList.add("hidden");
+                if(btnC) btnC.className = "px-3 py-1 bg-white dark:bg-slate-700 dark:text-white rounded-md shadow-xs transition-colors";
+                if(btnG) btnG.className = "px-3 py-1 text-slate-500 dark:text-slate-400 transition-colors";
             } else {
-                if(paneComp) paneComp.classList.add("hidden");
-                if(paneGraph) paneGraph.classList.remove("hidden");
-                if(btnGraph) btnGraph.className = "px-3 py-1 bg-white dark:bg-slate-700 dark:text-white rounded-md shadow-xs transition-colors";
-                if(btnComp) btnComp.className = "px-3 py-1 text-slate-500 dark:text-slate-400 transition-colors";
-                resizeCanvas(); reloadGlobalGraph();
+                paneC?.classList.add("hidden"); 
+                paneG?.classList.remove("hidden");
+                if(btnG) btnG.className = "px-3 py-1 bg-white dark:bg-slate-700 dark:text-white rounded-md shadow-xs transition-colors";
+                if(btnC) btnC.className = "px-3 py-1 text-slate-500 dark:text-slate-400 transition-colors";
+                resizeCanvas(); 
+                reloadGlobalGraph();
             }
         };
 
@@ -1269,16 +742,17 @@
             const btnRaw = document.getElementById("btn-tab-main-raw");
             const vDoc = document.getElementById("view-doc-main");
             const vRaw = document.getElementById("view-raw-main");
-            if(tab === 'formatted') {
-                if(vDoc) vDoc.classList.remove("hidden");
-                if(vRaw) vRaw.classList.add("hidden");
-                if(btnForm) btnForm.className = "px-3 py-1 bg-white dark:bg-slate-700 dark:text-white rounded-md shadow-xs transition-all";
-                if(btnRaw) btnRaw.className = "px-3 py-1 text-slate-500 dark:text-slate-400 transition-all";
+
+            if (tab === 'formatted') {
+                vDoc?.classList.remove("hidden"); 
+                vRaw?.classList.add("hidden");
+                if(btnForm) btnForm.className = "px-3 py-1 bg-white dark:bg-slate-700 dark:text-white rounded-md shadow-xs transition-colors";
+                if(btnRaw) btnRaw.className = "px-3 py-1 text-slate-500 dark:text-slate-400 transition-colors";
             } else {
-                if(vDoc) vDoc.classList.add("hidden");
-                if(vRaw) vRaw.classList.remove("hidden");
-                if(btnRaw) btnRaw.className = "px-3 py-1 bg-white dark:bg-slate-700 dark:text-white rounded-md shadow-xs transition-all";
-                if(btnForm) btnForm.className = "px-3 py-1 text-slate-500 dark:text-slate-400 transition-all";
+                vDoc?.classList.add("hidden"); 
+                vRaw?.classList.remove("hidden");
+                if(btnRaw) btnRaw.className = "px-3 py-1 bg-white dark:bg-slate-700 dark:text-white rounded-md shadow-xs transition-colors";
+                if(btnForm) btnForm.className = "px-3 py-1 text-slate-500 dark:text-slate-400 transition-colors";
             }
         };
 
@@ -1287,29 +761,82 @@
             const btnRaw = document.getElementById("btn-tab-comp-raw");
             const vDoc = document.getElementById("view-doc-comp");
             const vRaw = document.getElementById("view-raw-comp");
-            if(tab === 'formatted') {
-                if(vDoc) vDoc.classList.remove("hidden");
-                if(vRaw) vRaw.classList.add("hidden");
+
+            if (tab === 'formatted') {
+                vDoc?.classList.remove("hidden"); 
+                vRaw?.classList.add("hidden");
                 if(btnForm) btnForm.className = "px-2 py-0.5 bg-white dark:bg-slate-700 dark:text-white rounded-md shadow-xs transition-colors";
                 if(btnRaw) btnRaw.className = "px-2 py-0.5 text-slate-500 dark:text-slate-400 transition-colors";
             } else {
-                if(vDoc) vDoc.classList.add("hidden");
-                if(vRaw) vRaw.classList.remove("hidden");
+                vDoc?.classList.add("hidden"); 
+                vRaw?.classList.remove("hidden");
                 if(btnRaw) btnRaw.className = "px-2 py-0.5 bg-white dark:bg-slate-700 dark:text-white rounded-md shadow-xs transition-colors";
                 if(btnForm) btnForm.className = "px-2 py-0.5 text-slate-500 dark:text-slate-400 transition-colors";
             }
         };
 
+        window.openMenuComparison = function() {
+            if (contextMenuSelectedPath) {
+                selectMonitor('comp');
+                loadNoteContent(contextMenuSelectedPath);
+            }
+            closeAllDropdownsMenu();
+        };
+
         window.clearComparisonDoc = function() {
             comparisonFileId = null;
-            const tEl = document.getElementById("comp-note-title");
-            if(tEl) tEl.innerText = "Selecione o terceiro menu";
-            const dEl = document.getElementById("view-doc-comp");
-            if(dEl) dEl.innerHTML = `<div class="text-center text-slate-300 my-20 dark:text-slate-700">Painel secundário inativo. Selecione este monitor e clique em um arquivo.</div>`;
-            const rEl = document.getElementById("view-raw-comp");
-            if(rEl) rEl.innerText = "";
+            if(compNoteTitle) compNoteTitle.innerText = "Selecione o terceiro menu";
+            if(viewDocComp) viewDocComp.innerHTML = `<div class="text-center text-slate-300 my-20 dark:text-slate-700">Painel secundário inativo. Selecione este monitor e clique em um arquivo.</div>`;
+            if(viewRawComp) viewRawComp.innerText = "";
             buildNotesTree();
         };
+
+        // =========================================================================
+        // OCR FORCE REPROCESSAMENTO
+        // =========================================================================
+
+        window.reprocessMD = async function(monitor) {
+            const isMain = (monitor === 'main');
+            const targetFile = isMain ? selectedFileId : comparisonFileId;
+            if (!targetFile) return;
+
+            const rEl = document.getElementById(isMain ? "view-raw-main" : "view-raw-comp");
+            const btn = document.getElementById(isMain ? "btn-reprocess-main" : "btn-reprocess-comp");
+            
+            if (rEl) {
+                rEl.innerText = "A Inteligência Artificial está transcrevendo a imagem para texto... Isso pode levar alguns segundos dependendo do tamanho do PDF.";
+                if (isMain) setMainTab('raw'); else setCompTextTab('raw');
+            }
+            
+            if (btn) btn.innerHTML = `<i data-lucide="loader" class="w-3 h-3 inline mr-1 animate-spin"></i> Relendo...`;
+            lucide.createIcons();
+
+            try {
+                const res = await fetch("/api/reprocess-md", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ filename: targetFile })
+                });
+                const data = await res.json();
+                
+                if (data.success) {
+                    if (rEl) rEl.innerText = data.markdown;
+                    if (isMain) rawContentBuffer = data.markdown; else compContentBuffer = data.markdown;
+                    buildNotesTree();
+                } else {
+                    if (rEl) rEl.innerText = "Falha ao refazer o OCR: " + data.error;
+                }
+            } catch (err) {
+                if (rEl) rEl.innerText = "Erro de conexão com o servidor Node.";
+            }
+            
+            if (btn) btn.innerHTML = `<i data-lucide="refresh-cw" class="w-3 h-3 inline mr-1"></i> Reler PDF`;
+            lucide.createIcons();
+        };
+
+        // =========================================================================
+        // LEITURA DE ARQUIVOS NATIVA
+        // =========================================================================
 
         function renderMarkdownHTML(mdText, filename) {
             if(!mdText) return `<div class="text-center text-slate-400">Documento sem registros textuais.</div>`;
@@ -1317,22 +844,24 @@
             const tagRegex = /#([a-zA-Z0-9À-ÿ_-]+)/g; 
             let rawTags = []; 
             let m;
-            while((m = tagRegex.exec(mdText)) !== null) { rawTags.push(`#${m[1]}`); }
-            
-            const tags = [...new Set(rawTags)]; 
+            while((m = tagRegex.exec(mdText)) !== null) { 
+                rawTags.push(`#${m[1]}`); 
+            }
+            const uniqueTags = [...new Set(rawTags)]; 
 
             let cleanText = mdText.replace(/\[\[(.*?)\]\]/g, '<span class="text-blue-500 font-bold cursor-pointer hover:underline" onclick="loadNoteContent(\'$1\')">$1</span>');
             
             let tagHeader = "";
-            if(tags.length > 0) {
+            if (uniqueTags.length > 0) {
                 tagHeader = `<div class="flex flex-wrap gap-1.5 mb-4 border-b border-slate-100 dark:border-slate-800 pb-2.5">` + 
-                    tags.map(t => `<span class="bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-900 text-[10px] font-black px-2 py-0.5 rounded-md">${t}</span>`).join('') + `</div>`;
+                    uniqueTags.map(t => `<span class="bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-900 text-[10px] font-black px-2 py-0.5 rounded-md">${t}</span>`).join('') + 
+                `</div>`;
             }
 
             return `
                 <div class="text-center border-b border-slate-200 dark:border-slate-700 pb-3 mb-4">
                     <h3 class="font-bold text-sm tracking-wide uppercase text-slate-800 dark:text-white">BMS SERVICE - REGISTRO JURÍDICO</h3>
-                    <p class="text-[10px] text-slate-400 mt-0.5">Volume de Dados: Cofre/${filename}</p>
+                    <p class="text-[10px] text-slate-400 mt-0.5">Identificador de Volume: Cofre/${filename}</p>
                 </div>
                 ${tagHeader}
                 <div class="whitespace-pre-wrap text-slate-800 dark:text-slate-200">${cleanText}</div>
@@ -1351,7 +880,7 @@
             } else { 
                 comparisonFileId = filename; 
                 setCompTextTab('formatted'); 
-                setComparisonMode('compare');
+                setComparisonMode('compare'); 
             }
 
             const tEl = document.getElementById(targetTitleId);
@@ -1359,21 +888,21 @@
             
             const dEl = document.getElementById(targetDocId);
             const rEl = document.getElementById(targetRawId);
+            
             if(dEl) dEl.innerHTML = `<div class="text-center text-slate-400 my-20 animate-pulse">Indexando bloco documental...</div>`;
 
             highlightSelectedRow();
 
-            if (isMain) {
-                updateFavoriteStarUI(); 
-                buildNotesTree();
-            } else {
-                buildNotesTree();
-            }
+            if (isMain) updateFavoriteStarUI(); 
+            buildNotesTree(); 
 
+            // Tratamento especial para PDF com Botão de Reprocessamento
             if (filename.toLowerCase().endsWith('.pdf')) {
                 if(dEl) dEl.innerHTML = `<iframe src="/api/note-raw?file=${encodeURIComponent(filename)}" class="w-full h-[400px] border-0 rounded-xl bg-white"></iframe>`;
                 
-                // NOVIDADE: BUSCA O MARKDOWN GÊMEO DO PDF
+                const btnReprocess = document.getElementById(isMain ? "btn-reprocess-main" : "btn-reprocess-comp");
+                if (btnReprocess) btnReprocess.classList.remove("hidden");
+
                 const mdFilename = filename.substring(0, filename.lastIndexOf('.')) + '.md';
                 try {
                     const mdRes = await fetch(`/api/note-content?file=${encodeURIComponent(mdFilename)}`);
@@ -1383,16 +912,20 @@
                             if(rEl) rEl.innerText = mdData.content;
                             if(isMain) rawContentBuffer = mdData.content; else compContentBuffer = mdData.content;
                         } else {
-                            throw new Error("Empty");
+                            throw new Error("Vazio");
                         }
                     } else {
-                        throw new Error("Not found");
+                        throw new Error("Inexistente");
                     }
                 } catch(e) {
-                    if(rEl) rEl.innerText = "[Versão Markdown ainda não gerada. Acesse o menu de Plano e clique em 'Gerar Markdown de PDFs' ou aguarde a IA concluir o processamento no servidor.]";
+                    if(rEl) rEl.innerText = "[Nenhuma versão Markdown disponível ainda ou arquivo gerado com erro. Clique em 'Reler PDF' acima para forçar a IA a fazer um OCR visual deste documento agora mesmo.]";
                     if(isMain) rawContentBuffer = ""; else compContentBuffer = "";
                 }
                 return;
+            } else {
+                // Se não for PDF, esconde o botão de reler
+                const btnReprocess = document.getElementById(isMain ? "btn-reprocess-main" : "btn-reprocess-comp");
+                if (btnReprocess) btnReprocess.classList.add("hidden");
             }
 
             try {
@@ -1408,15 +941,8 @@
                 
                 if(isMain) lucide.createIcons();
             } catch(e) { 
-                if(dEl) dEl.innerHTML = `<div class="text-center text-red-500 my-20 font-bold">Erro ao ler bloco documental.</div>`; 
+                if(dEl) dEl.innerHTML = `<div class="text-center text-red-500 my-20 font-bold">Erro ao ler bloco documental do servidor.</div>`; 
             }
-        };
-
-        window.downloadCompFile = function() {
-            if (!comparisonFileId || !compContentBuffer) return;
-            const blob = new Blob([compContentBuffer], { type: "text/markdown;charset=utf-8" });
-            const link = document.createElement("a"); link.href = URL.createObjectURL(blob);
-            link.download = comparisonFileId.split('/').pop(); link.click();
         };
 
         function highlightSelectedRow() {
@@ -1433,52 +959,282 @@
             });
         }
 
-        async function processUploadBatch(fileList) {
-            let baseFolder = "";
-            if (selectedFileId && selectedFileId.endsWith("/")) baseFolder = selectedFileId;
-            else if (selectedFileId && selectedFileId.includes("/")) baseFolder = selectedFileId.substring(0, selectedFileId.lastIndexOf("/")) + "/";
+        // =========================================================================
+        // BOTÕES DE AÇÃO DOS MONITORES
+        // =========================================================================
 
-            for (let i = 0; i < fileList.length; i++) {
-                const file = fileList[i];
-                const relativePath = file.webkitRelativePath || file.name;
-                const finalPath = baseFolder + relativePath;
+        function downloadActiveFile() {
+            if (!selectedFileId || !rawContentBuffer) return;
+            const blob = new Blob([rawContentBuffer], { type: "text/markdown;charset=utf-8" });
+            const link = document.createElement("a"); 
+            link.href = URL.createObjectURL(blob);
+            link.download = selectedFileId.split('/').pop(); 
+            link.click();
+        }
 
-                try {
-                    await fetch(`/api/upload-vault?file=${encodeURIComponent(finalPath)}`, { method: "POST", body: file });
-                } catch(err){}
+        function downloadCompFile() {
+            if (!comparisonFileId || !compContentBuffer) return;
+            const blob = new Blob([compContentBuffer], { type: "text/markdown;charset=utf-8" });
+            const link = document.createElement("a"); 
+            link.href = URL.createObjectURL(blob);
+            link.download = comparisonFileId.split('/').pop(); 
+            link.click();
+        }
+
+        function printActiveFile() {
+            if (!selectedFileId || !viewDocMain) return;
+            const printWindow = window.open("", "_blank");
+            printWindow.document.write(`<html><head><title>BMS - Imprimir</title></head><body>${viewDocMain.innerHTML}</body></html>`);
+            printWindow.document.close(); 
+            printWindow.print();
+        }
+
+        function fullscreenActiveFile() {
+            const container = document.getElementById("center-preview-container"); 
+            if(!container) return;
+            if (!document.fullscreenElement) {
+                container.requestFullscreen().catch(e => console.error(e));
+            } else {
+                document.exitFullscreen();
+            }
+        }
+
+        // =========================================================================
+        // STATUS E MODAIS EXTRAS
+        // =========================================================================
+
+        async function checkRealServerStatus() {
+            if(!serverStatusBadge || !serverStatusDot || !serverStatusText) return;
+            try {
+                const res = await fetch("/api/status");
+                if (res.ok) {
+                    serverStatusBadge.className = "flex items-center gap-2 bg-emerald-50 dark:bg-emerald-950/40 px-3 py-2 rounded-xl border border-emerald-100 dark:border-emerald-900 shadow-xs transition-all";
+                    serverStatusDot.className = "w-2 h-2 bg-emerald-500 rounded-full animate-pulse";
+                    serverStatusText.innerText = "SERVIDOR ATIVO";
+                } else { 
+                    throw new Error(); 
+                }
+            } catch (err) {
+                serverStatusBadge.className = "flex items-center gap-2 bg-red-50 dark:bg-red-950/40 px-3 py-2 rounded-xl border border-red-100 dark:border-red-900 shadow-xs transition-all";
+                serverStatusDot.className = "w-2 h-2 bg-red-500 rounded-full";
+                serverStatusText.innerText = "SERVIDOR INATIVO";
+            }
+        }
+        setInterval(checkRealServerStatus, 4000); 
+        checkRealServerStatus();
+
+        function searchFileTree() {
+            if(!globalSearchBar || !fileTree) return;
+            const query = globalSearchBar.value.toLowerCase().trim();
+            const rows = fileTree.querySelectorAll(".tree-row-container");
+            rows.forEach(row => { 
+                row.classList.toggle("hidden", !row.getAttribute("data-path").toLowerCase().includes(query)); 
+            });
+        }
+
+        function triggerInlineContextMenu(e, path) {
+            e.stopPropagation(); 
+            contextMenuSelectedPath = path;
+            const menu = document.getElementById("custom-context-menu"); 
+            closeAllDropdownsMenu();
+            if(menu) { 
+                menu.classList.remove("hidden"); 
+                menu.style.left = `${e.clientX - 160}px`; 
+                menu.style.top = `${e.clientY + 10}px`; 
+            }
+        }
+
+        function closeCustomModal() { 
+            document.getElementById("custom-dialog-modal")?.classList.add("hidden"); 
+        }
+
+        function openRenameModal() {
+            document.getElementById("custom-context-menu")?.classList.add("hidden");
+            const modal = document.getElementById("custom-dialog-modal"); 
+            if(!modal) return;
+            document.getElementById("modal-title").innerText = "Renomear / Mover Item";
+            document.getElementById("modal-body-content").innerHTML = `<input type="text" id="modal-input-field" value="${contextMenuSelectedPath.replace(/\/$/, "")}" class="w-full bg-slate-50 border dark:border-slate-700 dark:bg-slate-800 rounded-xl p-2 text-xs font-semibold text-slate-800 dark:text-white">`;
+            modal.classList.remove("hidden");
+            document.getElementById("modal-confirm-btn").onclick = async () => {
+                const newPath = document.getElementById("modal-input-field").value.trim();
+                if (newPath) { 
+                    await renameItem(contextMenuSelectedPath, newPath); 
+                    closeCustomModal(); 
+                }
+            };
+        }
+
+        function openDeleteModal() {
+            document.getElementById("custom-context-menu")?.classList.add("hidden");
+            const modal = document.getElementById("custom-dialog-modal"); 
+            if(!modal) return;
+            document.getElementById("modal-title").innerText = "Confirmar Exclusão";
+            document.getElementById("modal-body-content").innerHTML = `<p>Excluir permanentemente <strong>${contextMenuSelectedPath.replace(/\/$/, "")}</strong>?</p>`;
+            modal.classList.remove("hidden");
+            document.getElementById("modal-confirm-btn").onclick = async () => { 
+                await deleteItem(contextMenuSelectedPath); 
+                closeCustomModal(); 
+            };
+        }
+
+        function createNewFolderManual(e) {
+            if(e) e.stopPropagation();
+            let context = ""; 
+            if (selectedFileId && selectedFileId.endsWith("/")) {
+                context = selectedFileId; 
+            } else if (selectedFileId && selectedFileId.includes("/")) {
+                context = selectedFileId.substring(0, selectedFileId.lastIndexOf("/")) + "/";
+            }
+            const modal = document.getElementById("custom-dialog-modal"); 
+            if(!modal) return;
+            document.getElementById("modal-title").innerText = "Criar Nova Pasta";
+            document.getElementById("modal-body-content").innerHTML = `<input type="text" id="modal-input-field" placeholder="Nome da subpasta..." class="w-full bg-slate-50 border dark:border-slate-700 dark:bg-slate-800 rounded-xl p-2 text-xs text-slate-800 dark:text-white">`;
+            modal.classList.remove("hidden");
+            document.getElementById("modal-confirm-btn").onclick = async () => {
+                const name = document.getElementById("modal-input-field").value.trim();
+                if (name) {
+                    try { 
+                        const res = await fetch("/api/create-folder", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ foldername: context + name }) }); 
+                        if (res.ok) { 
+                            buildNotesTree(); 
+                        } 
+                    } catch(err){}
+                    closeCustomModal();
+                }
+            };
+        }
+
+        async function deleteItem(p) { 
+            try { 
+                const res = await fetch("/api/delete-item", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ targetPath: p }) }); 
+                if (res.ok) { 
+                    if(selectedFileId === p || selectedFileId === p + "/") selectedFileId = null; 
+                    buildNotesTree(); 
+                } 
+            } catch(err){} 
+        }
+
+        async function renameItem(oldP, newP) { 
+            try { 
+                const res = await fetch("/api/rename-item", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ oldPath: oldP, newPath: newP }) }); 
+                if (res.ok) { 
+                    if(selectedFileId === oldP || selectedFileId === oldP + "/") selectedFileId = newP; 
+                    buildNotesTree(); 
+                } 
+            } catch(err){} 
+        }
+
+        // =========================================================================
+        // UPLOADS E DRAG N DROP GLOBAIS
+        // =========================================================================
+
+        async function handleOSDrop(e, targetFolder = "") {
+            const items = e.dataTransfer.items; 
+            if (!items) return;
+            let baseFolder = targetFolder; 
+            
+            if (baseFolder === "") { 
+                if (selectedFileId && selectedFileId.endsWith("/")) {
+                    baseFolder = selectedFileId; 
+                } else if (selectedFileId && selectedFileId.includes("/")) {
+                    baseFolder = selectedFileId.substring(0, selectedFileId.lastIndexOf("/")) + "/"; 
+                } 
             }
             
+            async function readEntry(entry, pathPrefix = "") {
+                if (entry.isFile) {
+                    return new Promise((resolve) => {
+                        entry.file(async (file) => {
+                            const finalPath = baseFolder + pathPrefix + file.name;
+                            try { 
+                                await fetch(`/api/upload-vault?file=${encodeURIComponent(finalPath)}`, { method: "POST", body: file }); 
+                            } catch(err){}
+                            resolve();
+                        });
+                    });
+                } else if (entry.isDirectory) {
+                    return new Promise((resolve) => {
+                        const dirReader = entry.createReader();
+                        dirReader.readEntries(async (entries) => { 
+                            for (let i = 0; i < entries.length; i++) { 
+                                await readEntry(entries[i], pathPrefix + entry.name + "/"); 
+                            } 
+                            resolve(); 
+                        });
+                    });
+                }
+            }
+            let promises = []; 
+            for (let i = 0; i < items.length; i++) { 
+                const item = items[i].webkitGetAsEntry(); 
+                if (item) promises.push(readEntry(item)); 
+            }
+            await Promise.all(promises); 
+            buildNotesTree(); 
+        }
+
+        async function processUploadBatch(fileList) {
+            let baseFolder = ""; 
+            if (selectedFileId && selectedFileId.endsWith("/")) {
+                baseFolder = selectedFileId; 
+            } else if (selectedFileId && selectedFileId.includes("/")) {
+                baseFolder = selectedFileId.substring(0, selectedFileId.lastIndexOf("/")) + "/"; 
+            }
+            for (let i = 0; i < fileList.length; i++) {
+                const file = fileList[i]; 
+                const finalPath = baseFolder + (file.webkitRelativePath || file.name);
+                try { 
+                    await fetch(`/api/upload-vault?file=${encodeURIComponent(finalPath)}`, { method: "POST", body: file }); 
+                } catch(e){}
+            }
             await buildNotesTree(); 
-            await reloadGlobalGraph();
         }
 
         const upV = document.getElementById("global-vault-upload");
-        if(upV) upV.onchange = (e) => {
-            if(e.target.files.length > 0) processUploadBatch(e.target.files);
-            e.target.value = "";
-        };
-
         const upF = document.getElementById("global-folder-upload");
-        if(upF) upF.onchange = (e) => {
-            if(e.target.files.length > 0) processUploadBatch(e.target.files);
-            e.target.value = "";
-        };
+        if(upV) {
+            upV.onchange = async (e) => { 
+                await processUploadBatch(e.target.files); 
+                e.target.value = ""; 
+            };
+        }
+        if(upF) {
+            upF.onchange = async (e) => { 
+                await processUploadBatch(e.target.files); 
+                e.target.value = ""; 
+            };
+        }
 
         const btnAttach = document.getElementById("btn-chat-attach");
         const ctxUpload = document.getElementById("chat-context-upload");
+        
         if(btnAttach && ctxUpload) {
             btnAttach.onclick = () => ctxUpload.click();
-            ctxUpload.onchange = (e) => {
-                const file = e.target.files[0]; if (!file) return;
-                const reader = new FileReader();
-                reader.onload = (event) => {
-                    pendingChatAttachment = { name: file.name, content: event.target.result };
-                    const attName = document.getElementById("chat-attachment-name");
-                    const attArea = document.getElementById("chat-attachment-area");
-                    if(attName) attName.innerText = file.name;
-                    if(attArea) attArea.classList.remove("hidden");
-                };
-                reader.readAsText(file);
+            ctxUpload.onchange = async (e) => {
+                const file = e.target.files[0]; 
+                if (!file) return;
+                
+                const attArea = document.getElementById("chat-attachment-area");
+                const attName = document.getElementById("chat-attachment-name");
+                
+                if (attArea) attArea.classList.remove("hidden");
+                if (attName) attName.innerText = "Sincronizando e gerando Markdown (aguarde)...";
+
+                const finalPath = "Anexos_Chat/" + file.name;
+                try {
+                    const res = await fetch(`/api/upload-vault?file=${encodeURIComponent(finalPath)}&sync=true`, { method: "POST", body: file });
+                    const data = await res.json();
+                    
+                    pendingChatAttachment = { 
+                        name: file.name, 
+                        content: data.markdown || "Falha ao gerar Markdown." 
+                    };
+                    
+                    if (attName) attName.innerText = file.name;
+                    buildNotesTree(); 
+                } catch (err) { 
+                    if (attName) attName.innerText = "Erro ao enviar anexo."; 
+                }
             };
         }
 
@@ -1486,25 +1242,297 @@
         if(btnRemAttach) {
             btnRemAttach.onclick = () => {
                 pendingChatAttachment = null;
-                const attArea = document.getElementById("chat-attachment-area");
-                if(attArea) attArea.classList.add("hidden");
+                document.getElementById("chat-attachment-area")?.classList.add("hidden");
                 if(ctxUpload) ctxUpload.value = "";
             };
         }
 
-        async function sendChatMessage() {
-            if(!chatInput || !appPassword) return;
-            let query = chatInput.value.trim();
-            if (!query) return;
+        // =========================================================================
+        // MOTOR DE ÁRVORE DO OBSIDIAN
+        // =========================================================================
 
-            const pwd = appPassword.value.trim();
-            if (!pwd) {
-                renderMessageBlock("assistant", "⚠️ **Acesso Negado:** Por favor, insira o Token de Validação Local no campo acima antes de enviar instruções.");
-                return;
+        async function buildNotesTree() {
+            try {
+                const res = await fetch("/api/notes"); 
+                const data = await res.json();
+                
+                if (data.items && fileTree) {
+                    fileTree.innerHTML = ""; 
+                    let items = data.items; 
+                    items.sort((a, b) => a.path.localeCompare(b.path));
+                    
+                    if (currentFilterType === "md") items = items.filter(i => i.type === "directory" || i.path.endsWith(".md"));
+                    if (currentFilterType === "pdf") items = items.filter(i => i.type === "directory" || i.path.endsWith(".pdf"));
+                    
+                    fileTree.ondragover = (e) => { e.preventDefault(); };
+                    fileTree.ondrop = async (e) => {
+                        e.preventDefault();
+                        if (e.target === fileTree) {
+                            const draggedPath = e.dataTransfer.getData("text/plain");
+                            if (draggedPath) {
+                                const cleanDragged = draggedPath.replace(/\/$/, "");
+                                const itemName = cleanDragged.split('/').pop();
+                                if (cleanDragged !== itemName) await renameItem(cleanDragged, itemName);
+                            } else if (e.dataTransfer.items) { 
+                                await handleOSDrop(e, ""); 
+                            }
+                        }
+                    };
+
+                    items.forEach(item => {
+                        const cleanItemPath = item.path.replace(/\/$/, "");
+                        let pathParts = cleanItemPath.split('/'); 
+                        let isHidden = false; 
+                        let currentPathCheck = "";
+                        
+                        for (let i = 0; i < pathParts.length - 1; i++) {
+                            currentPathCheck += (i === 0 ? "" : "/") + pathParts[i];
+                            if (collapsedFolders[currentPathCheck]) { 
+                                isHidden = true; 
+                                break; 
+                            }
+                        }
+                        if (isHidden) return;
+
+                        const row = document.createElement("div");
+                        const cleanMainPath = selectedFileId ? selectedFileId.replace(/\/$/, "") : "";
+                        const cleanCompPath = comparisonFileId ? comparisonFileId.replace(/\/$/, "") : "";
+                        const isSelected = (cleanItemPath === cleanMainPath || cleanItemPath === cleanCompPath);
+                        
+                        row.className = `tree-row-container group flex items-center justify-between w-full rounded-xl p-0.5 border text-left ${isSelected ? 'bg-blue-50/50 dark:bg-blue-950/30 border-blue-500 text-blue-600 shadow-xs' : 'border-transparent hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300'}`;
+                        row.setAttribute("data-path", item.path);
+
+                        const isDir = item.type === "directory"; 
+                        row.draggable = true;
+                        
+                        row.ondragstart = (e) => e.dataTransfer.setData("text/plain", item.path);
+                        row.ondragover = (e) => { e.preventDefault(); if(isDir) e.currentTarget.classList.add('bg-blue-50/40'); };
+                        row.ondragleave = (e) => e.currentTarget.classList.remove('bg-blue-50/40');
+                        row.ondrop = async (e) => {
+                            e.preventDefault(); 
+                            e.currentTarget.classList.remove('bg-blue-50/40');
+                            
+                            let targetFolder = isDir ? item.path : "";
+                            if (!isDir) { 
+                                const parts = item.path.split('/'); 
+                                parts.pop(); 
+                                targetFolder = parts.length > 0 ? parts.join('/') + '/' : ''; 
+                            }
+                            
+                            const draggedPath = e.dataTransfer.getData("text/plain");
+                            if (draggedPath && draggedPath !== item.path) {
+                                await renameItem(draggedPath.replace(/\/$/, ""), targetFolder + draggedPath.replace(/\/$/, "").split('/').pop());
+                            } else if (e.dataTransfer.items) {
+                                await handleOSDrop(e, targetFolder);
+                            }
+                        };
+
+                        const btn = document.createElement("button"); 
+                        const depth = (item.path.match(/\//g) || []).length - (isDir ? 1 : 0);
+                        
+                        btn.className = "flex-1 text-left py-1.5 flex items-center gap-1.5 font-bold truncate text-xs focus:outline-none";
+                        btn.style.paddingLeft = `${depth * 14 + 4}px`;
+                        
+                        const icon = isDir ? "folder" : (item.path.endsWith('.pdf') ? "file-text" : "file");
+                        const iconColor = isDir ? "text-amber-500" : (item.path.endsWith('.pdf') ? "text-red-400" : (isSelected ? "text-blue-500" : "text-slate-400"));
+                        const hasStar = !!favoriteItems[cleanItemPath];
+                        const starBadge = hasStar ? `<i data-lucide="star" class="w-3 h-3 text-amber-500 fill-amber-500 inline shrink-0 ml-1"></i>` : "";
+                        const isCollapsed = !!collapsedFolders[cleanItemPath];
+                        const chevronIcon = isDir ? `<i data-lucide="${isCollapsed ? 'chevron-right' : 'chevron-down'}" class="w-3.5 h-3.5 text-slate-400 shrink-0"></i>` : `<div class="w-3.5 shrink-0"></div>`;
+                        
+                        btn.innerHTML = `${chevronIcon}<i data-lucide="${icon}" class="w-3.5 h-3.5 ${iconColor} shrink-0"></i> <span class="truncate">${cleanItemPath.split('/').pop()}</span> ${starBadge}`;
+                        
+                        if (!isDir) {
+                            btn.onclick = (e) => { 
+                                e.stopPropagation(); 
+                                loadNoteContent(item.path); 
+                            };
+                        } else {
+                            btn.onclick = (e) => { 
+                                e.stopPropagation(); 
+                                collapsedFolders[cleanItemPath] = !collapsedFolders[cleanItemPath]; 
+                                localStorage.setItem("bms_collapsed_folders", JSON.stringify(collapsedFolders)); 
+                                selectedFileId = item.path; 
+                                buildNotesTree(); 
+                            };
+                        }
+
+                        const menuBtn = document.createElement("button"); 
+                        menuBtn.className = "opacity-0 group-hover:opacity-100 p-1 text-slate-400 hover:text-blue-500 rounded transition-all focus:outline-none";
+                        menuBtn.innerHTML = `<i data-lucide="more-horizontal" class="w-3.5 h-3.5"></i>`;
+                        menuBtn.onclick = (e) => triggerInlineContextMenu(e, item.path);
+
+                        row.appendChild(btn); 
+                        row.appendChild(menuBtn); 
+                        fileTree.appendChild(row);
+                    });
+                    lucide.createIcons();
+                }
+            } catch(e){}
+        }
+
+        // =========================================================================
+        // MOTOR DE FÍSICA E GRAPH
+        // =========================================================================
+
+        function initPhysicsNodes(data) {
+            if(!canvas || !canvas.parentElement) return;
+            const w = canvas.parentElement.clientWidth > 10 ? canvas.parentElement.clientWidth : 500; 
+            const h = canvas.parentElement.clientHeight > 10 ? canvas.parentElement.clientHeight : 230;
+            canvas.width = w; 
+            canvas.height = h;
+
+            const existingNodesMap = new Map(graphData.nodes.map(n => [n.id, n]));
+            graphData.nodes = data.nodes.map(n => {
+                const old = existingNodesMap.get(n.id);
+                return { 
+                    id: n.id, 
+                    label: n.label, 
+                    type: n.type, 
+                    x: old ? old.x : w/2 + (Math.random()-0.5)*160, 
+                    y: old ? old.y : h/2 + (Math.random()-0.5)*160, 
+                    vx:0, 
+                    vy:0 
+                };
+            });
+            graphData.edges = data.edges.map(e => ({ 
+                sourceNode: graphData.nodes.find(n => n.id === e.source), 
+                targetNode: graphData.nodes.find(n => n.id === e.target) 
+            })).filter(e => e.sourceNode && e.targetNode);
+        }
+
+        function updatePhysics() {
+            if(!canvas || graphData.nodes.length === 0) return;
+            const cx = canvas.width / 2;
+            const cy = canvas.height / 2;
+            
+            for (let i = 0; i < graphData.nodes.length; i++) {
+                let n1 = graphData.nodes[i];
+                for (let j = i + 1; j < graphData.nodes.length; j++) {
+                    let n2 = graphData.nodes[j];
+                    let dx = n2.x - n1.x; 
+                    let dy = n2.y - n1.y; 
+                    if(dx === 0 && dy === 0) { dx = 0.1; dy = 0.1; }
+                    let dist = Math.sqrt(dx*dx + dy*dy);
+                    if (dist < 180) {
+                        let force = 350 / (dist * dist + 5);
+                        let fx = (dx / dist) * force;
+                        let fy = (dy / dist) * force;
+                        
+                        if (n1 !== draggedNode) { n1.vx -= fx; n1.vy -= fy; }
+                        if (n2 !== draggedNode) { n2.vx += fx; n2.vy += fy; }
+                    }
+                }
             }
+            
+            graphData.edges.forEach(e => {
+                let dx = e.targetNode.x - e.sourceNode.x; 
+                let dy = e.targetNode.y - e.sourceNode.y;
+                let dist = Math.sqrt(dx*dx + dy*dy);
+                if (dist > 0) {
+                    let force = 0.012 * dist;
+                    if (e.sourceNode !== draggedNode) { 
+                        e.sourceNode.vx += (dx / dist) * force; 
+                        e.sourceNode.vy += (dy / dist) * force; 
+                    }
+                    if (e.targetNode !== draggedNode) { 
+                        e.targetNode.vx -= (dx / dist) * force; 
+                        e.targetNode.vy -= (dy / dist) * force; 
+                    }
+                }
+            });
+            
+            graphData.nodes.forEach(n => {
+                if (n === draggedNode) return;
+                n.vx += (cx - n.x) * 0.0015; 
+                n.vy += (cy - n.y) * 0.0015;
+                n.vx += (Math.random() - 0.5) * 0.15; 
+                n.vy += (Math.random() - 0.5) * 0.15;
+                n.x += n.vx; 
+                n.y += n.vy;
+                
+                const p = 15;
+                if (n.x < p) { n.x = p; n.vx *= -1; } 
+                if (n.y < p) { n.y = p; n.vy *= -1; }
+                if (n.x > canvas.width - p) { n.x = canvas.width - p; n.vx *= -1; }
+                if (n.y > canvas.height - p) { n.y = canvas.height - p; n.vy *= -1; }
+                
+                n.vx *= 0.90; 
+                n.vy *= 0.90;
+            });
+        }
 
-            renderMessageBlock("user", query);
-            chatInput.value = "";
+        function drawGraph() {
+            if(!ctx || !canvas) return; 
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            const isDark = document.documentElement.classList.contains("dark");
+            
+            ctx.lineWidth = 1.2; 
+            ctx.strokeStyle = isDark ? "#334155" : "#e2e8f0";
+            
+            graphData.edges.forEach(e => { 
+                ctx.beginPath(); 
+                ctx.moveTo(e.sourceNode.x, e.sourceNode.y); 
+                ctx.lineTo(e.targetNode.x, e.targetNode.y); 
+                ctx.stroke(); 
+            });
+            
+            graphData.nodes.forEach(n => {
+                ctx.beginPath();
+                let radius = n.type === "tag" ? 6.0 : 4.5;
+                if (selectedFileId === n.id || comparisonFileId === n.id) radius = 7.0;
+                
+                ctx.arc(n.x, n.y, radius, 0, 2*Math.PI);
+                
+                if (n.type === "tag") {
+                    ctx.fillStyle = "#8bc34a"; // Verde para Tags
+                } else if (selectedFileId === n.id || comparisonFileId === n.id) {
+                    ctx.fillStyle = "#2563eb"; // Azul para Selecionado
+                } else {
+                    ctx.fillStyle = isDark ? "#3b82f6" : "#64748b"; // Padrão
+                }
+                
+                ctx.fill(); 
+                
+                ctx.fillStyle = isDark ? "#cbd5e1" : "#334155";
+                ctx.font = "9px sans-serif"; 
+                ctx.textAlign = "center"; 
+                ctx.fillText(n.label, n.x, n.y + 14);
+            });
+        }
+
+        function anim() { 
+            updatePhysics(); 
+            drawGraph(); 
+            requestAnimationFrame(anim); 
+        }
+        if(canvas) requestAnimationFrame(anim);
+
+        async function reloadGlobalGraph() { 
+            try { 
+                const res = await fetch("/api/graph-data"); 
+                const data = await res.json(); 
+                initPhysicsNodes(data); 
+            } catch(e){} 
+        }
+        
+        // Mantém a árvore e a malha em sincronia a cada 10s
+        setInterval(reloadGlobalGraph, 10000); 
+        setInterval(buildNotesTree, 10000);
+
+        // =========================================================================
+        // MOTOR DO CHAT E ENVIO DE MENSAGENS
+        // =========================================================================
+
+        async function sendChatMessage() {
+            let query = chatInput.value.trim(); 
+            if (!query || !appPassword) return;
+            
+            const pwd = appPassword.value.trim(); 
+            if (!pwd) return alert("Por favor, insira o Token de Validação Local.");
+            
+            renderMessageBlock("user", query); 
+            chatInput.value = ""; 
             chatInput.style.height = "auto";
             
             const ctxArea = document.getElementById("ctx-area").value;
@@ -1512,88 +1540,34 @@
             const ctxPhase = document.getElementById("ctx-phase").value;
             const ctxObj = document.getElementById("ctx-obj").value;
 
-            let sysContext = `[Diretriz Processual Selecionada na Interface]\n- Área Jurídica: ${ctxArea}\n- Tipo de Peça: ${ctxType}\n- Fase Atual: ${ctxPhase}\n- Objetivo: ${ctxObj}\nAdapte seu vocabulário e respostas a estas diretrizes.\n\n`;
-            
-            if (selectedFileId) sysContext += `[O usuário está visualizando e trabalhando no arquivo: Cofre/${selectedFileId.replace(/\/$/, "")}]\n\n`;
-            
-            if (pendingChatAttachment) {
-                sysContext += `[Arquivo anexado nesta mensagem: ${pendingChatAttachment.name}]\nConteúdo:\n${pendingChatAttachment.content}\n\n`;
-                const attArea = document.getElementById("chat-attachment-area");
-                if(attArea) attArea.classList.add("hidden");
-                if(ctxUpload) ctxUpload.value = "";
-                pendingChatAttachment = null;
-            }
-            
-            const fullPrompt = `${sysContext}Instrução do usuário: ${query}`;
+            const fullPrompt = `[Área: ${ctxArea}, Peça: ${ctxType}, Fase: ${ctxPhase}, Foco: ${ctxObj}]\nInstrução: ${query}`;
             chatHistory.push({ role: "user", content: fullPrompt });
-
-            const tempId = renderMessageBlock("assistant", "Analisando conformidade e processando...");
-
+            
+            const tempId = renderMessageBlock("assistant", "Processando a resposta...");
             try {
-                const res = await fetch("/api/chat", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json", "x-app-password": pwd },
-                    body: JSON.stringify({ messages: chatHistory })
+                const res = await fetch("/api/chat", { 
+                    method: "POST", 
+                    headers: { "Content-Type": "application/json", "x-app-password": pwd }, 
+                    body: JSON.stringify({ messages: chatHistory }) 
                 });
-                const data = await res.json();
                 
-                const loaderBlock = document.getElementById(tempId);
-                if (loaderBlock) loaderBlock.remove();
-
-                if (data.error) {
-                    renderMessageBlock("assistant", `❌ Erro de Autenticação: ${data.error}`);
-                } else if (data.reply) {
+                const data = await res.json(); 
+                const tempBlock = document.getElementById(tempId);
+                if (tempBlock) tempBlock.remove();
+                
+                if (data.reply) {
                     renderMessageBlock("assistant", data.reply);
                     chatHistory.push({ role: "assistant", content: data.reply });
-                    
-                    if (data.citedFiles && data.citedFiles.length > 0) {
-                        highlightedNodes = data.citedFiles.map(f => f.replace(/\/$/, ""));
-                    } else {
-                        highlightedNodes = [];
-                    }
-
-                    buildNotesTree();
+                    buildNotesTree(); 
                     reloadGlobalGraph();
                 }
-            } catch (err) {
-                const loaderBlock = document.getElementById(tempId);
-                if (loaderBlock) loaderBlock.remove();
-                renderMessageBlock("assistant", "❌ Falha crítica de conexão com o servidor local.");
+            } catch (err) { 
+                const tempBlock = document.getElementById(tempId);
+                if (tempBlock) tempBlock.innerText = "Falha local de rede ao conectar com a API."; 
             }
         }
 
-        function renderMessageBlock(role, text) {
-            msgCounter++;
-            const id = "msg-" + Date.now() + "-" + msgCounter;
-            
-            const wrapper = document.createElement("div");
-            wrapper.className = `w-full flex shrink-0 ${role === 'user' ? 'justify-end' : 'justify-start'}`;
-            wrapper.id = id;
-            
-            const bubble = document.createElement("div");
-            
-            let htmlText = text
-                .replace(/</g, "&lt;").replace(/>/g, "&gt;") 
-                .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" download class="text-blue-200 underline font-black hover:text-white transition-colors">$1</a>')
-                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-                .replace(/\n/g, '<br>');
-
-            if (role === "user") {
-                bubble.className = "bg-blue-600 text-white rounded-2xl rounded-tr-none p-3 text-xs max-w-[85%] font-semibold leading-relaxed whitespace-pre-wrap shadow-xs select-text text-left break-words";
-            } else {
-                bubble.className = "bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 rounded-2xl rounded-tl-none p-3 text-xs max-w-[85%] shadow-xs leading-relaxed whitespace-pre-wrap select-text text-left break-words";
-            }
-            
-            bubble.innerHTML = htmlText;
-            wrapper.appendChild(bubble);
-            if(messagesContainer) {
-                messagesContainer.appendChild(wrapper);
-                messagesContainer.scrollTop = messagesContainer.scrollHeight;
-            }
-            return id;
-        }
-
-        document.getElementById("btn-send").onclick = sendChatMessage;
+        if(btnSend) btnSend.onclick = sendChatMessage;
         if(chatInput) {
             chatInput.onkeydown = (e) => { 
                 if (e.key === "Enter" && !e.shiftKey) { 
