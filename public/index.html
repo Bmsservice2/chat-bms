@@ -19,6 +19,7 @@
         applySavedTheme();
     </script>
     <style>
+        /* Proporção de escala ideal (75%) */
         html { font-size: 11.5px; } 
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
@@ -88,7 +89,7 @@
                         <path d="M 10 50 A 40 40 0 0 1 90 50" fill="none" stroke="url(#gradient)" stroke-width="8" class="text-blue-500" stroke-dasharray="125" stroke-dashoffset="125" id="st-progress" stroke-linecap="round" style="transition: stroke-dashoffset 0.2s ease-out;"></path>
                         <defs><linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#3b82f6" /><stop offset="100%" stop-color="#10b981" /></linearGradient></defs>
                     </svg>
-                    <div id="st-needle" class="absolute bottom-0 left-1/2 w-[3px] h-[85px] bg-slate-800 dark:bg-white origin-bottom -translate-x-1/2 transform -rotate-90 transition-transform duration-200 rounded-full"></div>
+                    <div id="st-needle" class="absolute bottom-0 left-1/2 w-[3px] h-[85px] bg-slate-800 dark:bg-white origin-bottom -translate-x-1/2 transform -rotate-90 transition-transform duration-200 ease-out rounded-full shadow-sm"></div>
                 </div>
                 <div class="text-4xl font-black text-slate-800 dark:text-white mt-4 font-mono"><span id="st-value">0.0</span></div>
             </div>
@@ -194,6 +195,10 @@
                         <button onclick="selectOption('area', 'Direito Penal', 'Direito Penal', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 truncate">Direito Penal</button>
                         <button onclick="selectOption('area', 'Direito Tributário', 'Direito Tributário', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 truncate">Direito Tributário</button>
                         <button onclick="selectOption('area', 'Direito Empresarial', 'Direito Empresarial', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 truncate">Direito Empresarial</button>
+                        <button onclick="selectOption('area', 'Direito de Família', 'Direito de Família', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 truncate">Direito de Família</button>
+                        <button onclick="selectOption('area', 'Direito Administrativo', 'Direito Administrativo', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 truncate">Direito Administrativo</button>
+                        <button onclick="selectOption('area', 'Direito Previdenciário', 'Direito Previdenciário', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 truncate">Direito Previdenciário</button>
+                        <button onclick="selectOption('area', 'Direito Constitucional', 'Direito Constitucional', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 truncate">Direito Constitucional</button>
                     </div>
                 </div>
 
@@ -209,6 +214,10 @@
                         <button onclick="selectOption('type', 'Petição Inicial', 'Petição Inicial', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 truncate">Petição Inicial</button>
                         <button onclick="selectOption('type', 'Contestação', 'Contestação', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 truncate">Contestação</button>
                         <button onclick="selectOption('type', 'Recurso', 'Recurso (Apelação/RO)', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 truncate">Recurso (Apelação/RO)</button>
+                        <button onclick="selectOption('type', 'Alegações Finais', 'Alegações Finais', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 truncate">Alegações Finais</button>
+                        <button onclick="selectOption('type', 'Contrato/Acordo', 'Contrato / Acordo', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 truncate">Contrato / Acordo</button>
+                        <button onclick="selectOption('type', 'Parecer Jurídico', 'Parecer Jurídico', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 truncate">Parecer Jurídico</button>
+                        <button onclick="selectOption('type', 'Notificação Extrajudicial', 'Notificação Extrajudicial', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 truncate">Notificação Extrajudicial</button>
                     </div>
                 </div>
 
@@ -222,6 +231,10 @@
                     <div id="dropdown-phase" class="hidden absolute top-[105%] left-0 mt-1 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl shadow-2xl py-1.5 w-full z-50 flex flex-col max-h-48 overflow-y-auto no-scrollbar text-xs font-bold text-slate-600 dark:text-slate-300">
                         <button onclick="selectOption('phase', 'Fase de Estudo', 'Fase de Estudo', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 truncate">Fase de Estudo</button>
                         <button onclick="selectOption('phase', 'Fase de Conhecimento', 'Fase de Conhecimento', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 truncate">Fase de Conhecimento</button>
+                        <button onclick="selectOption('phase', 'Fase de Instrução/Provas', 'Fase de Instrução', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 truncate">Fase de Instrução</button>
+                        <button onclick="selectOption('phase', 'Fase Recursal', 'Fase Recursal', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 truncate">Fase Recursal</button>
+                        <button onclick="selectOption('phase', 'Fase de Execução', 'Fase de Execução', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 truncate">Fase de Execução</button>
+                        <button onclick="selectOption('phase', 'Acordo ou Mediação', 'Acordo/Mediação', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 truncate">Acordo/Mediação</button>
                     </div>
                 </div>
 
@@ -232,9 +245,13 @@
                         <div class="flex items-center justify-between"><span id="label-ctx-obj" class="text-xs font-bold text-slate-700 dark:text-white truncate">Auditoria Geral</span><i data-lucide="chevron-down" class="w-3.5 h-3.5 text-slate-400 shrink-0"></i></div>
                     </div>
                     <input type="hidden" id="ctx-obj" value="Auditar/Resumir">
-                    <div id="dropdown-obj" class="hidden absolute top-[105%] left-0 mt-1 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl shadow-2xl py-1.5 w-full z-50 flex flex-col max-h-48 overflow-y-auto no-scrollbar text-xs font-bold text-slate-600 dark:text-slate-300">
+                    <div id="dropdown-obj" class="hidden absolute top-[105%] left-0 mt-1 bg-white dark:bg-slate-900 border border-slate-200 border-slate-200 dark:border-slate-800 rounded-xl shadow-2xl py-1.5 w-full z-50 flex flex-col max-h-48 overflow-y-auto no-scrollbar text-xs font-bold text-slate-600 dark:text-slate-300">
                         <button onclick="selectOption('obj', 'Auditar/Resumir', 'Auditoria Geral', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 truncate">Auditoria Geral</button>
                         <button onclick="selectOption('obj', 'Encontrar Contradições', 'Achar Contradições', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 truncate">Achar Contradições</button>
+                        <button onclick="selectOption('obj', 'Elaborar Minuta', 'Elaborar Minuta', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 truncate">Elaborar Minuta</button>
+                        <button onclick="selectOption('obj', 'Análise de Risco Jurídico', 'Análise de Risco', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 truncate">Análise de Risco</button>
+                        <button onclick="selectOption('obj', 'Pesquisa Jurisprudencial', 'Levantar Jurisprudência', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 truncate">Levantar Jurisprudência</button>
+                        <button onclick="selectOption('obj', 'Sistematizar Fatos', 'Resumir Fatos/Prazos', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 truncate">Resumir Fatos/Prazos</button>
                     </div>
                 </div>
             </div>
@@ -249,8 +266,8 @@
                         </div>
                         
                         <div class="flex bg-slate-100 dark:bg-slate-800 p-0.5 rounded-lg text-[9px] font-black mr-2">
-                            <button id="btn-tab-main-formatted" onclick="setMainTab('formatted')" class="px-2 py-1 bg-white dark:bg-slate-700 dark:text-white rounded-md shadow-xs transition-all">Original</button>
-                            <button id="btn-tab-main-raw" onclick="setMainTab('raw')" class="px-2 py-1 text-slate-400 transition-all">Markdown</button>
+                            <button id="btn-tab-main-formatted" onclick="setMainTab('formatted')" class="px-2 py-1 bg-white dark:bg-slate-700 dark:text-white rounded-md shadow-xs">Original</button>
+                            <button id="btn-tab-main-raw" onclick="setMainTab('raw')" class="px-2 py-1 text-slate-400">Markdown</button>
                         </div>
 
                         <div class="flex items-center gap-1.5">
@@ -259,11 +276,11 @@
                             <button onclick="fullscreenActiveFile()" class="p-1.5 text-slate-400 hover:text-slate-600"><i data-lucide="maximize-2" class="w-4 h-4"></i></button>
                         </div>
                     </div>
-                    <div class="flex flex-1 p-4 bg-[#fafafa] dark:bg-slate-950 overflow-hidden h-full relative">
-                        <div id="view-doc-main" class="w-full h-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl overflow-y-auto p-6 text-xs text-slate-700 dark:text-slate-300 font-serif leading-relaxed select-text shadow-sm h-full">
+                    <div class="flex flex-1 p-4 bg-[#fafafa] dark:bg-slate-950 overflow-hidden h-full relative font-serif">
+                        <div id="view-doc-main" class="w-full h-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl overflow-y-auto p-6 text-xs text-slate-700 dark:text-slate-300 leading-relaxed select-text shadow-sm h-full">
                             <div class="text-center text-slate-400 my-20">Nenhum documento aberto no monitor principal.</div>
                         </div>
-                        <div id="view-raw-main" class="hidden w-full h-full bg-slate-900 text-blue-400 border border-slate-800 rounded-xl p-4 font-mono text-xs whitespace-pre-wrap overflow-y-auto select-text"></div>
+                        <div id="view-raw-main" class="hidden w-full h-full bg-slate-900 text-blue-400 border border-slate-800 rounded-xl p-4 font-mono text-xs科学 whitespace-pre-wrap overflow-y-auto select-text"></div>
                     </div>
                 </div>
 
@@ -342,7 +359,7 @@
     <script>
         lucide.createIcons();
 
-        // ATALHO CTRL+K BLINDADO
+        // ATALHO CTRL+K PARA O APP
         document.addEventListener('keydown', (e) => {
             if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
                 e.preventDefault();
@@ -388,7 +405,6 @@
         let collapsedFolders = JSON.parse(localStorage.getItem("bms_collapsed_folders") || "{}");
         let highlightedNodes = []; 
 
-        // TEXTAREA DINÂMICA
         if(chatInput) {
             chatInput.addEventListener("input", function() {
                 this.style.height = "auto";
@@ -396,7 +412,6 @@
             });
         }
 
-        // REDIMENSIONADOR
         const sidebarLeft = document.getElementById('sidebar-left');
         const sidebarComparison = document.getElementById('sidebar-comparison');
         const sidebarRight = document.getElementById('sidebar-right');
@@ -431,51 +446,77 @@
         function resizeCanvas() { if (canvas && canvas.parentElement) { canvas.width = canvas.parentElement.clientWidth; canvas.height = canvas.parentElement.clientHeight; } }
         window.addEventListener("resize", resizeCanvas); resizeCanvas();
 
-        function closeAllDropdownsMenu() {
-            filterDropdown?.classList.add("hidden");
-            document.getElementById("custom-context-menu")?.classList.add("hidden");
-            document.getElementById("dropdown-area")?.classList.add("hidden");
-            document.getElementById("dropdown-type")?.classList.add("hidden");
-            document.getElementById("dropdown-phase")?.classList.add("hidden");
-            document.getElementById("dropdown-obj")?.classList.add("hidden");
-            document.getElementById("dropdown-upload")?.classList.add("hidden");
+        function toggleDarkMode() {
+            if (document.documentElement.classList.contains("dark")) {
+                document.documentElement.classList.remove("dark"); localStorage.setItem("theme", "light");
+            } else {
+                document.documentElement.classList.add("dark"); localStorage.setItem("theme", "dark");
+            }
+            if (canvas) drawGraph(); 
         }
 
-        function toggleFilterDropdown(e) { e.stopPropagation(); closeAllDropdownsMenu(); filterDropdown?.classList.remove("hidden"); }
-        function toggleCustomDropdown(id, e) { e.stopPropagation(); const el = document.getElementById(id); const isHidden = el?.classList.contains("hidden"); closeAllDropdownsMenu(); if (isHidden) el?.classList.remove("hidden"); }
-        function selectOption(category, value, label, e) { e.stopPropagation(); const vi = document.getElementById(`ctx-${category}`); const ls = document.getElementById(`label-ctx-${category}`); if(vi) vi.value = value; if(ls) ls.innerText = label; closeAllDropdownsMenu(); }
-        function changeFilter(type) { currentFilterType = type; closeAllDropdownsMenu(); buildNotesTree(); }
-
-        function openMenuComparison() { if(contextMenuSelectedPath) loadComparisonDoc(contextMenuSelectedPath); closeAllDropdownsMenu(); }
-
-        function setMainTab(tab) {
-            const btnForm = document.getElementById("btn-tab-main-formatted");
-            const btnRaw = document.getElementById("btn-tab-main-raw");
-            if(tab === 'formatted') {
-                viewDocMain?.classList.remove("hidden"); viewRawMain?.classList.add("hidden");
-                if(btnForm) btnForm.className = "px-2 py-1 bg-white dark:bg-slate-700 dark:text-white rounded-md shadow-xs";
-                if(btnRaw) btnRaw.className = "px-2 py-1 text-slate-400";
-            } else {
-                viewDocMain?.classList.add("hidden"); viewRawMain?.classList.remove("hidden");
-                if(btnRaw) btnRaw.className = "px-2 py-1 bg-white dark:bg-slate-700 dark:text-white rounded-md shadow-xs";
-                if(btnForm) btnForm.className = "px-2 py-1 text-slate-400";
-            }
+        function openSpeedTestModal() {
+            const modal = document.getElementById("speedtest-modal");
+            if(!modal) return;
+            modal.classList.remove("hidden");
+            setTimeout(() => {
+                modal.classList.remove("opacity-0");
+                document.getElementById("speedtest-content")?.classList.remove("scale-95");
+            }, 10);
+            document.getElementById("st-state-1")?.classList.remove("hidden");
+            document.getElementById("st-state-2")?.classList.add("hidden");
+            document.getElementById("st-state-3")?.classList.add("hidden");
         }
 
-        function setCompTextTab(tab) {
-            const fBody = document.getElementById("comp-view-body-formatted");
-            const rBody = document.getElementById("comp-view-body-raw");
-            const btnF = document.getElementById("btn-tab-comp-formatted");
-            const btnR = document.getElementById("btn-tab-comp-raw");
-            if(tab === 'formatted') {
-                fBody?.classList.remove("hidden"); rBody?.classList.add("hidden");
-                if(btnF) btnF.className = "px-2 py-0.5 bg-white dark:bg-slate-700 rounded-md shadow-xs";
-                if(btnR) btnR.className = "px-2 py-0.5 text-slate-400";
-            } else {
-                fBody?.classList.add("hidden"); rBody?.classList.remove("hidden");
-                if(btnR) btnR.className = "px-2 py-0.5 bg-white dark:bg-slate-700 rounded-md shadow-xs";
-                if(btnF) btnF.className = "px-2 py-0.5 text-slate-400";
-            }
+        function closeSpeedTest() {
+            const modal = document.getElementById("speedtest-modal");
+            if(!modal) return;
+            modal.classList.add("opacity-0");
+            document.getElementById("speedtest-content")?.classList.add("scale-95");
+            setTimeout(() => { modal.classList.add("hidden"); }, 300);
+        }
+
+        function updateSpeedometer(mbps) {
+            const valEl = document.getElementById("st-value");
+            if(valEl) valEl.innerText = mbps.toFixed(1);
+            let maxSpeed = 100;
+            let mapped = Math.min(Math.max(mbps, 0), maxSpeed);
+            let rot = -90 + (mapped / maxSpeed) * 180;
+            const needle = document.getElementById("st-needle");
+            if(needle) needle.style.transform = `translateX(-50%) rotate(${rot}deg)`;
+            let offset = 125 - (mapped / maxSpeed) * 125;
+            const prog = document.getElementById("st-progress");
+            if(prog) prog.style.strokeDashoffset = offset;
+        }
+
+        async function startSpeedTest() {
+            document.getElementById("st-state-1")?.classList.add("hidden");
+            document.getElementById("st-state-2")?.classList.remove("hidden");
+            updateSpeedometer(0);
+            try {
+                const res = await fetch('/api/speedtest?cacheBust=' + Date.now());
+                if (!res.ok) throw new Error("Falha");
+                const reader = res.body.getReader();
+                let loaded = 0; const startTime = Date.now(); let lastUiUpdate = startTime;
+                while(true) {
+                    const {done, value} = await reader.read(); if (done) break;
+                    loaded += value.length; const now = Date.now();
+                    if (now - lastUiUpdate > 100) {
+                        const duration = (now - startTime) / 1000;
+                        const mbps = ((loaded * 8) / 1000000) / duration;
+                        updateSpeedometer(mbps); lastUiUpdate = now;
+                    }
+                }
+                const finalDuration = (Date.now() - startTime) / 1000;
+                const finalMbps = ((loaded * 8) / 1000000) / finalDuration;
+                updateSpeedometer(finalMbps);
+                setTimeout(() => {
+                    document.getElementById("st-state-2")?.classList.add("hidden");
+                    document.getElementById("st-state-3")?.classList.remove("hidden");
+                    const finVal = document.getElementById("st-final-value");
+                    if(finVal) finVal.innerText = finalMbps.toFixed(1);
+                }, 800);
+            } catch (e) { closeSpeedTest(); }
         }
 
         function setComparisonMode(mode) {
@@ -494,6 +535,8 @@
                 resizeCanvas(); reloadGlobalGraph();
             }
         }
+
+        function openMenuComparison() { if(contextMenuSelectedPath) loadComparisonDoc(contextMenuSelectedPath); closeAllDropdownsMenu(); }
 
         async function loadComparisonDoc(filename) {
             comparisonFileId = filename;
@@ -551,6 +594,37 @@
             } catch(e) { if(viewDocMain) viewDocMain.innerHTML = "Erro."; }
         }
 
+        function setMainTab(tab) {
+            const btnForm = document.getElementById("btn-tab-main-formatted");
+            const btnRaw = document.getElementById("btn-tab-main-raw");
+            if(tab === 'formatted') {
+                viewDocMain?.classList.remove("hidden"); viewRawMain?.classList.add("hidden");
+                if(btnForm) btnForm.className = "px-2 py-1 bg-white dark:bg-slate-700 dark:text-white rounded-md shadow-xs";
+                if(btnRaw) btnRaw.className = "px-2 py-1 text-slate-400";
+            } else {
+                viewDocMain?.classList.add("hidden"); viewRawMain?.classList.remove("hidden");
+                if(btnRaw) btnRaw.className = "px-2 py-1 bg-white dark:bg-slate-700 dark:text-white rounded-md shadow-xs";
+                if(btnForm) btnForm.className = "px-2 py-1 text-slate-400";
+            }
+        }
+
+        function setCompTextTab(tab) {
+            const fBody = document.getElementById("comp-view-body-formatted");
+            const rBody = document.getElementById("comp-view-body-raw");
+            const btnF = document.getElementById("btn-tab-comp-formatted");
+            const btnR = document.getElementById("btn-tab-comp-raw");
+            if(tab === 'formatted') {
+                fBody?.classList.remove("hidden"); rBody?.classList.add("hidden");
+                if(btnF) btnF.className = "px-2 py-0.5 bg-white dark:bg-slate-700 rounded-md shadow-xs";
+                if(btnR) btnR.className = "px-2 py-0.5 text-slate-400";
+            } else {
+                fBody?.classList.add("hidden"); rBody?.classList.remove("hidden");
+                if(btnR) btnR.className = "px-2 py-0.5 bg-white dark:bg-slate-700 rounded-md shadow-xs";
+                if(btnF) btnF.className = "px-2 py-0.5 text-slate-400";
+            }
+        }
+
+        function closeDropdowns() { closeAllDropdownsMenu(); }
         function closeCustomModal() { document.getElementById("custom-dialog-modal")?.classList.add("hidden"); }
         function openRenameModal() {
             document.getElementById("custom-context-menu")?.classList.add("hidden");
@@ -698,7 +772,7 @@
                         if (!isDir) btn.onclick = (e) => { e.stopPropagation(); loadNoteContent(item.path); };
                         else btn.onclick = (e) => { e.stopPropagation(); collapsedFolders[cleanItemPath] = !collapsedFolders[cleanItemPath]; localStorage.setItem("bms_collapsed_folders", JSON.stringify(collapsedFolders)); selectedFileId = item.path; buildNotesTree(); };
 
-                        const menuBtn = document.createElement("button"); menuBtn.className = "opacity-0 group-hover:opacity-100 p-1 text-slate-400 hover:text-blue-500 rounded transition-all";
+                        const menuBtn = document.createElement("button"); menuBtn.className = "opacity-0 group-hover:opacity-100 p-1 text-slate-400 hover:text-blue-500 rounded transition-all focus:outline-none";
                         menuBtn.innerHTML = `<i data-lucide="more-horizontal" class="w-3.5 h-3.5"></i>`;
                         menuBtn.onclick = (e) => triggerInlineContextMenu(e, item.path);
 
@@ -721,7 +795,7 @@
             graphData.edges = data.edges.map(e => ({ sourceNode: graphData.nodes.find(n => n.id === e.source), targetNode: graphData.nodes.find(n => n.id === e.target) })).filter(e => e.sourceNode && e.targetNode);
         }
 
-        // REQUISITO 4: FÍSICA ALTERADA - GRÁFICO SE ESPALHA MAIS, MAS PASSEIA BROWNIANO NO MEIO
+        // CORREÇÃO DOS ERROS DE SINTAXE INTERNOS DO LOOP (Substituído full objects por referências limpas 'n')
         function updatePhysics() {
             if(!canvas || graphData.nodes.length === 0) return;
             const cx = canvas.width / 2, cy = canvas.height / 2;
@@ -731,25 +805,24 @@
                     let n2 = graphData.nodes[j];
                     let dx = n2.x - n1.x; let dy = n2.y - n1.y; if(dx===0) dx=0.1;
                     let dist = Math.sqrt(dx*dx + dy*dy);
-                    if (dist < 180) {
-                        let force = 350 / (dist * dist + 5); 
+                    if (dist < 150) {
+                        let force = 350 / (dist * dist + 5);
                         if (n1 !== draggedNode) { n1.vx -= (dx/dist)*force; n1.vy -= (dy/dist)*force; }
                         if (n2 !== draggedNode) { n2.vx += (dx/dist)*force; n2.vy += (dy/dist)*force; }
                     }
                 }
             }
-            graphData.edges.forEach(edge => {
-                let dx = edge.targetNode.x - edge.sourceNode.x; let dy = edge.targetNode.y - edge.sourceNode.y;
+            graphData.edges.forEach(e => {
+                let dx = e.targetNode.x - e.sourceNode.x; let dy = e.targetNode.y - e.sourceNode.y;
                 let dist = Math.sqrt(dx*dx + dy*dy);
                 if (dist > 0) {
                     let force = 0.012 * dist;
-                    if (edge.sourceNode !== draggedNode) { edge.sourceNode.vx += (dx / dist) * force; edge.sourceNode.vy += (dy / dist) * force; }
-                    if (edge.targetNode !== draggedNode) { edge.targetNode.vx -= (dx / dist) * force; edge.targetNode.vy -= (dy / dist) * force; }
+                    if (e.sourceNode !== draggedNode) { e.sourceNode.vx += (dx / dist) * force; e.sourceNode.vy += (dy / dist) * force; }
+                    if (e.targetNode !== draggedNode) { e.targetNode.vx -= (dx / dist) * force; e.targetNode.vy -= (dy / dist) * force; }
                 }
             });
             graphData.nodes.forEach(n => {
                 if (n === draggedNode) return;
-                // Atração magnética pro centro bem suave (evita o efeito "bola esmagada")
                 n.vx += (cx - n.x) * 0.0015; n.vy += (cy - n.y) * 0.0015;
                 n.vx += (Math.random() - 0.5) * 0.15; n.vy += (Math.random() - 0.5) * 0.15;
                 n.x += n.vx; n.y += n.vy;
@@ -757,7 +830,7 @@
                 if (n.x < p) { n.x = p; n.vx *= -1; } if (n.y < p) { n.y = p; n.vy *= -1; }
                 if (n.x > canvas.width - p) { n.x = canvas.width - p; n.vx *= -1; }
                 if (n.y > canvas.height - p) { n.y = canvas.height - p; n.vy *= -1; }
-                n.vx *= 0.91; n.vy *= 0.91;
+                n.vx *= 0.90; n.vy *= 0.90;
             });
         }
 
@@ -766,14 +839,14 @@
             const isDark = document.documentElement.classList.contains("dark");
             ctx.lineWidth = 1.2; ctx.strokeStyle = isDark ? "#334155" : "#e2e8f0";
             graphData.edges.forEach(e => { ctx.beginPath(); ctx.moveTo(e.sourceNode.x, e.sourceNode.y); ctx.lineTo(e.targetNode.x, e.targetNode.y); ctx.stroke(); });
-            graphData.nodes.forEach(node => {
+            graphData.nodes.forEach(n => {
                 ctx.beginPath();
-                let radius = node.type === "tag" ? 6.0 : 4.5;
-                if (selectedFileId === node.id) radius = 7.0;
-                ctx.arc(node.x, node.y, radius, 0, 2*Math.PI);
-                ctx.fillStyle = node.type === "tag" ? "#8bc34a" : (isDark ? "#3b82f6" : "#64748b");
+                let radius = n.type === "tag" ? 6.0 : 4.5;
+                if (selectedFileId === n.id) radius = 7.0;
+                ctx.arc(n.x, n.y, radius, 0, 2*Math.PI);
+                ctx.fillStyle = n.type === "tag" ? "#8bc34a" : (isDark ? "#3b82f6" : "#64748b");
                 ctx.fill(); ctx.fillStyle = isDark ? "#cbd5e1" : "#334155";
-                ctx.font = "9px sans-serif"; ctx.textAlign = "center"; ctx.fillText(node.label, node.x, node.y + 14);
+                ctx.font = "9px sans-serif"; ctx.textAlign = "center"; ctx.fillText(n.label, n.x, n.y + 14);
             });
         }
 
