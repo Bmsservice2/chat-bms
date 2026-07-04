@@ -47,6 +47,26 @@
         </div>
     </div>
 
+    <div id="account-settings-modal" class="hidden fixed inset-0 bg-slate-950/40 dark:bg-slate-950/60 backdrop-blur-xs flex items-center justify-center z-50">
+        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-2xl p-6 w-[400px] max-w-full flex flex-col gap-4">
+            <div class="flex items-center gap-3 border-b border-slate-100 dark:border-slate-800 pb-4">
+                <div class="w-12 h-12 bg-blue-100 dark:bg-blue-900/50 rounded-full flex items-center justify-center text-blue-600 dark:text-blue-400 font-bold text-xl">TS</div>
+                <div>
+                    <h3 class="font-bold text-slate-800 dark:text-white">Ambiente de Testes</h3>
+                    <p class="text-[10px] text-slate-400 font-medium">BETA V1.0 - BMS Service</p>
+                </div>
+            </div>
+            <div class="flex flex-col gap-2 text-xs font-semibold text-slate-600 dark:text-slate-400">
+                <div class="flex justify-between p-2 bg-slate-50 dark:bg-slate-800/50 rounded-lg"><span>Plano Habilitado:</span> <span class="text-emerald-600 dark:text-emerald-400">Profissional (Ilimitado)</span></div>
+                <div class="flex justify-between p-2 bg-slate-50 dark:bg-slate-800/50 rounded-lg"><span>Tokens Restantes:</span> <span>Infinitos (Local Mode)</span></div>
+                <div class="flex justify-between p-2 bg-slate-50 dark:bg-slate-800/50 rounded-lg"><span>Status da VPS:</span> <span class="text-blue-500">Conectado / Alta Prioridade</span></div>
+            </div>
+            <div class="flex justify-end gap-2 text-xs font-bold mt-2 pt-4 border-t border-slate-100 dark:border-slate-800">
+                <button onclick="document.getElementById('account-settings-modal').classList.add('hidden')" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl transition-all w-full">Fechar Painel</button>
+            </div>
+        </div>
+    </div>
+
     <div id="speedtest-modal" class="hidden fixed inset-0 bg-slate-950/40 dark:bg-slate-950/60 backdrop-blur-xs flex items-center justify-center z-50 transition-opacity duration-300 opacity-0">
         <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl shadow-2xl p-6 w-[350px] max-w-full flex flex-col gap-4 transform transition-all duration-300 scale-95" id="speedtest-content">
             <div id="st-state-1" class="flex flex-col items-center pt-2">
@@ -174,10 +194,6 @@
                         <button onclick="selectOption('area', 'Direito Penal', 'Direito Penal', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 truncate">Direito Penal</button>
                         <button onclick="selectOption('area', 'Direito Tributário', 'Direito Tributário', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 truncate">Direito Tributário</button>
                         <button onclick="selectOption('area', 'Direito Empresarial', 'Direito Empresarial', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 truncate">Direito Empresarial</button>
-                        <button onclick="selectOption('area', 'Direito de Família', 'Direito de Família', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 truncate">Direito de Família</button>
-                        <button onclick="selectOption('area', 'Direito Administrativo', 'Direito Administrativo', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 truncate">Direito Administrativo</button>
-                        <button onclick="selectOption('area', 'Direito Previdenciário', 'Direito Previdenciário', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 truncate">Direito Previdenciário</button>
-                        <button onclick="selectOption('area', 'Direito Constitucional', 'Direito Constitucional', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 truncate">Direito Constitucional</button>
                     </div>
                 </div>
 
@@ -193,10 +209,6 @@
                         <button onclick="selectOption('type', 'Petição Inicial', 'Petição Inicial', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 truncate">Petição Inicial</button>
                         <button onclick="selectOption('type', 'Contestação', 'Contestação', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 truncate">Contestação</button>
                         <button onclick="selectOption('type', 'Recurso', 'Recurso (Apelação/RO)', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 truncate">Recurso (Apelação/RO)</button>
-                        <button onclick="selectOption('type', 'Alegações Finais', 'Alegações Finais', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 truncate">Alegações Finais</button>
-                        <button onclick="selectOption('type', 'Contrato/Acordo', 'Contrato / Acordo', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 truncate">Contrato / Acordo</button>
-                        <button onclick="selectOption('type', 'Parecer Jurídico', 'Parecer Jurídico', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 truncate">Parecer Jurídico</button>
-                        <button onclick="selectOption('type', 'Notificação Extrajudicial', 'Notificação Extrajudicial', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 truncate">Notificação Extrajudicial</button>
                     </div>
                 </div>
 
@@ -223,26 +235,28 @@
                     <div id="dropdown-obj" class="hidden absolute top-[105%] left-0 mt-1 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl shadow-2xl py-1.5 w-full z-50 flex flex-col max-h-48 overflow-y-auto no-scrollbar text-xs font-bold text-slate-600 dark:text-slate-300">
                         <button onclick="selectOption('obj', 'Auditar/Resumir', 'Auditoria Geral', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 truncate">Auditoria Geral</button>
                         <button onclick="selectOption('obj', 'Encontrar Contradições', 'Achar Contradições', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 truncate">Achar Contradições</button>
-                        <button onclick="selectOption('obj', 'Elaborar Minuta', 'Elaborar Minuta', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 truncate">Elaborar Minuta</button>
                     </div>
                 </div>
             </div>
 
-            <div class="flex flex-1 gap-4 overflow-hidden h-full">
+            <div class="flex flex-1 gap-4 overflow-hidden h-full relative">
                 
                 <div id="center-preview-container" class="flex-1 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-xs flex flex-col overflow-hidden h-full">
                     <div class="flex items-center justify-between px-5 py-3 border-b border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900">
                         <div class="flex items-center gap-2">
                             <h2 id="active-note-title" class="text-sm font-bold text-slate-800 dark:text-white truncate max-w-xs">Selecione um arquivo principal</h2>
-                            <button id="btn-favorite-star" onclick="toggleActiveFileFavorite()" class="text-slate-300 dark:text-slate-600 hover:text-amber-500"><i data-lucide="star" class="w-4 h-4"></i></button>
+                            <button id="btn-favorite-star" onclick="toggleActiveFileFavorite()" class="text-slate-300 hover:text-amber-500 focus:outline-none"><i data-lucide="star" class="w-4 h-4"></i></button>
                         </div>
+                        
                         <div class="flex bg-slate-100 dark:bg-slate-800 p-0.5 rounded-lg text-[9px] font-black mr-2">
-                            <button id="btn-tab-main-formatted" onclick="setMainTab('formatted')" class="px-2 py-1 bg-white dark:bg-slate-700 dark:text-white rounded-md shadow-xs">Original</button>
-                            <button id="btn-tab-main-raw" onclick="setMainTab('raw')" class="px-2 py-1 text-slate-400">Markdown</button>
+                            <button id="btn-tab-main-formatted" onclick="setMainTab('formatted')" class="px-2 py-1 bg-white dark:bg-slate-700 dark:text-white rounded-md shadow-xs transition-all">Original</button>
+                            <button id="btn-tab-main-raw" onclick="setMainTab('raw')" class="px-2 py-1 text-slate-400 transition-all">Markdown</button>
                         </div>
+
                         <div class="flex items-center gap-1.5">
                             <button onclick="downloadActiveFile()" class="p-1.5 text-slate-400 hover:text-slate-600"><i data-lucide="download" class="w-4 h-4"></i></button>
                             <button onclick="printActiveFile()" class="p-1.5 text-slate-400 hover:text-slate-600"><i data-lucide="printer" class="w-4 h-4"></i></button>
+                            <button onclick="fullscreenActiveFile()" class="p-1.5 text-slate-400 hover:text-slate-600"><i data-lucide="maximize-2" class="w-4 h-4"></i></button>
                         </div>
                     </div>
                     <div class="flex flex-1 p-4 bg-[#fafafa] dark:bg-slate-950 overflow-hidden h-full relative">
@@ -328,6 +342,7 @@
     <script>
         lucide.createIcons();
 
+        // ATALHO CTRL+K BLINDADO
         document.addEventListener('keydown', (e) => {
             if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
                 e.preventDefault();
@@ -373,6 +388,7 @@
         let collapsedFolders = JSON.parse(localStorage.getItem("bms_collapsed_folders") || "{}");
         let highlightedNodes = []; 
 
+        // TEXTAREA DINÂMICA
         if(chatInput) {
             chatInput.addEventListener("input", function() {
                 this.style.height = "auto";
@@ -380,6 +396,7 @@
             });
         }
 
+        // REDIMENSIONADOR
         const sidebarLeft = document.getElementById('sidebar-left');
         const sidebarComparison = document.getElementById('sidebar-comparison');
         const sidebarRight = document.getElementById('sidebar-right');
@@ -414,77 +431,51 @@
         function resizeCanvas() { if (canvas && canvas.parentElement) { canvas.width = canvas.parentElement.clientWidth; canvas.height = canvas.parentElement.clientHeight; } }
         window.addEventListener("resize", resizeCanvas); resizeCanvas();
 
-        function toggleDarkMode() {
-            if (document.documentElement.classList.contains("dark")) {
-                document.documentElement.classList.remove("dark"); localStorage.setItem("theme", "light");
+        function closeAllDropdownsMenu() {
+            filterDropdown?.classList.add("hidden");
+            document.getElementById("custom-context-menu")?.classList.add("hidden");
+            document.getElementById("dropdown-area")?.classList.add("hidden");
+            document.getElementById("dropdown-type")?.classList.add("hidden");
+            document.getElementById("dropdown-phase")?.classList.add("hidden");
+            document.getElementById("dropdown-obj")?.classList.add("hidden");
+            document.getElementById("dropdown-upload")?.classList.add("hidden");
+        }
+
+        function toggleFilterDropdown(e) { e.stopPropagation(); closeAllDropdownsMenu(); filterDropdown?.classList.remove("hidden"); }
+        function toggleCustomDropdown(id, e) { e.stopPropagation(); const el = document.getElementById(id); const isHidden = el?.classList.contains("hidden"); closeAllDropdownsMenu(); if (isHidden) el?.classList.remove("hidden"); }
+        function selectOption(category, value, label, e) { e.stopPropagation(); const vi = document.getElementById(`ctx-${category}`); const ls = document.getElementById(`label-ctx-${category}`); if(vi) vi.value = value; if(ls) ls.innerText = label; closeAllDropdownsMenu(); }
+        function changeFilter(type) { currentFilterType = type; closeAllDropdownsMenu(); buildNotesTree(); }
+
+        function openMenuComparison() { if(contextMenuSelectedPath) loadComparisonDoc(contextMenuSelectedPath); closeAllDropdownsMenu(); }
+
+        function setMainTab(tab) {
+            const btnForm = document.getElementById("btn-tab-main-formatted");
+            const btnRaw = document.getElementById("btn-tab-main-raw");
+            if(tab === 'formatted') {
+                viewDocMain?.classList.remove("hidden"); viewRawMain?.classList.add("hidden");
+                if(btnForm) btnForm.className = "px-2 py-1 bg-white dark:bg-slate-700 dark:text-white rounded-md shadow-xs";
+                if(btnRaw) btnRaw.className = "px-2 py-1 text-slate-400";
             } else {
-                document.documentElement.classList.add("dark"); localStorage.setItem("theme", "dark");
+                viewDocMain?.classList.add("hidden"); viewRawMain?.classList.remove("hidden");
+                if(btnRaw) btnRaw.className = "px-2 py-1 bg-white dark:bg-slate-700 dark:text-white rounded-md shadow-xs";
+                if(btnForm) btnForm.className = "px-2 py-1 text-slate-400";
             }
-            if (canvas) drawGraph(); 
         }
 
-        function openSpeedTestModal() {
-            const modal = document.getElementById("speedtest-modal");
-            if(!modal) return;
-            modal.classList.remove("hidden");
-            setTimeout(() => {
-                modal.classList.remove("opacity-0");
-                document.getElementById("speedtest-content")?.classList.remove("scale-95");
-            }, 10);
-            document.getElementById("st-state-1")?.classList.remove("hidden");
-            document.getElementById("st-state-2")?.classList.add("hidden");
-            document.getElementById("st-state-3")?.classList.add("hidden");
-        }
-
-        function closeSpeedTest() {
-            const modal = document.getElementById("speedtest-modal");
-            if(!modal) return;
-            modal.classList.add("opacity-0");
-            document.getElementById("speedtest-content")?.classList.add("scale-95");
-            setTimeout(() => { modal.classList.add("hidden"); }, 300);
-        }
-
-        function updateSpeedometer(mbps) {
-            const valEl = document.getElementById("st-value");
-            if(valEl) valEl.innerText = mbps.toFixed(1);
-            let maxSpeed = 100;
-            let mapped = Math.min(Math.max(mbps, 0), maxSpeed);
-            let rot = -90 + (mapped / maxSpeed) * 180;
-            const needle = document.getElementById("st-needle");
-            if(needle) needle.style.transform = `translateX(-50%) rotate(${rot}deg)`;
-            let offset = 125 - (mapped / maxSpeed) * 125;
-            const prog = document.getElementById("st-progress");
-            if(prog) prog.style.strokeDashoffset = offset;
-        }
-
-        async function startSpeedTest() {
-            document.getElementById("st-state-1")?.classList.add("hidden");
-            document.getElementById("st-state-2")?.classList.remove("hidden");
-            updateSpeedometer(0);
-            try {
-                const res = await fetch('/api/speedtest?cacheBust=' + Date.now());
-                if (!res.ok) throw new Error("Falha");
-                const reader = res.body.getReader();
-                let loaded = 0; const startTime = Date.now(); let lastUiUpdate = startTime;
-                while(true) {
-                    const {done, value} = await reader.read(); if (done) break;
-                    loaded += value.length; const now = Date.now();
-                    if (now - lastUiUpdate > 100) {
-                        const duration = (now - startTime) / 1000;
-                        const mbps = ((loaded * 8) / 1000000) / duration;
-                        updateSpeedometer(mbps); lastUiUpdate = now;
-                    }
-                }
-                const finalDuration = (Date.now() - startTime) / 1000;
-                const finalMbps = ((loaded * 8) / 1000000) / finalDuration;
-                updateSpeedometer(finalMbps);
-                setTimeout(() => {
-                    document.getElementById("st-state-2")?.classList.add("hidden");
-                    document.getElementById("st-state-3")?.classList.remove("hidden");
-                    const finVal = document.getElementById("st-final-value");
-                    if(finVal) finVal.innerText = finalMbps.toFixed(1);
-                }, 800);
-            } catch (e) { closeSpeedTest(); }
+        function setCompTextTab(tab) {
+            const fBody = document.getElementById("comp-view-body-formatted");
+            const rBody = document.getElementById("comp-view-body-raw");
+            const btnF = document.getElementById("btn-tab-comp-formatted");
+            const btnR = document.getElementById("btn-tab-comp-raw");
+            if(tab === 'formatted') {
+                fBody?.classList.remove("hidden"); rBody?.classList.add("hidden");
+                if(btnF) btnF.className = "px-2 py-0.5 bg-white dark:bg-slate-700 rounded-md shadow-xs";
+                if(btnR) btnR.className = "px-2 py-0.5 text-slate-400";
+            } else {
+                fBody?.classList.add("hidden"); rBody?.classList.remove("hidden");
+                if(btnR) btnR.className = "px-2 py-0.5 bg-white dark:bg-slate-700 rounded-md shadow-xs";
+                if(btnF) btnF.className = "px-2 py-0.5 text-slate-400";
+            }
         }
 
         function setComparisonMode(mode) {
@@ -504,8 +495,6 @@
             }
         }
 
-        function openMenuComparison() { if(contextMenuSelectedPath) loadComparisonDoc(contextMenuSelectedPath); closeAllDropdownsMenu(); }
-
         async function loadComparisonDoc(filename) {
             comparisonFileId = filename;
             const titleSpan = document.getElementById("comp-note-title");
@@ -519,7 +508,7 @@
                 if(fBody) fBody.innerHTML = renderMarkdownHTML(compContentBuffer, filename);
                 if(rBody) rBody.innerText = compContentBuffer;
                 setCompTextTab('formatted');
-            } catch(e){ if(fBody) fBody.innerText = "Falha."; }
+            } catch(e){ if(fBody) fBody.innerText = "Falha ao ler bloco secundário."; }
         }
 
         function clearComparisonDoc() {
@@ -560,36 +549,6 @@
                 if(viewRawMain) viewRawMain.innerText = rawContentBuffer;
                 updateFavoriteStarUI();
             } catch(e) { if(viewDocMain) viewDocMain.innerHTML = "Erro."; }
-        }
-
-        function setMainTab(tab) {
-            const btnForm = document.getElementById("btn-tab-main-formatted");
-            const btnRaw = document.getElementById("btn-tab-main-raw");
-            if(tab === 'formatted') {
-                viewDocMain?.classList.remove("hidden"); viewRawMain?.classList.add("hidden");
-                if(btnForm) btnForm.className = "px-2 py-1 bg-white dark:bg-slate-700 dark:text-white rounded-md shadow-xs";
-                if(btnRaw) btnRaw.className = "px-2 py-1 text-slate-400";
-            } else {
-                viewDocMain?.classList.add("hidden"); viewRawMain?.classList.remove("hidden");
-                if(btnRaw) btnRaw.className = "px-2 py-1 bg-white dark:bg-slate-700 dark:text-white rounded-md shadow-xs";
-                if(btnForm) btnForm.className = "px-2 py-1 text-slate-400";
-            }
-        }
-
-        function setCompTextTab(tab) {
-            const fBody = document.getElementById("comp-view-body-formatted");
-            const rBody = document.getElementById("comp-view-body-raw");
-            const btnF = document.getElementById("btn-tab-comp-formatted");
-            const btnR = document.getElementById("btn-tab-comp-raw");
-            if(tab === 'formatted') {
-                fBody?.classList.remove("hidden"); rBody?.classList.add("hidden");
-                if(btnF) btnF.className = "px-2 py-0.5 bg-white dark:bg-slate-700 rounded-md shadow-xs";
-                if(btnR) btnR.className = "px-2 py-0.5 text-slate-400";
-            } else {
-                fBody?.classList.add("hidden"); rBody?.classList.remove("hidden");
-                if(btnR) btnR.className = "px-2 py-0.5 bg-white dark:bg-slate-700 rounded-md shadow-xs";
-                if(btnF) btnF.className = "px-2 py-0.5 text-slate-400";
-            }
         }
 
         function closeCustomModal() { document.getElementById("custom-dialog-modal")?.classList.add("hidden"); }
@@ -639,6 +598,47 @@
             });
         }
 
+        const paneComparisonDoc = document.getElementById("pane-comparison-doc");
+        if(paneComparisonDoc) {
+            paneComparisonDoc.ondragover = (e) => e.preventDefault();
+            paneComparisonDoc.ondrop = async (e) => {
+                e.preventDefault();
+                const path = e.dataTransfer.getData("text/plain");
+                if (path && !path.endsWith("/")) loadComparisonDoc(path);
+            };
+        }
+
+        async function handleOSDrop(e, targetFolder = "") {
+            const items = e.dataTransfer.items; if (!items) return;
+            let baseFolder = targetFolder;
+            if (baseFolder === "") {
+                if (selectedFileId && selectedFileId.endsWith("/")) baseFolder = selectedFileId;
+                else if (selectedFileId && selectedFileId.includes("/")) baseFolder = selectedFileId.substring(0, selectedFileId.lastIndexOf("/")) + "/";
+            }
+            async function readEntry(entry, pathPrefix = "") {
+                if (entry.isFile) {
+                    return new Promise((resolve) => {
+                        entry.file(async (file) => {
+                            const finalPath = baseFolder + pathPrefix + file.name;
+                            try { await fetch(`/api/upload-vault?file=${encodeURIComponent(finalPath)}`, { method: "POST", body: file }); } catch(err){}
+                            resolve();
+                        });
+                    });
+                } else if (entry.isDirectory) {
+                    return new Promise((resolve) => {
+                        const dirReader = entry.createReader();
+                        dirReader.readEntries(async (entries) => {
+                            for (let i = 0; i < entries.length; i++) { await readEntry(entries[i], pathPrefix + entry.name + "/"); }
+                            resolve();
+                        });
+                    });
+                }
+            }
+            let promises = [];
+            for (let i = 0; i < items.length; i++) { const item = items[i].webkitGetAsEntry(); if (item) promises.push(readEntry(item)); }
+            await Promise.all(promises); buildNotesTree(); reloadGlobalGraph();
+        }
+
         async function buildNotesTree() {
             try {
                 const res = await fetch("/api/notes"); const data = await res.json();
@@ -647,6 +647,19 @@
                     if (currentFilterType === "md") items = items.filter(i => i.type === "directory" || i.path.endsWith(".md"));
                     if (currentFilterType === "pdf") items = items.filter(i => i.type === "directory" || i.path.endsWith(".pdf"));
                     
+                    fileTree.ondragover = (e) => { e.preventDefault(); };
+                    fileTree.ondrop = async (e) => {
+                        e.preventDefault();
+                        if (e.target === fileTree) {
+                            const draggedPath = e.dataTransfer.getData("text/plain");
+                            if (draggedPath) {
+                                const cleanDragged = draggedPath.replace(/\/$/, "");
+                                const itemName = cleanDragged.split('/').pop();
+                                if (cleanDragged !== itemName) await renameItem(cleanDragged, itemName);
+                            } else if (e.dataTransfer.items) { await handleOSDrop(e, ""); }
+                        }
+                    };
+
                     items.forEach(item => {
                         const cleanItemPath = item.path.replace(/\/$/, "");
                         let pathParts = cleanItemPath.split('/'); let isHidden = false; let currentPathCheck = "";
@@ -697,7 +710,7 @@
         }
 
         function initPhysicsNodes(data) {
-            if(!canvas) return;
+            if(!canvas || !canvas.parentElement) return;
             const w = canvas.parentElement.clientWidth || 500, h = canvas.parentElement.clientHeight || 230;
             canvas.width = w; canvas.height = h;
             const existing = new Map(graphData.nodes.map(n => [n.id, n]));
@@ -708,6 +721,7 @@
             graphData.edges = data.edges.map(e => ({ sourceNode: graphData.nodes.find(n => n.id === e.source), targetNode: graphData.nodes.find(n => n.id === e.target) })).filter(e => e.sourceNode && e.targetNode);
         }
 
+        // REQUISITO 4: FÍSICA ALTERADA - GRÁFICO SE ESPALHA MAIS, MAS PASSEIA BROWNIANO NO MEIO
         function updatePhysics() {
             if(!canvas || graphData.nodes.length === 0) return;
             const cx = canvas.width / 2, cy = canvas.height / 2;
@@ -717,32 +731,33 @@
                     let n2 = graphData.nodes[j];
                     let dx = n2.x - n1.x; let dy = n2.y - n1.y; if(dx===0) dx=0.1;
                     let dist = Math.sqrt(dx*dx + dy*dy);
-                    if (dist < 150) {
-                        let force = 250 / (dist * dist + 1);
+                    if (dist < 180) {
+                        let force = 350 / (dist * dist + 5); 
                         if (n1 !== draggedNode) { n1.vx -= (dx/dist)*force; n1.vy -= (dy/dist)*force; }
                         if (n2 !== draggedNode) { n2.vx += (dx/dist)*force; n2.vy += (dy/dist)*force; }
                     }
                 }
             }
-            graphData.edges.forEach(e => {
-                let dx = e.targetNode.x - e.sourceNode.x; let dy = edge.targetNode.y - edge.sourceNode.y;
+            graphData.edges.forEach(edge => {
+                let dx = edge.targetNode.x - edge.sourceNode.x; let dy = edge.targetNode.y - edge.sourceNode.y;
                 let dist = Math.sqrt(dx*dx + dy*dy);
                 if (dist > 0) {
-                    let force = 0.015 * dist;
-                    if (edge.sourceNode !== draggedNode) { edge.sourceNode.vx += (dx/dist)*force; edge.sourceNode.vy += (dy/dist)*force; }
-                    if (edge.targetNode !== draggedNode) { edge.targetNode.vx -= (dx/dist)*force; edge.targetNode.vy -= (dy/dist)*force; }
+                    let force = 0.012 * dist;
+                    if (edge.sourceNode !== draggedNode) { edge.sourceNode.vx += (dx / dist) * force; edge.sourceNode.vy += (dy / dist) * force; }
+                    if (edge.targetNode !== draggedNode) { edge.targetNode.vx -= (dx / dist) * force; edge.targetNode.vy -= (dy / dist) * force; }
                 }
             });
             graphData.nodes.forEach(n => {
                 if (n === draggedNode) return;
-                n.vx += (centerX - n.x) * 0.001; n.vy += (centerY - n.y) * 0.001;
+                // Atração magnética pro centro bem suave (evita o efeito "bola esmagada")
+                n.vx += (cx - n.x) * 0.0015; n.vy += (cy - n.y) * 0.0015;
                 n.vx += (Math.random() - 0.5) * 0.15; n.vy += (Math.random() - 0.5) * 0.15;
-                n.x += n.vx; n.y += node.vy;
+                n.x += n.vx; n.y += n.vy;
                 const p = 15;
-                if (n.x < p) { n.x = padding; n.vx *= -1; } if (n.y < padding) { n.y = padding; n.vy *= -1; }
-                if (n.x > canvas.width - padding) { n.x = canvas.width - padding; n.vx *= -1; }
-                if (node.y > canvas.height - padding) { node.y = canvas.height - padding; node.vy *= -1; }
-                node.vx *= 0.90; node.vy *= 0.90;
+                if (n.x < p) { n.x = p; n.vx *= -1; } if (n.y < p) { n.y = p; n.vy *= -1; }
+                if (n.x > canvas.width - p) { n.x = canvas.width - p; n.vx *= -1; }
+                if (n.y > canvas.height - p) { n.y = canvas.height - p; n.vy *= -1; }
+                n.vx *= 0.91; n.vy *= 0.91;
             });
         }
 
@@ -750,7 +765,7 @@
             if(!ctx || !canvas) return; ctx.clearRect(0, 0, canvas.width, canvas.height);
             const isDark = document.documentElement.classList.contains("dark");
             ctx.lineWidth = 1.2; ctx.strokeStyle = isDark ? "#334155" : "#e2e8f0";
-            graphData.edges.forEach(e => { ctx.beginPath(); ctx.moveTo(e.sourceNode.x, e.sourceNode.y); ctx.lineTo(edge.targetNode.x, edge.targetNode.y); ctx.stroke(); });
+            graphData.edges.forEach(e => { ctx.beginPath(); ctx.moveTo(e.sourceNode.x, e.sourceNode.y); ctx.lineTo(e.targetNode.x, e.targetNode.y); ctx.stroke(); });
             graphData.nodes.forEach(node => {
                 ctx.beginPath();
                 let radius = node.type === "tag" ? 6.0 : 4.5;
@@ -779,7 +794,7 @@
         const upV = document.getElementById("global-vault-upload");
         const upF = document.getElementById("global-folder-upload");
         if(upV) upV.onchange = async (e) => { await processUploadBatch(e.target.files); e.target.value = ""; };
-        if(btnFolderUp) upF.onchange = async (e) => { await processUploadBatch(e.target.files); e.target.value = ""; };
+        if(upF) upF.onchange = async (e) => { await processUploadBatch(e.target.files); e.target.value = ""; };
 
         const btnAttach = document.getElementById("btn-chat-attach");
         const ctxUpload = document.getElementById("chat-context-upload");
@@ -795,23 +810,38 @@
             };
         }
 
+        const btnRemAttach = document.getElementById("btn-remove-attachment");
+        if(btnRemAttach) {
+            btnRemAttach.onclick = () => {
+                pendingChatAttachment = null;
+                document.getElementById("chat-attachment-area")?.classList.add("hidden");
+                if(ctxUpload) ctxUpload.value = "";
+            };
+        }
+
         async function sendChatMessage() {
             let query = chatInput.value.trim(); if (!query || !appPassword) return;
-            const pwd = appPassword.value.trim(); if (!pwd) return alert("Falta token.");
+            const pwd = appPassword.value.trim(); if (!pwd) return alert("Por favor, insira o Token de Validação.");
             renderMessageBlock("user", query); chatInput.value = ""; chatInput.style.height = "auto";
-            let sysContext = `[Diretriz] Área: ${document.getElementById("ctx-area")?.value}, Peça: ${document.getElementById("ctx-type")?.value}\n`;
-            if (selectedFileId) sysContext += `[Arquivo Ativo: ${selectedFileId}]\n`;
-            chatHistory.push({ role: "user", content: sysContext + query });
-            const tid = renderMessageBlock("assistant", "Processando...");
+            
+            const fullPrompt = `[Área: ${document.getElementById("ctx-area").value}, Peça: ${document.getElementById("ctx-type").value}, Fase: ${document.getElementById("ctx-phase").value}, Foco: ${document.getElementById("ctx-obj").value}]\nInstrução: ${query}`;
+            chatHistory.push({ role: "user", content: fullPrompt });
+            
+            const tempId = renderMessageBlock("assistant", "Processando parecer...");
             try {
                 const res = await fetch("/api/chat", { method: "POST", headers: { "Content-Type": "application/json", "x-app-password": pwd }, body: JSON.stringify({ messages: chatHistory }) });
-                const data = await res.json(); document.getElementById(tid)?.remove();
-                if (data.reply) { renderMessageBlock("assistant", data.reply); chatHistory.push({ role: "assistant", content: data.reply }); buildNotesTree(); reloadGlobalGraph(); }
-            } catch(e) { document.getElementById(tid).innerText = "Erro."; }
+                const data = await res.json(); document.getElementById(tempId)?.remove();
+                if (data.reply) {
+                    renderMessageBlock("assistant", data.reply);
+                    chatHistory.push({ role: "assistant", content: data.reply });
+                    buildNotesTree(); reloadGlobalGraph();
+                }
+            } catch (err) { document.getElementById(tempId).innerText = "Falha local de rede."; }
         }
 
         if(btnSend) btnSend.onclick = sendChatMessage;
         if(chatInput) chatInput.onkeydown = (e) => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); sendChatMessage(); } };
+
         buildNotesTree();
     </script>
 </body>
