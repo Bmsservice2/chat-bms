@@ -1,13 +1,15 @@
 {
-  "name": "claude-obsidian-chat",
+  "name": "bms-knowledge",
   "version": "1.0.0",
+  "description": "Centro Operacional BMS",
+  "main": "server.js",
   "type": "module",
   "scripts": {
     "start": "node server.js"
   },
   "dependencies": {
-    "express": "^4.19.2",
-    "@anthropic-ai/sdk": "^0.33.0",
-    "@modelcontextprotocol/sdk": "^1.0.1"
+    "express": "^4.18.2",
+    "@anthropic-ai/sdk": "^0.18.0",
+    "pdf-parse": "^1.1.1"
   }
 }
