@@ -74,61 +74,76 @@ function readNoteLocal(filename) {
     return { filename, content: fs.readFileSync(safePath, "utf-8") };
 }
 
-// O NOVO MOTOR DE TRANSCRIÇÃO VISUAL (OCR CLAUDE)
+// NOVO MOTOR DE TRANSCRIÇÃO VISUAL (OCR CLAUDE - À PROVA DE FALHAS)
 async function processDocumentWithClaude(fileBuffer, fileExt, originalName) {
     if (!anthropic) return `> **Aviso de Sistema:** Chave ANTHROPIC_API_KEY ausente. Não é possível rodar o motor OCR/Markdown.`;
 
     try {
         let extractedText = "";
+        let isScanned = false;
 
         // TENTA LER PDF NATIVO PRIMEIRO
         if (fileExt === '.pdf') {
-            const pdfData = await pdfParse(fileBuffer);
-            extractedText = pdfData.text;
+            try {
+                const pdfData = await pdfParse(fileBuffer);
+                extractedText = pdfData.text || "";
+                
+                // Filtra caracteres lixo para contar apenas letras reais
+                const alphanumericText = extractedText.replace(/[^a-zA-Z0-9À-ÿ]/g, '');
+                
+                // Se tiver menos de 100 letras limpas, é certeza que o PDF é apenas uma "foto" escaneada
+                if (alphanumericText.length < 100) {
+                    isScanned = true;
+                }
+            } catch(err) {
+                isScanned = true; // Se o parse quebrar, joga pra IA consertar visualmente
+            }
         } else if (fileExt === '.txt' || fileExt === '.csv') {
             extractedText = fileBuffer.toString('utf-8');
         }
 
-        const systemPrompt = "Você é um motor de indexação corporativa operando o Obsidian. Seu papel é transcrever ou reescrever documentos jurídicos em Markdown profissional. Corrija quebras de linha erradas, crie títulos (##) para seções principais e use formatação limpa. OBRIGATÓRIO: Crie uma seção '### Metadados' no final contendo de 3 a 5 #tags relevantes e links [[...]]. Retorne APENAS o código Markdown bruto. Não fale com o usuário.";
+        const systemPrompt = "Você é um motor de indexação corporativa operando o Obsidian. Seu papel é transcrever documentos inteiros ou reescrever textos extraídos em Markdown profissional. Extraia TODO O TEXTO VISÍVEL, não resuma. Corrija quebras de linha erradas, crie títulos (##) para seções principais e use formatação limpa (tabelas se houver). OBRIGATÓRIO: Crie uma seção '### Metadados' no final contendo de 3 a 5 #tags relevantes e links [[...]]. Retorne APENAS o código Markdown bruto. Não adicione introduções.";
 
-        // SE NÃO TIVER TEXTO (PDF IMAGEM/ESCANEADO), CHAMA O MOTOR DE VISÃO
-        if (!extractedText || extractedText.trim().length < 50) {
+        // SE FOR PDF ESCANEADO (SEM TEXTO), CHAMA A API VISUAL DO CLAUDE
+        if (isScanned && fileExt === '.pdf') {
+            console.log(`[MOTOR OCR] O arquivo '${originalName}' é um PDF Escaneado/Imagem. Invocando Visão Computacional do Claude...`);
+            const base64PDF = fileBuffer.toString('base64');
             
-            if (fileExt === '.pdf') {
-                console.log(`[MOTOR OCR] PDF '${originalName}' é imagem. Invocando Visão do Claude...`);
-                const base64PDF = fileBuffer.toString('base64');
-                
-                const response = await anthropic.messages.create({
-                    model: process.env.CLAUDE_MODEL || "claude-3-5-sonnet-20241022",
-                    max_tokens: 4000,
-                    system: systemPrompt,
-                    messages: [{
-                        role: "user",
-                        content: [
-                            { type: "text", text: `Transcreva visualmente o conteúdo do PDF abaixo para Markdown estruturado. Original: ${originalName}` },
-                            { type: "document", source: { type: "base64", media_type: "application/pdf", data: base64PDF } }
-                        ]
-                    }]
-                });
-                return response.content.find(c => c.type === "text")?.text || `> Erro da IA ao ler imagem.`;
-            } else {
-                return `> **Aviso de Sistema:** O arquivo '${originalName}' não possui texto legível e não é um PDF suportado para visão.`;
-            }
+            const response = await anthropic.messages.create({
+                model: process.env.CLAUDE_MODEL || "claude-3-5-sonnet-20241022",
+                max_tokens: 8192, // Suporta transcrições longas
+                system: systemPrompt,
+                messages: [{
+                    role: "user",
+                    content: [
+                        { 
+                            type: "document", 
+                            source: { type: "base64", media_type: "application/pdf", data: base64PDF } 
+                        },
+                        { 
+                            type: "text", 
+                            text: `Este documento é um PDF escaneado (imagem). Por favor, leia e transcreva O TEXTO COMPLETO E EXATO de todas as páginas para Markdown estruturado. Extraia tudo. Arquivo original: ${originalName}` 
+                        }
+                    ]
+                }]
+            }, { headers: { "anthropic-beta": "pdfs-2024-09-25" } }); // HEADER OBRIGATÓRIO PARA A API ACEITAR O PDF BASE64
+
+            return response.content.find(c => c.type === "text")?.text || `> Erro da IA ao ler PDF escaneado. O retorno foi vazio.`;
         }
 
-        // SE TIVER TEXTO, GERA MARKDOWN NORMAL
-        console.log(`[MOTOR NATIVO] Lendo texto puro de '${originalName}'...`);
+        // SE O TEXTO JÁ FOI LIDO PELO PDF-PARSE (PDF NATIVO), GERA O MARKDOWN MAIS RÁPIDO
+        console.log(`[MOTOR NATIVO] Lendo texto puro e estruturando '${originalName}'...`);
         const response = await anthropic.messages.create({
             model: process.env.CLAUDE_MODEL || "claude-3-5-sonnet-20241022",
-            max_tokens: 4000,
+            max_tokens: 8192,
             system: systemPrompt,
-            messages: [{ role: "user", content: `Transforme o conteúdo abaixo em Markdown rico. Original: ${originalName}\n\nConteúdo:\n${extractedText.substring(0, 60000)}` }]
+            messages: [{ role: "user", content: `Transforme o texto extraído abaixo em Markdown estruturado rico e legível. Preserve o conteúdo na íntegra. Original: ${originalName}\n\nConteúdo Extraído:\n${extractedText.substring(0, 80000)}` }]
         });
-        return response.content.find(c => c.type === "text")?.text || `> Erro da IA ao formatar texto.`;
+        return response.content.find(c => c.type === "text")?.text || `> Erro da IA ao formatar texto bruto.`;
 
     } catch (e) {
         console.error("Erro Crítico no Auto-Markdown/OCR:", e);
-        return `> **Erro de Processamento de IA:** O modelo falhou ao tentar ler '${originalName}'. Erro Técnico: ${e.message}`;
+        return `> **Erro de Processamento de IA:** O modelo falhou ao tentar transcrever/ler o arquivo '${originalName}'.\n\n**Detalhe Técnico:** ${e.message}\n\n*Dica: Verifique se o arquivo PDF não é grande demais (o limite de visão é de aproximadamente 100 páginas ou 32MB).*`;
     }
 }
 
@@ -262,6 +277,7 @@ app.post("/api/upload-vault", async (req, res) => {
     } catch (err) { res.status(500).json({ error: err.message }); }
 });
 
+// MOTOR DE MÁQUINA DO TEMPO ATUALIZADO (SOBRESCREVE ARQUIVOS COM ERRO)
 app.post("/api/sync-retroactive", async (req, res) => {
     res.json({ success: true, message: "Started" });
     
@@ -276,20 +292,32 @@ app.post("/api/sync-retroactive", async (req, res) => {
                 const baseName = file.substring(0, file.lastIndexOf(ext));
                 const mdPath = path.join(dir, baseName + ".md");
                 
+                let shouldGenerate = false;
+                
                 if (!fs.existsSync(mdPath)) {
-                    console.log(`[RETROATIVO] Iniciando IA em: ${file}`);
+                    shouldGenerate = true;
+                } else {
+                    // Verifica se o arquivo atual tem erro, se tiver, joga pra refazer.
+                    const existingMd = fs.readFileSync(mdPath, "utf-8");
+                    if (existingMd.includes("Erro de Processamento de IA") || existingMd.includes("Aviso de Sistema") || existingMd.trim().length < 150) {
+                        shouldGenerate = true;
+                    }
+                }
+
+                if (shouldGenerate) {
+                    console.log(`[RETROATIVO] Iniciando OCR/IA para: ${file}`);
                     try {
                         const buffer = fs.readFileSync(fullPath);
                         const mdContent = await processDocumentWithClaude(buffer, ext, file);
                         fs.writeFileSync(mdPath, mdContent, "utf-8");
-                        console.log(`[RETROATIVO] Salvo: ${baseName}.md`);
+                        console.log(`[RETROATIVO] Salvo com sucesso: ${baseName}.md`);
                     } catch (e) { console.error(`[RETROATIVO] Falha no arquivo ${file}:`, e.message); }
                 }
             }
         }
     };
     
-    scanAndConvert(VAULT_PATH).then(() => console.log("[RETROATIVO] Sincronização em massa finalizada!"));
+    scanAndConvert(VAULT_PATH).then(() => console.log("[RETROATIVO] Sincronização em massa concluída!"));
 });
 
 app.post("/api/chat", async (req, res) => {
