@@ -74,18 +74,27 @@ function readNoteLocal(filename) {
     return { filename, content: fs.readFileSync(safePath, "utf-8") };
 }
 
+// MOTOR MELHORADO PARA GARANTIR RETORNO, MESMO SEM CLAUDE
 async function generateMarkdownWithClaude(rawText, originalName) {
+    if (!rawText || rawText.trim().length === 0) {
+        return `> **Aviso de Sistema:** O extrator tentou ler o arquivo '${originalName}', mas nenhum texto real foi encontrado. É provável que este PDF seja uma imagem escaneada, necessitando de um motor OCR (Optical Character Recognition) externo para ler seu conteúdo.`;
+    }
+
+    if (!anthropic) {
+        return `> **Aviso de Sistema:** A Chave de API do Claude (ANTHROPIC_API_KEY) não foi detectada no servidor. Abaixo está o texto bruto extraído do arquivo '${originalName}' sem formatação de Inteligência Artificial:\n\n---\n\n${rawText}`;
+    }
+
     try {
         const response = await anthropic.messages.create({
             model: process.env.CLAUDE_MODEL || "claude-3-5-sonnet-20241022",
             max_tokens: 4000,
-            system: "Você é um motor de indexação corporativa operando o Obsidian. Seu papel é reescrever textos extraídos de OCR/PDF em Markdown profissional. Corrija quebras de linha, crie títulos (##) e uma seção '### Metadados' no final contendo de 3 a 5 #tags relevantes e links [[...]]. Retorne APENAS o código Markdown bruto.",
-            messages: [{ role: "user", content: `Original: ${originalName}\n\nConteúdo:\n${rawText.substring(0, 75000)}` }]
+            system: "Você é um motor de indexação corporativa operando o Obsidian. Seu papel é reescrever textos extraídos (OCR/PDF) em Markdown profissional. Corrija quebras de linha erradas, crie títulos (##) para seções principais e use formatação limpa. OBRIGATÓRIO: Crie uma seção '### Metadados' no final contendo de 3 a 5 #tags relevantes e links [[...]]. Retorne APENAS o código Markdown bruto. Não fale com o usuário.",
+            messages: [{ role: "user", content: `Transforme o conteúdo abaixo em Markdown rico. Original: ${originalName}\n\nConteúdo:\n${rawText.substring(0, 60000)}` }]
         });
-        return response.content.find(c => c.type === "text")?.text || null;
+        return response.content.find(c => c.type === "text")?.text || `> Erro da IA ao formatar o texto bruto. O Claude retornou vazio. \n\n${rawText}`;
     } catch (e) {
         console.error("Erro no Auto-Markdown:", e);
-        return null;
+        return `> **Aviso de Sistema:** Falha de comunicação com a API da Anthropic durante a formatação. Abaixo está o texto bruto extraído:\n\n---\n\n${rawText}`;
     }
 }
 
@@ -161,6 +170,7 @@ app.get("/api/graph-data", (req, res) => {
             if (file.path.toLowerCase().endsWith('.pdf')) return;
             try {
                 const fullContent = fs.readFileSync(getSafePath(file.path), "utf-8");
+                
                 const linkRegex = /\[\[(.*?)\]\]/g; let match;
                 while ((match = linkRegex.exec(fullContent)) !== null) {
                     const targetName = match[1].split('|')[0].trim().split('/').pop().replace(/\.(md|pdf|txt)$/i, "").toLowerCase();
@@ -185,9 +195,11 @@ app.post("/api/upload-vault", async (req, res) => {
         let rawTarget = cleanPath(req.query.file);
         const isSync = req.query.sync === 'true'; 
         const safePath = getSafePath(rawTarget);
+        
         fs.mkdirSync(path.dirname(safePath), { recursive: true });
         
         const fileBuffer = req.body;
+        
         if (rawTarget.toLowerCase().endsWith('.md')) {
             let textContent = fileBuffer.toString("utf-8");
             if (!textContent.startsWith("# ")) textContent = `# ${path.basename(rawTarget, ".md")}\n\n${textContent}`;
@@ -207,16 +219,17 @@ app.post("/api/upload-vault", async (req, res) => {
                     extractedText = fileBuffer.toString('utf-8');
                 }
 
-                if (extractedText && extractedText.trim().length > 0) {
-                    const mdContent = await generateMarkdownWithClaude(extractedText, path.basename(rawTarget));
-                    if (mdContent) {
-                        const mdPath = safePath.substring(0, safePath.lastIndexOf('.')) + ".md";
-                        fs.writeFileSync(mdPath, mdContent, "utf-8");
-                        return mdContent;
-                    }
+                const mdContent = await generateMarkdownWithClaude(extractedText, path.basename(rawTarget));
+                if (mdContent) {
+                    const mdPath = safePath.substring(0, safePath.lastIndexOf('.')) + ".md";
+                    fs.writeFileSync(mdPath, mdContent, "utf-8");
+                    return mdContent;
                 }
-            } catch(e) { console.error("Erro ProcessFile:", e); }
-            return "Extração falhou ou arquivo ilegível.";
+            } catch(e) { 
+                console.error("Erro interno no ProcessFile:", e); 
+                return `> Erro no servidor: O interpretador nativo falhou completamente ao tentar ler o arquivo: ${e.message}`;
+            }
+            return "Extração falhou.";
         };
 
         if (isSync) {
@@ -226,11 +239,13 @@ app.post("/api/upload-vault", async (req, res) => {
             processFileToMarkdown();
             res.json({ success: true, message: "Em processamento." });
         }
+
     } catch (err) { res.status(500).json({ error: err.message }); }
 });
 
 app.post("/api/sync-retroactive", async (req, res) => {
     res.json({ success: true, message: "Started" });
+    
     const scanAndConvert = async (dir) => {
         const list = fs.readdirSync(dir);
         for (let file of list) {
@@ -243,33 +258,40 @@ app.post("/api/sync-retroactive", async (req, res) => {
                 const mdPath = path.join(dir, baseName + ".md");
                 
                 if (!fs.existsSync(mdPath)) {
+                    console.log(`[RETROATIVO] Iniciando varredura em: ${file}`);
                     try {
                         const buffer = fs.readFileSync(fullPath);
                         let text = "";
                         if (ext.toLowerCase() === '.pdf') {
                             const pdfData = await pdfParse(buffer);
                             text = pdfData.text;
-                        } else { text = buffer.toString('utf-8'); }
-                        
-                        if (text && text.trim().length > 0) {
-                            const mdContent = await generateMarkdownWithClaude(text, file);
-                            if (mdContent) fs.writeFileSync(mdPath, mdContent, "utf-8");
+                        } else {
+                            text = buffer.toString('utf-8');
                         }
-                    } catch (e) { console.error(`Falha: ${file}`); }
+                        
+                        const mdContent = await generateMarkdownWithClaude(text, file);
+                        if (mdContent) {
+                            fs.writeFileSync(mdPath, mdContent, "utf-8");
+                            console.log(`[RETROATIVO] Salvo: ${baseName}.md`);
+                        }
+                        
+                    } catch (e) { console.error(`[RETROATIVO] Falha no arquivo ${file}:`, e.message); }
                 }
             }
         }
     };
-    scanAndConvert(VAULT_PATH);
+    
+    scanAndConvert(VAULT_PATH).then(() => console.log("[RETROATIVO] Sincronização em massa finalizada!"));
 });
 
 app.post("/api/chat", async (req, res) => {
-    if (missingVars.length > 0) return res.status(500).json({ error: "Configuração incompleta." });
-    if (req.headers["x-app-password"] !== process.env.APP_PASSWORD) return res.status(401).json({ error: "Senha inválida." });
+    if (missingVars.length > 0) return res.status(500).json({ error: "Configuração de Chave Anthropic incompleta." });
+    if (req.headers["x-app-password"] !== process.env.APP_PASSWORD) return res.status(401).json({ error: "Senha de acesso local inválida." });
 
     try {
         const userMessages = Array.isArray(req.body.messages) ? req.body.messages : [];
         let messages = userMessages.filter(msg => msg && ["user", "assistant"].includes(msg.role)).slice(-20);
+        
         if (messages.length > 0 && messages[0].role === "assistant") messages.shift();
         if (messages.length === 0) return res.status(400).json({ error: "Mensagem vazia." });
 
@@ -278,7 +300,7 @@ app.post("/api/chat", async (req, res) => {
         let response = await anthropic.messages.create({
             model: process.env.CLAUDE_MODEL || "claude-3-5-sonnet-20241022",
             max_tokens: 4000,
-            system: "Você é o Assistente BMS, inteligência corporativa (Modo Deus). Construa respostas excelentes baseadas nos documentos. Use links [[NomeDoArquivo]] e hashtags (#Direito, etc) para expandir a malha do usuário.",
+            system: "Você é o Assistente BMS, inteligência corporativa (Modo Deus). Construa respostas excelentes baseadas nos documentos. Use links [[NomeDoArquivo]] e hashtags (#DireitoTrabalhista, etc) sempre que possível para expandir a malha neural do usuário.",
             messages,
             tools: localTools
         });
@@ -292,13 +314,49 @@ app.post("/api/chat", async (req, res) => {
                     let toolResult = {};
                     try {
                         if (block.name === "list_notes") toolResult = listNotesLocal();
-                        else if (block.name === "read_note") { citedFiles.add(block.input.filename); toolResult = readNoteLocal(block.input.filename); }
-                        else if (block.name === "create_note") { const sp = getSafePath(cleanPath(block.input.filename)); fs.mkdirSync(path.dirname(sp), { recursive: true }); fs.writeFileSync(sp, block.input.content, "utf-8"); toolResult = { status: "Salvo." }; }
-                        else if (block.name === "edit_note") { const sp = getSafePath(cleanPath(block.input.filename)); fs.writeFileSync(sp, block.input.content, "utf-8"); toolResult = { status: "Modificado." }; }
-                        else if (block.name === "delete_item") { const sp = getSafePath(cleanPath(block.input.targetPath)); if (fs.existsSync(sp)) { const stat = fs.statSync(sp); if (stat.isDirectory()) fs.rmSync(sp, { recursive: true, force: true }); else fs.unlinkSync(sp); toolResult = { status: "Excluído." }; } else { toolResult = { error: "Inexistente." }; } }
-                        else if (block.name === "rename_item") { const oldP = getSafePath(cleanPath(block.input.oldPath)); const newP = getSafePath(cleanPath(block.input.newPath)); if (fs.existsSync(oldP)) { fs.mkdirSync(path.dirname(newP), { recursive: true }); fs.renameSync(oldP, newP); toolResult = { status: "Movido." }; } else { toolResult = { error: "Erro de caminho." }; } }
-                        else if (block.name === "create_folder") { const sp = getSafePath(cleanPath(block.input.foldername)); fs.mkdirSync(sp, { recursive: true }); toolResult = { status: "Pasta criada." }; }
-                        else if (block.name === "create_downloadable_file") { const dlPath = path.join(DOWNLOADS_PATH, block.input.filename); fs.writeFileSync(dlPath, block.input.content, "utf-8"); toolResult = { status: `Link gerado: /downloads/${block.input.filename}` }; }
+                        else if (block.name === "read_note") {
+                            citedFiles.add(block.input.filename);
+                            toolResult = readNoteLocal(block.input.filename);
+                        }
+                        else if (block.name === "create_note") {
+                            const sp = getSafePath(cleanPath(block.input.filename));
+                            fs.mkdirSync(path.dirname(sp), { recursive: true });
+                            fs.writeFileSync(sp, block.input.content, "utf-8");
+                            toolResult = { status: "Documento salvo." };
+                        }
+                        else if (block.name === "edit_note") {
+                            const sp = getSafePath(cleanPath(block.input.filename));
+                            fs.writeFileSync(sp, block.input.content, "utf-8");
+                            toolResult = { status: "Modificado." };
+                        }
+                        else if (block.name === "delete_item") {
+                            const sp = getSafePath(cleanPath(block.input.targetPath));
+                            if (fs.existsSync(sp)) {
+                                const stat = fs.statSync(sp);
+                                if (stat.isDirectory()) fs.rmSync(sp, { recursive: true, force: true });
+                                else fs.unlinkSync(sp);
+                                toolResult = { status: "Excluído." };
+                            } else { toolResult = { error: "Inexistente." }; }
+                        }
+                        else if (block.name === "rename_item") {
+                            const oldP = getSafePath(cleanPath(block.input.oldPath));
+                            const newP = getSafePath(cleanPath(block.input.newPath));
+                            if (fs.existsSync(oldP)) {
+                                fs.mkdirSync(path.dirname(newP), { recursive: true });
+                                fs.renameSync(oldP, newP);
+                                toolResult = { status: "Movido." };
+                            } else { toolResult = { error: "Erro de caminho." }; }
+                        }
+                        else if (block.name === "create_folder") {
+                            const sp = getSafePath(cleanPath(block.input.foldername));
+                            fs.mkdirSync(sp, { recursive: true });
+                            toolResult = { status: "Pasta criada." };
+                        }
+                        else if (block.name === "create_downloadable_file") {
+                            const dlPath = path.join(DOWNLOADS_PATH, block.input.filename);
+                            fs.writeFileSync(dlPath, block.input.content, "utf-8");
+                            toolResult = { status: `Link gerado: /downloads/${block.input.filename}` };
+                        }
                     } catch (err) { toolResult = { error: err.message }; }
                     toolResults.push({ type: "tool_result", tool_use_id: block.id, content: JSON.stringify(toolResult) });
                 }
@@ -306,9 +364,13 @@ app.post("/api/chat", async (req, res) => {
             messages.push({ role: "user", content: toolResults });
             response = await anthropic.messages.create({ model: process.env.CLAUDE_MODEL || "claude-3-5-sonnet-20241022", max_tokens: 4000, messages, tools: localTools });
         }
+        
         res.json({ reply: response.content.find(c => c.type === "text")?.text || "OK.", citedFiles: Array.from(citedFiles) });
-    } catch (error) { res.status(500).json({ error: error.message }); }
+    } catch (error) { 
+        console.error("ERRO CHAT:", error);
+        res.status(500).json({ error: error.message }); 
+    }
 });
 
 app.use((err, req, res, next) => { res.status(500).json({ error: err.message }); });
-app.listen(3000, () => console.log("Servidor ativo com Conversão PDF."));
+app.listen(3000, () => console.log("Servidor ativo com Sincronizador de PDF Avançado."));
