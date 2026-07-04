@@ -87,7 +87,7 @@
                         <path d="M 10 50 A 40 40 0 0 1 90 50" fill="none" stroke="url(#gradient)" stroke-width="8" class="text-blue-500" stroke-dasharray="125" stroke-dashoffset="125" id="st-progress" stroke-linecap="round" style="transition: stroke-dashoffset 0.2s ease-out;"></path>
                         <defs><linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#3b82f6" /><stop offset="100%" stop-color="#10b981" /></linearGradient></defs>
                     </svg>
-                    <div id="st-needle" class="absolute bottom-0 left-1/2 w-[3px] h-[85px] bg-slate-800 dark:bg-white origin-bottom -translate-x-1/2 transform -rotate-90 transition-transform duration-200 rounded-full"></div>
+                    <div id="st-needle" class="absolute bottom-0 left-1/2 w-[3px] h-[85px] bg-slate-800 dark:bg-white origin-bottom -translate-x-1/2 transform -rotate-90 transition-transform duration-200 ease-out rounded-full shadow-sm"></div>
                 </div>
                 <div class="text-4xl font-black text-slate-800 dark:text-white mt-4 font-mono"><span id="st-value">0.0</span></div>
             </div>
@@ -125,7 +125,7 @@
 
             <div class="relative">
                 <button onclick="toggleCustomDropdown('dropdown-upload', event)" class="border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 text-xs font-bold px-4 py-2.5 rounded-xl flex items-center gap-2 hover:bg-slate-50 shadow-xs">
-                    <i data-lucide="upload-cloud" class="w-4 h-4 text-blue-600"></i> Upload Cofre
+                    <i data-lucide="upload-cloud" class="w-4 h-4 text-blue-600"></i> Upload Box
                 </button>
                 <div id="dropdown-upload" class="hidden absolute top-[105%] right-0 mt-1 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl shadow-2xl py-1.5 w-48 z-50 flex flex-col text-xs font-bold text-slate-600 dark:text-slate-300">
                     <button onclick="document.getElementById('global-vault-upload').click(); closeAllDropdownsMenu()" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 flex items-center gap-2"><i data-lucide="file-plus" class="w-4 h-4 text-blue-500"></i> Arquivos Avulsos</button>
@@ -149,12 +149,6 @@
                 <div class="flex gap-1 relative" onclick="e => e.stopPropagation()">
                     <button id="btn-filter-tree" onclick="toggleFilterDropdown(event)" class="p-1 text-slate-400 hover:text-blue-600 rounded-lg transition-colors"><i data-lucide="filter" class="w-3.5 h-3.5"></i></button>
                     <button onclick="createNewFolderManual(event)" class="p-1 text-slate-400 hover:text-blue-600 rounded-lg transition-colors"><i data-lucide="folder-plus" class="w-3.5 h-3.5"></i></button>
-                    
-                    <div id="filter-menu-dropdown" class="hidden absolute top-7 right-0 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl shadow-xl py-1 w-44 z-30 text-xs font-bold text-slate-600 dark:text-slate-300">
-                        <button onclick="changeFilter('all')" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-700 flex items-center gap-2">Mostrar Todos</button>
-                        <button onclick="changeFilter('md')" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-700 flex items-center gap-2">Apenas Texto (.md)</button>
-                        <button onclick="changeFilter('pdf')" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-700 flex items-center gap-2">Apenas PDFs (.pdf)</button>
-                    </div>
                 </div>
             </div>
 
@@ -174,7 +168,6 @@
                         <span class="text-[11px] font-bold text-slate-700 dark:text-slate-300 flex items-center gap-1.5"><i data-lucide="shield-check" class="w-3.5 h-3.5 text-blue-600"></i> Plano Profissional</span>
                         <span class="text-[10px] bg-emerald-100 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-300 font-extrabold px-1.5 py-0.5 rounded-md">TESTE</span>
                     </div>
-                    <div class="text-[10px] text-slate-400 dark:text-slate-500 mb-2 font-medium">Uso do Assistente BMS este mês</div>
                     <div class="w-full bg-slate-200 dark:bg-slate-700 h-2 rounded-full overflow-hidden mb-1"><div class="bg-blue-600 h-full w-[10%] rounded-full"></div></div>
                 </div>
             </div>
@@ -199,6 +192,8 @@
                         <button onclick="selectOption('area', 'Direito Penal', 'Direito Penal', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 truncate">Direito Penal</button>
                         <button onclick="selectOption('area', 'Direito Tributário', 'Direito Tributário', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 truncate">Direito Tributário</button>
                         <button onclick="selectOption('area', 'Direito Empresarial', 'Direito Empresarial', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 truncate">Direito Empresarial</button>
+                        <button onclick="selectOption('area', 'Direito de Família', 'Direito de Família', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 truncate">Direito de Família</button>
+                        <button onclick="selectOption('area', 'Direito Administrativo', 'Direito Administrativo', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 truncate">Direito Administrativo</button>
                     </div>
                 </div>
 
@@ -244,7 +239,7 @@
                 </div>
             </div>
 
-            <div class="flex flex-1 gap-4 overflow-hidden h-full relative">
+            <div class="flex flex-1 gap-4 overflow-hidden h-full">
                 
                 <div id="center-preview-container" onclick="selectMonitor('main')" class="flex-1 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-xs flex flex-col overflow-hidden h-full transition-all ring-2 ring-blue-600 dark:ring-blue-500 cursor-pointer">
                     <div class="flex items-center justify-between px-5 py-3 border-b border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900">
@@ -253,12 +248,10 @@
                             <h2 id="active-note-title" class="text-sm font-bold text-slate-800 dark:text-white truncate max-w-xs">Selecione um arquivo principal</h2>
                             <button id="btn-favorite-star" onclick="toggleActiveFileFavorite()" class="text-slate-300 hover:text-amber-500 focus:outline-none"><i data-lucide="star" class="w-4 h-4"></i></button>
                         </div>
-                        
                         <div class="flex bg-slate-100 dark:bg-slate-800 p-0.5 rounded-lg text-[9px] font-black mr-2">
-                            <button id="btn-tab-main-formatted" onclick="setMainTab('formatted')" class="px-2 py-1 bg-white dark:bg-slate-700 dark:text-white rounded-md shadow-xs transition-all">Original</button>
-                            <button id="btn-tab-main-raw" onclick="setMainTab('raw')" class="px-2 py-1 text-slate-400 transition-all">Markdown</button>
+                            <button id="btn-tab-main-formatted" onclick="setMainTab('formatted')" class="px-2 py-1 bg-white dark:bg-slate-700 dark:text-white rounded-md shadow-xs">Original</button>
+                            <button id="btn-tab-main-raw" onclick="setMainTab('raw')" class="px-2 py-1 text-slate-400">Markdown</button>
                         </div>
-
                         <div class="flex items-center gap-1.5">
                             <button onclick="downloadActiveFile()" class="p-1.5 text-slate-400 hover:text-slate-600"><i data-lucide="download" class="w-4 h-4"></i></button>
                             <button onclick="printActiveFile()" class="p-1.5 text-slate-400 hover:text-slate-600"><i data-lucide="printer" class="w-4 h-4"></i></button>
@@ -280,10 +273,9 @@
                             <div class="w-2 h-2 bg-blue-500 rounded-full hidden mr-1" id="dot-active-comp"></div>
                             <h2 id="comp-note-title" class="text-sm font-bold text-slate-400 dark:text-white truncate max-w-xs">Selecione o terceiro menu</h2>
                         </div>
-                        
                         <div class="flex bg-slate-100 dark:bg-slate-800 p-0.5 rounded-lg text-[9px] font-black mr-2">
-                            <button id="btn-tab-comp-formatted" onclick="setCompTab('formatted')" class="px-2 py-1 bg-white dark:bg-slate-700 dark:text-white rounded-md shadow-xs transition-all">Original</button>
-                            <button id="btn-tab-comp-raw" onclick="setCompTab('raw')" class="px-2 py-1 text-slate-400 transition-all">Markdown</button>
+                            <button id="btn-tab-comp-formatted" onclick="setCompTab('formatted')" class="px-2 py-1 bg-white dark:bg-slate-700 dark:text-white rounded-md shadow-xs">Original</button>
+                            <button id="btn-tab-comp-raw" onclick="setCompTab('raw')" class="px-2 py-1 text-slate-400">Markdown</button>
                         </div>
                         <div class="flex items-center gap-1.5">
                             <button onclick="downloadCompFile()" class="p-1.5 text-slate-400 hover:text-slate-600"><i data-lucide="download" class="w-4 h-4"></i></button>
@@ -292,7 +284,7 @@
                     </div>
                     <div class="flex flex-1 p-4 bg-[#fafafa] dark:bg-slate-950 overflow-hidden h-full relative">
                         <div id="view-doc-comp" class="w-full h-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl overflow-y-auto p-6 text-xs text-slate-700 dark:text-slate-300 font-serif leading-relaxed select-text shadow-sm h-full">
-                            <div class="text-center text-slate-400 my-20">Painel secundário inativo. Selecione este monitor e clique em um arquivo.</div>
+                            <div class="text-center text-slate-400 my-20">Painel secundário inativo. Selecione este monitor e clique em um arquivo para carregar aqui.</div>
                         </div>
                         <div id="view-raw-comp" class="hidden w-full h-full bg-slate-950 dark:bg-slate-900 text-blue-500 dark:text-blue-400 border border-slate-200 dark:border-slate-800 rounded-xl p-4 font-mono text-xs whitespace-pre-wrap overflow-y-auto select-text"></div>
                     </div>
@@ -339,15 +331,6 @@
     <script>
         lucide.createIcons();
 
-        // ATALHO CTRL+K
-        document.addEventListener('keydown', (e) => {
-            if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
-                e.preventDefault();
-                const sb = document.getElementById('global-search-bar');
-                if (sb) { sb.focus(); sb.select(); }
-            }
-        });
-
         const messagesContainer = document.getElementById("chat-messages");
         const chatInput = document.getElementById("chat-input");
         const btnSend = document.getElementById("btn-send");
@@ -366,6 +349,7 @@
         const viewRawComp = document.getElementById("view-raw-comp");
 
         const activeNoteTitle = document.getElementById("active-note-title");
+        const compNoteTitle = document.getElementById("comp-note-title");
         const favoriteStarBtn = document.getElementById("btn-favorite-star");
 
         let chatHistory = [];
@@ -377,11 +361,10 @@
         let compContentBuffer = "";
         let contextMenuSelectedPath = null;
         let msgCounter = 0;
-        let activeMonitor = "main"; // Mecânica de foco unificada: 'main' ou 'comp'
+        let activeMonitor = "main"; 
         
         let favoriteItems = JSON.parse(localStorage.getItem("bms_favorites_map") || "{}");
         let collapsedFolders = JSON.parse(localStorage.getItem("bms_collapsed_folders") || "{}");
-        let highlightedNodes = []; 
 
         if(chatInput) {
             chatInput.addEventListener("input", function() {
@@ -390,7 +373,6 @@
             });
         }
 
-        // CONTROLADOR DE ALTERNÂNCIA DE MONITORES ATIVOS (REQUISITO 1)
         function selectMonitor(monitor) {
             activeMonitor = monitor;
             const mainBox = document.getElementById("center-preview-container");
@@ -558,7 +540,6 @@
             return `<div class="whitespace-pre-wrap text-slate-800 dark:text-slate-200">${cleanText}</div>`;
         }
 
-        // MOTOR DE CARREGAMENTO UNIFICADO PARA AMBOS MONITORES (REQUISITO 1)
         async function loadNoteContent(filename) {
             const isMain = (activeMonitor === "main");
             const targetDoc = isMain ? viewDocMain : viewDocComp;
@@ -687,18 +668,20 @@
 
         function highlightSelectedRow(targetFilename) {
             document.querySelectorAll(".tree-row-container").forEach(row => {
-                if (!targetFilename) { row.className = "tree-row-container group flex items-center justify-between w-full rounded-xl p-0.5 border border-transparent hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300"; return; }
-                row.className = (row.getAttribute("data-path").replace(/\/$/, "") === targetFilename.replace(/\/$/, "")) ? "tree-row-container group flex items-center justify-between w-full rounded-xl p-0.5 border text-left bg-blue-50/50 border-blue-500 text-blue-600 shadow-xs dark:bg-blue-950/40" : "tree-row-container group flex items-center justify-between w-full rounded-xl p-0.5 border border-transparent hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300";
+                if (!targetFilename) { row.className = "tree-row-container group flex items-center justify-between w-full rounded-xl p-0.5 border border-transparent hover:bg-slate-100 dark:hover:bg-slate-800 transition-all text-left text-slate-600 dark:text-slate-300"; return; }
+                const rowPath = row.getAttribute("data-path").replace(/\/$/, "");
+                const cleanTarget = targetFilename.replace(/\/$/, "");
+                if (rowPath === cleanTarget) {
+                    row.className = "tree-row-container group flex items-center justify-between w-full rounded-xl p-0.5 border transition-all text-left bg-blue-50/50 dark:bg-blue-950/30 border-blue-500 dark:border-blue-400 text-blue-600 dark:text-blue-400 shadow-xs";
+                } else {
+                    row.className = "tree-row-container group flex items-center justify-between w-full rounded-xl p-0.5 border border-transparent hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300";
+                }
             });
         }
 
         async function handleOSDrop(e, targetFolder = "") {
             const items = e.dataTransfer.items; if (!items) return;
-            let baseFolder = targetFolder;
-            if (baseFolder === "") {
-                if (selectedFileId && selectedFileId.endsWith("/")) baseFolder = selectedFileId;
-                else if (selectedFileId && selectedFileId.includes("/")) baseFolder = selectedFileId.substring(0, selectedFileId.lastIndexOf("/")) + "/";
-            }
+            let baseFolder = targetFolder; if (baseFolder === "") { if (selectedFileId && selectedFileId.endsWith("/")) baseFolder = selectedFileId; else if (selectedFileId && selectedFileId.includes("/")) baseFolder = selectedFileId.substring(0, selectedFileId.lastIndexOf("/")) + "/"; }
             async function readEntry(entry, pathPrefix = "") {
                 if (entry.isFile) {
                     return new Promise((resolve) => {
@@ -741,10 +724,49 @@
                 const file = e.target.files[0]; if (!file) return;
                 const reader = new FileReader(); reader.onload = (event) => {
                     pendingChatAttachment = { name: file.name, content: event.target.result };
-                    document.getElementById("chat-attachment-name").innerText = file.name;
-                    document.getElementById("chat-attachment-area")?.classList.remove("hidden");
+                    const attName = document.getElementById("chat-attachment-name");
+                    const attArea = document.getElementById("chat-attachment-area");
+                    if (attName) attName.innerText = file.name;
+                    if (attArea) attArea.classList.remove("hidden");
                 }; reader.readAsText(file);
             };
+        }
+
+        const btnRemAttach = document.getElementById("btn-remove-attachment");
+        if(btnRemAttach) {
+            btnRemAttach.onclick = () => {
+                pendingChatAttachment = null;
+                document.getElementById("chat-attachment-area")?.classList.add("hidden");
+                if(ctxUpload) ctxUpload.value = "";
+            };
+        }
+
+        function clearTreeSelection(e) {
+            if (e.target.id === "file-tree" || e.target.tagName === "ASIDE") {
+                selectedFileId = null;
+                if(activeNoteTitle) activeNoteTitle.innerText = "Selecione um arquivo do cofre";
+                if(viewDocMain) viewDocMain.innerHTML = `<div class="text-center text-slate-400 my-20 dark:text-slate-500">Raiz ativa. Organize seus volumes.</div>`;
+                updateFavoriteStarUI(); buildNotesTree();
+            }
+        }
+
+        function toggleActiveFileFavorite() {
+            if (!selectedFileId) return;
+            const cleanPath = selectedFileId.replace(/\/$/, "");
+            if (favoriteItems[cleanPath]) delete favoriteItems[cleanPath];
+            else favoriteItems[cleanPath] = true;
+            localStorage.setItem("bms_favorites_map", JSON.stringify(favoriteItems));
+            updateFavoriteStarUI(); buildNotesTree();
+        }
+
+        function updateFavoriteStarUI() {
+            if (!selectedFileId || !favoriteStarBtn) {
+                if(favoriteStarBtn) favoriteStarBtn.innerHTML = `<i data-lucide="star" class="w-4 h-4"></i>`;
+                lucide.createIcons(); return;
+            }
+            const cleanPath = selectedFileId.replace(/\/$/, "");
+            favoriteStarBtn.innerHTML = favoriteItems[cleanPath] ? `<i data-lucide="star" class="w-4 h-4 fill-amber-500 text-amber-500"></i>` : `<i data-lucide="star" class="w-4 h-4"></i>`;
+            lucide.createIcons();
         }
 
         async function sendChatMessage() {
@@ -759,8 +781,39 @@
             try {
                 const res = await fetch("/api/chat", { method: "POST", headers: { "Content-Type": "application/json", "x-app-password": pwd }, body: JSON.stringify({ messages: chatHistory }) });
                 const data = await res.json(); document.getElementById(tempId)?.remove();
-                if (data.reply) { renderMessageBlock("assistant", data.reply); chatHistory.push({ role: "assistant", content: data.reply }); buildNotesTree(); }
+                if (data.reply) {
+                    renderMessageBlock("assistant", data.reply);
+                    chatHistory.push({ role: "assistant", content: data.reply });
+                    buildNotesTree();
+                }
             } catch (err) { document.getElementById(tempId).innerText = "Falha local de rede."; }
+        }
+
+        function renderMessageBlock(role, text) {
+            msgCounter++; const id = "msg-" + Date.now() + "-" + msgCounter;
+            const wrapper = document.createElement("div");
+            wrapper.className = `w-full flex shrink-0 ${role === 'user' ? 'justify-end' : 'justify-start'}`;
+            wrapper.id = id;
+            const bubble = document.createElement("div");
+            
+            let htmlText = text.replace(/</g, "&lt;").replace(/>/g, "&gt;") 
+                .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" download class="text-blue-200 underline font-black hover:text-white transition-colors">$1</a>')
+                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                .replace(/\n/g, '<br>');
+
+            if (role === "user") {
+                bubble.className = "bg-blue-600 text-white rounded-2xl rounded-tr-none p-3 text-xs max-w-[85%] font-semibold leading-relaxed whitespace-pre-wrap shadow-xs select-text text-left break-words";
+            } else {
+                bubble.className = "bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 rounded-2xl rounded-tl-none p-3 text-xs max-w-[85%] shadow-xs leading-relaxed whitespace-pre-wrap select-text text-left break-words";
+            }
+            
+            bubble.innerHTML = htmlText;
+            wrapper.appendChild(bubble);
+            if(messagesContainer) {
+                messagesContainer.appendChild(wrapper);
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            }
+            return id;
         }
 
         if(btnSend) btnSend.onclick = sendChatMessage;
