@@ -3,6 +3,7 @@ import fs from "fs";
 import path from "path";
 import crypto from "crypto";
 import Anthropic from "@anthropic-ai/sdk";
+import pdfParse from "pdf-parse";
 
 const app = express();
 
@@ -24,79 +25,19 @@ const DOWNLOADS_PATH = path.join(process.cwd(), "public", "downloads");
 if (!fs.existsSync(DOWNLOADS_PATH)) fs.mkdirSync(DOWNLOADS_PATH, { recursive: true });
 
 const localTools = [
-    {
-        name: "list_notes",
-        description: "Lista processos, pastas e documentos jurídicos do Cofre.",
-        input_schema: { type: "object", properties: {} }
-    },
-    {
-        name: "read_note",
-        description: "Lê o conteúdo completo de um documento do Cofre.",
-        input_schema: {
-            type: "object",
-            properties: { filename: { type: "string", description: "Caminho do arquivo" } },
-            required: ["filename"]
-        }
-    },
-    {
-        name: "create_note",
-        description: "Cria uma nova nota em Markdown (.md) injetando #tags e links [[conexões]].",
-        input_schema: {
-            type: "object",
-            properties: { filename: { type: "string" }, content: { type: "string" } },
-            required: ["filename", "content"]
-        }
-    },
-    {
-        name: "edit_note",
-        description: "Modifica uma nota estruturando e adicionando novas #tags ou links cruzados do Obsidian.",
-        input_schema: {
-            type: "object",
-            properties: { filename: { type: "string" }, content: { type: "string" } },
-            required: ["filename", "content"]
-        }
-    },
-    {
-        name: "delete_item",
-        description: "Exclui permanentemente um arquivo ou pasta do Cofre.",
-        input_schema: {
-            type: "object",
-            properties: { targetPath: { type: "string" } },
-            required: ["targetPath"]
-        }
-    },
-    {
-        name: "rename_item",
-        description: "Renomeia ou move um arquivo ou pasta.",
-        input_schema: {
-            type: "object",
-            properties: { oldPath: { type: "string" }, newPath: { type: "string" } },
-            required: ["oldPath", "newPath"]
-        }
-    },
-    {
-        name: "create_folder",
-        description: "Cria uma nova pasta no Cofre.",
-        input_schema: {
-            type: "object",
-            properties: { foldername: { type: "string" } },
-            required: ["foldername"]
-        }
-    },
-    {
-        name: "create_downloadable_file",
-        description: "Cria um arquivo físico para o usuário fazer download.",
-        input_schema: {
-            type: "object",
-            properties: { filename: { type: "string" }, content: { type: "string" } },
-            required: ["filename", "content"]
-        }
-    }
+    { name: "list_notes", description: "Lista processos, pastas e documentos do Cofre.", input_schema: { type: "object", properties: {} } },
+    { name: "read_note", description: "Lê o conteúdo completo de um documento do Cofre.", input_schema: { type: "object", properties: { filename: { type: "string" } }, required: ["filename"] } },
+    { name: "create_note", description: "Cria um novo documento Markdown (.md) no Cofre.", input_schema: { type: "object", properties: { filename: { type: "string" }, content: { type: "string" } }, required: ["filename", "content"] } },
+    { name: "edit_note", description: "Edita e sobrescreve uma peça existente no Cofre.", input_schema: { type: "object", properties: { filename: { type: "string" }, content: { type: "string" } }, required: ["filename", "content"] } },
+    { name: "delete_item", description: "Exclui permanentemente um arquivo ou pasta.", input_schema: { type: "object", properties: { targetPath: { type: "string" } }, required: ["targetPath"] } },
+    { name: "rename_item", description: "Renomeia ou move um arquivo ou pasta.", input_schema: { type: "object", properties: { oldPath: { type: "string" }, newPath: { type: "string" } }, required: ["oldPath", "newPath"] } },
+    { name: "create_folder", description: "Cria uma nova pasta no Cofre.", input_schema: { type: "object", properties: { foldername: { type: "string" } }, required: ["foldername"] } },
+    { name: "create_downloadable_file", description: "Cria um arquivo físico para o usuário fazer download.", input_schema: { type: "object", properties: { filename: { type: "string" }, content: { type: "string" } }, required: ["filename", "content"] } }
 ];
 
 function getSafePath(targetPath) {
     const resolvedPath = path.resolve(VAULT_PATH, targetPath);
-    if (!resolvedPath.startsWith(VAULT_PATH)) throw new Error("Acesso negado de segurança.");
+    if (!resolvedPath.startsWith(VAULT_PATH)) throw new Error("Acesso negado.");
     return resolvedPath;
 }
 
@@ -126,11 +67,26 @@ function listNotesLocal() {
 
 function readNoteLocal(filename) {
     const safePath = getSafePath(cleanPath(filename));
-    if (!fs.existsSync(safePath)) return { error: `O documento ${filename} não foi encontrado.` };
+    if (!fs.existsSync(safePath)) return { error: `Arquivo ${filename} não encontrado.` };
     if (filename.toLowerCase().match(/\.(pdf|png|jpg|jpeg|docx)$/)) {
         return { error: `[ARQUIVO BINÁRIO] Use visualização nativa para ler PDFs.` };
     }
     return { filename, content: fs.readFileSync(safePath, "utf-8") };
+}
+
+async function generateMarkdownWithClaude(rawText, originalName) {
+    try {
+        const response = await anthropic.messages.create({
+            model: process.env.CLAUDE_MODEL || "claude-3-5-sonnet-20241022",
+            max_tokens: 4000,
+            system: "Você é um motor de indexação corporativa operando o Obsidian. Seu papel é reescrever textos extraídos de OCR/PDF em Markdown profissional. Corrija quebras de linha, crie títulos (##) e uma seção '### Metadados' no final contendo de 3 a 5 #tags relevantes e links [[...]]. Retorne APENAS o código Markdown bruto.",
+            messages: [{ role: "user", content: `Original: ${originalName}\n\nConteúdo:\n${rawText.substring(0, 75000)}` }]
+        });
+        return response.content.find(c => c.type === "text")?.text || null;
+    } catch (e) {
+        console.error("Erro no Auto-Markdown:", e);
+        return null;
+    }
 }
 
 app.get("/api/status", (req, res) => {
@@ -140,17 +96,12 @@ app.get("/api/status", (req, res) => {
 
 app.get("/api/speedtest", (req, res) => {
     const size = 5 * 1024 * 1024;
-    res.set({
-        'Content-Type': 'application/octet-stream',
-        'Content-Length': size,
-        'Cache-Control': 'no-store, no-cache, must-revalidate, private'
-    });
+    res.set({ 'Content-Type': 'application/octet-stream', 'Content-Length': size, 'Cache-Control': 'no-store' });
     res.send(crypto.randomBytes(size));
 });
 
 app.get("/api/notes", (req, res) => {
-    try { res.json(listNotesLocal()); } 
-    catch (err) { res.status(500).json({ error: err.message }); }
+    try { res.json(listNotesLocal()); } catch (err) { res.status(500).json({ error: err.message }); }
 });
 
 app.get("/api/note-content", (req, res) => {
@@ -173,34 +124,25 @@ app.get("/api/note-raw", (req, res) => {
 });
 
 app.post("/api/create-folder", (req, res) => {
-    try {
-        const safePath = getSafePath(cleanPath(req.body.foldername));
-        fs.mkdirSync(safePath, { recursive: true });
-        res.json({ success: true });
-    } catch (err) { res.status(500).json({ error: err.message }); }
+    try { fs.mkdirSync(getSafePath(cleanPath(req.body.foldername)), { recursive: true }); res.json({ success: true }); } catch (err) { res.status(500).json({ error: err.message }); }
 });
 
 app.post("/api/delete-item", (req, res) => {
     try {
-        const safePath = getSafePath(cleanPath(req.body.targetPath));
-        if (fs.existsSync(safePath)) {
-            const stat = fs.statSync(safePath);
-            if (stat.isDirectory()) fs.rmSync(safePath, { recursive: true, force: true });
-            else fs.unlinkSync(safePath);
+        const sp = getSafePath(cleanPath(req.body.targetPath));
+        if (fs.existsSync(sp)) {
+            const stat = fs.statSync(sp);
+            if (stat.isDirectory()) fs.rmSync(sp, { recursive: true, force: true }); else fs.unlinkSync(sp);
             res.json({ success: true });
-        } else { res.status(404).json({ error: "Item não encontrado." }); }
+        } else { res.status(404).json({ error: "Inexistente." }); }
     } catch (err) { res.status(500).json({ error: err.message }); }
 });
 
 app.post("/api/rename-item", (req, res) => {
     try {
-        const safeOld = getSafePath(cleanPath(req.body.oldPath));
-        const safeNew = getSafePath(cleanPath(req.body.newPath));
-        if (fs.existsSync(safeOld)) {
-            fs.mkdirSync(path.dirname(safeNew), { recursive: true });
-            fs.renameSync(safeOld, safeNew);
-            res.json({ success: true });
-        } else { res.status(404).json({ error: "Não encontrado." }); }
+        const oldP = getSafePath(cleanPath(req.body.oldPath));
+        const newP = getSafePath(cleanPath(req.body.newPath));
+        if (fs.existsSync(oldP)) { fs.mkdirSync(path.dirname(newP), { recursive: true }); fs.renameSync(oldP, newP); res.json({ success: true }); } else { res.status(404).json({ error: "Origem não encontrada." }); }
     } catch (err) { res.status(500).json({ error: err.message }); }
 });
 
@@ -213,30 +155,23 @@ app.get("/api/graph-data", (req, res) => {
         let nodesMap = new Map();
         let edges = [];
 
-        files.forEach(f => {
-            nodesMap.set(f.path, { id: f.path, label: f.path.split('/').pop(), type: "file" });
-        });
+        files.forEach(f => { nodesMap.set(f.path, { id: f.path, label: f.path.split('/').pop(), type: "file" }); });
 
         files.forEach(file => {
             if (file.path.toLowerCase().endsWith('.pdf')) return;
             try {
                 const fullContent = fs.readFileSync(getSafePath(file.path), "utf-8");
-                const linkRegex = /\[\[(.*?)\]\]/g;
-                let match;
+                const linkRegex = /\[\[(.*?)\]\]/g; let match;
                 while ((match = linkRegex.exec(fullContent)) !== null) {
-                    const rawLink = match[1].split('|')[0].trim();
-                    const targetName = rawLink.split('/').pop().replace(/\.(md|pdf|txt)$/i, "").toLowerCase();
+                    const targetName = match[1].split('|')[0].trim().split('/').pop().replace(/\.(md|pdf|txt)$/i, "").toLowerCase();
                     let foundKey = Array.from(nodesMap.keys()).find(k => k.split('/').pop().replace(/\.(md|pdf|txt)$/i, "").toLowerCase() === targetName);
                     if (foundKey) edges.push({ source: file.path, target: foundKey });
                 }
 
-                const tagRegex = /#([a-zA-Z0-9À-ÿ_-]+)/g;
-                let tMatch;
+                const tagRegex = /#([a-zA-Z0-9À-ÿ_-]+)/g; let tMatch;
                 while ((tMatch = tagRegex.exec(fullContent)) !== null) {
                     const tagLabel = `#${tMatch[1]}`;
-                    if (!nodesMap.has(tagLabel)) {
-                        nodesMap.set(tagLabel, { id: tagLabel, label: tagLabel, type: "tag" });
-                    }
+                    if (!nodesMap.has(tagLabel)) nodesMap.set(tagLabel, { id: tagLabel, label: tagLabel, type: "tag" });
                     edges.push({ source: file.path, target: tagLabel });
                 }
             } catch (e) {}
@@ -245,26 +180,87 @@ app.get("/api/graph-data", (req, res) => {
     } catch (err) { res.status(500).json({ error: err.message }); }
 });
 
-app.post("/api/upload-vault", (req, res) => {
+app.post("/api/upload-vault", async (req, res) => {
     try {
         let rawTarget = cleanPath(req.query.file);
-        if (rawTarget.toLowerCase().endsWith('.txt')) {
-            rawTarget = rawTarget.slice(0, -4) + ".md";
-        }
+        const isSync = req.query.sync === 'true'; 
         const safePath = getSafePath(rawTarget);
         fs.mkdirSync(path.dirname(safePath), { recursive: true });
         
-        let contentBuffer = req.body;
-        if (rawTarget.endsWith('.md')) {
-            const textContent = req.body.toString("utf-8");
-            if (!textContent.startsWith("# ")) {
-                const title = path.basename(rawTarget, ".md");
-                contentBuffer = Buffer.from(`# ${title}\n\n${textContent}`, "utf-8");
+        const fileBuffer = req.body;
+        if (rawTarget.toLowerCase().endsWith('.md')) {
+            let textContent = fileBuffer.toString("utf-8");
+            if (!textContent.startsWith("# ")) textContent = `# ${path.basename(rawTarget, ".md")}\n\n${textContent}`;
+            fs.writeFileSync(safePath, textContent);
+            return res.json({ success: true, markdown: textContent });
+        }
+
+        fs.writeFileSync(safePath, fileBuffer);
+
+        const processFileToMarkdown = async () => {
+            try {
+                let extractedText = "";
+                if (rawTarget.toLowerCase().endsWith('.pdf')) {
+                    const pdfData = await pdfParse(fileBuffer);
+                    extractedText = pdfData.text;
+                } else if (rawTarget.toLowerCase().endsWith('.txt') || rawTarget.toLowerCase().endsWith('.csv')) {
+                    extractedText = fileBuffer.toString('utf-8');
+                }
+
+                if (extractedText && extractedText.trim().length > 0) {
+                    const mdContent = await generateMarkdownWithClaude(extractedText, path.basename(rawTarget));
+                    if (mdContent) {
+                        const mdPath = safePath.substring(0, safePath.lastIndexOf('.')) + ".md";
+                        fs.writeFileSync(mdPath, mdContent, "utf-8");
+                        return mdContent;
+                    }
+                }
+            } catch(e) { console.error("Erro ProcessFile:", e); }
+            return "Extração falhou ou arquivo ilegível.";
+        };
+
+        if (isSync) {
+            const mdResult = await processFileToMarkdown();
+            res.json({ success: true, markdown: mdResult });
+        } else {
+            processFileToMarkdown();
+            res.json({ success: true, message: "Em processamento." });
+        }
+    } catch (err) { res.status(500).json({ error: err.message }); }
+});
+
+app.post("/api/sync-retroactive", async (req, res) => {
+    res.json({ success: true, message: "Started" });
+    const scanAndConvert = async (dir) => {
+        const list = fs.readdirSync(dir);
+        for (let file of list) {
+            const fullPath = path.join(dir, file);
+            if (fs.statSync(fullPath).isDirectory()) {
+                await scanAndConvert(fullPath);
+            } else if (file.toLowerCase().endsWith('.pdf') || file.toLowerCase().endsWith('.txt')) {
+                const ext = path.extname(file);
+                const baseName = file.substring(0, file.lastIndexOf(ext));
+                const mdPath = path.join(dir, baseName + ".md");
+                
+                if (!fs.existsSync(mdPath)) {
+                    try {
+                        const buffer = fs.readFileSync(fullPath);
+                        let text = "";
+                        if (ext.toLowerCase() === '.pdf') {
+                            const pdfData = await pdfParse(buffer);
+                            text = pdfData.text;
+                        } else { text = buffer.toString('utf-8'); }
+                        
+                        if (text && text.trim().length > 0) {
+                            const mdContent = await generateMarkdownWithClaude(text, file);
+                            if (mdContent) fs.writeFileSync(mdPath, mdContent, "utf-8");
+                        }
+                    } catch (e) { console.error(`Falha: ${file}`); }
+                }
             }
         }
-        fs.writeFileSync(safePath, contentBuffer);
-        res.json({ success: true });
-    } catch (err) { res.status(500).json({ error: err.message }); }
+    };
+    scanAndConvert(VAULT_PATH);
 });
 
 app.post("/api/chat", async (req, res) => {
@@ -274,10 +270,7 @@ app.post("/api/chat", async (req, res) => {
     try {
         const userMessages = Array.isArray(req.body.messages) ? req.body.messages : [];
         let messages = userMessages.filter(msg => msg && ["user", "assistant"].includes(msg.role)).slice(-20);
-        
-        if (messages.length > 0 && messages[0].role === "assistant") {
-            messages.shift();
-        }
+        if (messages.length > 0 && messages[0].role === "assistant") messages.shift();
         if (messages.length === 0) return res.status(400).json({ error: "Mensagem vazia." });
 
         let citedFiles = new Set(); 
@@ -285,7 +278,7 @@ app.post("/api/chat", async (req, res) => {
         let response = await anthropic.messages.create({
             model: process.env.CLAUDE_MODEL || "claude-3-5-sonnet-20241022",
             max_tokens: 4000,
-            system: "Você é o Assistente BMS, uma inteligência jurídica sênior operando em Modo Deus. Quando criar ou editar notas, use intensamente links [[NomeDoArquivo]] e hashtags tematizadas como #DireitoTrabalhista, #Prazo ou #Contradição para alimentar a malha neural do usuário.",
+            system: "Você é o Assistente BMS, inteligência corporativa (Modo Deus). Construa respostas excelentes baseadas nos documentos. Use links [[NomeDoArquivo]] e hashtags (#Direito, etc) para expandir a malha do usuário.",
             messages,
             tools: localTools
         });
@@ -299,49 +292,13 @@ app.post("/api/chat", async (req, res) => {
                     let toolResult = {};
                     try {
                         if (block.name === "list_notes") toolResult = listNotesLocal();
-                        else if (block.name === "read_note") {
-                            citedFiles.add(block.input.filename);
-                            toolResult = readNoteLocal(block.input.filename);
-                        }
-                        else if (block.name === "create_note") {
-                            const sp = getSafePath(cleanPath(block.input.filename));
-                            fs.mkdirSync(path.dirname(sp), { recursive: true });
-                            fs.writeFileSync(sp, block.input.content, "utf-8");
-                            toolResult = { status: "Documento criado." };
-                        }
-                        else if (block.name === "edit_note") {
-                            const sp = getSafePath(cleanPath(block.input.filename));
-                            fs.writeFileSync(sp, block.input.content, "utf-8");
-                            toolResult = { status: "Documento modificado." };
-                        }
-                        else if (block.name === "delete_item") {
-                            const sp = getSafePath(cleanPath(block.input.targetPath));
-                            if (fs.existsSync(sp)) {
-                                const stat = fs.statSync(sp);
-                                if (stat.isDirectory()) fs.rmSync(sp, { recursive: true, force: true });
-                                else fs.unlinkSync(sp);
-                                toolResult = { status: "Excluído." };
-                            } else { toolResult = { error: "Inexistente." }; }
-                        }
-                        else if (block.name === "rename_item") {
-                            const oldP = getSafePath(cleanPath(block.input.oldPath));
-                            const newP = getSafePath(cleanPath(block.input.newPath));
-                            if (fs.existsSync(oldP)) {
-                                fs.mkdirSync(path.dirname(newP), { recursive: true });
-                                fs.renameSync(oldP, newP);
-                                toolResult = { status: "Movido com sucesso." };
-                            } else { toolResult = { error: "Erro de caminho." }; }
-                        }
-                        else if (block.name === "create_folder") {
-                            const sp = getSafePath(cleanPath(block.input.foldername));
-                            fs.mkdirSync(sp, { recursive: true });
-                            toolResult = { status: "Pasta criada." };
-                        }
-                        else if (block.name === "create_downloadable_file") {
-                            const dlPath = path.join(DOWNLOADS_PATH, block.input.filename);
-                            fs.writeFileSync(dlPath, block.input.content, "utf-8");
-                            toolResult = { status: `Link de download gerado: /downloads/${block.input.filename}` };
-                        }
+                        else if (block.name === "read_note") { citedFiles.add(block.input.filename); toolResult = readNoteLocal(block.input.filename); }
+                        else if (block.name === "create_note") { const sp = getSafePath(cleanPath(block.input.filename)); fs.mkdirSync(path.dirname(sp), { recursive: true }); fs.writeFileSync(sp, block.input.content, "utf-8"); toolResult = { status: "Salvo." }; }
+                        else if (block.name === "edit_note") { const sp = getSafePath(cleanPath(block.input.filename)); fs.writeFileSync(sp, block.input.content, "utf-8"); toolResult = { status: "Modificado." }; }
+                        else if (block.name === "delete_item") { const sp = getSafePath(cleanPath(block.input.targetPath)); if (fs.existsSync(sp)) { const stat = fs.statSync(sp); if (stat.isDirectory()) fs.rmSync(sp, { recursive: true, force: true }); else fs.unlinkSync(sp); toolResult = { status: "Excluído." }; } else { toolResult = { error: "Inexistente." }; } }
+                        else if (block.name === "rename_item") { const oldP = getSafePath(cleanPath(block.input.oldPath)); const newP = getSafePath(cleanPath(block.input.newPath)); if (fs.existsSync(oldP)) { fs.mkdirSync(path.dirname(newP), { recursive: true }); fs.renameSync(oldP, newP); toolResult = { status: "Movido." }; } else { toolResult = { error: "Erro de caminho." }; } }
+                        else if (block.name === "create_folder") { const sp = getSafePath(cleanPath(block.input.foldername)); fs.mkdirSync(sp, { recursive: true }); toolResult = { status: "Pasta criada." }; }
+                        else if (block.name === "create_downloadable_file") { const dlPath = path.join(DOWNLOADS_PATH, block.input.filename); fs.writeFileSync(dlPath, block.input.content, "utf-8"); toolResult = { status: `Link gerado: /downloads/${block.input.filename}` }; }
                     } catch (err) { toolResult = { error: err.message }; }
                     toolResults.push({ type: "tool_result", tool_use_id: block.id, content: JSON.stringify(toolResult) });
                 }
@@ -349,20 +306,9 @@ app.post("/api/chat", async (req, res) => {
             messages.push({ role: "user", content: toolResults });
             response = await anthropic.messages.create({ model: process.env.CLAUDE_MODEL || "claude-3-5-sonnet-20241022", max_tokens: 4000, messages, tools: localTools });
         }
-        
-        res.json({ 
-            reply: response.content.find(c => c.type === "text")?.text || "OK.",
-            citedFiles: Array.from(citedFiles)
-        });
-
-    } catch (error) { 
-        console.error("ERRO CHAT:", error);
-        res.status(500).json({ error: error.message }); 
-    }
+        res.json({ reply: response.content.find(c => c.type === "text")?.text || "OK.", citedFiles: Array.from(citedFiles) });
+    } catch (error) { res.status(500).json({ error: error.message }); }
 });
 
-app.use((err, req, res, next) => {
-    res.status(500).json({ error: err.message });
-});
-
-app.listen(3000, () => console.log("Servidor ativo e blindado em 3000."));
+app.use((err, req, res, next) => { res.status(500).json({ error: err.message }); });
+app.listen(3000, () => console.log("Servidor ativo com Conversão PDF."));
