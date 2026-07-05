@@ -453,6 +453,9 @@
                             <button onclick="printActiveFile()" class="p-1.5 text-slate-400 dark:text-slate-500 hover:text-slate-600 rounded-lg transition-all" title="Imprimir">
                                 <i data-lucide="printer" class="w-4 h-4"></i>
                             </button>
+                            <button onclick="fullscreenActiveFile()" class="p-1.5 text-slate-400 dark:text-slate-500 hover:text-slate-600 rounded-lg transition-all" title="Tela Cheia">
+                                <i data-lucide="maximize-2" class="w-4 h-4"></i>
+                            </button>
                         </div>
                     </div>
 
@@ -460,7 +463,7 @@
                         <div id="view-doc-main" class="w-full h-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl overflow-y-auto p-6 font-serif text-xs text-slate-700 dark:text-slate-300 select-text shadow-sm leading-relaxed">
                             <div class="text-center text-slate-400 my-20">Nenhum documento aberto no monitor principal.</div>
                         </div>
-                        <div id="view-raw-main" class="hidden w-full h-full bg-slate-950 dark:bg-slate-900 text-blue-500 border border-slate-800 rounded-xl p-4 font-mono text-xs whitespace-pre-wrap overflow-y-auto select-text"></div>
+                        <div id="view-raw-main" class="hidden w-full h-full bg-slate-950 dark:bg-slate-900 text-blue-500 border border-slate-800 rounded-xl overflow-y-auto p-4 font-mono text-xs whitespace-pre-wrap select-text"></div>
                     </div>
                 </div>
 
@@ -636,7 +639,7 @@
         let collapsedFolders = JSON.parse(localStorage.getItem("bms_collapsed_folders") || "{}");
         let highlightedNodes = []; 
 
-        let activeMonitor = "main";
+        let activeMonitor = "main"; // Foco Inicial no Monitor 1
 
         if (chatInput) {
             chatInput.addEventListener("input", function() {
@@ -867,6 +870,10 @@
             }
         }
 
+        // =========================================================================
+        // MENUS E DROPDOWNS DE CONTEXTO
+        // =========================================================================
+
         function closeAllDropdownsMenu() {
             if (filterDropdown) {
                 filterDropdown.classList.add("hidden");
@@ -1013,31 +1020,17 @@
             const paneG = document.getElementById("pane-comparison-graph");
 
             if (mode === 'compare') {
-                if (paneC) {
-                    paneC.classList.remove("hidden"); 
-                }
-                if (paneG) {
-                    paneG.classList.add("hidden");
-                }
-                if (btnC) {
-                    btnC.className = "px-3 py-1 bg-white dark:bg-slate-700 dark:text-white rounded-md shadow-xs transition-colors";
-                }
-                if (btnG) {
-                    btnG.className = "px-3 py-1 text-slate-500 dark:text-slate-400 transition-colors";
-                }
+                if (paneC) paneC.classList.remove("hidden"); 
+                if (paneG) paneG.classList.add("hidden");
+                
+                if (btnC) btnC.className = "px-3 py-1 bg-white dark:bg-slate-700 dark:text-white rounded-md shadow-xs transition-colors";
+                if (btnG) btnG.className = "px-3 py-1 text-slate-500 dark:text-slate-400 transition-colors";
             } else {
-                if (paneC) {
-                    paneC.classList.add("hidden"); 
-                }
-                if (paneG) {
-                    paneG.classList.remove("hidden");
-                }
-                if (btnG) {
-                    btnG.className = "px-3 py-1 bg-white dark:bg-slate-700 dark:text-white rounded-md shadow-xs transition-colors";
-                }
-                if (btnC) {
-                    btnC.className = "px-3 py-1 text-slate-500 dark:text-slate-400 transition-colors";
-                }
+                if (paneC) paneC.classList.add("hidden"); 
+                if (paneG) paneG.classList.remove("hidden");
+                
+                if (btnG) btnG.className = "px-3 py-1 bg-white dark:bg-slate-700 dark:text-white rounded-md shadow-xs transition-colors";
+                if (btnC) btnC.className = "px-3 py-1 text-slate-500 dark:text-slate-400 transition-colors";
                 
                 resizeCanvas(); 
                 reloadGlobalGraph();
@@ -1134,7 +1127,7 @@
             }
             
             if (rEl) {
-                rEl.innerText = "A Inteligência Artificial está transcrevendo o PDF visualmente... Isso pode levar alguns segundos dependendo do tamanho das imagens.";
+                rEl.innerText = "A Inteligência Artificial está transcrevendo a imagem para texto... Isso pode levar alguns segundos dependendo do tamanho do PDF.";
                 switchTab(monitor, 'raw');
             }
             
@@ -1183,7 +1176,7 @@
         };
 
         // =========================================================================
-        // LEITURA DE ARQUIVOS E INDEXAÇÃO DE TAGS
+        // LEITURA DE ARQUIVOS NATIVA
         // =========================================================================
 
         function renderMarkdownHTML(mdText, filename) {
@@ -1198,7 +1191,6 @@
             while ((m = tagRegex.exec(mdText)) !== null) { 
                 rawTags.push(`#${m[1]}`); 
             }
-            
             const uniqueTags = [...new Set(rawTags)]; 
 
             let cleanText = mdText.replace(/\[\[(.*?)\]\]/g, '<span class="text-blue-500 font-bold cursor-pointer hover:underline" onclick="loadNoteContent(\'$1\')">$1</span>');
@@ -1263,6 +1255,7 @@
             
             buildNotesTree();
 
+            // Tratamento especial para PDF com Botão de Reprocessamento OCR
             if (filename.toLowerCase().endsWith('.pdf')) {
                 
                 if (dEl) {
@@ -1440,6 +1433,7 @@
                 serverStatusText.innerText = "SERVIDOR INATIVO";
             }
         }
+        
         setInterval(checkRealServerStatus, 4000); 
         checkRealServerStatus();
 
@@ -1449,8 +1443,14 @@
             }
             const query = globalSearchBar.value.toLowerCase().trim();
             const rows = fileTree.querySelectorAll(".tree-row-container");
+            
             rows.forEach(row => { 
-                row.classList.toggle("hidden", !row.getAttribute("data-path").toLowerCase().includes(query)); 
+                const pathText = row.getAttribute("data-path").toLowerCase();
+                if (pathText.includes(query)) {
+                    row.classList.remove("hidden");
+                } else {
+                    row.classList.add("hidden");
+                }
             });
         }
 
@@ -1459,6 +1459,7 @@
             contextMenuSelectedPath = path;
             const menu = document.getElementById("custom-context-menu"); 
             closeAllDropdownsMenu();
+            
             if (menu) { 
                 menu.classList.remove("hidden"); 
                 menu.style.left = `${e.clientX - 160}px`; 
@@ -1478,11 +1479,8 @@
             if (ctxMenu) {
                 ctxMenu.classList.add("hidden");
             }
-            
             const modal = document.getElementById("custom-dialog-modal"); 
-            if (!modal) {
-                return;
-            }
+            if (!modal) return;
             
             document.getElementById("modal-title").innerText = "Renomear / Mover Item";
             document.getElementById("modal-body-content").innerHTML = `<input type="text" id="modal-input-field" value="${contextMenuSelectedPath.replace(/\/$/, "")}" class="w-full bg-slate-50 border dark:border-slate-700 dark:bg-slate-800 rounded-xl p-2 text-xs font-semibold text-slate-800 dark:text-white">`;
@@ -1502,11 +1500,8 @@
             if (ctxMenu) {
                 ctxMenu.classList.add("hidden");
             }
-            
             const modal = document.getElementById("custom-dialog-modal"); 
-            if (!modal) {
-                return;
-            }
+            if (!modal) return;
             
             document.getElementById("modal-title").innerText = "Confirmar Exclusão";
             document.getElementById("modal-body-content").innerHTML = `<p>Excluir permanentemente <strong>${contextMenuSelectedPath.replace(/\/$/, "")}</strong>?</p>`;
@@ -1522,8 +1517,8 @@
             if (e) {
                 e.stopPropagation();
             }
-            
             let context = ""; 
+            
             if (selectedFileId && selectedFileId.endsWith("/")) {
                 context = selectedFileId; 
             } else if (selectedFileId && selectedFileId.includes("/")) {
@@ -1531,9 +1526,7 @@
             }
             
             const modal = document.getElementById("custom-dialog-modal"); 
-            if (!modal) {
-                return;
-            }
+            if (!modal) return;
             
             document.getElementById("modal-title").innerText = "Criar Nova Pasta";
             document.getElementById("modal-body-content").innerHTML = `<input type="text" id="modal-input-field" placeholder="Nome da subpasta..." class="w-full bg-slate-50 border dark:border-slate-700 dark:bg-slate-800 rounded-xl p-2 text-xs text-slate-800 dark:text-white">`;
@@ -1566,7 +1559,7 @@
                     body: JSON.stringify({ targetPath: p }) 
                 }); 
                 if (res.ok) { 
-                    if (selectedFileId === p || selectedFileId === p + "/") {
+                    if(selectedFileId === p || selectedFileId === p + "/") {
                         selectedFileId = null; 
                     }
                     buildNotesTree(); 
@@ -1583,7 +1576,7 @@
                     body: JSON.stringify({ oldPath: oldP, newPath: newP }) 
                 }); 
                 if (res.ok) { 
-                    if (selectedFileId === oldP || selectedFileId === oldP + "/") {
+                    if(selectedFileId === oldP || selectedFileId === oldP + "/") {
                         selectedFileId = newP; 
                     }
                     buildNotesTree(); 
@@ -1828,7 +1821,7 @@
                         if (isSelected) {
                             row.className = "tree-row-container group flex items-center justify-between w-full rounded-xl p-0.5 border transition-all text-left bg-blue-50/50 dark:bg-blue-950/30 border-blue-500 dark:border-blue-400 text-blue-600 dark:text-blue-400 shadow-xs";
                         } else {
-                            row.className = "tree-row-container group flex items-center justify-between w-full rounded-xl p-0.5 border border-transparent hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300 transition-all";
+                            row.className = "tree-row-container group flex items-center justify-between w-full rounded-xl p-0.5 border text-left border-transparent hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300";
                         }
                         
                         row.setAttribute("data-path", item.path);
@@ -2005,9 +1998,9 @@
                     
                     let dist = Math.sqrt(dx*dx + dy*dy);
                     
-                    // Repulsão para afastar os nós
-                    if (dist < 180) {
-                        let force = 300 / (dist * dist + 5);
+                    // Aumentei o raio de repulsão para 250 e a força para 600 (Distância natural)
+                    if (dist < 250) {
+                        let force = 600 / (dist * dist + 1);
                         if (n1 !== draggedNode) { 
                             n1.vx -= (dx/dist)*force; 
                             n1.vy -= (dy/dist)*force; 
@@ -2025,9 +2018,11 @@
                 let dy = e.targetNode.y - e.sourceNode.y;
                 let dist = Math.sqrt(dx*dx + dy*dy);
                 
-                // Mola elástica entre os nós conectados
+                // Mola elástica (Hooke's Law) com resting distance = 80px
                 if (dist > 0) {
-                    let force = 0.015 * dist;
+                    let diff = dist - 80;
+                    let force = 0.02 * diff;
+                    
                     if (e.sourceNode !== draggedNode) { 
                         e.sourceNode.vx += (dx / dist) * force; 
                         e.sourceNode.vy += (dy / dist) * force; 
@@ -2102,7 +2097,11 @@
                     radius = 6.0;
                 }
                 
-                if (selectedFileId === n.id || comparisonFileId === n.id) {
+                const cleanMain = selectedFileId ? selectedFileId.replace(/\/$/, "") : "";
+                const cleanComp = comparisonFileId ? comparisonFileId.replace(/\/$/, "") : "";
+                const isAct = (cleanMain === n.id || cleanComp === n.id);
+
+                if (isAct) {
                     radius = 7.0;
                 }
                 
@@ -2110,10 +2109,12 @@
                 
                 if (n.type === "tag") {
                     ctx.fillStyle = "#8bc34a"; // Bolha Verde Claro
-                } else if (selectedFileId === n.id || comparisonFileId === n.id) {
+                } else if (n.type === "concept") {
+                    ctx.fillStyle = isDark ? "#94a3b8" : "#cbd5e1"; // Bolha Cinza para Nós Fantasmas
+                } else if (isAct) {
                     ctx.fillStyle = "#2563eb"; // Bolha Azul de Seleção
                 } else {
-                    ctx.fillStyle = isDark ? "#3b82f6" : "#64748b"; 
+                    ctx.fillStyle = isDark ? "#475569" : "#94a3b8"; // Padrão
                 }
                 
                 ctx.fill(); 
