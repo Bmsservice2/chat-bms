@@ -117,7 +117,6 @@ function readNoteLocal(filename) {
     return { filename, content: fs.readFileSync(safePath, "utf-8") };
 }
 
-// MOTOR HÍBRIDO DE OCR VISUAL E MARKDOWN COM CLAUDE 3.5 SONNET
 async function processDocumentWithClaude(fileBuffer, fileExt, originalName) {
     if (!anthropic) {
         return `> **Aviso de Sistema:** Chave ANTHROPIC_API_KEY ausente. Não é possível rodar o motor OCR/Markdown para o arquivo ${originalName}.`;
@@ -127,13 +126,11 @@ async function processDocumentWithClaude(fileBuffer, fileExt, originalName) {
         let extractedText = "";
         let isScanned = false;
 
-        // ETAPA 1: TENTAR EXTRAIR TEXTO NATIVO
         if (fileExt === '.pdf') {
             try {
                 const pdfData = await pdfParse(fileBuffer);
                 extractedText = pdfData.text || "";
                 
-                // Se o PDF tiver menos de 100 caracteres alfanuméricos, assumimos que é imagem escaneada.
                 const alphanumericText = extractedText.replace(/[^a-zA-Z0-9À-ÿ]/g, '');
                 if (alphanumericText.length < 100) {
                     isScanned = true;
@@ -148,7 +145,6 @@ async function processDocumentWithClaude(fileBuffer, fileExt, originalName) {
 
         const systemPrompt = "Você é um motor de indexação corporativa operando a base de dados do Obsidian. Seu papel é transcrever documentos inteiros ou reescrever textos extraídos em Markdown profissional.\n\nDIRETRIZES:\n1. Extraia TODO O TEXTO VISÍVEL, sem ocultar partes.\n2. Corrija quebras de linha erradas.\n3. Crie títulos (##) para seções principais.\n4. OBRIGATÓRIO: Crie uma seção '### Metadados' no final contendo de 3 a 5 #tags relevantes ao conteúdo e links em formato [[...]].\n\nRetorne APENAS o código Markdown bruto. Não adicione texto de conversa nem explique o que você fez.";
 
-        // ETAPA 2: DECISÃO DE MOTOR (VISÃO COMPUTACIONAL OU TEXTO PURO)
         if (isScanned && fileExt === '.pdf') {
             console.log(`[MOTOR OCR] PDF '${originalName}' é escaneado/imagem. Invocando Visão Computacional do Claude...`);
             const base64PDF = fileBuffer.toString('base64');
@@ -171,13 +167,12 @@ async function processDocumentWithClaude(fileBuffer, fileExt, originalName) {
                     ]
                 }]
             }, { 
-                headers: { "anthropic-beta": "pdfs-2024-09-25" } // Cabeçalho obrigatório para ler PDFs nativamente
+                headers: { "anthropic-beta": "pdfs-2024-09-25" } 
             });
 
             return response.content.find(c => c.type === "text")?.text || `> Erro da Inteligência Artificial ao tentar ler as imagens do PDF escaneado. O retorno foi vazio.`;
         }
 
-        // MOTOR PADRÃO DE TEXTO (Mais rápido e barato para PDFs gerados eletronicamente)
         console.log(`[MOTOR TEXTO] Lendo texto puro e formatando '${originalName}'...`);
         const response = await anthropic.messages.create({
             model: process.env.CLAUDE_MODEL || "claude-3-5-sonnet-20241022",
@@ -196,10 +191,6 @@ async function processDocumentWithClaude(fileBuffer, fileExt, originalName) {
         return `> **Erro de Processamento de IA:** O modelo falhou ao tentar transcrever/ler o arquivo '${originalName}'.\n\n**Detalhe Técnico para TI:** ${e.message}`;
     }
 }
-
-// =========================================================================
-// ROTAS DE API DA PLATAFORMA
-// =========================================================================
 
 app.get("/api/status", (req, res) => {
     if (missingVars.length > 0 || !fs.existsSync(VAULT_PATH)) {
@@ -300,6 +291,7 @@ app.post("/api/rename-item", (req, res) => {
     }
 });
 
+// A ROTA MÁGICA: CRIAÇÃO DO GRAFO (MALHA NEURAL NATIVA ESTILO OBSIDIAN)
 app.get("/api/graph-data", (req, res) => {
     try {
         const check = listNotesLocal();
@@ -311,49 +303,96 @@ app.get("/api/graph-data", (req, res) => {
         let nodesMap = new Map();
         let edges = [];
 
-        files.forEach(f => { 
-            nodesMap.set(f.path, { id: f.path, label: f.path.split('/').pop(), type: "file" }); 
+        // FUNÇÃO OBSIDIAN CLONE: Junta PDF e MD no mesmo NÓ
+        const getLogicalNode = (filePath) => {
+            const ext = path.extname(filePath).toLowerCase();
+            const base = filePath.substring(0, filePath.lastIndexOf('.'));
+            
+            // Se eu estiver lendo um arquivo MD, eu olho se ele tem um PDF dono dele.
+            // Se tiver, eu atribuo a identidade desse MD para o PDF!
+            if (ext === '.md') {
+                const pdfTwin = base + '.pdf';
+                if (files.some(f => f.path === pdfTwin)) {
+                    return pdfTwin;
+                }
+            }
+            return filePath;
+        };
+
+        // PASSO 1: Criar as bolinhas dos arquivos filtrados e mesclados
+        files.forEach(f => {
+            const logicalPath = getLogicalNode(f.path);
+            if (!nodesMap.has(logicalPath)) {
+                // Tira o .pdf e o .md para o texto da bolinha ficar super limpo (E-MAIL AFASTAMENTO)
+                let displayLabel = logicalPath.split('/').pop().replace(/\.(md|pdf|txt)$/i, "");
+                nodesMap.set(logicalPath, { 
+                    id: logicalPath, 
+                    label: displayLabel, 
+                    type: "file" 
+                });
+            }
         });
 
+        // PASSO 2: Mapear Conexões (Lendo os MDs)
         files.forEach(file => {
-            if (file.path.toLowerCase().endsWith('.pdf')) return;
+            // PDFs e Imagens não possuem tags nativas legíveis nesse loop
+            if (file.path.toLowerCase().endsWith('.pdf')) {
+                return;
+            }
             
             try {
                 const fullContent = fs.readFileSync(getSafePath(file.path), "utf-8");
+                const sourceLogicalPath = getLogicalNode(file.path); // Quem é o "dono" desse conteúdo?
                 
-                // Mapeia links de conexão do Obsidian: [[Arquivo]]
+                // Extração de Links Diretos: [[Outro Arquivo]]
                 const linkRegex = /\[\[(.*?)\]\]/g; 
                 let match;
                 while ((match = linkRegex.exec(fullContent)) !== null) {
                     const targetName = match[1].split('|')[0].trim().split('/').pop().replace(/\.(md|pdf|txt)$/i, "").toLowerCase();
+                    
                     let foundKey = Array.from(nodesMap.keys()).find(k => k.split('/').pop().replace(/\.(md|pdf|txt)$/i, "").toLowerCase() === targetName);
                     
                     if (foundKey) {
-                        edges.push({ source: file.path, target: foundKey });
+                        edges.push({ source: sourceLogicalPath, target: foundKey });
                     }
                 }
 
-                // Mapeia hashtags e cria nós de contexto
+                // Extração de #Tags (O motor agregador universal)
                 const tagRegex = /#([a-zA-Z0-9À-ÿ_-]+)/g; 
                 let tMatch;
                 while ((tMatch = tagRegex.exec(fullContent)) !== null) {
-                    const tagLabel = `#${tMatch[1]}`;
-                    if (!nodesMap.has(tagLabel)) {
-                        nodesMap.set(tagLabel, { id: tagLabel, label: tagLabel, type: "tag" });
+                    // Mágica: Tudo pra minúsculo na hora de criar o "ID" da tag para elas se fundirem!
+                    const tagID = `#${tMatch[1].toLowerCase()}`; 
+                    
+                    if (!nodesMap.has(tagID)) {
+                        // Mas na hora de mostrar o texto na bolinha, mantém como o cara escreveu
+                        const displayTag = `#${tMatch[1]}`;
+                        nodesMap.set(tagID, { id: tagID, label: displayTag, type: "tag" });
                     }
-                    edges.push({ source: file.path, target: tagLabel });
+                    edges.push({ source: sourceLogicalPath, target: tagID });
                 }
             } catch (e) {
-                // Ignora arquivos corrompidos silenciosamente para não quebrar a malha
+                // Ignora arquivo corrompido
             }
         });
-        res.json({ nodes: Array.from(nodesMap.values()), edges });
+
+        // Limpeza de Teias Duplicadas
+        const uniqueEdges = [];
+        const edgeSet = new Set();
+        edges.forEach(e => {
+            const key = `${e.source}->${e.target}`;
+            if (!edgeSet.has(key)) {
+                edgeSet.add(key);
+                uniqueEdges.push(e);
+            }
+        });
+
+        res.json({ nodes: Array.from(nodesMap.values()), edges: uniqueEdges });
     } catch (err) { 
         res.status(500).json({ error: err.message }); 
     }
 });
 
-// A ROTA MÁGICA: REFAZER MARKDOWN ESPECÍFICO A PEDIDO DO USUÁRIO
 app.post("/api/reprocess-md", async (req, res) => {
     try {
         const filename = cleanPath(req.body.filename);
@@ -371,7 +410,7 @@ app.post("/api/reprocess-md", async (req, res) => {
         
         if (mdContent) {
             const mdPath = safePath.substring(0, safePath.lastIndexOf('.')) + ".md";
-            fs.writeFileSync(mdPath, mdContent, "utf-8"); // Substitui o arquivo com erro
+            fs.writeFileSync(mdPath, mdContent, "utf-8");
         }
         
         res.json({ success: true, markdown: mdContent });
@@ -390,7 +429,6 @@ app.post("/api/upload-vault", async (req, res) => {
         
         const fileBuffer = req.body;
         
-        // Se for MD vindo do usuário, aceita nativamente
         if (rawTarget.toLowerCase().endsWith('.md')) {
             let textContent = fileBuffer.toString("utf-8");
             if (!textContent.startsWith("# ")) {
@@ -400,10 +438,8 @@ app.post("/api/upload-vault", async (req, res) => {
             return res.json({ success: true, markdown: textContent });
         }
 
-        // Salva o PDF fisicamente
         fs.writeFileSync(safePath, fileBuffer);
 
-        // Dispara o motor inteligente
         const runAsyncEngine = async () => {
             const ext = path.extname(rawTarget).toLowerCase();
             const mdContent = await processDocumentWithClaude(fileBuffer, ext, path.basename(rawTarget));
@@ -444,7 +480,6 @@ app.post("/api/sync-retroactive", async (req, res) => {
                 if (!fs.existsSync(mdPath)) {
                     shouldGenerate = true;
                 } else {
-                    // Verifica se o arquivo MD existente foi um erro antigo e precisa ser atualizado
                     const existingMd = fs.readFileSync(mdPath, "utf-8");
                     if (existingMd.includes("Erro de Processamento de IA") || existingMd.includes("Aviso de Sistema") || existingMd.trim().length < 150) {
                         shouldGenerate = true;
@@ -581,4 +616,4 @@ app.use((err, req, res, next) => {
     res.status(500).json({ error: err.message }); 
 });
 
-app.listen(3000, () => console.log("BMS Server operante na porta 3000 com OCR ativo."));
+app.listen(3000, () => console.log("BMS Server operante com Malha Orgânica Obsidian."));
