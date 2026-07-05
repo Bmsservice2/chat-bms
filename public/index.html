@@ -453,9 +453,6 @@
                             <button onclick="printActiveFile()" class="p-1.5 text-slate-400 dark:text-slate-500 hover:text-slate-600 rounded-lg transition-all" title="Imprimir">
                                 <i data-lucide="printer" class="w-4 h-4"></i>
                             </button>
-                            <button onclick="fullscreenActiveFile()" class="p-1.5 text-slate-400 dark:text-slate-500 hover:text-slate-600 rounded-lg transition-all" title="Tela Cheia">
-                                <i data-lucide="maximize-2" class="w-4 h-4"></i>
-                            </button>
                         </div>
                     </div>
 
@@ -488,7 +485,7 @@
                         </div>
                     </div>
 
-                    <div id="pane-comparison-doc" class="flex-1 flex flex-col overflow-hidden p-4 bg-[#fafafa] dark:bg-slate-950">
+                    <div id="pane-comparison-doc" class="flex-1 flex flex-col overflow-hidden p-4 bg-[#fafafa] dark:bg-slate-950 h-full">
                         
                         <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-2.5 mb-3 flex items-center justify-between shadow-xs">
                             <span id="comp-note-title" class="text-xs font-bold text-slate-400 truncate pr-2 px-2 max-w-[200px]">Monitor de Comparação</span>
@@ -500,7 +497,7 @@
 
                                 <div class="flex bg-slate-100 dark:bg-slate-800 p-0.5 rounded-lg text-[9px] font-black">
                                     <button id="btn-tab-comp-formatted" onclick="switchTab('comp', 'doc')" class="px-3 py-1 bg-white dark:bg-slate-700 dark:text-white rounded-md shadow-xs transition-colors">Original</button>
-                                    <button id="btn-tab-comp-raw" onclick="switchTab('comp', 'raw')" class="px-3 py-1 text-slate-500 dark:text-slate-400 transition-colors">Markdown</button>
+                                    <button id="btn-tab-main-raw" onclick="switchTab('comp', 'raw')" class="px-3 py-1 text-slate-500 dark:text-slate-400 transition-colors">Markdown</button>
                                 </div>
                                 <button onclick="clearComparisonDoc()" class="text-slate-400 hover:text-red-500 mx-1">
                                     <i data-lucide="x" class="w-3.5 h-3.5"></i>
@@ -510,7 +507,7 @@
                         
                         <div class="flex-1 relative overflow-hidden font-serif">
                             <div id="view-doc-comp" class="w-full h-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl overflow-y-auto p-6 text-xs text-slate-700 dark:text-slate-300 select-text leading-relaxed shadow-sm">
-                                <div class="text-center text-slate-400 my-20 dark:text-slate-600">Painel secundário inativo. Selecione este monitor e clique em um arquivo da árvore para carregá-lo aqui.</div>
+                                <div class="text-center text-slate-400 my-20 dark:text-slate-600">Painel secundário inativo. Selecione este monitor e clique em um arquivo na árvore para carregá-lo aqui.</div>
                             </div>
                             <div id="view-raw-comp" class="hidden w-full h-full bg-slate-950 dark:bg-slate-900 text-blue-500 border border-slate-200 dark:border-slate-800 rounded-xl p-4 font-mono text-xs whitespace-pre-wrap overflow-y-auto select-text"></div>
                         </div>
@@ -968,7 +965,7 @@
             
             try {
                 await fetch("/api/sync-retroactive", { method: "POST" });
-                alert("A IA vai varrer seu cofre agora e transcrever visualmente os PDFs antigos!");
+                alert("Processo de conversão iniciado no Servidor! A IA vai varrer todos os arquivos com erro e transcrevê-los visualmente.");
             } catch(e) {
                 alert("Erro ao iniciar sincronização.");
             }
@@ -1020,17 +1017,31 @@
             const paneG = document.getElementById("pane-comparison-graph");
 
             if (mode === 'compare') {
-                if (paneC) paneC.classList.remove("hidden"); 
-                if (paneG) paneG.classList.add("hidden");
-                
-                if (btnC) btnC.className = "px-3 py-1 bg-white dark:bg-slate-700 dark:text-white rounded-md shadow-xs transition-colors";
-                if (btnG) btnG.className = "px-3 py-1 text-slate-500 dark:text-slate-400 transition-colors";
+                if (paneC) {
+                    paneC.classList.remove("hidden"); 
+                }
+                if (paneG) {
+                    paneG.classList.add("hidden");
+                }
+                if (btnC) {
+                    btnC.className = "px-3 py-1 bg-white dark:bg-slate-700 dark:text-white rounded-md shadow-xs transition-colors";
+                }
+                if (btnG) {
+                    btnG.className = "px-3 py-1 text-slate-500 dark:text-slate-400 transition-colors";
+                }
             } else {
-                if (paneC) paneC.classList.add("hidden"); 
-                if (paneG) paneG.classList.remove("hidden");
-                
-                if (btnG) btnG.className = "px-3 py-1 bg-white dark:bg-slate-700 dark:text-white rounded-md shadow-xs transition-colors";
-                if (btnC) btnC.className = "px-3 py-1 text-slate-500 dark:text-slate-400 transition-colors";
+                if (paneC) {
+                    paneC.classList.add("hidden"); 
+                }
+                if (paneG) {
+                    paneG.classList.remove("hidden");
+                }
+                if (btnG) {
+                    btnG.className = "px-3 py-1 bg-white dark:bg-slate-700 dark:text-white rounded-md shadow-xs transition-colors";
+                }
+                if (btnC) {
+                    btnC.className = "px-3 py-1 text-slate-500 dark:text-slate-400 transition-colors";
+                }
                 
                 resizeCanvas(); 
                 reloadGlobalGraph();
@@ -1479,8 +1490,11 @@
             if (ctxMenu) {
                 ctxMenu.classList.add("hidden");
             }
+            
             const modal = document.getElementById("custom-dialog-modal"); 
-            if (!modal) return;
+            if (!modal) {
+                return;
+            }
             
             document.getElementById("modal-title").innerText = "Renomear / Mover Item";
             document.getElementById("modal-body-content").innerHTML = `<input type="text" id="modal-input-field" value="${contextMenuSelectedPath.replace(/\/$/, "")}" class="w-full bg-slate-50 border dark:border-slate-700 dark:bg-slate-800 rounded-xl p-2 text-xs font-semibold text-slate-800 dark:text-white">`;
@@ -1500,8 +1514,11 @@
             if (ctxMenu) {
                 ctxMenu.classList.add("hidden");
             }
+            
             const modal = document.getElementById("custom-dialog-modal"); 
-            if (!modal) return;
+            if (!modal) {
+                return;
+            }
             
             document.getElementById("modal-title").innerText = "Confirmar Exclusão";
             document.getElementById("modal-body-content").innerHTML = `<p>Excluir permanentemente <strong>${contextMenuSelectedPath.replace(/\/$/, "")}</strong>?</p>`;
@@ -1526,7 +1543,9 @@
             }
             
             const modal = document.getElementById("custom-dialog-modal"); 
-            if (!modal) return;
+            if (!modal) {
+                return;
+            }
             
             document.getElementById("modal-title").innerText = "Criar Nova Pasta";
             document.getElementById("modal-body-content").innerHTML = `<input type="text" id="modal-input-field" placeholder="Nome da subpasta..." class="w-full bg-slate-50 border dark:border-slate-700 dark:bg-slate-800 rounded-xl p-2 text-xs text-slate-800 dark:text-white">`;
@@ -1545,12 +1564,14 @@
                             buildNotesTree(); 
                             reloadGlobalGraph(); 
                         } 
-                    } catch(err){}
+                    } catch(err) {
+                        console.error(err);
+                    }
                     closeCustomModal();
                 }
             };
         }
-
+        
         async function deleteItem(p) { 
             try { 
                 const res = await fetch("/api/delete-item", { 
@@ -1565,7 +1586,9 @@
                     buildNotesTree(); 
                     reloadGlobalGraph(); 
                 } 
-            } catch(err){} 
+            } catch(err) {
+                console.error(err);
+            } 
         }
         
         async function renameItem(oldP, newP) { 
@@ -1582,7 +1605,9 @@
                     buildNotesTree(); 
                     reloadGlobalGraph(); 
                 } 
-            } catch(err){} 
+            } catch(err) {
+                console.error(err);
+            } 
         }
 
         // =========================================================================
@@ -1614,7 +1639,9 @@
                                     method: "POST", 
                                     body: file 
                                 }); 
-                            } catch(err){}
+                            } catch(err) {
+                                console.error(err);
+                            }
                             resolve();
                         });
                     });
@@ -1660,7 +1687,9 @@
                         method: "POST", 
                         body: file 
                     }); 
-                } catch(e){}
+                } catch(e) {
+                    console.error(e);
+                }
             }
             
             await buildNotesTree(); 
@@ -1821,7 +1850,7 @@
                         if (isSelected) {
                             row.className = "tree-row-container group flex items-center justify-between w-full rounded-xl p-0.5 border transition-all text-left bg-blue-50/50 dark:bg-blue-950/30 border-blue-500 dark:border-blue-400 text-blue-600 dark:text-blue-400 shadow-xs";
                         } else {
-                            row.className = "tree-row-container group flex items-center justify-between w-full rounded-xl p-0.5 border text-left border-transparent hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300";
+                            row.className = "tree-row-container group flex items-center justify-between w-full rounded-xl p-0.5 border text-left border-transparent hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300 transition-all";
                         }
                         
                         row.setAttribute("data-path", item.path);
@@ -1953,6 +1982,7 @@
             canvas.height = h;
 
             const existingNodesMap = new Map();
+            
             graphData.nodes.forEach(n => {
                 existingNodesMap.set(n.id, n);
             });
@@ -1963,17 +1993,21 @@
                     id: n.id, 
                     label: n.label, 
                     type: n.type, 
-                    x: old ? old.x : w/2 + (Math.random()-0.5)*160, 
-                    y: old ? old.y : h/2 + (Math.random()-0.5)*160, 
+                    x: old ? old.x : w / 2 + (Math.random() - 0.5) * 160, 
+                    y: old ? old.y : h / 2 + (Math.random() - 0.5) * 160, 
                     vx: 0, 
                     vy: 0 
                 };
             });
             
-            graphData.edges = data.edges.map(e => ({ 
-                sourceNode: graphData.nodes.find(n => n.id === e.source), 
-                targetNode: graphData.nodes.find(n => n.id === e.target) 
-            })).filter(e => e.sourceNode && e.targetNode);
+            graphData.edges = data.edges.map(e => {
+                return { 
+                    sourceNode: graphData.nodes.find(n => n.id === e.source), 
+                    targetNode: graphData.nodes.find(n => n.id === e.target) 
+                };
+            }).filter(e => {
+                return e.sourceNode && e.targetNode;
+            });
         }
 
         function updatePhysics() {
@@ -1986,6 +2020,7 @@
             
             for (let i = 0; i < graphData.nodes.length; i++) {
                 let n1 = graphData.nodes[i];
+                
                 for (let j = i + 1; j < graphData.nodes.length; j++) {
                     let n2 = graphData.nodes[j];
                     let dx = n2.x - n1.x; 
@@ -1996,18 +2031,22 @@
                         dy = 0.1;
                     }
                     
-                    let dist = Math.sqrt(dx*dx + dy*dy);
+                    let dist = Math.sqrt(dx * dx + dy * dy);
+                    let safeDist = Math.max(dist, 25);
                     
-                    // Aumentei o raio de repulsão para 250 e a força para 600 (Distância natural)
-                    if (dist < 250) {
-                        let force = 600 / (dist * dist + 1);
+                    if (dist < 220) {
+                        let force = 900 / (safeDist * safeDist);
+                        let fx = (dx / safeDist) * force;
+                        let fy = (dy / safeDist) * force;
+                        
                         if (n1 !== draggedNode) { 
-                            n1.vx -= (dx/dist)*force; 
-                            n1.vy -= (dy/dist)*force; 
+                            n1.vx -= fx; 
+                            n1.vy -= fy; 
                         }
+                        
                         if (n2 !== draggedNode) { 
-                            n2.vx += (dx/dist)*force; 
-                            n2.vy += (dy/dist)*force; 
+                            n2.vx += fx; 
+                            n2.vy += fy; 
                         }
                     }
                 }
@@ -2016,20 +2055,25 @@
             graphData.edges.forEach(e => {
                 let dx = e.targetNode.x - e.sourceNode.x; 
                 let dy = e.targetNode.y - e.sourceNode.y;
-                let dist = Math.sqrt(dx*dx + dy*dy);
+                let dist = Math.sqrt(dx * dx + dy * dy);
+                let safeDist = Math.max(dist, 1);
                 
-                // Mola elástica (Hooke's Law) com resting distance = 80px
                 if (dist > 0) {
-                    let diff = dist - 80;
-                    let force = 0.02 * diff;
+                    let restingDistance = 65; 
+                    let diff = safeDist - restingDistance;
+                    let force = 0.025 * diff;
+                    
+                    let fx = (dx / safeDist) * force;
+                    let fy = (dy / safeDist) * force;
                     
                     if (e.sourceNode !== draggedNode) { 
-                        e.sourceNode.vx += (dx / dist) * force; 
-                        e.sourceNode.vy += (dy / dist) * force; 
+                        e.sourceNode.vx += fx; 
+                        e.sourceNode.vy += fy; 
                     }
+                    
                     if (e.targetNode !== draggedNode) { 
-                        e.targetNode.vx -= (dx / dist) * force; 
-                        e.targetNode.vy -= (dy / dist) * force; 
+                        e.targetNode.vx -= fx; 
+                        e.targetNode.vy -= fy; 
                     }
                 }
             });
@@ -2039,40 +2083,48 @@
                     return;
                 }
                 
-                n.vx += (cx - n.x) * 0.001; 
-                n.vy += (cy - n.y) * 0.001;
+                n.vx += (cx - n.x) * 0.0018; 
+                n.vy += (cy - n.y) * 0.0018;
                 
                 n.vx += (Math.random() - 0.5) * 0.1; 
                 n.vy += (Math.random() - 0.5) * 0.1;
                 
+                let maxVel = 6.5;
+                n.vx = Math.max(-maxVel, Math.min(maxVel, n.vx));
+                n.vy = Math.max(-maxVel, Math.min(maxVel, n.vy));
+                
                 n.x += n.vx; 
                 n.y += n.vy;
                 
-                const p = 15;
+                const p = 20;
+                
                 if (n.x < p) { 
                     n.x = p; 
-                    n.vx *= -1; 
+                    n.vx *= -0.2; 
                 } 
+                
                 if (n.y < p) { 
                     n.y = p; 
-                    n.vy *= -1; 
-                }
-                if (n.x > canvas.width - p) { 
-                    n.x = canvas.width - p; 
-                    n.vx *= -1; 
-                }
-                if (n.y > canvas.height - p) { 
-                    n.y = canvas.height - p; 
-                    n.vy *= -1; 
+                    n.vy *= -0.2; 
                 }
                 
-                n.vx *= 0.90; 
-                n.vy *= 0.90;
+                if (n.x > canvas.width - p) { 
+                    n.x = canvas.width - p; 
+                    n.vx *= -0.2; 
+                }
+                
+                if (n.y > canvas.height - p) { 
+                    n.y = canvas.height - p; 
+                    n.vy *= -0.2; 
+                }
+                
+                n.vx *= 0.84; 
+                n.vy *= 0.84;
             });
         }
 
         function drawGraph() {
-            if(!ctx || !canvas) {
+            if (!ctx || !canvas) {
                 return; 
             }
             
@@ -2093,6 +2145,7 @@
                 ctx.beginPath();
                 
                 let radius = 4.5;
+                
                 if (n.type === "tag") {
                     radius = 6.0;
                 }
@@ -2100,12 +2153,12 @@
                 const cleanMain = selectedFileId ? selectedFileId.replace(/\/$/, "") : "";
                 const cleanComp = comparisonFileId ? comparisonFileId.replace(/\/$/, "") : "";
                 const isAct = (cleanMain === n.id || cleanComp === n.id);
-
+                
                 if (isAct) {
                     radius = 7.0;
                 }
                 
-                ctx.arc(n.x, n.y, radius, 0, 2*Math.PI);
+                ctx.arc(n.x, n.y, radius, 0, 2 * Math.PI);
                 
                 if (n.type === "tag") {
                     ctx.fillStyle = "#8bc34a"; // Bolha Verde Claro
