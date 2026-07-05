@@ -143,7 +143,7 @@ async function processDocumentWithClaude(fileBuffer, fileExt, originalName) {
             extractedText = fileBuffer.toString('utf-8');
         }
 
-        const systemPrompt = "Você é um motor de indexação corporativa operando a base de dados do Obsidian. Seu papel é transcrever documentos inteiros ou reescrever textos extraídos em Markdown profissional.\n\nDIRETRIZES:\n1. Extraia TODO O TEXTO VISÍVEL, sem ocultar partes.\n2. Corrija quebras de linha erradas.\n3. Crie títulos (##) para seções principais.\n4. OBRIGATÓRIO: Crie uma seção '### Metadados' no final contendo de 3 a 5 #tags relevantes ao conteúdo e links em formato [[...]].\n\nRetorne APENAS o código Markdown bruto. Não adicione texto de conversa nem explique o que você fez.";
+        const systemPrompt = "Você é um motor de indexação corporativa operando a base de dados do Obsidian. Seu papel é transcrever documentos inteiros ou reescrever textos extraídos em Markdown profissional.\n\nDIRETRIZES:\n1. Extraia TODO O TEXTO VISÍVEL, sem ocultar partes.\n2. Corrija quebras de linha erradas.\n3. Crie títulos (##) para seções principais.\n4. OBRIGATÓRIO: Crie uma seção '### Metadados' no final contendo de 3 a 5 #tags relevantes ao conteúdo e links em formato [[...]] para assuntos principais como nomes de empresas ou temas jurídicos.\n\nRetorne APENAS o código Markdown bruto. Não adicione texto de conversa nem explique o que você fez.";
 
         if (isScanned && fileExt === '.pdf') {
             console.log(`[MOTOR OCR] PDF '${originalName}' é escaneado/imagem. Invocando Visão Computacional do Claude...`);
@@ -291,7 +291,7 @@ app.post("/api/rename-item", (req, res) => {
     }
 });
 
-// A ROTA MÁGICA: CRIAÇÃO DO GRAFO (MALHA NEURAL NATIVA ESTILO OBSIDIAN)
+// A ROTA DA MALHA NEURAL ATUALIZADA (CLONE OBSIDIAN)
 app.get("/api/graph-data", (req, res) => {
     try {
         const check = listNotesLocal();
@@ -303,13 +303,11 @@ app.get("/api/graph-data", (req, res) => {
         let nodesMap = new Map();
         let edges = [];
 
-        // FUNÇÃO OBSIDIAN CLONE: Junta PDF e MD no mesmo NÓ
+        // FUNÇÃO OBSIDIAN CLONE: Une MD e PDF no mesmo nó principal
         const getLogicalNode = (filePath) => {
             const ext = path.extname(filePath).toLowerCase();
             const base = filePath.substring(0, filePath.lastIndexOf('.'));
             
-            // Se eu estiver lendo um arquivo MD, eu olho se ele tem um PDF dono dele.
-            // Se tiver, eu atribuo a identidade desse MD para o PDF!
             if (ext === '.md') {
                 const pdfTwin = base + '.pdf';
                 if (files.some(f => f.path === pdfTwin)) {
@@ -319,11 +317,10 @@ app.get("/api/graph-data", (req, res) => {
             return filePath;
         };
 
-        // PASSO 1: Criar as bolinhas dos arquivos filtrados e mesclados
+        // PASSO 1: Cria os nós-raiz (os arquivos reais)
         files.forEach(f => {
             const logicalPath = getLogicalNode(f.path);
             if (!nodesMap.has(logicalPath)) {
-                // Tira o .pdf e o .md para o texto da bolinha ficar super limpo (E-MAIL AFASTAMENTO)
                 let displayLabel = logicalPath.split('/').pop().replace(/\.(md|pdf|txt)$/i, "");
                 nodesMap.set(logicalPath, { 
                     id: logicalPath, 
@@ -333,41 +330,55 @@ app.get("/api/graph-data", (req, res) => {
             }
         });
 
-        // PASSO 2: Mapear Conexões (Lendo os MDs)
+        // PASSO 2: Mapeia Tags e Nós Fantasmas Lendo os MDs
         files.forEach(file => {
-            // PDFs e Imagens não possuem tags nativas legíveis nesse loop
             if (file.path.toLowerCase().endsWith('.pdf')) {
                 return;
             }
             
             try {
                 const fullContent = fs.readFileSync(getSafePath(file.path), "utf-8");
-                const sourceLogicalPath = getLogicalNode(file.path); // Quem é o "dono" desse conteúdo?
+                const sourceLogicalPath = getLogicalNode(file.path); 
                 
-                // Extração de Links Diretos: [[Outro Arquivo]]
+                // Mapeia links de conexão do Obsidian: [[Assunto Qualquer]]
                 const linkRegex = /\[\[(.*?)\]\]/g; 
                 let match;
                 while ((match = linkRegex.exec(fullContent)) !== null) {
-                    const targetName = match[1].split('|')[0].trim().split('/').pop().replace(/\.(md|pdf|txt)$/i, "").toLowerCase();
+                    let rawLink = match[1].split('|')[0].trim();
+                    let targetName = rawLink.toLowerCase();
                     
+                    // Procura se esse link já bate com algum arquivo existente
                     let foundKey = Array.from(nodesMap.keys()).find(k => k.split('/').pop().replace(/\.(md|pdf|txt)$/i, "").toLowerCase() === targetName);
                     
                     if (foundKey) {
                         edges.push({ source: sourceLogicalPath, target: foundKey });
+                    } else {
+                        // NÓ FANTASMA (Concept): O arquivo não existe, mas o tema conecta os arquivos!
+                        let conceptId = `concept:${targetName}`;
+                        if (!nodesMap.has(conceptId)) {
+                            nodesMap.set(conceptId, { 
+                                id: conceptId, 
+                                label: rawLink, 
+                                type: "concept" 
+                            });
+                        }
+                        edges.push({ source: sourceLogicalPath, target: conceptId });
                     }
                 }
 
-                // Extração de #Tags (O motor agregador universal)
+                // Mapeia hashtags padrão
                 const tagRegex = /#([a-zA-Z0-9À-ÿ_-]+)/g; 
                 let tMatch;
                 while ((tMatch = tagRegex.exec(fullContent)) !== null) {
-                    // Mágica: Tudo pra minúsculo na hora de criar o "ID" da tag para elas se fundirem!
                     const tagID = `#${tMatch[1].toLowerCase()}`; 
                     
                     if (!nodesMap.has(tagID)) {
-                        // Mas na hora de mostrar o texto na bolinha, mantém como o cara escreveu
                         const displayTag = `#${tMatch[1]}`;
-                        nodesMap.set(tagID, { id: tagID, label: displayTag, type: "tag" });
+                        nodesMap.set(tagID, { 
+                            id: tagID, 
+                            label: displayTag, 
+                            type: "tag" 
+                        });
                     }
                     edges.push({ source: sourceLogicalPath, target: tagID });
                 }
@@ -376,13 +387,16 @@ app.get("/api/graph-data", (req, res) => {
             }
         });
 
-        // Limpeza de Teias Duplicadas
+        // Evita duplicidade de elásticos puxando e empurrando (A -> B é igual a B -> A)
         const uniqueEdges = [];
         const edgeSet = new Set();
+        
         edges.forEach(e => {
-            const key = `${e.source}->${e.target}`;
-            if (!edgeSet.has(key)) {
-                edgeSet.add(key);
+            const key1 = `${e.source}->${e.target}`;
+            const key2 = `${e.target}->${e.source}`;
+            
+            if (!edgeSet.has(key1) && !edgeSet.has(key2)) {
+                edgeSet.add(key1);
                 uniqueEdges.push(e);
             }
         });
@@ -616,4 +630,4 @@ app.use((err, req, res, next) => {
     res.status(500).json({ error: err.message }); 
 });
 
-app.listen(3000, () => console.log("BMS Server operante com Malha Orgânica Obsidian."));
+app.listen(3000, () => console.log("BMS Server operante na porta 3000."));
