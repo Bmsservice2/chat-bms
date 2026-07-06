@@ -512,7 +512,7 @@
                             <div id="view-doc-comp" class="w-full h-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl overflow-y-auto p-6 text-xs text-slate-700 dark:text-slate-300 select-text leading-relaxed shadow-sm">
                                 <div class="text-center text-slate-400 my-20 dark:text-slate-600">Painel secundário inativo. Selecione este monitor e clique em um arquivo da árvore para carregá-lo aqui.</div>
                             </div>
-                            <div id="view-raw-comp" class="hidden w-full h-full bg-slate-950 dark:bg-slate-900 text-blue-500 border border-slate-200 dark:border-slate-800 rounded-xl overflow-y-auto p-4 font-mono text-xs whitespace-pre-wrap select-text"></div>
+                            <div id="view-raw-comp" class="hidden w-full h-full bg-slate-950 dark:bg-slate-900 text-blue-500 border border-slate-200 dark:border-slate-800 rounded-xl p-4 font-mono text-xs whitespace-pre-wrap overflow-y-auto select-text"></div>
                         </div>
                     </div>
 
@@ -585,14 +585,8 @@
     </div>
 
     <script>
-        // Inicializa os ícones do Lucide
-        try {
-            lucide.createIcons();
-        } catch (e) {
-            console.error("Erro ao carregar ícones:", e);
-        }
+        lucide.createIcons();
 
-        // Atalho Ctrl+K para focar na barra de busca
         document.addEventListener('keydown', (e) => {
             if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
                 e.preventDefault();
@@ -604,9 +598,6 @@
             }
         });
 
-        // ==========================================
-        // VARIÁVEIS GLOBAIS
-        // ==========================================
         const messagesContainer = document.getElementById("chat-messages");
         const chatInput = document.getElementById("chat-input");
         const btnSend = document.getElementById("btn-send");
@@ -650,7 +641,6 @@
 
         let activeMonitor = "main"; // Foco Inicial no Monitor 1
 
-        // Expansão dinâmica do Input de Chat
         if (chatInput) {
             chatInput.addEventListener("input", function() {
                 this.style.height = "auto";
@@ -833,35 +823,49 @@
             updateSpeedometer(0);
 
             try {
-                const res = await fetch('/api/speedtest?cacheBust=' + Date.now());
-                if (!res.ok) {
-                    throw new Error("Falha no servidor");
-                }
-                
-                const reader = res.body.getReader(); 
-                let loaded = 0; 
+                let totalLoaded = 0; 
                 const startTime = Date.now(); 
                 let lastUiUpdate = startTime;
                 
-                while(true) {
-                    const {done, value} = await reader.read(); 
-                    if (done) {
-                        break;
+                // NOVO: LOOP DE 6 SEGUNDOS PARA MAIOR PRECISÃO
+                const TEST_DURATION_MS = 6000; 
+                
+                while (Date.now() - startTime < TEST_DURATION_MS) {
+                    const res = await fetch('/api/speedtest?cacheBust=' + Date.now());
+                    
+                    if (!res.ok) {
+                        throw new Error("Falha no servidor");
                     }
                     
-                    loaded += value.length; 
-                    const now = Date.now();
+                    const reader = res.body.getReader(); 
                     
-                    if (now - lastUiUpdate > 100) {
-                        const duration = (now - startTime) / 1000;
-                        const mbps = ((loaded * 8) / 1000000) / duration;
-                        updateSpeedometer(mbps); 
-                        lastUiUpdate = now;
+                    while(true) {
+                        const {done, value} = await reader.read(); 
+                        
+                        if (done) {
+                            break;
+                        }
+                        
+                        totalLoaded += value.length; 
+                        const now = Date.now();
+                        
+                        if (now - lastUiUpdate > 100) {
+                            const duration = (now - startTime) / 1000;
+                            const mbps = ((totalLoaded * 8) / 1000000) / duration;
+                            updateSpeedometer(mbps); 
+                            lastUiUpdate = now;
+                        }
+                        
+                        // Aborta caso atinja os 6 segundos
+                        if (Date.now() - startTime >= TEST_DURATION_MS) {
+                            reader.cancel();
+                            break;
+                        }
                     }
                 }
                 
                 const finalDuration = (Date.now() - startTime) / 1000;
-                const finalMbps = ((loaded * 8) / 1000000) / finalDuration;
+                const finalMbps = ((totalLoaded * 8) / 1000000) / finalDuration;
                 updateSpeedometer(finalMbps);
                 
                 setTimeout(() => {
@@ -978,14 +982,13 @@
             
             try {
                 await fetch("/api/sync-retroactive", { method: "POST" });
-                alert("A IA vai varrer seu cofre agora e transcrever visualmente os PDFs antigos!");
+                alert("Processo de conversão iniciado no Servidor! A IA vai varrer todos os arquivos com erro e transcrevê-los visualmente.");
             } catch(e) {
                 alert("Erro ao iniciar sincronização.");
             }
             
             btn.innerHTML = `<i data-lucide="check" class="w-4 h-4 inline-block mr-1"></i> Varredura Iniciada`;
-            
-            try { lucide.createIcons(); } catch(e) {}
+            lucide.createIcons();
         };
 
         window.selectMonitor = function(monitor) {
@@ -1125,11 +1128,11 @@
                 rEl.innerText = "";
             }
             
-            try { buildNotesTree(); } catch(e) {}
+            buildNotesTree();
         };
 
         // =========================================================================
-        // OCR FORÇADO
+        // OCR FORÇADO E BLINDADO
         // =========================================================================
 
         window.reprocessMD = async function(monitor) {
@@ -1216,7 +1219,6 @@
             while ((m = tagRegex.exec(mdText)) !== null) { 
                 rawTags.push(`#${m[1]}`); 
             }
-            
             const uniqueTags = [...new Set(rawTags)]; 
 
             let cleanText = mdText.replace(/\[\[(.*?)\]\]/g, '<span class="text-blue-500 font-bold cursor-pointer hover:underline" onclick="loadNoteContent(\'$1\')">$1</span>');
@@ -1239,10 +1241,7 @@
             `;
         }
 
-        // !!! MASTER BLINDAGEM DE CARREGAMENTO !!!
         window.loadNoteContent = async function(filename) {
-            
-            // Variáveis de segurança para caso o código falhe, a tela renderize o erro.
             let dEl_Safe = null;
             let rEl_Safe = null;
 
@@ -1295,7 +1294,6 @@
                 
                 try { buildNotesTree(); } catch(e) {}
 
-                // Tratamento especial para PDF
                 if (filename.toLowerCase().endsWith('.pdf')) {
                     
                     if (dEl) {
@@ -1344,10 +1342,9 @@
                             compContentBuffer = "";
                         }
                     }
-                    return; // PDF processado
+                    return; 
                 } 
                 
-                // Se não for PDF, esconde o botão de reprocessamento
                 let btnReprocess;
                 if (isMain) {
                     btnReprocess = document.getElementById("btn-reprocess-main");
@@ -1359,7 +1356,6 @@
                     btnReprocess.classList.add("hidden");
                 }
                 
-                // Fetch padrão para arquivos Markdown
                 const res = await fetch(`/api/note-content?file=${encodeURIComponent(filename)}`);
                 if (!res.ok) {
                     throw new Error(`Erro HTTP ao buscar o conteúdo do arquivo`);
@@ -2192,7 +2188,7 @@
                 const cleanMain = selectedFileId ? selectedFileId.replace(/\/$/, "") : "";
                 const cleanComp = comparisonFileId ? comparisonFileId.replace(/\/$/, "") : "";
                 const isAct = (cleanMain === n.id || cleanComp === n.id);
-                
+
                 if (isAct) {
                     radius = 7.0;
                 }
@@ -2226,6 +2222,82 @@
         
         if (canvas) {
             requestAnimationFrame(anim);
+            
+            // =========================================================================
+            // INTERATIVIDADE DA MALHA: CLIQUE E ARRASTE (DRAG & DROP)
+            // =========================================================================
+            
+            let clickStartX = 0;
+            let clickStartY = 0;
+
+            canvas.addEventListener("mousedown", (e) => {
+                const rect = canvas.getBoundingClientRect(); 
+                const mx = e.clientX - rect.left; 
+                const my = e.clientY - rect.top;
+                
+                isDraggingNode = false;
+                clickStartX = mx;
+                clickStartY = my;
+                
+                for (let n of graphData.nodes) { 
+                    if (Math.sqrt((n.x - mx)**2 + (n.y - my)**2) < 18) { 
+                        draggedNode = n; 
+                        canvas.style.cursor = 'grabbing';
+                        break; 
+                    } 
+                }
+            });
+
+            canvas.addEventListener("mousemove", (e) => { 
+                const rect = canvas.getBoundingClientRect(); 
+                const mx = e.clientX - rect.left; 
+                const my = e.clientY - rect.top;
+
+                if (draggedNode) { 
+                    // Se o mouse moveu mais de 3 pixels desde o mousedown, é um arraste
+                    if (Math.abs(mx - clickStartX) > 3 || Math.abs(my - clickStartY) > 3) {
+                        isDraggingNode = true;
+                    }
+                    
+                    draggedNode.x = mx; 
+                    draggedNode.y = my; 
+                    canvas.style.cursor = 'grabbing';
+                } else {
+                    let isHovering = false;
+                    for (let n of graphData.nodes) { 
+                        if (Math.sqrt((n.x - mx)**2 + (n.y - my)**2) < 18) { 
+                            isHovering = true; 
+                            break; 
+                        } 
+                    }
+                    canvas.style.cursor = isHovering ? 'pointer' : 'default';
+                }
+            });
+
+            canvas.addEventListener("mouseup", () => { 
+                
+                if (draggedNode && !isDraggingNode) {
+                    // SE FOI UM CLIQUE PERFEITO (A bolinha não foi arrastada)
+                    if (draggedNode.type === "file") {
+                        // Joga o arquivo no painel principal ou secundário!
+                        loadNoteContent(draggedNode.id);
+                    } else {
+                        // Se for uma Tag (Verde) ou Conceito (Cinza), preenche a barra de busca para filtrar a árvore!
+                        const sb = document.getElementById("global-search-bar");
+                        if (sb) {
+                            sb.value = draggedNode.label;
+                            searchFileTree(); // Aciona a filtragem visual da árvore à esquerda
+                        }
+                    }
+                }
+                
+                draggedNode = null; 
+                isDraggingNode = false;
+                
+                if (canvas) {
+                    canvas.style.cursor = 'default';
+                }
+            });
         }
 
         async function reloadGlobalGraph() { 
