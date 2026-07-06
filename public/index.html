@@ -34,21 +34,28 @@
             -ms-overflow-style: none; 
             scrollbar-width: none; 
         }
+        
+        /* Barra de rolagem customizada para a caixa de texto do chat */
+        textarea::-webkit-scrollbar {
+            width: 4px;
+        }
+        textarea::-webkit-scrollbar-thumb {
+            background-color: #cbd5e1;
+            border-radius: 10px;
+        }
+        .dark textarea::-webkit-scrollbar-thumb {
+            background-color: #475569;
+        }
     </style>
 </head>
 <body class="bg-[#f3f4f6] dark:bg-slate-950 text-slate-800 dark:text-slate-100 font-sans h-screen flex flex-col overflow-hidden select-none transition-colors duration-200">
 
-    <!-- ========================================== -->
-    <!-- INPUTS GLOBAIS DE ARQUIVO (OCULTOS)        -->
-    <!-- ========================================== -->
     <input type="file" id="global-vault-upload" class="hidden" multiple />
     <input type="file" id="global-folder-upload" class="hidden" webkitdirectory directory multiple />
     <input type="file" id="chat-context-upload" class="hidden" />
 
-    <!-- ========================================== -->
-    <!-- MENU DE CONTEXTO FLUTUANTE DA ÁRVORE       -->
-    <!-- ========================================== -->
     <div id="custom-context-menu" class="hidden absolute bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl shadow-2xl py-1.5 w-44 z-50 text-xs font-bold text-slate-600 dark:text-slate-300">
+        
         <button onclick="openRenameModal()" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 flex items-center gap-2">
             <i data-lucide="edit-2" class="w-3.5 h-3.5 text-blue-500"></i> Renomear / Mover
         </button>
@@ -60,22 +67,21 @@
         <button onclick="openDeleteModal()" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 text-red-600 dark:text-red-400 flex items-center gap-2">
             <i data-lucide="trash-2" class="w-3.5 h-3.5"></i> Apagar Registro
         </button>
+        
     </div>
 
-    <!-- ========================================== -->
-    <!-- MODAL DE DIÁLOGO GERAL (AÇÕES DO COFRE)    -->
-    <!-- ========================================== -->
     <div id="custom-dialog-modal" class="hidden fixed inset-0 bg-slate-950/40 dark:bg-slate-950/60 backdrop-blur-xs flex items-center justify-center z-50">
         <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-2xl p-5 w-80 max-w-full flex flex-col gap-4">
+            
             <h3 id="modal-title" class="text-sm font-black text-slate-800 dark:text-white">
                 Ação do Cofre
             </h3>
             
             <div id="modal-body-content" class="flex flex-col gap-2 text-xs font-semibold text-slate-600 dark:text-slate-400">
-                <!-- Conteúdo Injetado dinamicamente via JS -->
-            </div>
+                </div>
             
             <div class="flex justify-end gap-2 text-xs font-bold mt-2">
+                
                 <button onclick="closeCustomModal()" class="px-3 py-2 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 rounded-xl hover:bg-slate-200/60 dark:hover:bg-slate-700 transition-all">
                     Cancelar
                 </button>
@@ -83,13 +89,11 @@
                 <button id="modal-confirm-btn" class="px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl transition-all">
                     Confirmar
                 </button>
+                
             </div>
         </div>
     </div>
 
-    <!-- ========================================== -->
-    <!-- MODAL DE CONTA E PLANO (BOTÃO DE IA OCR)   -->
-    <!-- ========================================== -->
     <div id="account-settings-modal" class="hidden fixed inset-0 bg-slate-950/40 dark:bg-slate-950/60 backdrop-blur-xs flex items-center justify-center z-50">
         <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-2xl p-6 w-[400px] max-w-full flex flex-col gap-4">
             
@@ -139,13 +143,9 @@
         </div>
     </div>
 
-    <!-- ========================================== -->
-    <!-- MODAL DO SPEEDTEST NATIVO DA VPS           -->
-    <!-- ========================================== -->
     <div id="speedtest-modal" class="hidden fixed inset-0 bg-slate-950/40 dark:bg-slate-950/60 backdrop-blur-xs flex items-center justify-center z-50 transition-opacity duration-300 opacity-0">
         <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl shadow-2xl p-6 w-[350px] max-w-full flex flex-col gap-4 transform transition-all duration-300 scale-95" id="speedtest-content">
             
-            <!-- ETAPA 1 DO SPEEDTEST -->
             <div id="st-state-1" class="flex flex-col items-center pt-2">
                 <div class="w-14 h-14 bg-blue-100 dark:bg-blue-900/50 rounded-full flex items-center justify-center text-blue-600 dark:text-blue-400 mb-3 relative">
                     <i data-lucide="wifi" class="w-7 h-7"></i>
@@ -169,7 +169,6 @@
                 </div>
             </div>
             
-            <!-- ETAPA 2 DO SPEEDTEST -->
             <div id="st-state-2" class="hidden flex flex-col items-center py-4">
                 <h3 class="font-black text-slate-800 dark:text-white text-sm mb-6 uppercase tracking-widest text-slate-400">
                     Medindo Banda...
@@ -194,7 +193,6 @@
                 </div>
             </div>
             
-            <!-- ETAPA 3 DO SPEEDTEST -->
             <div id="st-state-3" class="hidden flex flex-col items-center pt-2">
                 <div class="w-16 h-16 bg-emerald-100 dark:bg-emerald-900/50 rounded-full flex items-center justify-center text-emerald-600 dark:text-emerald-400 mb-3">
                     <i data-lucide="check-circle-2" class="w-8 h-8"></i>
@@ -222,9 +220,6 @@
         </div>
     </div>
 
-    <!-- ========================================== -->
-    <!-- CABEÇALHO SUPERIOR DO SISTEMA (HEADER)     -->
-    <!-- ========================================== -->
     <header class="bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 h-16 min-h-16 flex items-center justify-between px-6 z-20 shadow-xs">
         
         <div class="flex items-center gap-1.5">
@@ -251,7 +246,6 @@
                 <i data-lucide="sun" class="w-4 h-4 hidden dark:block"></i>
             </button>
 
-            <!-- DROPDOWN DE UPLOAD DO COFRE -->
             <div class="relative">
                 <button onclick="toggleCustomDropdown('dropdown-upload', event)" class="border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 text-xs font-bold px-4 py-2.5 rounded-xl flex items-center gap-2 hover:bg-slate-50 dark:hover:bg-slate-700 transition-all active:scale-95 shadow-xs">
                     <i data-lucide="upload-cloud" class="w-4 h-4 text-blue-600"></i> Upload Box
@@ -277,14 +271,8 @@
         </div>
     </header>
 
-    <!-- ========================================== -->
-    <!-- ESTEIRA OPERACIONAL DAS 4 COLUNAS          -->
-    <!-- ========================================== -->
     <div class="flex flex-1 overflow-hidden relative" onclick="closeAllDropdownsMenu()">
         
-        <!-- ========================================== -->
-        <!-- COLUNA 1: GAVETA ESQUERDA (ÁRVORE)         -->
-        <!-- ========================================== -->
         <aside id="sidebar-left" class="w-64 bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 flex flex-col overflow-hidden p-4 relative flex-shrink-0" onclick="clearTreeSelection(event)">
             
             <div class="flex items-center justify-between mb-4 px-1">
@@ -309,7 +297,8 @@
                 </div>
             </div>
 
-            <div id="file-tree" class="flex-1 overflow-y-auto space-y-0.5 pr-1 text-xs font-semibold text-slate-600 dark:text-slate-300 no-scrollbar relative"></div>
+            <div id="file-tree" class="flex-1 overflow-y-auto space-y-0.5 pr-1 text-xs font-semibold text-slate-600 dark:text-slate-300 no-scrollbar relative">
+                </div>
 
             <div class="mt-2">
                 <div onclick="openSpeedTestModal()" class="mb-2 bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-800 rounded-xl p-2.5 cursor-pointer hover:ring-2 hover:ring-blue-500/50 transition-all flex items-center justify-between group">
@@ -343,15 +332,10 @@
             </div>
         </aside>
 
-        <!-- SPLITTER 1 -->
         <div id="resizer-left" class="w-1.5 bg-transparent hover:bg-blue-500 cursor-col-resize z-10 flex-shrink-0 transition-colors"></div>
 
-        <!-- ========================================== -->
-        <!-- COLUNAS CENTRAIS: WORKSPACE                -->
-        <!-- ========================================== -->
         <main id="center-panel" class="flex-1 flex flex-col min-w-[300px] overflow-hidden p-5 gap-4">
             
-            <!-- MENUS DE PERSONALIZAÇÃO JURÍDICA (4 COLUNAS) -->
             <div class="grid grid-cols-4 gap-4 w-full flex-shrink-0">
                 
                 <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-3 flex items-center shadow-xs relative cursor-pointer" onclick="toggleCustomDropdown('dropdown-area', event)">
@@ -450,11 +434,9 @@
                 </div>
             </div>
 
-            <!-- TELA DIVIDIDA DOS DOIS MONITORES -->
             <div class="flex flex-1 gap-4 overflow-hidden relative mt-2">
                 
-                <!-- MONITOR 1 (PRINCIPAL) -->
-                <div id="center-preview-container" onclick="selectMonitor('main')" class="flex-1 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-xs flex flex-col overflow-hidden ring-2 ring-blue-600 dark:ring-blue-500 cursor-pointer relative transition-all">
+                <div id="center-preview-container" onclick="selectMonitor('main')" class="flex-1 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-xs flex flex-col overflow-hidden h-full ring-2 ring-blue-600 dark:ring-blue-500 cursor-pointer relative transition-all">
                     
                     <div class="absolute top-0 left-1/2 -translate-x-1/2 px-3 py-0.5 bg-blue-600 text-white text-[9px] font-black uppercase rounded-b-md shadow-md z-10" id="dot-active-main">
                         Foco Ativo
@@ -463,7 +445,17 @@
                     <div class="flex items-center justify-between px-5 py-3.5 border-b border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900 mt-2">
                         
                         <div class="flex items-center gap-2.5">
-                            <h2 id="active-note-title" class="text-sm font-bold text-slate-800 dark:text-white truncate max-w-[200px]">Selecione um arquivo principal</h2>
+                            <div class="flex items-center bg-slate-100 dark:bg-slate-800 rounded-md">
+                                <button onclick="goBack('main')" id="btn-back-main" class="p-1 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 disabled:opacity-30 disabled:cursor-not-allowed transition-colors" disabled>
+                                    <i data-lucide="chevron-left" class="w-3.5 h-3.5"></i>
+                                </button>
+                                <button onclick="goForward('main')" id="btn-forward-main" class="p-1 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 disabled:opacity-30 disabled:cursor-not-allowed transition-colors" disabled>
+                                    <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+                                </button>
+                            </div>
+                            
+                            <h2 id="active-note-title" class="text-sm font-bold text-slate-800 dark:text-white truncate max-w-[200px] ml-1">Selecione um arquivo principal</h2>
+                            
                             <button id="btn-favorite-star" onclick="toggleActiveFileFavorite()" class="text-slate-300 dark:text-slate-600 hover:text-amber-500 transition-colors focus:outline-none">
                                 <i data-lucide="star" class="w-4 h-4"></i>
                             </button>
@@ -471,7 +463,6 @@
                         
                         <div class="flex items-center gap-2 flex-shrink-0">
                             
-                            <!-- BOTÃO DE REPROCESSAMENTO OCR -->
                             <button id="btn-reprocess-main" onclick="reprocessMD('main')" class="hidden px-2 py-1 bg-amber-500 hover:bg-amber-600 text-white rounded-md transition-all text-[9px] font-bold uppercase tracking-wider shadow-xs" title="Forçar a IA a reler este PDF">
                                 <i data-lucide="refresh-cw" class="w-3 h-3 inline"></i> Reler PDF
                             </button>
@@ -489,9 +480,6 @@
                             <button onclick="printActiveFile()" class="p-1.5 text-slate-400 dark:text-slate-500 hover:text-slate-600 rounded-lg transition-all" title="Imprimir">
                                 <i data-lucide="printer" class="w-4 h-4"></i>
                             </button>
-                            <button onclick="fullscreenActiveFile()" class="p-1.5 text-slate-400 dark:text-slate-500 hover:text-slate-600 rounded-lg transition-all" title="Tela Cheia">
-                                <i data-lucide="maximize-2" class="w-4 h-4"></i>
-                            </button>
                         </div>
                     </div>
 
@@ -503,11 +491,9 @@
                     </div>
                 </div>
 
-                <!-- SPLITTER 2 -->
                 <div id="resizer-center" class="w-1.5 bg-transparent hover:bg-blue-500 cursor-col-resize z-10 flex-shrink-0 transition-colors"></div>
 
-                <!-- MONITOR 2 (COMPARAÇÃO E MALHA NEURAL) -->
-                <section id="sidebar-comparison" onclick="selectMonitor('comp')" class="w-[45%] bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl flex flex-col overflow-hidden shadow-xs transition-all cursor-pointer relative">
+                <section id="sidebar-comparison" onclick="selectMonitor('comp')" class="w-[45%] bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl flex flex-col overflow-hidden shadow-xs h-full flex-shrink-0 transition-all cursor-pointer relative">
                     
                     <div class="absolute top-0 left-1/2 -translate-x-1/2 px-3 py-0.5 bg-blue-600 text-white text-[9px] font-black uppercase rounded-b-md shadow-md z-10 hidden" id="dot-active-comp">
                         Foco Ativo
@@ -515,25 +501,34 @@
 
                     <div class="p-3.5 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between bg-slate-50 dark:bg-slate-900 flex-shrink-0 mt-2">
                         <div class="flex items-center gap-2">
+                            
+                            <div class="flex items-center bg-slate-200 dark:bg-slate-800 rounded-md mr-1">
+                                <button onclick="goBack('comp')" id="btn-back-comp" class="p-1 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 disabled:opacity-30 disabled:cursor-not-allowed transition-colors" disabled>
+                                    <i data-lucide="chevron-left" class="w-3.5 h-3.5"></i>
+                                </button>
+                                <button onclick="goForward('comp')" id="btn-forward-comp" class="p-1 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 disabled:opacity-30 disabled:cursor-not-allowed transition-colors" disabled>
+                                    <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+                                </button>
+                            </div>
+                            
                             <div class="p-1.5 bg-blue-600 text-white rounded-lg">
                                 <i data-lucide="git-compare" class="w-4 h-4"></i>
                             </div>
                             <span class="font-black text-xs uppercase tracking-wider dark:text-white">Módulo de Correlação</span>
                         </div>
+                        
                         <div class="flex bg-slate-200 dark:bg-slate-800 p-0.5 rounded-lg text-[10px] font-black">
                             <button id="btn-tab-comp" onclick="setComparisonMode('compare')" class="px-3 py-1 bg-white dark:bg-slate-700 dark:text-white rounded-md shadow-xs transition-colors">Comparação</button>
                             <button id="btn-tab-graph" onclick="setComparisonMode('graph')" class="px-3 py-1 text-slate-500 dark:text-slate-400 transition-colors">Malha Neural</button>
                         </div>
                     </div>
 
-                    <!-- PANE COMPARAÇÃO (DOCUMENTO 2) -->
                     <div id="pane-comparison-doc" class="flex-1 flex flex-col overflow-hidden p-4 bg-[#fafafa] dark:bg-slate-950 h-full">
                         
                         <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-2.5 mb-3 flex items-center justify-between shadow-xs">
                             <span id="comp-note-title" class="text-xs font-bold text-slate-400 truncate pr-2 px-2 max-w-[200px]">Monitor de Comparação</span>
                             <div class="flex items-center gap-2 flex-shrink-0">
                                 
-                                <!-- BOTÃO REFAZER OCR MONITOR 2 -->
                                 <button id="btn-reprocess-comp" onclick="reprocessMD('comp')" class="hidden px-2 py-1 bg-amber-500 hover:bg-amber-600 text-white rounded-md transition-all text-[9px] font-bold uppercase tracking-wider shadow-xs" title="Forçar a IA a reler este PDF">
                                     <i data-lucide="refresh-cw" class="w-3 h-3 inline"></i> Reler PDF
                                 </button>
@@ -550,13 +545,12 @@
                         
                         <div class="flex-1 relative overflow-hidden font-serif">
                             <div id="view-doc-comp" class="w-full h-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl overflow-y-auto p-6 text-xs text-slate-700 dark:text-slate-300 select-text leading-relaxed shadow-sm">
-                                <div class="text-center text-slate-400 my-20 dark:text-slate-600">Painel secundário inativo. Selecione este monitor e clique em um arquivo na árvore para carregá-lo aqui.</div>
+                                <div class="text-center text-slate-400 my-20 dark:text-slate-600">Painel secundário inativo. Selecione este monitor e clique em um arquivo da árvore para carregá-lo aqui.</div>
                             </div>
                             <div id="view-raw-comp" class="hidden w-full h-full bg-slate-950 dark:bg-slate-900 text-blue-500 border border-slate-200 dark:border-slate-800 rounded-xl p-4 font-mono text-xs whitespace-pre-wrap overflow-y-auto select-text"></div>
                         </div>
                     </div>
 
-                    <!-- PANE MALHA NEURAL (OBSIDIAN CANVAS) -->
                     <div id="pane-comparison-graph" class="hidden flex-1 flex flex-col overflow-hidden relative bg-slate-50 dark:bg-slate-950 w-full h-full">
                         <canvas id="graph-canvas" class="w-full h-full block cursor-grab active:cursor-grabbing"></canvas>
                         <div class="absolute top-2 left-2 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xs px-2 py-1 rounded-md text-[9px] font-bold border border-slate-200 dark:border-slate-800 tracking-wide uppercase text-slate-400">
@@ -567,12 +561,8 @@
             </div>
         </main>
 
-        <!-- SPLITTER 3 -->
         <div id="resizer-right" class="w-1.5 bg-transparent hover:bg-blue-500 cursor-col-resize z-10 flex-shrink-0 transition-colors"></div>
 
-        <!-- ========================================== -->
-        <!-- COLUNA 4: ASSISTENTE CHAT DA INTELIGÊNCIA  -->
-        <!-- ========================================== -->
         <aside id="sidebar-right" class="w-80 bg-white dark:bg-slate-900 border-l border-slate-200 dark:border-slate-800 flex flex-col overflow-hidden shadow-2xl flex-shrink-0">
             
             <div class="p-4 border-b border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-900 flex items-center justify-between">
@@ -595,7 +585,6 @@
                 <input type="password" id="app-password" value="" placeholder="Insira a chave operacional..." class="w-full bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-lg px-3 py-1.5 text-xs font-mono text-slate-700 dark:text-slate-300 focus:outline-none">
             </div>
 
-            <!-- CONTAINER DO CHAT -->
             <div id="chat-messages" class="flex-1 overflow-y-auto p-4 flex flex-col gap-4 bg-[#fafafa] dark:bg-slate-950 select-text no-scrollbar">
                 <div class="w-full flex justify-start shrink-0">
                     <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 rounded-2xl rounded-tl-none p-3.5 text-xs max-w-[90%] shadow-xs leading-relaxed">
@@ -604,7 +593,6 @@
                 </div>
             </div>
 
-            <!-- ÁREA DE ANEXOS DO CHAT -->
             <div id="chat-attachment-area" class="hidden px-3 py-2 bg-blue-50 dark:bg-slate-800 border-t border-blue-100 dark:border-slate-700 flex items-center justify-between text-[11px] font-bold text-blue-700 dark:text-blue-300">
                 <div class="flex items-center gap-1.5 truncate">
                     <i data-lucide="paperclip" class="w-3.5 h-3.5"></i>
@@ -615,15 +603,13 @@
                 </button>
             </div>
 
-            <!-- INPUT DO CHAT -->
             <div class="p-3 border-t border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900">
                 <div class="relative flex items-end gap-2 bg-slate-50 dark:bg-slate-800 rounded-xl p-1.5 border border-slate-200 dark:border-slate-700 transition-all">
                     <button id="btn-chat-attach" class="p-2 text-slate-400 hover:text-blue-600 mb-0.5 rounded-xl">
                         <i data-lucide="paperclip" class="w-4 h-4"></i>
                     </button>
                     
-                    <!-- CAIXA DE TEXTO COM EXPANSÃO DINÂMICA ATÉ A METADE DO MENU DE CHAT -->
-                    <textarea id="chat-input" rows="1" placeholder="Pergunte ao Assistente BMS..." class="flex-1 bg-transparent py-2 px-1 text-xs font-semibold focus:outline-none text-slate-800 dark:text-slate-100 resize-none max-h-[45vh] overflow-y-auto no-scrollbar leading-relaxed" style="height: auto;"></textarea>
+                    <textarea id="chat-input" rows="1" placeholder="Pergunte ao Assistente BMS..." class="flex-1 bg-transparent py-2 px-1 text-xs font-semibold focus:outline-none text-slate-800 dark:text-slate-100 resize-none leading-relaxed" style="height: auto; overflow-y: hidden;"></textarea>
                     
                     <button id="btn-send" class="p-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg mb-0.5 transition-all shadow-sm">
                         <i data-lucide="send" class="w-3.5 h-3.5"></i>
@@ -633,12 +619,15 @@
         </aside>
     </div>
 
-    <!-- ========================================================================= -->
-    <!-- SCRIPT JAVASCRIPT EXPANSO E SEM COMPRESSÕES DE LINHAS                     -->
-    <!-- ========================================================================= -->
     <script>
-        lucide.createIcons();
+        // Inicializa os ícones do Lucide
+        try {
+            lucide.createIcons();
+        } catch (e) {
+            console.error("Erro ao carregar ícones:", e);
+        }
 
+        // Atalho Ctrl+K para focar na barra de busca
         document.addEventListener('keydown', (e) => {
             if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
                 e.preventDefault();
@@ -650,6 +639,9 @@
             }
         });
 
+        // ==========================================
+        // VARIÁVEIS GLOBAIS
+        // ==========================================
         const messagesContainer = document.getElementById("chat-messages");
         const chatInput = document.getElementById("chat-input");
         const btnSend = document.getElementById("btn-send");
@@ -693,12 +685,138 @@
 
         let activeMonitor = "main"; // Foco Inicial no Monitor 1
 
+        // ==========================================
+        // VARIÁVEIS GLOBAIS DE NAVEGAÇÃO DE HISTÓRICO
+        // ==========================================
+        let mainHistory = [{ type: 'empty' }];
+        let mainHistoryIndex = 0;
+        
+        let compHistory = [{ type: 'empty' }];
+        let compHistoryIndex = 0;
+        
+        let isNavigatingHistory = false;
+
+        // =========================================================================
+        // EXPANSÃO DINÂMICA DA CAIXA DE CHAT (MAX 50% DA TELA)
+        // =========================================================================
         if (chatInput) {
             chatInput.addEventListener("input", function() {
                 this.style.height = "auto";
-                this.style.height = this.scrollHeight + "px";
+                
+                let maxHeight = window.innerHeight / 2; 
+                const sbRight = document.getElementById('sidebar-right');
+                
+                if (sbRight) {
+                    maxHeight = sbRight.clientHeight / 2; 
+                }
+                
+                if (this.scrollHeight > maxHeight) {
+                    this.style.height = maxHeight + "px";
+                    this.style.overflowY = "auto";
+                } else {
+                    this.style.height = this.scrollHeight + "px";
+                    this.style.overflowY = "hidden";
+                }
             });
         }
+
+        // =========================================================================
+        // FUNÇÕES DE NAVEGAÇÃO DO HISTÓRICO (VOLTAR / AVANÇAR)
+        // =========================================================================
+        
+        window.updateHistoryUI = function() {
+            const bMain = document.getElementById("btn-back-main");
+            const fMain = document.getElementById("btn-forward-main");
+            const bComp = document.getElementById("btn-back-comp");
+            const fComp = document.getElementById("btn-forward-comp");
+
+            if (bMain) {
+                bMain.disabled = mainHistoryIndex <= 0;
+            }
+            if (fMain) {
+                fMain.disabled = mainHistoryIndex >= mainHistory.length - 1;
+            }
+            
+            if (bComp) {
+                bComp.disabled = compHistoryIndex <= 0;
+            }
+            if (fComp) {
+                fComp.disabled = compHistoryIndex >= compHistory.length - 1;
+            }
+        };
+
+        window.goBack = async function(monitor) {
+            if (monitor === 'main' && mainHistoryIndex > 0) {
+                mainHistoryIndex--;
+                await restoreState('main', mainHistory[mainHistoryIndex]);
+            } else if (monitor === 'comp' && compHistoryIndex > 0) {
+                compHistoryIndex--;
+                await restoreState('comp', compHistory[compHistoryIndex]);
+            }
+        };
+
+        window.goForward = async function(monitor) {
+            if (monitor === 'main' && mainHistoryIndex < mainHistory.length - 1) {
+                mainHistoryIndex++;
+                await restoreState('main', mainHistory[mainHistoryIndex]);
+            } else if (monitor === 'comp' && compHistoryIndex < compHistory.length - 1) {
+                compHistoryIndex++;
+                await restoreState('comp', compHistory[compHistoryIndex]);
+            }
+        };
+
+        window.restoreState = async function(monitor, state) {
+            isNavigatingHistory = true;
+            let previousMonitor = activeMonitor;
+            selectMonitor(monitor);
+            
+            if (state.type === 'file') {
+                if (monitor === 'comp') {
+                    setComparisonMode('compare');
+                }
+                await loadNoteContent(state.path);
+            } else if (state.type === 'graph') {
+                setComparisonMode('graph');
+            } else if (state.type === 'empty') {
+                if (monitor === 'comp') {
+                    setComparisonMode('compare');
+                    clearComparisonDoc(true);
+                } else {
+                    clearMainMonitor(true);
+                }
+            }
+            
+            selectMonitor(previousMonitor);
+            isNavigatingHistory = false;
+            updateHistoryUI();
+        };
+
+        window.clearMainMonitor = function(fromHistory = false) {
+            selectedFileId = null;
+            
+            const activeNoteTitleEl = document.getElementById("active-note-title");
+            if (activeNoteTitleEl) {
+                activeNoteTitleEl.innerText = "Selecione um arquivo principal";
+            }
+            
+            const viewDocMainEl = document.getElementById("view-doc-main");
+            if (viewDocMainEl) {
+                viewDocMainEl.innerHTML = `<div class="text-center text-slate-400 my-20 dark:text-slate-500">Raiz ativa. Organize e veja seus dados.</div>`;
+            }
+            
+            try { updateFavoriteStarUI(); } catch(e) {}
+            try { buildNotesTree(); } catch(e) {}
+            
+            if (!fromHistory && !isNavigatingHistory) {
+                const lastState = mainHistory[mainHistoryIndex];
+                if (!lastState || lastState.type !== 'empty') {
+                    mainHistory = mainHistory.slice(0, mainHistoryIndex + 1);
+                    mainHistory.push({ type: 'empty' });
+                    mainHistoryIndex++;
+                    updateHistoryUI();
+                }
+            }
+        };
 
         // =========================================================================
         // REDIMENSIONADOR (SPLITTER) ENTRE AS 4 COLUNAS
@@ -879,7 +997,6 @@
                 const startTime = Date.now(); 
                 let lastUiUpdate = startTime;
                 
-                // LOOP DE 6 SEGUNDOS PARA MAIOR PRECISÃO
                 const TEST_DURATION_MS = 6000; 
                 
                 while (Date.now() - startTime < TEST_DURATION_MS) {
@@ -1033,13 +1150,14 @@
             
             try {
                 await fetch("/api/sync-retroactive", { method: "POST" });
-                alert("A IA vai varrer seu cofre agora e transcrever visualmente os PDFs antigos!");
+                alert("Processo de conversão iniciado no Servidor! A IA vai varrer todos os arquivos com erro e transcrevê-los visualmente.");
             } catch(e) {
                 alert("Erro ao iniciar sincronização.");
             }
             
             btn.innerHTML = `<i data-lucide="check" class="w-4 h-4 inline-block mr-1"></i> Varredura Iniciada`;
-            lucide.createIcons();
+            
+            try { lucide.createIcons(); } catch(e) {}
         };
 
         window.selectMonitor = function(monitor) {
@@ -1111,6 +1229,16 @@
                     btnC.className = "px-3 py-1 text-slate-500 dark:text-slate-400 transition-colors";
                 }
                 
+                if (!isNavigatingHistory) {
+                    const lastState = compHistory[compHistoryIndex];
+                    if (!lastState || lastState.type !== 'graph') {
+                        compHistory = compHistory.slice(0, compHistoryIndex + 1);
+                        compHistory.push({ type: 'graph' });
+                        compHistoryIndex++;
+                        updateHistoryUI();
+                    }
+                }
+                
                 resizeCanvas(); 
                 reloadGlobalGraph();
             }
@@ -1162,7 +1290,7 @@
             closeAllDropdownsMenu();
         };
 
-        window.clearComparisonDoc = function() {
+        window.clearComparisonDoc = function(fromHistory = false) {
             comparisonFileId = null;
             const tEl = document.getElementById("comp-note-title");
             if (tEl) {
@@ -1179,7 +1307,17 @@
                 rEl.innerText = "";
             }
             
-            buildNotesTree();
+            try { buildNotesTree(); } catch(e) {}
+            
+            if (!fromHistory && !isNavigatingHistory) {
+                const lastState = compHistory[compHistoryIndex];
+                if (!lastState || lastState.type !== 'empty') {
+                    compHistory = compHistory.slice(0, compHistoryIndex + 1);
+                    compHistory.push({ type: 'empty' });
+                    compHistoryIndex++;
+                    updateHistoryUI();
+                }
+            }
         };
 
         // =========================================================================
@@ -1270,6 +1408,7 @@
             while ((m = tagRegex.exec(mdText)) !== null) { 
                 rawTags.push(`#${m[1]}`); 
             }
+            
             const uniqueTags = [...new Set(rawTags)]; 
 
             let cleanText = mdText.replace(/\[\[(.*?)\]\]/g, '<span class="text-blue-500 font-bold cursor-pointer hover:underline" onclick="loadNoteContent(\'$1\')">$1</span>');
@@ -1292,7 +1431,10 @@
             `;
         }
 
+        // !!! MASTER BLINDAGEM DE CARREGAMENTO !!!
         window.loadNoteContent = async function(filename) {
+            
+            // Variáveis de segurança para caso o código falhe, a tela renderize o erro.
             let dEl_Safe = null;
             let rEl_Safe = null;
 
@@ -1316,6 +1458,25 @@
                     comparisonFileId = filename; 
                     switchTab('comp', 'doc'); 
                     setComparisonMode('compare');
+                }
+
+                if (!isNavigatingHistory) {
+                    if (isMain) {
+                        const lastState = mainHistory[mainHistoryIndex];
+                        if (!lastState || lastState.type !== 'file' || lastState.path !== filename) {
+                            mainHistory = mainHistory.slice(0, mainHistoryIndex + 1);
+                            mainHistory.push({ type: 'file', path: filename });
+                            mainHistoryIndex++;
+                        }
+                    } else {
+                        const lastState = compHistory[compHistoryIndex];
+                        if (!lastState || lastState.type !== 'file' || lastState.path !== filename) {
+                            compHistory = compHistory.slice(0, compHistoryIndex + 1);
+                            compHistory.push({ type: 'file', path: filename });
+                            compHistoryIndex++;
+                        }
+                    }
+                    updateHistoryUI();
                 }
 
                 const tEl = document.getElementById(targetTitleId);
@@ -1345,6 +1506,7 @@
                 
                 try { buildNotesTree(); } catch(e) {}
 
+                // Tratamento especial para PDF
                 if (filename.toLowerCase().endsWith('.pdf')) {
                     
                     if (dEl) {
@@ -1396,6 +1558,7 @@
                     return; 
                 } 
                 
+                // Se não for PDF, esconde o botão de reprocessamento
                 let btnReprocess;
                 if (isMain) {
                     btnReprocess = document.getElementById("btn-reprocess-main");
@@ -1407,6 +1570,7 @@
                     btnReprocess.classList.add("hidden");
                 }
                 
+                // Fetch padrão para arquivos Markdown
                 const res = await fetch(`/api/note-content?file=${encodeURIComponent(filename)}`);
                 if (!res.ok) {
                     throw new Error(`Erro HTTP ao buscar o conteúdo do arquivo`);
@@ -1485,11 +1649,16 @@
         };
 
         function printActiveFile() {
-            if (!selectedFileId || !viewDocMain) {
+            if (!selectedFileId) {
                 return;
             }
+            const docElement = document.getElementById("view-doc-main");
+            if (!docElement) {
+                return;
+            }
+            
             const printWindow = window.open("", "_blank");
-            printWindow.document.write(`<html><head><title>BMS - Imprimir</title></head><body>${viewDocMain.innerHTML}</body></html>`);
+            printWindow.document.write(`<html><head><title>BMS - Imprimir</title></head><body>${docElement.innerHTML}</body></html>`);
             printWindow.document.close(); 
             printWindow.print();
         }
@@ -1645,7 +1814,9 @@
                             buildNotesTree(); 
                             reloadGlobalGraph(); 
                         } 
-                    } catch(err){}
+                    } catch(err) {
+                        console.error(err);
+                    }
                     closeCustomModal();
                 }
             };
@@ -1665,7 +1836,9 @@
                     buildNotesTree(); 
                     reloadGlobalGraph(); 
                 } 
-            } catch(err){} 
+            } catch(err) {
+                console.error(err);
+            } 
         }
         
         async function renameItem(oldP, newP) { 
@@ -1682,7 +1855,9 @@
                     buildNotesTree(); 
                     reloadGlobalGraph(); 
                 } 
-            } catch(err){} 
+            } catch(err) {
+                console.error(err);
+            } 
         }
 
         // =========================================================================
@@ -1714,7 +1889,9 @@
                                     method: "POST", 
                                     body: file 
                                 }); 
-                            } catch(err){}
+                            } catch(err) {
+                                console.error(err);
+                            }
                             resolve();
                         });
                     });
@@ -1760,7 +1937,9 @@
                         method: "POST", 
                         body: file 
                     }); 
-                } catch(e){}
+                } catch(e) {
+                    console.error(e);
+                }
             }
             
             await buildNotesTree(); 
@@ -1851,6 +2030,47 @@
                     ctxUpload.value = "";
                 }
             };
+        }
+
+        function clearTreeSelection(e) {
+            if (e.target.id === "file-tree" || e.target.tagName === "ASIDE") {
+                clearMainMonitor();
+            }
+        }
+
+        function toggleActiveFileFavorite() {
+            if (!selectedFileId) {
+                return;
+            }
+            const cleanPath = selectedFileId.replace(/\/$/, "");
+            
+            if (favoriteItems[cleanPath]) {
+                delete favoriteItems[cleanPath]; 
+            } else {
+                favoriteItems[cleanPath] = true; 
+            }
+            
+            localStorage.setItem("bms_favorites_map", JSON.stringify(favoriteItems));
+            updateFavoriteStarUI(); 
+            buildNotesTree();
+        }
+
+        function updateFavoriteStarUI() {
+            if (!selectedFileId || !favoriteStarBtn) {
+                if (favoriteStarBtn) {
+                    favoriteStarBtn.innerHTML = `<i data-lucide="star" class="w-4 h-4"></i>`;
+                }
+                try { lucide.createIcons(); } catch(e) {} 
+                return;
+            }
+            const cleanPath = selectedFileId.replace(/\/$/, "");
+            
+            if (favoriteItems[cleanPath]) {
+                favoriteStarBtn.innerHTML = `<i data-lucide="star" class="w-4 h-4 fill-amber-500 text-amber-500"></i>`;
+            } else {
+                favoriteStarBtn.innerHTML = `<i data-lucide="star" class="w-4 h-4"></i>`;
+            }
+            try { lucide.createIcons(); } catch(e) {}
         }
 
         // =========================================================================
@@ -2259,10 +2479,6 @@
         if (canvas) {
             requestAnimationFrame(anim);
             
-            // =========================================================================
-            // INTERATIVIDADE DA MALHA: CLIQUE E ARRASTE (DRAG & DROP)
-            // =========================================================================
-            
             let clickStartX = 0;
             let clickStartY = 0;
 
@@ -2362,8 +2578,10 @@
             }
 
             renderMessageBlock("user", query); 
+            
             chatInput.value = ""; 
             chatInput.style.height = "auto";
+            chatInput.style.overflowY = "hidden";
             
             const ctxArea = document.getElementById("ctx-area");
             const ctxType = document.getElementById("ctx-type");
@@ -2409,6 +2627,35 @@
                     tempBlock.innerText = "Falha na comunicação de rede com o gateway local."; 
                 }
             }
+        }
+
+        function renderMessageBlock(role, text) {
+            msgCounter++;
+            const id = "msg-" + Date.now() + "-" + msgCounter;
+            
+            const wrapper = document.createElement("div");
+            wrapper.className = `w-full flex shrink-0 ${role === 'user' ? 'justify-end' : 'justify-start'}`;
+            wrapper.id = id;
+            
+            const bubble = document.createElement("div");
+            
+            let htmlText = text
+                .replace(/</g, "&lt;").replace(/>/g, "&gt;") 
+                .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" download class="text-blue-200 underline font-black hover:text-white transition-colors">$1</a>')
+                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                .replace(/\n/g, '<br>');
+
+            if (role === "user") {
+                bubble.className = "bg-blue-600 text-white rounded-2xl rounded-tr-none p-3 text-xs max-w-[85%] font-semibold leading-relaxed whitespace-pre-wrap shadow-xs select-text text-left break-words";
+            } else {
+                bubble.className = "bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 rounded-2xl rounded-tl-none p-3 text-xs max-w-[85%] shadow-xs leading-relaxed whitespace-pre-wrap select-text text-left break-words";
+            }
+            
+            bubble.innerHTML = htmlText;
+            wrapper.appendChild(bubble);
+            messagesContainer.appendChild(wrapper);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            return id;
         }
 
         if (btnSend) {
