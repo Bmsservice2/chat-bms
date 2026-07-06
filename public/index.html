@@ -6,7 +6,2655 @@
     <title>BMS Knowledge - Centro Operacional de Inteligência Jurídica</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https:/<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BMS Knowledge - Centro Operacional de Inteligência Jurídica</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <script>
+        tailwind.config = { 
+            darkMode: 'class' 
+        };
+        
+        if (!localStorage.getItem("theme") || localStorage.getItem("theme") === "dark") {
+            document.documentElement.classList.add("dark");
+            localStorage.setItem("theme", "dark");
+        } else {
+            document.documentElement.classList.remove("dark");
+        }
+    </script>
+    
+    <style>
+        html { 
+            font-size: 11.5px; 
+        }
+        
+        .no-scrollbar::-webkit-scrollbar { 
+            display: none; 
+        }
+        
+        .no-scrollbar { 
+            -ms-overflow-style: none; 
+            scrollbar-width: none; 
+        }
+        
+        /* ========================================== */
+        /* BARRA DE ROLAGEM CUSTOMIZADA DO CHAT       */
+        /* ========================================== */
+        textarea::-webkit-scrollbar {
+            width: 4px;
+        }
+        
+        textarea::-webkit-scrollbar-thumb {
+            background-color: #cbd5e1;
+            border-radius: 10px;
+        }
+        
+        .dark textarea::-webkit-scrollbar-thumb {
+            background-color: #475569;
+        }
+    </style>
+</head>
+<body class="bg-[#f3f4f6] dark:bg-slate-950 text-slate-800 dark:text-slate-100 font-sans h-screen flex flex-col overflow-hidden select-none transition-colors duration-200">
+
+    <input type="file" id="global-vault-upload" class="hidden" multiple />
+    
+    <input type="file" id="global-folder-upload" class="hidden" webkitdirectory directory multiple />
+    
+    <input type="file" id="chat-context-upload" class="hidden" />
+
+    <div id="custom-context-menu" class="hidden absolute bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl shadow-2xl py-1.5 w-44 z-50 text-xs font-bold text-slate-600 dark:text-slate-300">
+        
+        <button onclick="openRenameModal()" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 flex items-center gap-2">
+            <i data-lucide="edit-2" class="w-3.5 h-3.5 text-blue-500"></i> Renomear / Mover
+        </button>
+        
+        <button onclick="openMenuComparison()" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 flex items-center gap-2 text-blue-600">
+            <i data-lucide="git-compare" class="w-3.5 h-3.5"></i> Abrir na Comparação
+        </button>
+        
+        <button onclick="openDeleteModal()" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 text-red-600 dark:text-red-400 flex items-center gap-2">
+            <i data-lucide="trash-2" class="w-3.5 h-3.5"></i> Apagar Registro
+        </button>
+        
+    </div>
+
+    <div id="custom-dialog-modal" class="hidden fixed inset-0 bg-slate-950/40 dark:bg-slate-950/60 backdrop-blur-xs flex items-center justify-center z-50">
+        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-2xl p-5 w-80 max-w-full flex flex-col gap-4">
+            
+            <h3 id="modal-title" class="text-sm font-black text-slate-800 dark:text-white">
+                Ação do Cofre
+            </h3>
+            
+            <div id="modal-body-content" class="flex flex-col gap-2 text-xs font-semibold text-slate-600 dark:text-slate-400">
+                </div>
+            
+            <div class="flex justify-end gap-2 text-xs font-bold mt-2">
+                
+                <button onclick="closeCustomModal()" class="px-3 py-2 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 rounded-xl hover:bg-slate-200/60 dark:hover:bg-slate-700 transition-all">
+                    Cancelar
+                </button>
+                
+                <button id="modal-confirm-btn" class="px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl transition-all">
+                    Confirmar
+                </button>
+                
+            </div>
+        </div>
+    </div>
+
+    <div id="account-settings-modal" class="hidden fixed inset-0 bg-slate-950/40 dark:bg-slate-950/60 backdrop-blur-xs flex items-center justify-center z-50">
+        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-2xl p-6 w-[400px] max-w-full flex flex-col gap-4">
+            
+            <div class="flex items-center gap-3 border-b border-slate-100 dark:border-slate-800 pb-4">
+                <div class="w-12 h-12 bg-blue-100 dark:bg-blue-900/50 rounded-full flex items-center justify-center text-blue-600 dark:text-blue-400 font-bold text-xl">
+                    TS
+                </div>
+                <div>
+                    <h3 class="font-bold text-slate-800 dark:text-white">
+                        Ambiente de Testes
+                    </h3>
+                    <p class="text-[10px] text-slate-400 font-medium">
+                        BETA V1.0 - BMS Service
+                    </p>
+                </div>
+            </div>
+            
+            <button id="btn-retroactive" onclick="triggerRetroactiveMD()" class="w-full px-4 py-2.5 bg-amber-500 hover:bg-amber-600 text-white font-bold rounded-xl transition-all shadow-sm flex items-center justify-center gap-2 mb-2">
+                <i data-lucide="refresh-cw" class="w-4 h-4"></i> Gerar Markdown de PDFs Antigos
+            </button>
+            
+            <p class="text-[9px] text-slate-400 text-center mb-4 leading-tight">
+                O motor de Visão Computacional da Inteligência Artificial varrerá seu cofre e apagará os arquivos com erro antigo, recriando o texto Markdown com formatação perfeita.
+            </p>
+
+            <div class="flex flex-col gap-2 text-xs font-semibold text-slate-600 dark:text-slate-400">
+                <div class="flex justify-between p-2 bg-slate-50 dark:bg-slate-800/50 rounded-lg">
+                    <span>Plano Habilitado:</span> 
+                    <span class="text-emerald-600 dark:text-emerald-400">Profissional (Ilimitado)</span>
+                </div>
+                <div class="flex justify-between p-2 bg-slate-50 dark:bg-slate-800/50 rounded-lg">
+                    <span>Tokens Restantes:</span> 
+                    <span>Infinitos (Local Mode)</span>
+                </div>
+                <div class="flex justify-between p-2 bg-slate-50 dark:bg-slate-800/50 rounded-lg">
+                    <span>Status da VPS:</span> 
+                    <span class="text-blue-500">Conectado / Alta Prioridade</span>
+                </div>
+            </div>
+            
+            <div class="flex justify-end gap-2 text-xs font-bold mt-2 pt-4 border-t border-slate-100 dark:border-slate-800">
+                <button onclick="document.getElementById('account-settings-modal').classList.add('hidden')" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl transition-all w-full">
+                    Fechar Painel
+                </button>
+            </div>
+            
+        </div>
+    </div>
+
+    <div id="speedtest-modal" class="hidden fixed inset-0 bg-slate-950/40 dark:bg-slate-950/60 backdrop-blur-xs flex items-center justify-center z-50 transition-opacity duration-300 opacity-0">
+        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl shadow-2xl p-6 w-[350px] max-w-full flex flex-col gap-4 transform transition-all duration-300 scale-95" id="speedtest-content">
+            
+            <div id="st-state-1" class="flex flex-col items-center pt-2">
+                <div class="w-14 h-14 bg-blue-100 dark:bg-blue-900/50 rounded-full flex items-center justify-center text-blue-600 dark:text-blue-400 mb-3 relative">
+                    <i data-lucide="wifi" class="w-7 h-7"></i>
+                    <div class="absolute inset-0 border-2 border-blue-400 dark:border-blue-500 rounded-full animate-ping opacity-20"></div>
+                </div>
+                
+                <h3 class="font-black text-slate-800 dark:text-white text-lg">
+                    Teste de Velocidade
+                </h3>
+                <p class="text-center text-xs text-slate-500 dark:text-slate-400 font-medium mt-1 leading-relaxed">
+                    Sente que o sistema está lento? Faça um teste da velocidade da sua internet agora mesmo!
+                </p>
+                
+                <div class="flex w-full gap-2 text-xs font-bold mt-6">
+                    <button onclick="closeSpeedTest()" class="flex-1 py-3 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-xl transition-all">
+                        Cancelar
+                    </button>
+                    <button onclick="startSpeedTest()" class="flex-1 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-xl transition-all shadow-md shadow-blue-500/30">
+                        Iniciar Teste
+                    </button>
+                </div>
+            </div>
+            
+            <div id="st-state-2" class="hidden flex flex-col items-center py-4">
+                <h3 class="font-black text-slate-800 dark:text-white text-sm mb-6 uppercase tracking-widest text-slate-400">
+                    Medindo Banda...
+                </h3>
+                
+                <div class="relative w-56 h-28 overflow-hidden mb-2">
+                    <svg viewBox="0 0 100 50" class="w-full h-full">
+                        <path d="M 10 50 A 40 40 0 0 1 90 50" fill="none" stroke="currentColor" stroke-width="8" class="text-slate-100 dark:text-slate-800" stroke-linecap="round"></path>
+                        <path d="M 10 50 A 40 40 0 0 1 90 50" fill="none" stroke="url(#gradient)" stroke-width="8" class="text-blue-500" stroke-dasharray="125" stroke-dashoffset="125" id="st-progress" stroke-linecap="round" style="transition: stroke-dashoffset 0.2s ease-out;"></path>
+                        <defs>
+                            <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                                <stop offset="0%" stop-color="#3b82f6" />
+                                <stop offset="100%" stop-color="#10b981" />
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                    <div id="st-needle" class="absolute bottom-0 left-1/2 w-[3px] h-[85px] bg-slate-800 dark:bg-white origin-bottom -translate-x-1/2 transform -rotate-90 transition-transform duration-200 ease-out rounded-full shadow-sm z-10"></div>
+                </div>
+                
+                <div class="text-4xl font-black text-slate-800 dark:text-white mt-4 font-mono">
+                    <span id="st-value">0.0</span>
+                </div>
+            </div>
+            
+            <div id="st-state-3" class="hidden flex flex-col items-center pt-2">
+                <div class="w-16 h-16 bg-emerald-100 dark:bg-emerald-900/50 rounded-full flex items-center justify-center text-emerald-600 dark:text-emerald-400 mb-3">
+                    <i data-lucide="check-circle-2" class="w-8 h-8"></i>
+                </div>
+                
+                <h3 class="font-black text-slate-800 dark:text-white text-lg">
+                    Teste Concluído!
+                </h3>
+                
+                <div class="bg-slate-50 dark:bg-slate-800 rounded-2xl p-5 w-full mt-4 border border-slate-100 dark:border-slate-700">
+                    <p class="text-center text-[10px] uppercase font-bold text-slate-400 mb-1 tracking-widest">
+                        Sua Velocidade
+                    </p>
+                    <p class="text-center text-3xl font-black text-slate-800 dark:text-white font-mono">
+                        <span id="st-final-value">0.0</span> 
+                        <span class="text-sm font-sans text-slate-400">Mbps</span>
+                    </p>
+                </div>
+                
+                <button onclick="closeSpeedTest()" class="w-full mt-5 py-3 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-xl transition-all font-bold text-xs">
+                    Concluir
+                </button>
+            </div>
+            
+        </div>
+    </div>
+
+    <header class="bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 h-16 min-h-16 flex items-center justify-between px-6 z-20 shadow-xs">
+        
+        <div class="flex items-center gap-1.5">
+            <div class="w-10 h-10 flex items-center justify-center mr-1">
+                <svg viewBox="0 0 100 100" class="w-full h-full drop-shadow-md">
+                    <path d="M 35 10 V 70 A 25 25 0 0 0 85 70 A 25 25 0 0 0 35 45" fill="none" stroke="#8bc34a" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M 47 10 V 70 A 13 13 0 0 0 73 70 A 13 13 0 0 0 47 57" fill="none" stroke="#0ea5e9" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </div>
+            <span class="font-black text-xl tracking-tight text-slate-900 dark:text-white">
+                BMS <span class="text-blue-600 font-medium">Knowledge</span>
+            </span>
+        </div>
+        
+        <div class="flex-1 max-w-xl mx-8 relative">
+            <i data-lucide="search" class="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2"></i>
+            <input type="text" id="global-search-bar" oninput="searchFileTree()" placeholder="Buscar processos, leis, jurisprudências, petições... (Ctrl + K)" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl pl-10 pr-4 py-2 text-xs focus:outline-none focus:border-blue-500 focus:bg-white dark:focus:bg-slate-900 transition-all font-semibold text-slate-700 dark:text-slate-200">
+        </div>
+
+        <div class="flex items-center gap-3">
+            
+            <button onclick="toggleDarkMode()" class="p-2.5 border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-700 transition-all shadow-xs active:scale-95">
+                <i data-lucide="moon" class="w-4 h-4 dark:hidden"></i>
+                <i data-lucide="sun" class="w-4 h-4 hidden dark:block"></i>
+            </button>
+
+            <div class="relative">
+                <button onclick="toggleCustomDropdown('dropdown-upload', event)" class="border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 text-xs font-bold px-4 py-2.5 rounded-xl flex items-center gap-2 hover:bg-slate-50 dark:hover:bg-slate-700 transition-all active:scale-95 shadow-xs">
+                    <i data-lucide="upload-cloud" class="w-4 h-4 text-blue-600"></i> Upload Box
+                </button>
+                
+                <div id="dropdown-upload" class="hidden absolute top-[105%] right-0 mt-1 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl shadow-2xl py-1.5 w-48 z-50 flex flex-col text-xs font-bold text-slate-600 dark:text-slate-300">
+                    <button onclick="document.getElementById('global-vault-upload').click(); document.getElementById('dropdown-upload').classList.add('hidden')" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 flex items-center gap-2 transition-all">
+                        <i data-lucide="file-plus" class="w-4 h-4 text-blue-500"></i> Arquivos Avulsos
+                    </button>
+                    <button onclick="document.getElementById('global-folder-upload').click(); document.getElementById('dropdown-upload').classList.add('hidden')" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 flex items-center gap-2 transition-all">
+                        <i data-lucide="folder-plus" class="w-4 h-4 text-amber-500"></i> Pasta Completa
+                    </button>
+                </div>
+            </div>
+            
+            <div class="w-px h-6 bg-slate-200 dark:bg-slate-800 mx-1"></div>
+            
+            <div id="server-status-badge" class="flex items-center gap-2 bg-slate-100 dark:bg-slate-800 px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 shadow-xs transition-all duration-300">
+                <div id="server-status-dot" class="w-2 h-2 bg-slate-400 rounded-full"></div>
+                <span id="server-status-text" class="text-[10px] font-black tracking-wide uppercase text-slate-500 dark:text-slate-400">Checando...</span>
+            </div>
+            
+        </div>
+    </header>
+
+    <div class="flex flex-1 overflow-hidden relative" onclick="closeAllDropdownsMenu()">
+        
+        <aside id="sidebar-left" class="w-64 bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 flex flex-col overflow-hidden p-4 relative flex-shrink-0" onclick="clearTreeSelection(event)">
+            
+            <div class="flex items-center justify-between mb-4 px-1">
+                <span class="text-xs font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest">
+                    Processos e Cofre
+                </span>
+                
+                <div class="flex gap-1 relative" onclick="e => e.stopPropagation()">
+                    <button id="btn-filter-tree" onclick="toggleFilterDropdown(event)" class="p-1 text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors">
+                        <i data-lucide="filter" class="w-3.5 h-3.5"></i>
+                    </button>
+                    
+                    <button onclick="createNewFolderManual(event)" class="p-1 text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors">
+                        <i data-lucide="folder-plus" class="w-3.5 h-3.5"></i>
+                    </button>
+                    
+                    <div id="filter-menu-dropdown" class="hidden absolute top-7 right-0 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl shadow-xl py-1 w-44 z-30 text-xs font-bold text-slate-600 dark:text-slate-300">
+                        <button onclick="changeFilter('all')" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-700 flex items-center gap-2">Mostrar Todos</button>
+                        <button onclick="changeFilter('md')" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-700 flex items-center gap-2">Apenas Texto (.md)</button>
+                        <button onclick="changeFilter('pdf')" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-700 flex items-center gap-2">Apenas PDFs (.pdf)</button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="file-tree" class="flex-1 overflow-y-auto space-y-0.5 pr-1 text-xs font-semibold text-slate-600 dark:text-slate-300 no-scrollbar relative">
+                </div>
+
+            <div class="mt-2">
+                <div onclick="openSpeedTestModal()" class="mb-2 bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-800 rounded-xl p-2.5 cursor-pointer hover:ring-2 hover:ring-blue-500/50 transition-all flex items-center justify-between group">
+                    <div class="flex items-center gap-2">
+                        <div class="p-1.5 bg-blue-100 dark:bg-blue-900/50 text-blue-600 dark:text-blue-400 rounded-md group-hover:scale-110 transition-transform">
+                            <i data-lucide="wifi" class="w-3.5 h-3.5"></i>
+                        </div>
+                        <span class="text-[10px] font-bold text-slate-700 dark:text-slate-300">O sistema está lento?</span>
+                    </div>
+                    <i data-lucide="chevron-right" class="w-3.5 h-3.5 text-slate-400 group-hover:text-blue-500 transition-colors"></i>
+                </div>
+
+                <div onclick="document.getElementById('account-settings-modal').classList.remove('hidden')" class="bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-800 rounded-2xl p-3.5 cursor-pointer hover:ring-2 hover:ring-blue-500/50 transition-all">
+                    <div class="flex items-center justify-between mb-1.5">
+                        <span class="text-[11px] font-bold text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
+                            <i data-lucide="shield-check" class="w-3.5 h-3.5 text-blue-600"></i> Plano Profissional
+                        </span>
+                        <span class="text-[10px] bg-emerald-100 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-300 font-extrabold px-1.5 py-0.5 rounded-md">
+                            TESTE
+                        </span>
+                    </div>
+                    <div class="text-[10px] text-slate-400 dark:text-slate-500 mb-2 font-medium">Uso do Assistente BMS este mês</div>
+                    <div class="w-full bg-slate-200 dark:bg-slate-700 h-2 rounded-full overflow-hidden mb-1">
+                        <div class="bg-blue-600 h-full w-[10%] rounded-full"></div>
+                    </div>
+                    <div class="flex justify-between text-[10px] font-bold text-slate-500 dark:text-slate-400">
+                        <span>120 / Ilimitado</span>
+                        <span>1%</span>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <div id="resizer-left" class="w-1.5 bg-transparent hover:bg-blue-500 cursor-col-resize z-10 flex-shrink-0 transition-colors"></div>
+
+        <main id="center-panel" class="flex-1 flex flex-col min-w-[300px] overflow-hidden p-5 gap-4">
+            
+            <div class="grid grid-cols-4 gap-4 w-full flex-shrink-0">
+                
+                <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-3 flex items-center shadow-xs relative cursor-pointer" onclick="toggleCustomDropdown('dropdown-area', event)">
+                    <div class="p-2 bg-blue-50 dark:bg-slate-800 text-blue-600 dark:text-blue-400 rounded-lg mr-3">
+                        <i data-lucide="scale" class="w-4 h-4"></i>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <p class="text-[10px] text-slate-400 dark:text-slate-500 font-bold uppercase tracking-wider mb-0.5">Área Jurídica</p>
+                        <div class="flex items-center justify-between">
+                            <span id="label-ctx-area" class="text-xs font-bold text-slate-700 dark:text-white truncate">Geral (Misto)</span>
+                            <i data-lucide="chevron-down" class="w-3.5 h-3.5 text-slate-400 shrink-0"></i>
+                        </div>
+                    </div>
+                    <input type="hidden" id="ctx-area" value="Geral/Nenhuma">
+                    
+                    <div id="dropdown-area" class="hidden absolute top-[105%] left-0 mt-1 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl shadow-2xl py-1.5 w-full z-50 flex flex-col max-h-48 overflow-y-auto no-scrollbar text-xs font-bold text-slate-600 dark:text-slate-300">
+                        <button onclick="selectOption('area', 'Geral/Nenhuma', 'Geral (Misto)', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 truncate">Geral (Misto)</button>
+                        <button onclick="selectOption('area', 'Direito Trabalhista', 'Direito Trabalhista', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 truncate">Direito Trabalhista</button>
+                        <button onclick="selectOption('area', 'Direito Cível', 'Direito Cível', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 truncate">Direito Cível</button>
+                        <button onclick="selectOption('area', 'Direito Penal', 'Direito Penal', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 truncate">Direito Penal</button>
+                        <button onclick="selectOption('area', 'Direito Tributário', 'Direito Tributário', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 truncate">Direito Tributário</button>
+                        <button onclick="selectOption('area', 'Direito Empresarial', 'Direito Empresarial', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 truncate">Direito Empresarial</button>
+                        <button onclick="selectOption('area', 'Direito de Família', 'Direito de Família', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 truncate">Direito de Família</button>
+                        <button onclick="selectOption('area', 'Direito Administrativo', 'Direito Administrativo', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 truncate">Direito Administrativo</button>
+                    </div>
+                </div>
+
+                <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-3 flex items-center shadow-xs relative cursor-pointer" onclick="toggleCustomDropdown('dropdown-type', event)">
+                    <div class="p-2 bg-purple-50 dark:bg-slate-800 text-purple-600 dark:text-purple-400 rounded-lg mr-3">
+                        <i data-lucide="file-text" class="w-4 h-4"></i>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <p class="text-[10px] text-slate-400 dark:text-slate-500 font-bold uppercase tracking-wider mb-0.5">Tipo de Peça</p>
+                        <div class="flex items-center justify-between">
+                            <span id="label-ctx-type" class="text-xs font-bold text-slate-700 dark:text-white truncate">Análise Interna</span>
+                            <i data-lucide="chevron-down" class="w-3.5 h-3.5 text-slate-400 shrink-0"></i>
+                        </div>
+                    </div>
+                    <input type="hidden" id="ctx-type" value="Análise/Documento">
+                    
+                    <div id="dropdown-type" class="hidden absolute top-[105%] left-0 mt-1 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl shadow-2xl py-1.5 w-full z-50 flex flex-col max-h-48 overflow-y-auto no-scrollbar text-xs font-bold text-slate-600 dark:text-slate-300">
+                        <button onclick="selectOption('type', 'Análise/Documento', 'Análise Interna', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 truncate">Análise Interna</button>
+                        <button onclick="selectOption('type', 'Petição Inicial', 'Petição Inicial', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 truncate">Petição Inicial</button>
+                        <button onclick="selectOption('type', 'Contestação', 'Contestação', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 truncate">Contestação</button>
+                        <button onclick="selectOption('type', 'Recurso', 'Recurso (Apelação/RO)', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 truncate">Recurso (Apelação/RO)</button>
+                        <button onclick="selectOption('type', 'Alegações Finais', 'Alegações Finais', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 truncate">Alegações Finais</button>
+                        <button onclick="selectOption('type', 'Contrato/Acordo', 'Contrato / Acordo', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 truncate">Contrato / Acordo</button>
+                        <button onclick="selectOption('type', 'Parecer Jurídico', 'Parecer Jurídico', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 truncate">Parecer Jurídico</button>
+                    </div>
+                </div>
+
+                <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-3 flex items-center shadow-xs relative cursor-pointer" onclick="toggleCustomDropdown('dropdown-phase', event)">
+                    <div class="p-2 bg-amber-50 dark:bg-slate-800 text-amber-600 dark:text-amber-400 rounded-lg mr-3">
+                        <i data-lucide="folder-git" class="w-4 h-4"></i>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <p class="text-[10px] text-slate-400 dark:text-slate-500 font-bold uppercase tracking-wider mb-0.5">Fase Atual</p>
+                        <div class="flex items-center justify-between">
+                            <span id="label-ctx-phase" class="text-xs font-bold text-slate-700 dark:text-white truncate">Fase de Estudo</span>
+                            <i data-lucide="chevron-down" class="w-3.5 h-3.5 text-slate-400 shrink-0"></i>
+                        </div>
+                    </div>
+                    <input type="hidden" id="ctx-phase" value="Fase de Estudo">
+                    
+                    <div id="dropdown-phase" class="hidden absolute top-[105%] left-0 mt-1 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl shadow-2xl py-1.5 w-full z-50 flex flex-col max-h-48 overflow-y-auto no-scrollbar text-xs font-bold text-slate-600 dark:text-slate-300">
+                        <button onclick="selectOption('phase', 'Fase de Estudo', 'Fase de Estudo', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 truncate">Fase de Estudo</button>
+                        <button onclick="selectOption('phase', 'Fase de Conhecimento', 'Fase de Conhecimento', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 truncate">Fase de Conhecimento</button>
+                        <button onclick="selectOption('phase', 'Fase de Instrução/Provas', 'Fase de Instrução', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 truncate">Fase de Instrução</button>
+                        <button onclick="selectOption('phase', 'Fase Recursal', 'Fase Recursal', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 truncate">Fase Recursal</button>
+                        <button onclick="selectOption('phase', 'Fase de Execução', 'Fase de Execução', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 truncate">Fase de Execução</button>
+                        <button onclick="selectOption('phase', 'Acordo ou Mediação', 'Acordo/Mediação', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 truncate">Acordo/Mediação</button>
+                    </div>
+                </div>
+
+                <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-3 flex items-center shadow-xs relative cursor-pointer" onclick="toggleCustomDropdown('dropdown-obj', event)">
+                    <div class="p-2 bg-emerald-50 dark:bg-slate-800 text-emerald-600 dark:text-emerald-400 rounded-lg mr-3">
+                        <i data-lucide="target" class="w-4 h-4"></i>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <p class="text-[10px] text-slate-400 dark:text-slate-500 font-bold uppercase tracking-wider mb-0.5">Objetivo Direto</p>
+                        <div class="flex items-center justify-between">
+                            <span id="label-ctx-obj" class="text-xs font-bold text-slate-700 dark:text-white truncate">Auditoria Geral</span>
+                            <i data-lucide="chevron-down" class="w-3.5 h-3.5 text-slate-400 shrink-0"></i>
+                        </div>
+                    </div>
+                    <input type="hidden" id="ctx-obj" value="Auditar/Resumir">
+                    
+                    <div id="dropdown-obj" class="hidden absolute top-[105%] left-0 mt-1 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl shadow-2xl py-1.5 w-full z-50 flex flex-col max-h-48 overflow-y-auto no-scrollbar text-xs font-bold text-slate-600 dark:text-slate-300">
+                        <button onclick="selectOption('obj', 'Auditar/Resumir', 'Auditoria Geral', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 truncate">Auditoria Geral</button>
+                        <button onclick="selectOption('obj', 'Encontrar Contradições', 'Achar Contradições', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 truncate">Achar Contradições</button>
+                        <button onclick="selectOption('obj', 'Elaborar Minuta', 'Elaborar Minuta', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 truncate">Elaborar Minuta</button>
+                        <button onclick="selectOption('obj', 'Análise de Risco Jurídico', 'Análise de Risco', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 truncate">Análise de Risco</button>
+                        <button onclick="selectOption('obj', 'Pesquisa Jurisprudencial', 'Levantar Jurisprudência', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 truncate">Levantar Jurisprudência</button>
+                        <button onclick="selectOption('obj', 'Sistematizar Fatos', 'Resumir Fatos/Prazos', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 truncate">Resumir Fatos/Prazos</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex flex-1 gap-4 overflow-hidden relative mt-2">
+                
+                <div id="center-preview-container" onclick="selectMonitor('main')" class="flex-1 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-xs flex flex-col overflow-hidden h-full ring-2 ring-blue-600 dark:ring-blue-500 cursor-pointer relative transition-all">
+                    
+                    <div class="absolute top-0 left-1/2 -translate-x-1/2 px-3 py-0.5 bg-blue-600 text-white text-[9px] font-black uppercase rounded-b-md shadow-md z-10" id="dot-active-main">
+                        Foco Ativo
+                    </div>
+
+                    <div class="flex items-center justify-between px-5 py-3.5 border-b border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900 mt-2">
+                        
+                        <div class="flex items-center gap-2.5">
+                            
+                            <div class="flex items-center bg-slate-100 dark:bg-slate-800 rounded-md">
+                                <button onclick="goBack('main')" id="btn-back-main" class="p-1 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 disabled:opacity-30 disabled:cursor-not-allowed transition-colors" disabled>
+                                    <i data-lucide="chevron-left" class="w-3.5 h-3.5"></i>
+                                </button>
+                                <button onclick="goForward('main')" id="btn-forward-main" class="p-1 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 disabled:opacity-30 disabled:cursor-not-allowed transition-colors" disabled>
+                                    <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+                                </button>
+                            </div>
+                            
+                            <h2 id="active-note-title" class="text-sm font-bold text-slate-800 dark:text-white truncate max-w-[200px] ml-1">Selecione um arquivo principal</h2>
+                            <button id="btn-favorite-star" onclick="toggleActiveFileFavorite()" class="text-slate-300 dark:text-slate-600 hover:text-amber-500 transition-colors focus:outline-none">
+                                <i data-lucide="star" class="w-4 h-4"></i>
+                            </button>
+                        </div>
+                        
+                        <div class="flex items-center gap-2 flex-shrink-0">
+                            
+                            <button id="btn-reprocess-main" onclick="reprocessMD('main')" class="hidden px-2 py-1 bg-amber-500 hover:bg-amber-600 text-white rounded-md transition-all text-[9px] font-bold uppercase tracking-wider shadow-xs" title="Forçar a IA a reler este PDF">
+                                <i data-lucide="refresh-cw" class="w-3 h-3 inline"></i> Reler PDF
+                            </button>
+                            
+                            <div class="flex bg-slate-100 dark:bg-slate-800 p-0.5 rounded-lg text-[9px] font-black mx-2">
+                                <button id="btn-tab-main-formatted" onclick="switchTab('main', 'doc')" class="px-3 py-1 bg-white dark:bg-slate-700 dark:text-white rounded-md shadow-xs transition-colors">Original</button>
+                                <button id="btn-tab-main-raw" onclick="switchTab('main', 'raw')" class="px-3 py-1 text-slate-500 dark:text-slate-400 transition-colors">Markdown</button>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-center gap-1.5">
+                            <button onclick="downloadActiveFile()" class="p-1.5 text-slate-400 dark:text-slate-500 hover:text-slate-600 rounded-lg transition-all" title="Download">
+                                <i data-lucide="download" class="w-4 h-4"></i>
+                            </button>
+                            <button onclick="printActiveFile()" class="p-1.5 text-slate-400 dark:text-slate-500 hover:text-slate-600 rounded-lg transition-all" title="Imprimir">
+                                <i data-lucide="printer" class="w-4 h-4"></i>
+                            </button>
+                            <button onclick="fullscreenActiveFile()" class="p-1.5 text-slate-400 dark:text-slate-500 hover:text-slate-600 rounded-lg transition-all" title="Tela Cheia">
+                                <i data-lucide="maximize-2" class="w-4 h-4"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="flex flex-1 overflow-hidden relative bg-[#fafafa] dark:bg-slate-950 p-4">
+                        <div id="view-doc-main" class="w-full h-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl overflow-y-auto p-6 font-serif text-xs text-slate-700 dark:text-slate-300 select-text shadow-sm leading-relaxed">
+                            <div class="text-center text-slate-400 my-20">Nenhum documento aberto no monitor principal.</div>
+                        </div>
+                        <div id="view-raw-main" class="hidden w-full h-full bg-slate-950 dark:bg-slate-900 text-blue-500 border border-slate-800 rounded-xl overflow-y-auto p-4 font-mono text-xs whitespace-pre-wrap select-text"></div>
+                    </div>
+                </div>
+
+                <div id="resizer-center" class="w-1.5 bg-transparent hover:bg-blue-500 cursor-col-resize z-10 flex-shrink-0 transition-colors"></div>
+
+                <section id="sidebar-comparison" onclick="selectMonitor('comp')" class="w-[45%] bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl flex flex-col overflow-hidden shadow-xs h-full flex-shrink-0 transition-all cursor-pointer relative">
+                    
+                    <div class="absolute top-0 left-1/2 -translate-x-1/2 px-3 py-0.5 bg-blue-600 text-white text-[9px] font-black uppercase rounded-b-md shadow-md z-10 hidden" id="dot-active-comp">
+                        Foco Ativo
+                    </div>
+
+                    <div class="p-3.5 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between bg-slate-50 dark:bg-slate-900 flex-shrink-0 mt-2">
+                        <div class="flex items-center gap-2">
+                            
+                            <div class="flex items-center bg-slate-200 dark:bg-slate-800 rounded-md mr-1">
+                                <button onclick="goBack('comp')" id="btn-back-comp" class="p-1 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 disabled:opacity-30 disabled:cursor-not-allowed transition-colors" disabled>
+                                    <i data-lucide="chevron-left" class="w-3.5 h-3.5"></i>
+                                </button>
+                                <button onclick="goForward('comp')" id="btn-forward-comp" class="p-1 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 disabled:opacity-30 disabled:cursor-not-allowed transition-colors" disabled>
+                                    <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+                                </button>
+                            </div>
+
+                            <div class="p-1.5 bg-blue-600 text-white rounded-lg">
+                                <i data-lucide="git-compare" class="w-4 h-4"></i>
+                            </div>
+                            <span class="font-black text-xs uppercase tracking-wider dark:text-white">Módulo de Correlação</span>
+                        </div>
+                        
+                        <div class="flex bg-slate-200 dark:bg-slate-800 p-0.5 rounded-lg text-[10px] font-black">
+                            <button id="btn-tab-comp" onclick="setComparisonMode('compare')" class="px-3 py-1 bg-white dark:bg-slate-700 dark:text-white rounded-md shadow-xs transition-colors">Comparação</button>
+                            <button id="btn-tab-graph" onclick="setComparisonMode('graph')" class="px-3 py-1 text-slate-500 dark:text-slate-400 transition-colors">Malha Neural</button>
+                        </div>
+                    </div>
+
+                    <div id="pane-comparison-doc" class="flex-1 flex flex-col overflow-hidden p-4 bg-[#fafafa] dark:bg-slate-950 h-full">
+                        
+                        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-2.5 mb-3 flex items-center justify-between shadow-xs">
+                            <span id="comp-note-title" class="text-xs font-bold text-slate-400 truncate pr-2 px-2 max-w-[200px]">Monitor de Comparação</span>
+                            <div class="flex items-center gap-2 flex-shrink-0">
+                                
+                                <button id="btn-reprocess-comp" onclick="reprocessMD('comp')" class="hidden px-2 py-1 bg-amber-500 hover:bg-amber-600 text-white rounded-md transition-all text-[9px] font-bold uppercase tracking-wider shadow-xs" title="Forçar a IA a reler este PDF">
+                                    <i data-lucide="refresh-cw" class="w-3 h-3 inline"></i> Reler PDF
+                                </button>
+
+                                <div class="flex bg-slate-100 dark:bg-slate-800 p-0.5 rounded-lg text-[9px] font-black">
+                                    <button id="btn-tab-comp-formatted" onclick="switchTab('comp', 'doc')" class="px-3 py-1 bg-white dark:bg-slate-700 dark:text-white rounded-md shadow-xs transition-colors">Original</button>
+                                    <button id="btn-tab-comp-raw" onclick="switchTab('comp', 'raw')" class="px-3 py-1 text-slate-500 dark:text-slate-400 transition-colors">Markdown</button>
+                                </div>
+                                <button onclick="clearComparisonDoc()" class="text-slate-400 hover:text-red-500 mx-1">
+                                    <i data-lucide="x" class="w-3.5 h-3.5"></i>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="flex-1 relative overflow-hidden font-serif">
+                            <div id="view-doc-comp" class="w-full h-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl overflow-y-auto p-6 text-xs text-slate-700 dark:text-slate-300 select-text leading-relaxed shadow-sm">
+                                <div class="text-center text-slate-400 my-20 dark:text-slate-600">Painel secundário inativo. Selecione este monitor e clique em um arquivo da árvore para carregá-lo aqui.</div>
+                            </div>
+                            <div id="view-raw-comp" class="hidden w-full h-full bg-slate-950 dark:bg-slate-900 text-blue-500 border border-slate-200 dark:border-slate-800 rounded-xl p-4 font-mono text-xs whitespace-pre-wrap overflow-y-auto select-text"></div>
+                        </div>
+                    </div>
+
+                    <div id="pane-comparison-graph" class="hidden flex-1 flex flex-col overflow-hidden relative bg-slate-50 dark:bg-slate-950 w-full h-full">
+                        <canvas id="graph-canvas" class="w-full h-full block cursor-grab active:cursor-grabbing"></canvas>
+                        <div class="absolute top-2 left-2 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xs px-2 py-1 rounded-md text-[9px] font-bold border border-slate-200 dark:border-slate-800 tracking-wide uppercase text-slate-400">
+                            Indexador de #Tags e Temas
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </main>
+
+        <div id="resizer-right" class="w-1.5 bg-transparent hover:bg-blue-500 cursor-col-resize z-10 flex-shrink-0 transition-colors"></div>
+
+        <aside id="sidebar-right" class="w-80 bg-white dark:bg-slate-900 border-l border-slate-200 dark:border-slate-800 flex flex-col overflow-hidden shadow-2xl flex-shrink-0">
+            
+            <div class="p-4 border-b border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-900 flex items-center justify-between">
+                <div class="flex items-center gap-2.5">
+                    <div class="w-9 h-9 bg-blue-600 rounded-xl flex items-center justify-center text-white font-bold">
+                        <i data-lucide="bot" class="w-4 h-4"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-xs text-slate-800 dark:text-white">Assistente BMS</h3>
+                        <div class="flex items-center gap-1">
+                            <div class="w-1.5 h-1.5 bg-green-500 rounded-full"></div>
+                            <span class="text-[10px] text-slate-400 font-bold uppercase">Cofre Ativo</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="p-3 bg-amber-50/50 dark:bg-slate-800/30 border-b border-amber-100/60 dark:border-slate-800 flex flex-col gap-1.5">
+                <label class="text-[9px] font-black text-amber-800 dark:text-amber-400 uppercase tracking-widest">Token de Validação Local</label>
+                <input type="password" id="app-password" value="" placeholder="Insira a chave operacional..." class="w-full bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-lg px-3 py-1.5 text-xs font-mono text-slate-700 dark:text-slate-300 focus:outline-none">
+            </div>
+
+            <div id="chat-messages" class="flex-1 overflow-y-auto p-4 flex flex-col gap-4 bg-[#fafafa] dark:bg-slate-950 select-text no-scrollbar">
+                <div class="w-full flex justify-start shrink-0">
+                    <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 rounded-2xl rounded-tl-none p-3.5 text-xs max-w-[90%] shadow-xs leading-relaxed">
+                        Sincronização efetuada. A inteligência já pode ler seus arquivos estruturados via Markdown e OCR Computacional.
+                    </div>
+                </div>
+            </div>
+
+            <div id="chat-attachment-area" class="hidden px-3 py-2 bg-blue-50 dark:bg-slate-800 border-t border-blue-100 dark:border-slate-700 flex items-center justify-between text-[11px] font-bold text-blue-700 dark:text-blue-300">
+                <div class="flex items-center gap-1.5 truncate">
+                    <i data-lucide="paperclip" class="w-3.5 h-3.5"></i>
+                    <span id="chat-attachment-name" class="truncate">anexo.md</span>
+                </div>
+                <button id="btn-remove-attachment" class="text-slate-400 hover:text-red-500">
+                    <i data-lucide="x" class="w-4 h-4"></i>
+                </button>
+            </div>
+
+            <div class="p-3 border-t border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900">
+                <div class="relative flex items-end gap-2 bg-slate-50 dark:bg-slate-800 rounded-xl p-1.5 border border-slate-200 dark:border-slate-700 transition-all">
+                    <button id="btn-chat-attach" class="p-2 text-slate-400 hover:text-blue-600 mb-0.5 rounded-xl">
+                        <i data-lucide="paperclip" class="w-4 h-4"></i>
+                    </button>
+                    
+                    <textarea id="chat-input" rows="1" placeholder="Pergunte ao Assistente BMS..." class="flex-1 bg-transparent py-2 px-1 text-xs font-semibold focus:outline-none text-slate-800 dark:text-slate-100 resize-none leading-relaxed custom-scrollbar" style="height: auto; overflow-y: hidden;"></textarea>
+                    
+                    <button id="btn-send" class="p-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg mb-0.5 transition-all shadow-sm">
+                        <i data-lucide="send" class="w-3.5 h-3.5"></i>
+                    </button>
+                </div>
+            </div>
+        </aside>
+    </div>
+
+    <script>
+        // Inicializa os ícones do Lucide
+        try {
+            lucide.createIcons();
+        } catch (e) {
+            console.error("Erro ao carregar ícones:", e);
+        }
+
+        // Atalho Ctrl+K para focar na barra de busca
+        document.addEventListener('keydown', (e) => {
+            if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
+                e.preventDefault();
+                const sb = document.getElementById('global-search-bar');
+                if (sb) {
+                    sb.focus();
+                    sb.select();
+                }
+            }
+        });
+
+        // ==========================================
+        // VARIÁVEIS GLOBAIS
+        // ==========================================
+        const messagesContainer = document.getElementById("chat-messages");
+        const chatInput = document.getElementById("chat-input");
+        const btnSend = document.getElementById("btn-send");
+        const appPassword = document.getElementById("app-password");
+        const fileTree = document.getElementById("file-tree");
+        const globalSearchBar = document.getElementById("global-search-bar");
+        const filterDropdown = document.getElementById("filter-menu-dropdown");
+        
+        const serverStatusBadge = document.getElementById("server-status-badge");
+        const serverStatusDot = document.getElementById("server-status-dot");
+        const serverStatusText = document.getElementById("server-status-text");
+
+        const viewDocMain = document.getElementById("view-doc-main");
+        const viewRawMain = document.getElementById("view-raw-main");
+        const viewDocComp = document.getElementById("view-doc-comp");
+        const viewRawComp = document.getElementById("view-raw-comp");
+
+        const activeNoteTitle = document.getElementById("active-note-title");
+        const compNoteTitle = document.getElementById("comp-note-title");
+        const favoriteStarBtn = document.getElementById("btn-favorite-star");
+
+        const canvas = document.getElementById("graph-canvas");
+        const ctx = canvas ? canvas.getContext("2d") : null;
+
+        let chatHistory = [];
+        let pendingChatAttachment = null;
+        let selectedFileId = null;
+        let comparisonFileId = null; 
+        let graphData = { nodes: [], edges: [] };
+        let draggedNode = null;
+        let currentFilterType = "all";
+        let rawContentBuffer = "";
+        let compContentBuffer = "";
+        let contextMenuSelectedPath = null;
+        let msgCounter = 0;
+        let isDraggingNode = false;
+        
+        let favoriteItems = JSON.parse(localStorage.getItem("bms_favorites_map") || "{}");
+        let collapsedFolders = JSON.parse(localStorage.getItem("bms_collapsed_folders") || "{}");
+        let highlightedNodes = []; 
+
+        let activeMonitor = "main"; // Foco Inicial no Monitor 1
+
+        // ==========================================
+        // VARIÁVEIS GLOBAIS DE HISTÓRICO DE NAVEGAÇÃO
+        // ==========================================
+        let mainHistory = [{ type: 'empty' }];
+        let mainHistoryIndex = 0;
+        
+        let compHistory = [{ type: 'empty' }];
+        let compHistoryIndex = 0;
+        
+        let isNavigatingHistory = false;
+
+        // =========================================================================
+        // EXPANSÃO DINÂMICA DA CAIXA DE CHAT (MAX 50% DA TELA)
+        // =========================================================================
+        if (chatInput) {
+            chatInput.addEventListener("input", function() {
+                this.style.height = "auto";
+                
+                let maxHeight = window.innerHeight / 2; // Default 50% da janela
+                const sbRight = document.getElementById('sidebar-right');
+                
+                if (sbRight) {
+                    maxHeight = sbRight.clientHeight / 2; // Puxa 50% do menu direito exato se existir
+                }
+                
+                if (this.scrollHeight > maxHeight) {
+                    this.style.height = maxHeight + "px";
+                    this.style.overflowY = "auto";
+                } else {
+                    this.style.height = this.scrollHeight + "px";
+                    this.style.overflowY = "hidden";
+                }
+            });
+        }
+
+        // =========================================================================
+        // FUNÇÕES DE NAVEGAÇÃO DO HISTÓRICO (VOLTAR / AVANÇAR)
+        // =========================================================================
+        
+        window.updateHistoryUI = function() {
+            const bMain = document.getElementById("btn-back-main");
+            const fMain = document.getElementById("btn-forward-main");
+            const bComp = document.getElementById("btn-back-comp");
+            const fComp = document.getElementById("btn-forward-comp");
+
+            if (bMain) {
+                bMain.disabled = mainHistoryIndex <= 0;
+            }
+            if (fMain) {
+                fMain.disabled = mainHistoryIndex >= mainHistory.length - 1;
+            }
+            
+            if (bComp) {
+                bComp.disabled = compHistoryIndex <= 0;
+            }
+            if (fComp) {
+                fComp.disabled = compHistoryIndex >= compHistory.length - 1;
+            }
+        };
+
+        window.goBack = async function(monitor) {
+            if (monitor === 'main' && mainHistoryIndex > 0) {
+                mainHistoryIndex--;
+                await restoreState('main', mainHistory[mainHistoryIndex]);
+            } else if (monitor === 'comp' && compHistoryIndex > 0) {
+                compHistoryIndex--;
+                await restoreState('comp', compHistory[compHistoryIndex]);
+            }
+        };
+
+        window.goForward = async function(monitor) {
+            if (monitor === 'main' && mainHistoryIndex < mainHistory.length - 1) {
+                mainHistoryIndex++;
+                await restoreState('main', mainHistory[mainHistoryIndex]);
+            } else if (monitor === 'comp' && compHistoryIndex < compHistory.length - 1) {
+                compHistoryIndex++;
+                await restoreState('comp', compHistory[compHistoryIndex]);
+            }
+        };
+
+        window.restoreState = async function(monitor, state) {
+            isNavigatingHistory = true;
+            let previousMonitor = activeMonitor;
+            selectMonitor(monitor);
+            
+            if (state.type === 'file') {
+                if (monitor === 'comp') {
+                    setComparisonMode('compare');
+                }
+                await loadNoteContent(state.path);
+            } else if (state.type === 'graph') {
+                setComparisonMode('graph');
+            } else if (state.type === 'empty') {
+                if (monitor === 'comp') {
+                    setComparisonMode('compare');
+                    clearComparisonDoc(true);
+                } else {
+                    clearMainMonitor(true);
+                }
+            }
+            
+            selectMonitor(previousMonitor);
+            isNavigatingHistory = false;
+            updateHistoryUI();
+        };
+
+        window.clearMainMonitor = function(fromHistory = false) {
+            selectedFileId = null;
+            
+            const activeNoteTitleEl = document.getElementById("active-note-title");
+            if (activeNoteTitleEl) {
+                activeNoteTitleEl.innerText = "Selecione um arquivo principal";
+            }
+            
+            const viewDocMainEl = document.getElementById("view-doc-main");
+            if (viewDocMainEl) {
+                viewDocMainEl.innerHTML = `<div class="text-center text-slate-400 my-20 dark:text-slate-500">Raiz ativa. Organize e veja seus dados.</div>`;
+            }
+            
+            try { updateFavoriteStarUI(); } catch(e) {}
+            try { buildNotesTree(); } catch(e) {}
+            
+            if (!fromHistory && !isNavigatingHistory) {
+                const lastState = mainHistory[mainHistoryIndex];
+                if (!lastState || lastState.type !== 'empty') {
+                    mainHistory = mainHistory.slice(0, mainHistoryIndex + 1);
+                    mainHistory.push({ type: 'empty' });
+                    mainHistoryIndex++;
+                    updateHistoryUI();
+                }
+            }
+        };
+
+        // =========================================================================
+        // REDIMENSIONADOR (SPLITTER) ENTRE AS 4 COLUNAS
+        // =========================================================================
+
+        const sidebarLeft = document.getElementById('sidebar-left');
+        const sidebarComparison = document.getElementById('sidebar-comparison');
+        const sidebarRight = document.getElementById('sidebar-right');
+        
+        const resizerLeft = document.getElementById('resizer-left');
+        const resizerCenter = document.getElementById('resizer-center');
+        const resizerRight = document.getElementById('resizer-right');
+
+        let isResizingLeft = false;
+        let isResizingCenter = false;
+        let isResizingRight = false;
+
+        if (resizerLeft) {
+            resizerLeft.addEventListener('mousedown', (e) => { 
+                isResizingLeft = true; 
+                document.body.style.cursor = 'col-resize'; 
+                e.preventDefault(); 
+            });
+        }
+        
+        if (resizerCenter) {
+            resizerCenter.addEventListener('mousedown', (e) => { 
+                isResizingCenter = true; 
+                document.body.style.cursor = 'col-resize'; 
+                e.preventDefault(); 
+            });
+        }
+
+        if (resizerRight) {
+            resizerRight.addEventListener('mousedown', (e) => { 
+                isResizingRight = true; 
+                document.body.style.cursor = 'col-resize'; 
+                e.preventDefault(); 
+            });
+        }
+
+        document.addEventListener('mousemove', (e) => {
+            if (isResizingLeft && sidebarLeft) {
+                let w = e.clientX; 
+                if (w > 150 && w < window.innerWidth * 0.3) {
+                    sidebarLeft.style.width = w + "px";
+                }
+            }
+            
+            if (isResizingCenter && sidebarComparison) {
+                let calculatedWidth = window.innerWidth - e.clientX - (sidebarRight ? sidebarRight.clientWidth : 320);
+                if (calculatedWidth > 200 && calculatedWidth < window.innerWidth * 0.5) {
+                    sidebarComparison.style.width = calculatedWidth + "px";
+                }
+            }
+            
+            if (isResizingRight && sidebarRight) {
+                let w = window.innerWidth - e.clientX; 
+                if (w > 200 && w < window.innerWidth * 0.3) {
+                    sidebarRight.style.width = w + "px";
+                }
+            }
+            
+            if (canvas) {
+                resizeCanvas();
+            }
+        });
+
+        document.addEventListener('mouseup', () => { 
+            isResizingLeft = false;
+            isResizingCenter = false;
+            isResizingRight = false; 
+            document.body.style.cursor = 'default'; 
+        });
+
+        function resizeCanvas() { 
+            if (canvas && canvas.parentElement) { 
+                canvas.width = canvas.parentElement.clientWidth; 
+                canvas.height = canvas.parentElement.clientHeight; 
+            } 
+        }
+        window.addEventListener("resize", resizeCanvas); 
+        resizeCanvas();
+
+        function toggleDarkMode() {
+            if (document.documentElement.classList.contains("dark")) {
+                document.documentElement.classList.remove("dark"); 
+                localStorage.setItem("theme", "light");
+            } else {
+                document.documentElement.classList.add("dark"); 
+                localStorage.setItem("theme", "dark");
+            }
+            
+            if (canvas) {
+                drawGraph(); 
+            }
+        }
+
+        // =========================================================================
+        // SPEEDTEST E MODAIS NATIVOS
+        // =========================================================================
+
+        function openSpeedTestModal() {
+            const modal = document.getElementById("speedtest-modal"); 
+            if (!modal) {
+                return;
+            }
+            
+            modal.classList.remove("hidden");
+            
+            setTimeout(() => {
+                modal.classList.remove("opacity-0");
+                const content = document.getElementById("speedtest-content");
+                if (content) {
+                    content.classList.remove("scale-95");
+                }
+            }, 10);
+            
+            const s1 = document.getElementById("st-state-1");
+            const s2 = document.getElementById("st-state-2");
+            const s3 = document.getElementById("st-state-3");
+            
+            if (s1) s1.classList.remove("hidden");
+            if (s2) s2.classList.add("hidden");
+            if (s3) s3.classList.add("hidden");
+        }
+
+        function closeSpeedTest() {
+            const modal = document.getElementById("speedtest-modal"); 
+            if (!modal) {
+                return;
+            }
+            
+            modal.classList.add("opacity-0"); 
+            const content = document.getElementById("speedtest-content");
+            if (content) {
+                content.classList.add("scale-95");
+            }
+            
+            setTimeout(() => { 
+                modal.classList.add("hidden"); 
+            }, 300);
+        }
+
+        function updateSpeedometer(mbps) {
+            const valEl = document.getElementById("st-value"); 
+            if (valEl) {
+                valEl.innerText = mbps.toFixed(1);
+            }
+            
+            let maxSpeed = 100; 
+            let mapped = Math.min(Math.max(mbps, 0), maxSpeed);
+            let rot = -90 + (mapped / maxSpeed) * 180;
+            
+            const needle = document.getElementById("st-needle"); 
+            if (needle) {
+                needle.style.transform = `translateX(-50%) rotate(${rot}deg)`;
+            }
+            
+            let offset = 125 - (mapped / maxSpeed) * 125;
+            const prog = document.getElementById("st-progress"); 
+            if (prog) {
+                prog.style.strokeDashoffset = offset;
+            }
+        }
+
+        async function startSpeedTest() {
+            const s1 = document.getElementById("st-state-1");
+            const s2 = document.getElementById("st-state-2");
+            
+            if (s1) s1.classList.add("hidden");
+            if (s2) s2.classList.remove("hidden");
+            
+            updateSpeedometer(0);
+
+            try {
+                let totalLoaded = 0; 
+                const startTime = Date.now(); 
+                let lastUiUpdate = startTime;
+                
+                const TEST_DURATION_MS = 6000; 
+                
+                while (Date.now() - startTime < TEST_DURATION_MS) {
+                    const res = await fetch('/api/speedtest?cacheBust=' + Date.now());
+                    
+                    if (!res.ok) {
+                        throw new Error("Falha no servidor");
+                    }
+                    
+                    const reader = res.body.getReader(); 
+                    
+                    while(true) {
+                        const {done, value} = await reader.read(); 
+                        
+                        if (done) {
+                            break;
+                        }
+                        
+                        totalLoaded += value.length; 
+                        const now = Date.now();
+                        
+                        if (now - lastUiUpdate > 100) {
+                            const duration = (now - startTime) / 1000;
+                            const mbps = ((totalLoaded * 8) / 1000000) / duration;
+                            updateSpeedometer(mbps); 
+                            lastUiUpdate = now;
+                        }
+                        
+                        if (Date.now() - startTime >= TEST_DURATION_MS) {
+                            reader.cancel();
+                            break;
+                        }
+                    }
+                }
+                
+                const finalDuration = (Date.now() - startTime) / 1000;
+                const finalMbps = ((totalLoaded * 8) / 1000000) / finalDuration;
+                updateSpeedometer(finalMbps);
+                
+                setTimeout(() => {
+                    const s2_final = document.getElementById("st-state-2");
+                    const s3 = document.getElementById("st-state-3");
+                    const finVal = document.getElementById("st-final-value"); 
+                    
+                    if (s2_final) s2_final.classList.add("hidden");
+                    if (s3) s3.classList.remove("hidden");
+                    if (finVal) finVal.innerText = finalMbps.toFixed(1);
+                }, 800);
+                
+            } catch (e) {
+                alert("Erro ao testar velocidade. Verifique sua conexão local.");
+                closeSpeedTest();
+            }
+        }
+
+        // =========================================================================
+        // MENUS E DROPDOWNS DE CONTEXTO
+        // =========================================================================
+
+        function closeAllDropdownsMenu() {
+            if (filterDropdown) {
+                filterDropdown.classList.add("hidden");
+            }
+            
+            const ctxMenu = document.getElementById("custom-context-menu");
+            if (ctxMenu) {
+                ctxMenu.classList.add("hidden");
+            }
+            
+            const dpArea = document.getElementById("dropdown-area");
+            if (dpArea) {
+                dpArea.classList.add("hidden");
+            }
+            
+            const dpType = document.getElementById("dropdown-type");
+            if (dpType) {
+                dpType.classList.add("hidden");
+            }
+            
+            const dpPhase = document.getElementById("dropdown-phase");
+            if (dpPhase) {
+                dpPhase.classList.add("hidden");
+            }
+            
+            const dpObj = document.getElementById("dropdown-obj");
+            if (dpObj) {
+                dpObj.classList.add("hidden");
+            }
+            
+            const dpUpload = document.getElementById("dropdown-upload");
+            if (dpUpload) {
+                dpUpload.classList.add("hidden");
+            }
+        }
+
+        function toggleFilterDropdown(e) { 
+            e.stopPropagation(); 
+            closeAllDropdownsMenu(); 
+            if (filterDropdown) {
+                filterDropdown.classList.remove("hidden"); 
+            }
+        }
+
+        function toggleCustomDropdown(id, e) { 
+            e.stopPropagation(); 
+            const el = document.getElementById(id); 
+            if (el) {
+                const isHidden = el.classList.contains("hidden"); 
+                closeAllDropdownsMenu(); 
+                if (isHidden) {
+                    el.classList.remove("hidden"); 
+                }
+            }
+        }
+
+        function selectOption(category, value, label, e) { 
+            e.stopPropagation(); 
+            const vi = document.getElementById(`ctx-${category}`); 
+            const ls = document.getElementById(`label-ctx-${category}`); 
+            const dp = document.getElementById(`dropdown-${category}`);
+            
+            if (vi) {
+                vi.value = value; 
+            }
+            if (ls) {
+                ls.innerText = label; 
+            }
+            if (dp) {
+                dp.classList.add("hidden"); 
+            }
+        }
+
+        function changeFilter(type) { 
+            currentFilterType = type; 
+            closeAllDropdownsMenu(); 
+            buildNotesTree(); 
+        }
+
+        // =========================================================================
+        // GESTÃO DE MONITORES ATIVOS E ABAS DA INTERFACE DUPLA
+        // =========================================================================
+
+        window.triggerRetroactiveMD = async function() {
+            const btn = document.getElementById("btn-retroactive");
+            if (!btn) {
+                return;
+            }
+            
+            btn.innerHTML = `<i data-lucide="loader" class="w-4 h-4 inline-block mr-1 animate-spin"></i> Processando Cofre...`;
+            btn.classList.add("opacity-50", "pointer-events-none");
+            
+            try {
+                await fetch("/api/sync-retroactive", { method: "POST" });
+                alert("Processo de conversão iniciado no Servidor! A IA vai varrer todos os arquivos com erro e transcrevê-los visualmente.");
+            } catch(e) {
+                alert("Erro ao iniciar sincronização.");
+            }
+            
+            btn.innerHTML = `<i data-lucide="check" class="w-4 h-4 inline-block mr-1"></i> Varredura Iniciada`;
+            lucide.createIcons();
+        };
+
+        window.selectMonitor = function(monitor) {
+            activeMonitor = monitor;
+            const mainBox = document.getElementById("center-preview-container");
+            const compBox = document.getElementById("sidebar-comparison");
+            const dotMain = document.getElementById("dot-active-main");
+            const dotComp = document.getElementById("dot-active-comp");
+
+            if (monitor === "main") {
+                if (mainBox) {
+                    mainBox.classList.add("ring-2", "ring-blue-600", "dark:ring-blue-500");
+                }
+                if (compBox) {
+                    compBox.classList.remove("ring-2", "ring-blue-600", "dark:ring-blue-500");
+                }
+                if (dotMain) {
+                    dotMain.classList.remove("hidden");
+                }
+                if (dotComp) {
+                    dotComp.classList.add("hidden");
+                }
+            } else {
+                if (compBox) {
+                    compBox.classList.add("ring-2", "ring-blue-600", "dark:ring-blue-500");
+                }
+                if (mainBox) {
+                    mainBox.classList.remove("ring-2", "ring-blue-600", "dark:ring-blue-500");
+                }
+                if (dotComp) {
+                    dotComp.classList.remove("hidden");
+                }
+                if (dotMain) {
+                    dotMain.classList.add("hidden");
+                }
+            }
+        };
+
+        window.setComparisonMode = function(mode) {
+            const btnC = document.getElementById("btn-tab-comp");
+            const btnG = document.getElementById("btn-tab-graph");
+            const paneC = document.getElementById("pane-comparison-doc");
+            const paneG = document.getElementById("pane-comparison-graph");
+
+            if (mode === 'compare') {
+                if (paneC) {
+                    paneC.classList.remove("hidden"); 
+                }
+                if (paneG) {
+                    paneG.classList.add("hidden");
+                }
+                if (btnC) {
+                    btnC.className = "px-3 py-1 bg-white dark:bg-slate-700 dark:text-white rounded-md shadow-xs transition-colors";
+                }
+                if (btnG) {
+                    btnG.className = "px-3 py-1 text-slate-500 dark:text-slate-400 transition-colors";
+                }
+            } else {
+                if (paneC) {
+                    paneC.classList.add("hidden"); 
+                }
+                if (paneG) {
+                    paneG.classList.remove("hidden");
+                }
+                if (btnG) {
+                    btnG.className = "px-3 py-1 bg-white dark:bg-slate-700 dark:text-white rounded-md shadow-xs transition-colors";
+                }
+                if (btnC) {
+                    btnC.className = "px-3 py-1 text-slate-500 dark:text-slate-400 transition-colors";
+                }
+                
+                // Registra na memória que a Malha Neural foi aberta!
+                if (!isNavigatingHistory) {
+                    const lastState = compHistory[compHistoryIndex];
+                    if (!lastState || lastState.type !== 'graph') {
+                        compHistory = compHistory.slice(0, compHistoryIndex + 1);
+                        compHistory.push({ type: 'graph' });
+                        compHistoryIndex++;
+                        updateHistoryUI();
+                    }
+                }
+                
+                resizeCanvas(); 
+                reloadGlobalGraph();
+            }
+        };
+
+        window.switchTab = function(monitor, type) {
+            if (monitor === 'main') {
+                const tDoc = document.getElementById("btn-tab-main-formatted");
+                const tRaw = document.getElementById("btn-tab-main-raw");
+                const vDoc = document.getElementById("view-doc-main");
+                const vRaw = document.getElementById("view-raw-main");
+                
+                if (type === 'doc') {
+                    if (vDoc) vDoc.classList.remove("hidden"); 
+                    if (vRaw) vRaw.classList.add("hidden");
+                    if (tDoc) tDoc.className = "px-3 py-1 bg-white dark:bg-slate-700 dark:text-white rounded-md shadow-xs transition-colors";
+                    if (tRaw) tRaw.className = "px-3 py-1 text-slate-500 dark:text-slate-400 transition-colors";
+                } else {
+                    if (vDoc) vDoc.classList.add("hidden"); 
+                    if (vRaw) vRaw.classList.remove("hidden");
+                    if (tRaw) tRaw.className = "px-3 py-1 bg-white dark:bg-slate-700 dark:text-white rounded-md shadow-xs transition-colors";
+                    if (tDoc) tDoc.className = "px-3 py-1 text-slate-500 dark:text-slate-400 transition-colors";
+                }
+            } else {
+                const tDoc = document.getElementById("btn-tab-comp-formatted");
+                const tRaw = document.getElementById("btn-tab-comp-raw");
+                const vDoc = document.getElementById("view-doc-comp");
+                const vRaw = document.getElementById("view-raw-comp");
+                
+                if (type === 'doc') {
+                    if (vDoc) vDoc.classList.remove("hidden"); 
+                    if (vRaw) vRaw.classList.add("hidden");
+                    if (tDoc) tDoc.className = "px-3 py-1 bg-white dark:bg-slate-700 dark:text-white rounded-md shadow-xs transition-colors";
+                    if (tRaw) tRaw.className = "px-3 py-1 text-slate-500 dark:text-slate-400 transition-colors";
+                } else {
+                    if (vDoc) vDoc.classList.add("hidden"); 
+                    if (vRaw) vRaw.classList.remove("hidden");
+                    if (tRaw) tRaw.className = "px-3 py-1 bg-white dark:bg-slate-700 dark:text-white rounded-md shadow-xs transition-colors";
+                    if (tDoc) tDoc.className = "px-3 py-1 text-slate-500 dark:text-slate-400 transition-colors";
+                }
+            }
+        };
+
+        window.openMenuComparison = function() {
+            if (contextMenuSelectedPath) {
+                selectMonitor('comp');
+                loadNoteContent(contextMenuSelectedPath);
+            }
+            closeAllDropdownsMenu();
+        };
+
+        window.clearComparisonDoc = function(fromHistory = false) {
+            comparisonFileId = null;
+            const tEl = document.getElementById("comp-note-title");
+            if (tEl) {
+                tEl.innerText = "Monitor de Comparação";
+            }
+            
+            const dEl = document.getElementById("view-doc-comp");
+            if (dEl) {
+                dEl.innerHTML = `<div class="text-center text-slate-400 my-20 dark:text-slate-700">Painel secundário inativo. Selecione este monitor e clique em um arquivo da árvore para carregá-lo aqui.</div>`;
+            }
+            
+            const rEl = document.getElementById("view-raw-comp");
+            if (rEl) {
+                rEl.innerText = "";
+            }
+            
+            try { buildNotesTree(); } catch(e) {}
+            
+            // Registra limpeza na memória
+            if (!fromHistory && !isNavigatingHistory) {
+                const lastState = compHistory[compHistoryIndex];
+                if (!lastState || lastState.type !== 'empty') {
+                    compHistory = compHistory.slice(0, compHistoryIndex + 1);
+                    compHistory.push({ type: 'empty' });
+                    compHistoryIndex++;
+                    updateHistoryUI();
+                }
+            }
+        };
+
+        // =========================================================================
+        // OCR FORÇADO E BLINDADO
+        // =========================================================================
+
+        window.reprocessMD = async function(monitor) {
+            const isMain = (monitor === 'main');
+            const targetFile = isMain ? selectedFileId : comparisonFileId;
+            
+            if (!targetFile) {
+                return;
+            }
+
+            let rEl;
+            let btn;
+            
+            if (isMain) {
+                rEl = document.getElementById("view-raw-main");
+                btn = document.getElementById("btn-reprocess-main");
+            } else {
+                rEl = document.getElementById("view-raw-comp");
+                btn = document.getElementById("btn-reprocess-comp");
+            }
+            
+            if (rEl) {
+                rEl.innerText = "A Inteligência Artificial está transcrevendo a imagem para texto... Isso pode levar alguns segundos dependendo do tamanho do PDF.";
+                switchTab(monitor, 'raw');
+            }
+            
+            if (btn) {
+                btn.innerHTML = `<i data-lucide="loader" class="w-3 h-3 inline mr-1 animate-spin"></i> Relendo...`;
+            }
+            
+            try { lucide.createIcons(); } catch(e) {}
+
+            try {
+                const res = await fetch("/api/reprocess-md", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ filename: targetFile })
+                });
+                
+                const data = await res.json();
+                
+                if (data.success) {
+                    if (rEl) {
+                        rEl.innerText = data.markdown;
+                    }
+                    if (isMain) {
+                        rawContentBuffer = data.markdown; 
+                    } else {
+                        compContentBuffer = data.markdown;
+                    }
+                    try { buildNotesTree(); } catch(e) {}
+                    try { reloadGlobalGraph(); } catch(e) {}
+                } else {
+                    if (rEl) {
+                        rEl.innerText = "Falha ao refazer o OCR: " + data.error;
+                    }
+                }
+            } catch (err) {
+                if (rEl) {
+                    rEl.innerText = "Erro de conexão com o servidor Node.";
+                }
+            }
+            
+            if (btn) {
+                btn.innerHTML = `<i data-lucide="refresh-cw" class="w-3 h-3 inline mr-1"></i> Reler PDF`;
+            }
+            
+            try { lucide.createIcons(); } catch(e) {}
+        };
+
+        // =========================================================================
+        // LEITURA DE ARQUIVOS NATIVA E MEMÓRIA DE HISTÓRICO
+        // =========================================================================
+
+        function renderMarkdownHTML(mdText, filename) {
+            if (!mdText) {
+                return `<div class="text-center text-slate-400">Documento sem registros textuais válidos.</div>`;
+            }
+            
+            const tagRegex = /#([a-zA-Z0-9À-ÿ_-]+)/g; 
+            let rawTags = []; 
+            let m;
+            
+            while ((m = tagRegex.exec(mdText)) !== null) { 
+                rawTags.push(`#${m[1]}`); 
+            }
+            const uniqueTags = [...new Set(rawTags)]; 
+
+            let cleanText = mdText.replace(/\[\[(.*?)\]\]/g, '<span class="text-blue-500 font-bold cursor-pointer hover:underline" onclick="loadNoteContent(\'$1\')">$1</span>');
+            
+            let tagHeader = "";
+            if (uniqueTags.length > 0) {
+                tagHeader = `<div class="flex flex-wrap gap-1.5 mb-4 border-b border-slate-100 dark:border-slate-800 pb-2.5">`;
+                const spans = uniqueTags.map(t => `<span class="bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-900 text-[10px] font-black px-2 py-0.5 rounded-md">${t}</span>`);
+                tagHeader += spans.join('');
+                tagHeader += `</div>`;
+            }
+
+            return `
+                <div class="text-center border-b border-slate-200 dark:border-slate-700 pb-3 mb-4">
+                    <h3 class="font-bold text-sm tracking-wide uppercase text-slate-800 dark:text-white">BMS SERVICE - REGISTRO JURÍDICO</h3>
+                    <p class="text-[10px] text-slate-400 mt-0.5">Identificador de Volume: Cofre/${filename}</p>
+                </div>
+                ${tagHeader}
+                <div class="whitespace-pre-wrap text-slate-800 dark:text-slate-200">${cleanText}</div>
+            `;
+        }
+
+        window.loadNoteContent = async function(filename) {
+            
+            // Variáveis de segurança para caso o código falhe, a tela renderize o erro.
+            let dEl_Safe = null;
+            let rEl_Safe = null;
+
+            try {
+                const isMain = (activeMonitor === "main");
+                
+                let targetTitleId;
+                let targetDocId;
+                let targetRawId;
+
+                if (isMain) { 
+                    targetTitleId = "active-note-title";
+                    targetDocId = "view-doc-main";
+                    targetRawId = "view-raw-main";
+                    selectedFileId = filename; 
+                    switchTab('main', 'doc');
+                } else { 
+                    targetTitleId = "comp-note-title";
+                    targetDocId = "view-doc-comp";
+                    targetRawId = "view-raw-comp";
+                    comparisonFileId = filename; 
+                    switchTab('comp', 'doc'); 
+                    setComparisonMode('compare');
+                }
+
+                // ==============================================
+                // MOTOR DE HISTÓRICO: SALVA A PÁGINA ATUAL
+                // ==============================================
+                if (!isNavigatingHistory) {
+                    if (isMain) {
+                        const lastState = mainHistory[mainHistoryIndex];
+                        if (!lastState || lastState.type !== 'file' || lastState.path !== filename) {
+                            mainHistory = mainHistory.slice(0, mainHistoryIndex + 1);
+                            mainHistory.push({ type: 'file', path: filename });
+                            mainHistoryIndex++;
+                        }
+                    } else {
+                        const lastState = compHistory[compHistoryIndex];
+                        if (!lastState || lastState.type !== 'file' || lastState.path !== filename) {
+                            compHistory = compHistory.slice(0, compHistoryIndex + 1);
+                            compHistory.push({ type: 'file', path: filename });
+                            compHistoryIndex++;
+                        }
+                    }
+                    updateHistoryUI();
+                }
+
+                const tEl = document.getElementById(targetTitleId);
+                if (tEl) {
+                    tEl.innerText = filename.split('/').pop().replace(/\.(md|pdf|txt)$/i, "");
+                }
+                
+                const dEl = document.getElementById(targetDocId);
+                const rEl = document.getElementById(targetRawId);
+                
+                dEl_Safe = dEl;
+                rEl_Safe = rEl;
+                
+                if (dEl) {
+                    dEl.innerHTML = `<div class="text-center text-slate-400 my-20 animate-pulse">Indexando bloco documental...</div>`;
+                }
+
+                if (rEl) {
+                    rEl.innerText = "Carregando o texto fonte bruto...";
+                }
+
+                try { highlightSelectedRow(); } catch(e) {}
+
+                if (isMain) {
+                    try { updateFavoriteStarUI(); } catch(e) {}
+                }
+                
+                try { buildNotesTree(); } catch(e) {}
+
+                // Tratamento especial para PDF com altura dinâmica de leitura
+                if (filename.toLowerCase().endsWith('.pdf')) {
+                    
+                    if (dEl) {
+                        dEl.innerHTML = `<iframe src="/api/note-raw?file=${encodeURIComponent(filename)}" class="w-full border-0 rounded-xl bg-white shadow-sm" style="height: calc(100vh - 240px);"></iframe>`;
+                    }
+                    
+                    let btnReprocess;
+                    if (isMain) {
+                        btnReprocess = document.getElementById("btn-reprocess-main");
+                    } else {
+                        btnReprocess = document.getElementById("btn-reprocess-comp");
+                    }
+                    
+                    if (btnReprocess) {
+                        btnReprocess.classList.remove("hidden");
+                    }
+
+                    const mdFilename = filename.substring(0, filename.lastIndexOf('.')) + '.md';
+                    
+                    try {
+                        const mdRes = await fetch(`/api/note-content?file=${encodeURIComponent(mdFilename)}`);
+                        if (mdRes.ok) {
+                            const mdData = await mdRes.json();
+                            if (mdData.content) {
+                                if (rEl) {
+                                    rEl.innerText = mdData.content;
+                                }
+                                if (isMain) {
+                                    rawContentBuffer = mdData.content;
+                                } else {
+                                    compContentBuffer = mdData.content;
+                                }
+                            } else {
+                                throw new Error("Empty");
+                            }
+                        } else {
+                            throw new Error("Not found");
+                        }
+                    } catch(e) {
+                        if (rEl) {
+                            rEl.innerText = "[Nenhuma versão Markdown válida foi encontrada para este PDF. Clique em 'Reler PDF' acima para forçar a Inteligência Artificial a criar um OCR visual deste documento agora mesmo.]";
+                        }
+                        if (isMain) {
+                            rawContentBuffer = "";
+                        } else {
+                            compContentBuffer = "";
+                        }
+                    }
+                    return; 
+                } 
+                
+                // Se não for PDF, esconde o botão de reprocessamento
+                let btnReprocess;
+                if (isMain) {
+                    btnReprocess = document.getElementById("btn-reprocess-main");
+                } else {
+                    btnReprocess = document.getElementById("btn-reprocess-comp");
+                }
+                
+                if (btnReprocess) {
+                    btnReprocess.classList.add("hidden");
+                }
+                
+                // Fetch padrão para arquivos Markdown
+                const res = await fetch(`/api/note-content?file=${encodeURIComponent(filename)}`);
+                if (!res.ok) {
+                    throw new Error(`Erro HTTP ao buscar o conteúdo do arquivo`);
+                }
+                
+                const data = await res.json();
+                const content = data.content || "";
+                
+                if (isMain) {
+                    rawContentBuffer = content;
+                } else {
+                    compContentBuffer = content;
+                }
+
+                if (dEl) {
+                    dEl.innerHTML = renderMarkdownHTML(content, filename);
+                }
+                
+                if (rEl) {
+                    rEl.innerText = content;
+                }
+                
+                try { lucide.createIcons(); } catch(e) {}
+                
+            } catch(e) { 
+                console.error("Falha Sistêmica na renderização:", e);
+                if (dEl_Safe) {
+                    dEl_Safe.innerHTML = `<div class="text-center text-red-500 my-20 font-bold">Erro ao processar e ler o arquivo na interface.<br><span class="text-xs text-red-400 font-normal">${e.message}</span></div>`; 
+                }
+                if (rEl_Safe) {
+                    rEl_Safe.innerText = `Erro de Leitura Sistêmica: ${e.message}`;
+                }
+            }
+        };
+
+        function highlightSelectedRow() {
+            const rows = document.querySelectorAll(".tree-row-container");
+            
+            rows.forEach(row => {
+                const rowPath = row.getAttribute("data-path").replace(/\/$/, "");
+                const cleanMain = selectedFileId ? selectedFileId.replace(/\/$/, "") : "";
+                const cleanComp = comparisonFileId ? comparisonFileId.replace(/\/$/, "") : "";
+                
+                if (rowPath === cleanMain || rowPath === cleanComp) {
+                    row.className = "tree-row-container group flex items-center justify-between w-full rounded-xl p-0.5 border transition-all text-left bg-blue-50/50 dark:bg-blue-950/30 border-blue-500 dark:border-blue-400 text-blue-600 dark:text-blue-400 shadow-xs";
+                } else {
+                    row.className = "tree-row-container group flex items-center justify-between w-full rounded-xl p-0.5 border border-transparent hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300 transition-all";
+                }
+            });
+        }
+
+        // =========================================================================
+        // DOWNLOADS, IMPRESSÃO E STATUS DE REDE
+        // =========================================================================
+
+        function downloadActiveFile() {
+            if (!selectedFileId || !rawContentBuffer) {
+                return;
+            }
+            const blob = new Blob([rawContentBuffer], { type: "text/markdown;charset=utf-8" });
+            const link = document.createElement("a"); 
+            link.href = URL.createObjectURL(blob);
+            link.download = selectedFileId.split('/').pop(); 
+            link.click();
+        }
+
+        window.downloadCompFile = function() {
+            if (!comparisonFileId || !compContentBuffer) {
+                return;
+            }
+            const blob = new Blob([compContentBuffer], { type: "text/markdown;charset=utf-8" });
+            const link = document.createElement("a"); 
+            link.href = URL.createObjectURL(blob);
+            link.download = comparisonFileId.split('/').pop(); 
+            link.click();
+        };
+
+        function printActiveFile() {
+            if (!selectedFileId) {
+                return;
+            }
+            const docElement = document.getElementById("view-doc-main");
+            if (!docElement) {
+                return;
+            }
+            
+            const printWindow = window.open("", "_blank");
+            printWindow.document.write(`<html><head><title>BMS - Imprimir</title></head><body>${docElement.innerHTML}</body></html>`);
+            printWindow.document.close(); 
+            printWindow.print();
+        }
+
+        function fullscreenActiveFile() {
+            const container = document.getElementById("center-preview-container"); 
+            if (!container) {
+                return;
+            }
+            if (!document.fullscreenElement) {
+                container.requestFullscreen().catch(e => console.error(e));
+            } else {
+                document.exitFullscreen();
+            }
+        }
+
+        async function checkRealServerStatus() {
+            if (!serverStatusBadge || !serverStatusDot || !serverStatusText) {
+                return;
+            }
+            try {
+                const res = await fetch("/api/status");
+                if (res.ok) {
+                    serverStatusBadge.className = "flex items-center gap-2 bg-emerald-50 dark:bg-emerald-950/40 px-3 py-2 rounded-xl border border-emerald-100 dark:border-emerald-900 shadow-xs transition-all";
+                    serverStatusDot.className = "w-2 h-2 bg-emerald-500 rounded-full animate-pulse";
+                    serverStatusText.innerText = "SERVIDOR ATIVO";
+                } else { 
+                    throw new Error(); 
+                }
+            } catch (err) {
+                serverStatusBadge.className = "flex items-center gap-2 bg-red-50 dark:bg-red-950/40 px-3 py-2 rounded-xl border border-red-100 dark:border-red-900 shadow-xs transition-all";
+                serverStatusDot.className = "w-2 h-2 bg-red-500 rounded-full";
+                serverStatusText.innerText = "SERVIDOR INATIVO";
+            }
+        }
+        
+        setInterval(checkRealServerStatus, 4000); 
+        checkRealServerStatus();
+
+        function searchFileTree() {
+            if (!globalSearchBar || !fileTree) {
+                return;
+            }
+            const query = globalSearchBar.value.toLowerCase().trim();
+            const rows = fileTree.querySelectorAll(".tree-row-container");
+            
+            rows.forEach(row => { 
+                const pathText = row.getAttribute("data-path").toLowerCase();
+                if (pathText.includes(query)) {
+                    row.classList.remove("hidden");
+                } else {
+                    row.classList.add("hidden");
+                }
+            });
+        }
+
+        function triggerInlineContextMenu(e, path) {
+            e.stopPropagation(); 
+            contextMenuSelectedPath = path;
+            const menu = document.getElementById("custom-context-menu"); 
+            closeAllDropdownsMenu();
+            
+            if (menu) { 
+                menu.classList.remove("hidden"); 
+                menu.style.left = `${e.clientX - 160}px`; 
+                menu.style.top = `${e.clientY + 10}px`; 
+            }
+        }
+
+        function closeCustomModal() { 
+            const modal = document.getElementById("custom-dialog-modal");
+            if (modal) {
+                modal.classList.add("hidden"); 
+            }
+        }
+        
+        function openRenameModal() {
+            const ctxMenu = document.getElementById("custom-context-menu");
+            if (ctxMenu) {
+                ctxMenu.classList.add("hidden");
+            }
+            
+            const modal = document.getElementById("custom-dialog-modal"); 
+            if (!modal) {
+                return;
+            }
+            
+            document.getElementById("modal-title").innerText = "Renomear / Mover Item";
+            document.getElementById("modal-body-content").innerHTML = `<input type="text" id="modal-input-field" value="${contextMenuSelectedPath.replace(/\/$/, "")}" class="w-full bg-slate-50 border dark:border-slate-700 dark:bg-slate-800 rounded-xl p-2 text-xs font-semibold text-slate-800 dark:text-white">`;
+            modal.classList.remove("hidden");
+            
+            document.getElementById("modal-confirm-btn").onclick = async () => {
+                const newPath = document.getElementById("modal-input-field").value.trim();
+                if (newPath) { 
+                    await renameItem(contextMenuSelectedPath, newPath); 
+                    closeCustomModal(); 
+                }
+            };
+        }
+        
+        function openDeleteModal() {
+            const ctxMenu = document.getElementById("custom-context-menu");
+            if (ctxMenu) {
+                ctxMenu.classList.add("hidden");
+            }
+            
+            const modal = document.getElementById("custom-dialog-modal"); 
+            if (!modal) {
+                return;
+            }
+            
+            document.getElementById("modal-title").innerText = "Confirmar Exclusão";
+            document.getElementById("modal-body-content").innerHTML = `<p>Excluir permanentemente <strong>${contextMenuSelectedPath.replace(/\/$/, "")}</strong>?</p>`;
+            modal.classList.remove("hidden");
+            
+            document.getElementById("modal-confirm-btn").onclick = async () => { 
+                await deleteItem(contextMenuSelectedPath); 
+                closeCustomModal(); 
+            };
+        }
+
+        function createNewFolderManual(e) {
+            if (e) {
+                e.stopPropagation();
+            }
+            let context = ""; 
+            
+            if (selectedFileId && selectedFileId.endsWith("/")) {
+                context = selectedFileId; 
+            } else if (selectedFileId && selectedFileId.includes("/")) {
+                context = selectedFileId.substring(0, selectedFileId.lastIndexOf("/")) + "/";
+            }
+            
+            const modal = document.getElementById("custom-dialog-modal"); 
+            if (!modal) {
+                return;
+            }
+            
+            document.getElementById("modal-title").innerText = "Criar Nova Pasta";
+            document.getElementById("modal-body-content").innerHTML = `<input type="text" id="modal-input-field" placeholder="Nome da subpasta..." class="w-full bg-slate-50 border dark:border-slate-700 dark:bg-slate-800 rounded-xl p-2 text-xs text-slate-800 dark:text-white">`;
+            modal.classList.remove("hidden");
+            
+            document.getElementById("modal-confirm-btn").onclick = async () => {
+                const name = document.getElementById("modal-input-field").value.trim();
+                if (name) {
+                    try { 
+                        const res = await fetch("/api/create-folder", { 
+                            method: "POST", 
+                            headers: { "Content-Type": "application/json" }, 
+                            body: JSON.stringify({ foldername: context + name }) 
+                        }); 
+                        if (res.ok) { 
+                            buildNotesTree(); 
+                            reloadGlobalGraph(); 
+                        } 
+                    } catch(err) {
+                        console.error(err);
+                    }
+                    closeCustomModal();
+                }
+            };
+        }
+
+        async function deleteItem(p) { 
+            try { 
+                const res = await fetch("/api/delete-item", { 
+                    method: "POST", 
+                    headers: { "Content-Type": "application/json" }, 
+                    body: JSON.stringify({ targetPath: p }) 
+                }); 
+                if (res.ok) { 
+                    if(selectedFileId === p || selectedFileId === p + "/") {
+                        selectedFileId = null; 
+                    }
+                    buildNotesTree(); 
+                    reloadGlobalGraph(); 
+                } 
+            } catch(err) {
+                console.error(err);
+            } 
+        }
+        
+        async function renameItem(oldP, newP) { 
+            try { 
+                const res = await fetch("/api/rename-item", { 
+                    method: "POST", 
+                    headers: { "Content-Type": "application/json" }, 
+                    body: JSON.stringify({ oldPath: oldP, newPath: newP }) 
+                }); 
+                if (res.ok) { 
+                    if(selectedFileId === oldP || selectedFileId === oldP + "/") {
+                        selectedFileId = newP; 
+                    }
+                    buildNotesTree(); 
+                    reloadGlobalGraph(); 
+                } 
+            } catch(err) {
+                console.error(err);
+            } 
+        }
+
+        // =========================================================================
+        // UPLOAD EM LOTE E DRAG & DROP FÍSICO
+        // =========================================================================
+
+        async function handleOSDrop(e, targetFolder = "") {
+            const items = e.dataTransfer.items; 
+            if (!items) {
+                return;
+            }
+            
+            let baseFolder = targetFolder; 
+            if (baseFolder === "") { 
+                if (selectedFileId && selectedFileId.endsWith("/")) {
+                    baseFolder = selectedFileId; 
+                } else if (selectedFileId && selectedFileId.includes("/")) {
+                    baseFolder = selectedFileId.substring(0, selectedFileId.lastIndexOf("/")) + "/"; 
+                } 
+            }
+            
+            async function readEntry(entry, pathPrefix = "") {
+                if (entry.isFile) {
+                    return new Promise((resolve) => {
+                        entry.file(async (file) => {
+                            const finalPath = baseFolder + pathPrefix + file.name;
+                            try { 
+                                await fetch(`/api/upload-vault?file=${encodeURIComponent(finalPath)}`, { 
+                                    method: "POST", 
+                                    body: file 
+                                }); 
+                            } catch(err) {
+                                console.error(err);
+                            }
+                            resolve();
+                        });
+                    });
+                } else if (entry.isDirectory) {
+                    return new Promise((resolve) => {
+                        const dirReader = entry.createReader();
+                        dirReader.readEntries(async (entries) => { 
+                            for (let i = 0; i < entries.length; i++) { 
+                                await readEntry(entries[i], pathPrefix + entry.name + "/"); 
+                            } 
+                            resolve(); 
+                        });
+                    });
+                }
+            }
+            
+            let promises = []; 
+            for (let i = 0; i < items.length; i++) { 
+                const item = items[i].webkitGetAsEntry(); 
+                if (item) {
+                    promises.push(readEntry(item)); 
+                }
+            }
+            
+            await Promise.all(promises); 
+            buildNotesTree(); 
+            reloadGlobalGraph();
+        }
+
+        async function processUploadBatch(fileList) {
+            let baseFolder = ""; 
+            if (selectedFileId && selectedFileId.endsWith("/")) {
+                baseFolder = selectedFileId; 
+            } else if (selectedFileId && selectedFileId.includes("/")) {
+                baseFolder = selectedFileId.substring(0, selectedFileId.lastIndexOf("/")) + "/"; 
+            }
+            
+            for (let i = 0; i < fileList.length; i++) {
+                const file = fileList[i]; 
+                const finalPath = baseFolder + (file.webkitRelativePath || file.name);
+                try { 
+                    await fetch(`/api/upload-vault?file=${encodeURIComponent(finalPath)}`, { 
+                        method: "POST", 
+                        body: file 
+                    }); 
+                } catch(e) {
+                    console.error(e);
+                }
+            }
+            
+            await buildNotesTree(); 
+            reloadGlobalGraph();
+        }
+
+        const upV = document.getElementById("global-vault-upload");
+        const upF = document.getElementById("global-folder-upload");
+        
+        if (upV) {
+            upV.onchange = async (e) => { 
+                await processUploadBatch(e.target.files); 
+                e.target.value = ""; 
+            };
+        }
+        
+        if (upF) {
+            upF.onchange = async (e) => { 
+                await processUploadBatch(e.target.files); 
+                e.target.value = ""; 
+            };
+        }
+
+        // =========================================================================
+        // ATTACHMENT DE ARQUIVOS NO CHAT
+        // =========================================================================
+
+        const btnAttach = document.getElementById("btn-chat-attach");
+        const ctxUpload = document.getElementById("chat-context-upload");
+        
+        if (btnAttach && ctxUpload) {
+            btnAttach.onclick = () => {
+                ctxUpload.click();
+            };
+            
+            ctxUpload.onchange = async (e) => {
+                const file = e.target.files[0]; 
+                if (!file) {
+                    return;
+                }
+                
+                const attArea = document.getElementById("chat-attachment-area");
+                const attName = document.getElementById("chat-attachment-name");
+                
+                if (attArea) {
+                    attArea.classList.remove("hidden");
+                }
+                if (attName) {
+                    attName.innerText = "Sincronizando arquivo (aguarde OCR visual)...";
+                }
+
+                const finalPath = "Anexos_Chat/" + file.name;
+                
+                try {
+                    const res = await fetch(`/api/upload-vault?file=${encodeURIComponent(finalPath)}&sync=true`, { 
+                        method: "POST", 
+                        body: file 
+                    });
+                    const data = await res.json();
+                    
+                    pendingChatAttachment = { 
+                        name: file.name, 
+                        content: data.markdown || "Falha na Extração Visual." 
+                    };
+                    
+                    if (attName) {
+                        attName.innerText = file.name;
+                    }
+                    buildNotesTree(); 
+                    reloadGlobalGraph();
+                } catch (err) { 
+                    if (attName) {
+                        attName.innerText = "Erro ao enviar o anexo para o OCR."; 
+                    }
+                }
+            };
+        }
+
+        const btnRemAttach = document.getElementById("btn-remove-attachment");
+        if (btnRemAttach) {
+            btnRemAttach.onclick = () => {
+                pendingChatAttachment = null;
+                const attArea = document.getElementById("chat-attachment-area");
+                if (attArea) {
+                    attArea.classList.add("hidden");
+                }
+                if (ctxUpload) {
+                    ctxUpload.value = "";
+                }
+            };
+        }
+
+        // =========================================================================
+        // MOTOR DE ÁRVORE - LISTAGEM DOS ARQUIVOS (OBSIDIAN STYLE)
+        // =========================================================================
+
+        async function buildNotesTree() {
+            try {
+                const res = await fetch("/api/notes"); 
+                const data = await res.json();
+                
+                if (data.items && fileTree) {
+                    fileTree.innerHTML = ""; 
+                    let items = data.items; 
+                    
+                    items.sort((a, b) => a.path.localeCompare(b.path));
+                    
+                    if (currentFilterType === "md") {
+                        items = items.filter(i => i.type === "directory" || i.path.endsWith(".md"));
+                    }
+                    if (currentFilterType === "pdf") {
+                        items = items.filter(i => i.type === "directory" || i.path.endsWith(".pdf"));
+                    }
+                    
+                    fileTree.ondragover = (e) => { 
+                        e.preventDefault(); 
+                    };
+                    
+                    fileTree.ondrop = async (e) => {
+                        e.preventDefault();
+                        if (e.target === fileTree) {
+                            const draggedPath = e.dataTransfer.getData("text/plain");
+                            if (draggedPath) {
+                                const cleanDragged = draggedPath.replace(/\/$/, "");
+                                const itemName = cleanDragged.split('/').pop();
+                                if (cleanDragged !== itemName) {
+                                    await renameItem(cleanDragged, itemName);
+                                }
+                            } else if (e.dataTransfer.items) { 
+                                await handleOSDrop(e, ""); 
+                            }
+                        }
+                    };
+
+                    items.forEach(item => {
+                        const cleanItemPath = item.path.replace(/\/$/, "");
+                        let pathParts = cleanItemPath.split('/'); 
+                        let isHidden = false; 
+                        let currentPathCheck = "";
+                        
+                        for (let i = 0; i < pathParts.length - 1; i++) {
+                            currentPathCheck += (i === 0 ? "" : "/") + pathParts[i];
+                            if (collapsedFolders[currentPathCheck]) { 
+                                isHidden = true; 
+                                break; 
+                            }
+                        }
+                        
+                        if (isHidden) {
+                            return;
+                        }
+
+                        const row = document.createElement("div");
+                        const cleanMainPath = selectedFileId ? selectedFileId.replace(/\/$/, "") : "";
+                        const cleanCompPath = comparisonFileId ? comparisonFileId.replace(/\/$/, "") : "";
+                        const isSelected = (cleanItemPath === cleanMainPath || cleanItemPath === cleanCompPath);
+                        
+                        if (isSelected) {
+                            row.className = "tree-row-container group flex items-center justify-between w-full rounded-xl p-0.5 border transition-all text-left bg-blue-50/50 dark:bg-blue-950/30 border-blue-500 dark:border-blue-400 text-blue-600 dark:text-blue-400 shadow-xs";
+                        } else {
+                            row.className = "tree-row-container group flex items-center justify-between w-full rounded-xl p-0.5 border text-left border-transparent hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300 transition-all";
+                        }
+                        
+                        row.setAttribute("data-path", item.path);
+
+                        const isDir = item.type === "directory"; 
+                        row.draggable = true;
+                        
+                        row.ondragstart = (e) => {
+                            e.dataTransfer.setData("text/plain", item.path);
+                        };
+                        
+                        row.ondragover = (e) => { 
+                            e.preventDefault(); 
+                            if(isDir) {
+                                e.currentTarget.classList.add('bg-blue-50/40'); 
+                            }
+                        };
+                        
+                        row.ondragleave = (e) => {
+                            e.currentTarget.classList.remove('bg-blue-50/40');
+                        };
+                        
+                        row.ondrop = async (e) => {
+                            e.preventDefault(); 
+                            e.currentTarget.classList.remove('bg-blue-50/40');
+                            
+                            let targetFolder = isDir ? item.path : "";
+                            if (!isDir) { 
+                                const parts = item.path.split('/'); 
+                                parts.pop(); 
+                                targetFolder = parts.length > 0 ? parts.join('/') + '/' : ''; 
+                            }
+                            
+                            const draggedPath = e.dataTransfer.getData("text/plain");
+                            if (draggedPath && draggedPath !== item.path) {
+                                await renameItem(draggedPath.replace(/\/$/, ""), targetFolder + draggedPath.replace(/\/$/, "").split('/').pop());
+                            } else if (e.dataTransfer.items) {
+                                await handleOSDrop(e, targetFolder);
+                            }
+                        };
+
+                        const btn = document.createElement("button"); 
+                        const depth = (item.path.match(/\//g) || []).length - (isDir ? 1 : 0);
+                        
+                        btn.className = "flex-1 text-left py-1.5 flex items-center gap-1.5 font-bold truncate text-xs focus:outline-none";
+                        btn.style.paddingLeft = `${depth * 14 + 4}px`;
+                        
+                        let icon = "file";
+                        let iconColor = "text-slate-400";
+                        
+                        if (isDir) {
+                            icon = "folder";
+                            iconColor = "text-amber-500";
+                        } else if (item.path.endsWith('.pdf')) {
+                            icon = "file-text";
+                            iconColor = "text-red-400";
+                        }
+                        
+                        if (isSelected && !isDir && !item.path.endsWith('.pdf')) {
+                            iconColor = "text-blue-500";
+                        }
+                        
+                        const hasStar = !!favoriteItems[cleanItemPath];
+                        let starBadge = "";
+                        if (hasStar) {
+                            starBadge = `<i data-lucide="star" class="w-3 h-3 text-amber-500 fill-amber-500 inline shrink-0 ml-1"></i>`;
+                        }
+                        
+                        const isCollapsed = !!collapsedFolders[cleanItemPath];
+                        let chevronIcon = `<div class="w-3.5 shrink-0"></div>`;
+                        
+                        if (isDir) {
+                            if (isCollapsed) {
+                                chevronIcon = `<i data-lucide="chevron-right" class="w-3.5 h-3.5 text-slate-400 shrink-0"></i>`;
+                            } else {
+                                chevronIcon = `<i data-lucide="chevron-down" class="w-3.5 h-3.5 text-slate-400 shrink-0"></i>`;
+                            }
+                        }
+                        
+                        btn.innerHTML = `${chevronIcon}<i data-lucide="${icon}" class="w-3.5 h-3.5 ${iconColor} shrink-0"></i> <span class="truncate">${cleanItemPath.split('/').pop()}</span> ${starBadge}`;
+                        
+                        if (!isDir) {
+                            btn.onclick = (e) => { 
+                                e.stopPropagation(); 
+                                loadNoteContent(item.path); 
+                            };
+                        } else {
+                            btn.onclick = (e) => { 
+                                e.stopPropagation(); 
+                                collapsedFolders[cleanItemPath] = !collapsedFolders[cleanItemPath]; 
+                                localStorage.setItem("bms_collapsed_folders", JSON.stringify(collapsedFolders)); 
+                                selectedFileId = item.path; 
+                                buildNotesTree(); 
+                            };
+                        }
+
+                        const menuBtn = document.createElement("button"); 
+                        menuBtn.className = "opacity-0 group-hover:opacity-100 p-1 text-slate-400 hover:text-blue-500 rounded transition-all focus:outline-none";
+                        menuBtn.innerHTML = `<i data-lucide="more-horizontal" class="w-3.5 h-3.5"></i>`;
+                        menuBtn.onclick = (e) => {
+                            triggerInlineContextMenu(e, item.path);
+                        };
+
+                        row.appendChild(btn); 
+                        row.appendChild(menuBtn); 
+                        fileTree.appendChild(row);
+                    });
+                    
+                    try { lucide.createIcons(); } catch(e) {}
+                }
+            } catch(e) {
+                console.error(e);
+            }
+        }
+
+        // =========================================================================
+        // MOTOR FÍSICO DE CONEXÕES: GRAFO E MALHA NEURAL NATIVA 
+        // =========================================================================
+
+        function initPhysicsNodes(data) {
+            if(!canvas || !canvas.parentElement) {
+                return;
+            }
+            
+            const w = canvas.parentElement.clientWidth > 10 ? canvas.parentElement.clientWidth : 500; 
+            const h = canvas.parentElement.clientHeight > 10 ? canvas.parentElement.clientHeight : 230;
+            
+            canvas.width = w; 
+            canvas.height = h;
+
+            const existingNodesMap = new Map();
+            
+            graphData.nodes.forEach(n => {
+                existingNodesMap.set(n.id, n);
+            });
+            
+            graphData.nodes = data.nodes.map(n => {
+                const old = existingNodesMap.get(n.id);
+                return { 
+                    id: n.id, 
+                    label: n.label, 
+                    type: n.type, 
+                    x: old ? old.x : w / 2 + (Math.random() - 0.5) * 160, 
+                    y: old ? old.y : h / 2 + (Math.random() - 0.5) * 160, 
+                    vx: 0, 
+                    vy: 0 
+                };
+            });
+            
+            graphData.edges = data.edges.map(e => {
+                return { 
+                    sourceNode: graphData.nodes.find(n => n.id === e.source), 
+                    targetNode: graphData.nodes.find(n => n.id === e.target) 
+                };
+            }).filter(e => {
+                return e.sourceNode && e.targetNode;
+            });
+        }
+
+        function updatePhysics() {
+            if(!canvas || graphData.nodes.length === 0) {
+                return;
+            }
+            
+            const cx = canvas.width / 2;
+            const cy = canvas.height / 2;
+            
+            for (let i = 0; i < graphData.nodes.length; i++) {
+                let n1 = graphData.nodes[i];
+                
+                for (let j = i + 1; j < graphData.nodes.length; j++) {
+                    let n2 = graphData.nodes[j];
+                    let dx = n2.x - n1.x; 
+                    let dy = n2.y - n1.y; 
+                    
+                    if (dx === 0 && dy === 0) {
+                        dx = 0.1; 
+                        dy = 0.1;
+                    }
+                    
+                    let dist = Math.sqrt(dx * dx + dy * dy);
+                    let safeDist = Math.max(dist, 25);
+                    
+                    if (dist < 220) {
+                        let force = 900 / (safeDist * safeDist);
+                        let fx = (dx / safeDist) * force;
+                        let fy = (dy / safeDist) * force;
+                        
+                        if (n1 !== draggedNode) { 
+                            n1.vx -= fx; 
+                            n1.vy -= fy; 
+                        }
+                        
+                        if (n2 !== draggedNode) { 
+                            n2.vx += fx; 
+                            n2.vy += fy; 
+                        }
+                    }
+                }
+            }
+            
+            graphData.edges.forEach(e => {
+                let dx = e.targetNode.x - e.sourceNode.x; 
+                let dy = e.targetNode.y - e.sourceNode.y;
+                let dist = Math.sqrt(dx * dx + dy * dy);
+                let safeDist = Math.max(dist, 1);
+                
+                if (dist > 0) {
+                    let restingDistance = 65; 
+                    let diff = safeDist - restingDistance;
+                    let force = 0.025 * diff;
+                    
+                    let fx = (dx / safeDist) * force;
+                    let fy = (dy / safeDist) * force;
+                    
+                    if (e.sourceNode !== draggedNode) { 
+                        e.sourceNode.vx += fx; 
+                        e.sourceNode.vy += fy; 
+                    }
+                    
+                    if (e.targetNode !== draggedNode) { 
+                        e.targetNode.vx -= fx; 
+                        e.targetNode.vy -= fy; 
+                    }
+                }
+            });
+            
+            graphData.nodes.forEach(n => {
+                if (n === draggedNode) {
+                    return;
+                }
+                
+                n.vx += (cx - n.x) * 0.0018; 
+                n.vy += (cy - n.y) * 0.0018;
+                
+                n.vx += (Math.random() - 0.5) * 0.1; 
+                n.vy += (Math.random() - 0.5) * 0.1;
+                
+                let maxVel = 6.5;
+                n.vx = Math.max(-maxVel, Math.min(maxVel, n.vx));
+                n.vy = Math.max(-maxVel, Math.min(maxVel, n.vy));
+                
+                n.x += n.vx; 
+                n.y += n.vy;
+                
+                const p = 20;
+                
+                if (n.x < p) { 
+                    n.x = p; 
+                    n.vx *= -0.2; 
+                } 
+                
+                if (n.y < p) { 
+                    n.y = p; 
+                    n.vy *= -0.2; 
+                }
+                
+                if (n.x > canvas.width - p) { 
+                    n.x = canvas.width - p; 
+                    n.vx *= -0.2; 
+                }
+                
+                if (n.y > canvas.height - p) { 
+                    n.y = canvas.height - p; 
+                    n.vy *= -0.2; 
+                }
+                
+                n.vx *= 0.84; 
+                n.vy *= 0.84;
+            });
+        }
+
+        function drawGraph() {
+            if (!ctx || !canvas) {
+                return; 
+            }
+            
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            const isDark = document.documentElement.classList.contains("dark");
+            
+            ctx.lineWidth = 1.2; 
+            ctx.strokeStyle = isDark ? "#334155" : "#e2e8f0";
+            
+            graphData.edges.forEach(e => { 
+                ctx.beginPath(); 
+                ctx.moveTo(e.sourceNode.x, e.sourceNode.y); 
+                ctx.lineTo(e.targetNode.x, e.targetNode.y); 
+                ctx.stroke(); 
+            });
+            
+            graphData.nodes.forEach(n => {
+                ctx.beginPath();
+                
+                let radius = 4.5;
+                
+                if (n.type === "tag") {
+                    radius = 6.0;
+                }
+                
+                const cleanMain = selectedFileId ? selectedFileId.replace(/\/$/, "") : "";
+                const cleanComp = comparisonFileId ? comparisonFileId.replace(/\/$/, "") : "";
+                const isAct = (cleanMain === n.id || cleanComp === n.id);
+
+                if (isAct) {
+                    radius = 7.0;
+                }
+                
+                ctx.arc(n.x, n.y, radius, 0, 2 * Math.PI);
+                
+                if (n.type === "tag") {
+                    ctx.fillStyle = "#8bc34a"; 
+                } else if (n.type === "concept") {
+                    ctx.fillStyle = isDark ? "#94a3b8" : "#cbd5e1"; 
+                } else if (isAct) {
+                    ctx.fillStyle = "#2563eb"; 
+                } else {
+                    ctx.fillStyle = isDark ? "#475569" : "#94a3b8"; 
+                }
+                
+                ctx.fill(); 
+                
+                ctx.fillStyle = isDark ? "#cbd5e1" : "#334155";
+                ctx.font = "9px sans-serif"; 
+                ctx.textAlign = "center"; 
+                ctx.fillText(n.label, n.x, n.y + 14);
+            });
+        }
+
+        function anim() { 
+            updatePhysics(); 
+            drawGraph(); 
+            requestAnimationFrame(anim); 
+        }
+        
+        if (canvas) {
+            requestAnimationFrame(anim);
+            
+            let clickStartX = 0;
+            let clickStartY = 0;
+
+            canvas.addEventListener("mousedown", (e) => {
+                const rect = canvas.getBoundingClientRect(); 
+                const mx = e.clientX - rect.left; 
+                const my = e.clientY - rect.top;
+                
+                isDraggingNode = false;
+                clickStartX = mx;
+                clickStartY = my;
+                
+                for (let n of graphData.nodes) { 
+                    if (Math.sqrt((n.x - mx)**2 + (n.y - my)**2) < 18) { 
+                        draggedNode = n; 
+                        canvas.style.cursor = 'grabbing';
+                        break; 
+                    } 
+                }
+            });
+
+            canvas.addEventListener("mousemove", (e) => { 
+                const rect = canvas.getBoundingClientRect(); 
+                const mx = e.clientX - rect.left; 
+                const my = e.clientY - rect.top;
+
+                if (draggedNode) { 
+                    if (Math.abs(mx - clickStartX) > 3 || Math.abs(my - clickStartY) > 3) {
+                        isDraggingNode = true;
+                    }
+                    
+                    draggedNode.x = mx; 
+                    draggedNode.y = my; 
+                    canvas.style.cursor = 'grabbing';
+                } else {
+                    let isHovering = false;
+                    for (let n of graphData.nodes) { 
+                        if (Math.sqrt((n.x - mx)**2 + (n.y - my)**2) < 18) { 
+                            isHovering = true; 
+                            break; 
+                        } 
+                    }
+                    canvas.style.cursor = isHovering ? 'pointer' : 'default';
+                }
+            });
+
+            canvas.addEventListener("mouseup", () => { 
+                
+                if (draggedNode && !isDraggingNode) {
+                    if (draggedNode.type === "file") {
+                        loadNoteContent(draggedNode.id);
+                    } else {
+                        const sb = document.getElementById("global-search-bar");
+                        if (sb) {
+                            sb.value = draggedNode.label;
+                            searchFileTree(); 
+                        }
+                    }
+                }
+                
+                draggedNode = null; 
+                isDraggingNode = false;
+                
+                if (canvas) {
+                    canvas.style.cursor = 'default';
+                }
+            });
+        }
+
+        async function reloadGlobalGraph() { 
+            try { 
+                const res = await fetch("/api/graph-data"); 
+                const data = await res.json(); 
+                initPhysicsNodes(data); 
+            } catch(e) {
+                console.error("Falha ao puxar a malha neural:", e);
+            } 
+        }
+        
+        setInterval(reloadGlobalGraph, 10000); 
+        setInterval(buildNotesTree, 10000);
+
+        // =========================================================================
+        // MOTOR DE CHAT DE INTELIGÊNCIA ARTIFICIAL
+        // =========================================================================
+
+        async function sendChatMessage() {
+            let query = chatInput.value.trim(); 
+            if (!query || !appPassword) {
+                return;
+            }
+            
+            const pwd = appPassword.value.trim(); 
+            if (!pwd) {
+                alert("Por favor, insira o Token de Validação Local na barra lateral.");
+                return;
+            }
+
+            renderMessageBlock("user", query); 
+            
+            chatInput.value = ""; 
+            chatInput.style.height = "auto";
+            chatInput.style.overflowY = "hidden";
+            
+            const ctxArea = document.getElementById("ctx-area");
+            const ctxType = document.getElementById("ctx-type");
+            const ctxPhase = document.getElementById("ctx-phase");
+            const ctxObj = document.getElementById("ctx-obj");
+
+            let areaVal = ctxArea ? ctxArea.value : "";
+            let typeVal = ctxType ? ctxType.value : "";
+            let phaseVal = ctxPhase ? ctxPhase.value : "";
+            let objVal = ctxObj ? ctxObj.value : "";
+
+            const fullPrompt = `[Área: ${areaVal}, Peça: ${typeVal}, Fase: ${phaseVal}, Foco: ${objVal}]\nInstrução: ${query}`;
+            chatHistory.push({ role: "user", content: fullPrompt });
+            
+            const tempId = renderMessageBlock("assistant", "Processando o contexto no motor central...");
+            
+            try {
+                const res = await fetch("/api/chat", { 
+                    method: "POST", 
+                    headers: { 
+                        "Content-Type": "application/json", 
+                        "x-app-password": pwd 
+                    }, 
+                    body: JSON.stringify({ messages: chatHistory }) 
+                });
+                
+                const data = await res.json(); 
+                
+                const tempBlock = document.getElementById(tempId);
+                if (tempBlock) {
+                    tempBlock.remove();
+                }
+                
+                if (data.reply) {
+                    renderMessageBlock("assistant", data.reply);
+                    chatHistory.push({ role: "assistant", content: data.reply });
+                    buildNotesTree(); 
+                    reloadGlobalGraph();
+                }
+            } catch (err) { 
+                const tempBlock = document.getElementById(tempId);
+                if (tempBlock) {
+                    tempBlock.innerText = "Falha na comunicação de rede com o gateway local."; 
+                }
+            }
+        }
+
+        function renderMessageBlock(role, text) {
+            msgCounter++;
+            const id = "msg-" + Date.now() + "-" + msgCounter;
+            
+            const wrapper = document.createElement("div");
+            wrapper.className = `w-full flex shrink-0 ${role === 'user' ? 'justify-end' : 'justify-start'}`;
+            wrapper.id = id;
+            
+            const bubble = document.createElement("div");
+            
+            let htmlText = text
+                .replace(/</g, "&lt;").replace(/>/g, "&gt;") 
+                .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" download class="text-blue-200 underline font-black hover:text-white transition-colors">$1</a>')
+                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                .replace(/\n/g, '<br>');
+
+            if (role === "user") {
+                bubble.className = "bg-blue-600 text-white rounded-2xl rounded-tr-none p-3 text-xs max-w-[85%] font-semibold leading-relaxed whitespace-pre-wrap shadow-xs select-text text-left break-words";
+            } else {
+                bubble.className = "bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 rounded-2xl rounded-tl-none p-3 text-xs max-w-[85%] shadow-xs leading-relaxed whitespace-pre-wrap select-text text-left break-words";
+            }
+            
+            bubble.innerHTML = htmlText;
+            wrapper.appendChild(bubble);
+            messagesContainer.appendChild(wrapper);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            return id;
+        }
+
+        if (btnSend) {
+            btnSend.onclick = sendChatMessage;
+        }
+        
+        if (chatInput) {
+            chatInput.onkeydown = (e) => { 
+                if (e.key === "Enter" && !e.shiftKey) { 
+                    e.preventDefault(); 
+                    sendChatMessage(); 
+                } 
+            };
+        }
+
+        // CARREGA A ÁRVORE E A MALHA NEURAL NO BOOT DA PÁGINA
+        buildNotesTree();
+        reloadGlobalGraph();
+    </script>
+</body>
+</html>/unpkg.com/lucide@latest"></script>
     
     <script>
         tailwind.config = { 
