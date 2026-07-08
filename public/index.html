@@ -247,6 +247,10 @@
 
         <div class="flex items-center gap-3">
             
+            <button onclick="toggleAppFullscreen()" class="p-2.5 border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-700 transition-all shadow-xs active:scale-95" title="Tela Cheia do Sistema">
+                <i data-lucide="expand" class="w-4 h-4"></i>
+            </button>
+
             <button onclick="toggleDarkMode()" class="p-2.5 border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-700 transition-all shadow-xs active:scale-95">
                 <i data-lucide="moon" class="w-4 h-4 dark:hidden"></i>
                 <i data-lucide="sun" class="w-4 h-4 hidden dark:block"></i>
@@ -750,6 +754,19 @@
         let isCompExpanded = false;
 
         // =========================================================================
+        // TELA CHEIA GLOBAL DO SISTEMA
+        // =========================================================================
+        window.toggleAppFullscreen = function() {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen().catch(err => console.error(err));
+            } else {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                }
+            }
+        };
+
+        // =========================================================================
         // FUNÇÕES DE FAVORITOS E SELEÇÃO (RESTAURADAS E BLINDADAS)
         // =========================================================================
         
@@ -816,10 +833,12 @@
         // =========================================================================
         
         window.exitExpansion = function(monitor) {
+            // Se estiver em modo tela cheia do navegador, sai
             if (document.fullscreenElement) {
                 document.exitFullscreen().catch(e => console.error(e));
             }
             
+            // Se estiver na tela dividida expandida, recolhe
             if (monitor === 'main' && isMainExpanded) {
                 toggleSplitMaximize('main');
             }
@@ -986,6 +1005,7 @@
             }
         };
 
+        // Reverte os botões se o usuário apertar ESC para sair da Tela Cheia
         document.addEventListener('fullscreenchange', () => {
             if (!document.fullscreenElement) {
                 if (!isMainExpanded) {
@@ -1018,11 +1038,11 @@
             chatInput.addEventListener("input", function() {
                 this.style.height = "auto";
                 
-                let maxHeight = window.innerHeight / 2; 
+                let maxHeight = window.innerHeight / 2; // Default 50% da janela
                 const sbRight = document.getElementById('sidebar-right');
                 
                 if (sbRight) {
-                    maxHeight = sbRight.clientHeight / 2; 
+                    maxHeight = sbRight.clientHeight / 2; // Puxa 50% do menu direito exato se existir
                 }
                 
                 if (this.scrollHeight > maxHeight) {
@@ -1116,6 +1136,14 @@
             
             const viewDocMainEl = document.getElementById("view-doc-main");
             if (viewDocMainEl) {
+                viewDocMainEl.classList.add('p-6', 'border', 'border-slate-200', 'dark:border-slate-800', 'rounded-xl');
+                viewDocMainEl.classList.remove('p-0');
+                
+                if (viewDocMainEl.parentElement) {
+                    viewDocMainEl.parentElement.classList.add('p-4');
+                    viewDocMainEl.parentElement.classList.remove('p-0');
+                }
+                
                 viewDocMainEl.innerHTML = `<div class="text-center text-slate-400 my-20 dark:text-slate-500">Raiz ativa. Organize e veja seus dados.</div>`;
             }
             
@@ -1672,6 +1700,14 @@
             
             const dEl = document.getElementById("view-doc-comp");
             if (dEl) {
+                dEl.classList.add('p-6', 'border', 'border-slate-200', 'dark:border-slate-800', 'rounded-xl');
+                dEl.classList.remove('p-0');
+                
+                if (dEl.parentElement) {
+                    dEl.parentElement.classList.add('p-4');
+                    dEl.parentElement.classList.remove('p-0');
+                }
+                
                 dEl.innerHTML = `<div class="text-center text-slate-400 my-20 dark:text-slate-700">Painel secundário inativo. Selecione este monitor e clique em um arquivo da árvore para carregá-lo aqui.</div>`;
             }
             
@@ -1882,11 +1918,19 @@
                 
                 try { buildNotesTree(); } catch(e) {}
 
-                // Tratamento especial para PDF com altura fluida (FLEXBOX)
+                // Tratamento especial para PDF com altura fluida (FLEXBOX REAL 100%)
                 if (filename.toLowerCase().endsWith('.pdf')) {
                     
                     if (dEl) {
                         // Reseta as margens do PDF para colar nas pontas da tela e remove cálculos rígidos
+                        dEl.classList.remove('p-6', 'border', 'border-slate-200', 'dark:border-slate-800', 'rounded-xl');
+                        dEl.classList.add('p-0');
+                        
+                        if (dEl.parentElement) {
+                            dEl.parentElement.classList.remove('p-4');
+                            dEl.parentElement.classList.add('p-0');
+                        }
+                        
                         dEl.innerHTML = `<iframe src="/api/note-raw?file=${encodeURIComponent(filename)}" class="w-full h-full border-0 bg-white" style="display: block; min-height: 100%;"></iframe>`;
                     }
                     
@@ -1963,6 +2007,14 @@
                 }
 
                 if (dEl) {
+                    dEl.classList.add('p-6', 'border', 'border-slate-200', 'dark:border-slate-800', 'rounded-xl');
+                    dEl.classList.remove('p-0');
+                    
+                    if (dEl.parentElement) {
+                        dEl.parentElement.classList.add('p-4');
+                        dEl.parentElement.classList.remove('p-0');
+                    }
+                    
                     dEl.innerHTML = renderMarkdownHTML(content, filename);
                 }
                 
