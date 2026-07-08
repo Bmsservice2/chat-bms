@@ -31,7 +31,6 @@ const anthropic = process.env.ANTHROPIC_API_KEY ? new Anthropic({ apiKey: proces
 const VAULT_PATH = path.join(process.cwd(), "obsidian_vault", "BaseConhecimento");
 const DOWNLOADS_PATH = path.join(process.cwd(), "public", "downloads");
 
-// Cria os diretórios necessários caso não existam
 if (!fs.existsSync(VAULT_PATH)) {
     fs.mkdirSync(VAULT_PATH, { recursive: true });
     console.log(`[INFO] Cofre criado em: ${VAULT_PATH}`);
@@ -152,19 +151,19 @@ async function processDocumentWithClaude(fileBuffer, fileExt, originalName) {
 
         if (fileExt === '.pdf') {
             try {
-                // Tenta extrair o texto diretamente do PDF
+                // Tenta extrair o texto diretamente do PDF em milissegundos
                 const pdfData = await pdfParse(fileBuffer);
                 extractedText = pdfData.text || "";
                 
-                // Heurística simples: se o PDF tiver pouquíssimo texto extraível, 
+                // Heurística de verificação: se o PDF tiver pouquíssimo texto extraível, 
                 // assumimos que é uma imagem escaneada.
                 const alphanumericText = extractedText.replace(/[^a-zA-Z0-9À-ÿ]/g, '');
-                if (alphanumericText.length < 100) {
+                if (alphanumericText.length < 50) {
                     isScanned = true;
                 }
             } catch(err) {
-                console.error("Erro no pdf-parse, assumindo como imagem:", err.message);
-                isScanned = true; // Se falhar ao parsear, assume que é imagem/escaneado
+                console.error("Erro no pdf-parse, assumindo como imagem OCR:", err.message);
+                isScanned = true; 
             }
         } else if (fileExt === '.txt' || fileExt === '.csv') {
             extractedText = fileBuffer.toString('utf-8');
@@ -172,14 +171,14 @@ async function processDocumentWithClaude(fileBuffer, fileExt, originalName) {
 
         const systemPrompt = "Você é um motor de indexação corporativa operando a base de dados do Obsidian. Seu papel é transcrever documentos inteiros ou reescrever textos extraídos em Markdown profissional.\n\nDIRETRIZES:\n1. Extraia TODO O TEXTO VISÍVEL, sem ocultar partes.\n2. Corrija quebras de linha erradas.\n3. Crie títulos (##) para seções principais.\n4. OBRIGATÓRIO: Crie uma seção '### Metadados' no final contendo de 3 a 5 #tags relevantes ao conteúdo e links em formato [[...]] para assuntos principais como nomes de empresas ou temas jurídicos.\n\nRetorne APENAS o código Markdown bruto. Não adicione texto de conversa nem explique o que você fez.";
 
-        // ROTA 1: Se for um PDF ESCANEADO, usamos a funcionalidade "Vision" da Anthropic
+        // ROTA 1: PDF ESCANEADO (Usa OCR nativo da Anthropic - Mais demorado e pesado)
         if (isScanned && fileExt === '.pdf') {
             console.log(`[MOTOR OCR] PDF '${originalName}' é escaneado/imagem. Invocando Visão Computacional do Claude...`);
             const base64PDF = fileBuffer.toString('base64');
             
             const response = await anthropic.messages.create({
                 model: process.env.CLAUDE_MODEL || "claude-3-5-sonnet-20241022",
-                max_tokens: 8192,
+                max_tokens: 4096, // CORREÇÃO: Limite exato para evitar travamento da API
                 system: systemPrompt,
                 messages: [{
                     role: "user",
@@ -195,21 +194,21 @@ async function processDocumentWithClaude(fileBuffer, fileExt, originalName) {
                     ]
                 }]
             }, { 
-                headers: { "anthropic-beta": "pdfs-2024-09-25" } // Ativa o suporte beta a PDF vision
+                headers: { "anthropic-beta": "pdfs-2024-09-25" } 
             });
 
             return response.content.find(c => c.type === "text")?.text || `> Erro da Inteligência Artificial ao tentar ler as imagens do PDF escaneado. O retorno foi vazio.`;
         }
 
-        // ROTA 2: Se for um PDF que já tem texto (ou um .txt), mandamos o texto puro
-        console.log(`[MOTOR TEXTO] Formatando texto puro extraído de '${originalName}'...`);
+        // ROTA 2: PDF COM TEXTO SELECIONÁVEL (Processo ultra-rápido de baixo custo)
+        console.log(`[MOTOR TEXTO] Lendo texto puro e formatando '${originalName}'...`);
         const response = await anthropic.messages.create({
             model: process.env.CLAUDE_MODEL || "claude-3-5-sonnet-20241022",
-            max_tokens: 8192,
+            max_tokens: 4096, // CORREÇÃO: Voltando para 4096 evita o crash da API de texto
             system: systemPrompt,
             messages: [{ 
                 role: "user", 
-                content: `Transforme o texto extraído abaixo em Markdown estruturado rico e legível. Preserve o conteúdo na íntegra.\n\nOriginal: ${originalName}\n\nConteúdo Extraído:\n${extractedText.substring(0, 80000)}` 
+                content: `Transforme o texto extraído abaixo em Markdown estruturado rico e legível. Preserve o conteúdo na íntegra.\n\nOriginal: ${originalName}\n\nConteúdo Extraído:\n${extractedText.substring(0, 35000)}` 
             }]
         });
         
@@ -324,7 +323,6 @@ app.post("/api/rename-item", (req, res) => {
     }
 });
 
-// A ROTA DA MALHA NEURAL ATUALIZADA (CLONE OBSIDIAN)
 app.get("/api/graph-data", (req, res) => {
     try {
         const check = listNotesLocal();
@@ -336,7 +334,6 @@ app.get("/api/graph-data", (req, res) => {
         let nodesMap = new Map();
         let edges = [];
 
-        // FUNÇÃO OBSIDIAN CLONE: Une MD e PDF no mesmo nó principal
         const getLogicalNode = (filePath) => {
             const ext = path.extname(filePath).toLowerCase();
             const base = filePath.substring(0, filePath.lastIndexOf('.'));
@@ -350,7 +347,6 @@ app.get("/api/graph-data", (req, res) => {
             return filePath;
         };
 
-        // PASSO 1: Cria os nós-raiz (os arquivos reais)
         files.forEach(f => {
             const logicalPath = getLogicalNode(f.path);
             if (!nodesMap.has(logicalPath)) {
@@ -363,7 +359,6 @@ app.get("/api/graph-data", (req, res) => {
             }
         });
 
-        // PASSO 2: Mapeia Tags e Nós Fantasmas Lendo os MDs
         files.forEach(file => {
             if (file.path.toLowerCase().endsWith('.pdf')) {
                 return;
@@ -373,20 +368,17 @@ app.get("/api/graph-data", (req, res) => {
                 const fullContent = fs.readFileSync(getSafePath(file.path), "utf-8");
                 const sourceLogicalPath = getLogicalNode(file.path); 
                 
-                // Mapeia links de conexão do Obsidian: [[Assunto Qualquer]]
                 const linkRegex = /\[\[(.*?)\]\]/g; 
                 let match;
                 while ((match = linkRegex.exec(fullContent)) !== null) {
                     let rawLink = match[1].split('|')[0].trim();
                     let targetName = rawLink.toLowerCase();
                     
-                    // Procura se esse link já bate com algum arquivo existente
                     let foundKey = Array.from(nodesMap.keys()).find(k => k.split('/').pop().replace(/\.(md|pdf|txt)$/i, "").toLowerCase() === targetName);
                     
                     if (foundKey) {
                         edges.push({ source: sourceLogicalPath, target: foundKey });
                     } else {
-                        // NÓ FANTASMA (Concept): O arquivo não existe, mas o tema conecta os arquivos!
                         let conceptId = `concept:${targetName}`;
                         if (!nodesMap.has(conceptId)) {
                             nodesMap.set(conceptId, { 
@@ -399,7 +391,6 @@ app.get("/api/graph-data", (req, res) => {
                     }
                 }
 
-                // Mapeia hashtags padrão
                 const tagRegex = /#([a-zA-Z0-9À-ÿ_-]+)/g; 
                 let tMatch;
                 while ((tMatch = tagRegex.exec(fullContent)) !== null) {
@@ -420,7 +411,6 @@ app.get("/api/graph-data", (req, res) => {
             }
         });
 
-        // Evita duplicidade de elásticos puxando e empurrando (A -> B é igual a B -> A)
         const uniqueEdges = [];
         const edgeSet = new Set();
         
@@ -556,11 +546,6 @@ app.post("/api/chat", async (req, res) => {
         return res.status(500).json({ error: "Configuração de Chave Anthropic incompleta." });
     }
     
-    // ==================================================
-    // VALIDAÇÃO DE SEGURANÇA BASE64 (LOGIN INVISÍVEL)
-    // A chave esperada é 'Ym1zOmx1aXph' que equivale a bms:luiza em base64
-    // O app envia isso pelo header x-app-password
-    // ==================================================
     const requestToken = req.headers["x-app-password"];
     
     if (!requestToken) {
