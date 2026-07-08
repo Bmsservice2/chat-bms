@@ -510,7 +510,7 @@
                         </div>
                     </div>
 
-                    <div id="view-doc-main-wrapper" class="flex flex-1 overflow-hidden relative bg-[#fafafa] dark:bg-slate-950 p-4">
+                    <div class="flex flex-1 overflow-hidden relative bg-[#fafafa] dark:bg-slate-950 p-4">
                         <div id="view-doc-main" class="w-full h-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl overflow-y-auto p-6 font-serif text-xs text-slate-700 dark:text-slate-300 select-text shadow-sm leading-relaxed">
                             <div class="text-center text-slate-400 my-20">Nenhum documento aberto no monitor principal.</div>
                         </div>
@@ -552,9 +552,9 @@
                         </div>
                     </div>
 
-                    <div id="pane-comparison-doc" class="flex-1 flex flex-col overflow-hidden bg-[#fafafa] dark:bg-slate-950 h-full">
+                    <div id="pane-comparison-doc" class="flex-1 flex flex-col overflow-hidden p-4 bg-[#fafafa] dark:bg-slate-950 h-full">
                         
-                        <div class="bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 p-2.5 flex items-center justify-between shadow-xs">
+                        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-2.5 mb-3 flex items-center justify-between shadow-xs">
                             <span id="comp-note-title" class="text-xs font-bold text-slate-400 truncate pr-2 px-2 max-w-[200px]">Monitor de Comparação</span>
                             <div class="flex items-center gap-2 flex-shrink-0">
                                 
@@ -591,7 +591,7 @@
                             </div>
                         </div>
                         
-                        <div id="view-doc-comp-wrapper" class="flex-1 relative overflow-hidden font-serif p-4">
+                        <div class="flex-1 relative overflow-hidden font-serif">
                             <div id="view-doc-comp" class="w-full h-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl overflow-y-auto p-6 text-xs text-slate-700 dark:text-slate-300 select-text leading-relaxed shadow-sm">
                                 <div class="text-center text-slate-400 my-20 dark:text-slate-600">Painel secundário inativo. Selecione este monitor e clique em um arquivo da árvore para carregá-lo aqui.</div>
                             </div>
@@ -750,16 +750,76 @@
         let isCompExpanded = false;
 
         // =========================================================================
+        // FUNÇÕES DE FAVORITOS E SELEÇÃO (RESTAURADAS E BLINDADAS)
+        // =========================================================================
+        
+        window.clearTreeSelection = function(e) {
+            if (e.target.id === "file-tree" || e.target.tagName === "ASIDE") {
+                clearMainMonitor();
+            }
+        };
+
+        window.toggleActiveFileFavorite = function() {
+            if (!selectedFileId) {
+                return;
+            }
+            
+            const cleanPath = selectedFileId.replace(/\/$/, "");
+            
+            if (favoriteItems[cleanPath]) {
+                delete favoriteItems[cleanPath]; 
+            } else {
+                favoriteItems[cleanPath] = true; 
+            }
+            
+            localStorage.setItem("bms_favorites_map", JSON.stringify(favoriteItems));
+            
+            try {
+                updateFavoriteStarUI(); 
+            } catch(e) {}
+            
+            try {
+                buildNotesTree();
+            } catch(e) {}
+        };
+
+        window.updateFavoriteStarUI = function() {
+            const btnFav = document.getElementById("btn-favorite-star");
+            
+            if (!btnFav) {
+                return;
+            }
+            
+            if (!selectedFileId) {
+                btnFav.innerHTML = `<i data-lucide="star" class="w-4 h-4 text-slate-400"></i>`;
+                try { 
+                    lucide.createIcons(); 
+                } catch(e) {} 
+                return;
+            }
+            
+            const cleanPath = selectedFileId.replace(/\/$/, "");
+            
+            if (favoriteItems[cleanPath]) {
+                btnFav.innerHTML = `<i data-lucide="star" class="w-4 h-4 text-amber-500" style="fill: currentColor;"></i>`;
+            } else {
+                btnFav.innerHTML = `<i data-lucide="star" class="w-4 h-4 text-slate-400 hover:text-amber-500 transition-colors"></i>`;
+            }
+            
+            try { 
+                lucide.createIcons(); 
+            } catch(e) {}
+        };
+
+        // =========================================================================
         // EXPANSÃO INTEGRAL DE TELA JURÍDICA (MÁXIMA VISUALIZAÇÃO DE PDFs E BOTÕES)
         // =========================================================================
         
         window.exitExpansion = function(monitor) {
-            // Se estiver em modo tela cheia do navegador, sai
             if (document.fullscreenElement) {
                 document.exitFullscreen().catch(e => console.error(e));
             }
             
-            // Se estiver na tela dividida expandida, recolhe
             if (monitor === 'main' && isMainExpanded) {
                 toggleSplitMaximize('main');
             }
@@ -926,7 +986,6 @@
             }
         };
 
-        // Reverte os botões se o usuário apertar ESC para sair da Tela Cheia
         document.addEventListener('fullscreenchange', () => {
             if (!document.fullscreenElement) {
                 if (!isMainExpanded) {
@@ -959,11 +1018,11 @@
             chatInput.addEventListener("input", function() {
                 this.style.height = "auto";
                 
-                let maxHeight = window.innerHeight / 2; // Default 50% da janela
+                let maxHeight = window.innerHeight / 2; 
                 const sbRight = document.getElementById('sidebar-right');
                 
                 if (sbRight) {
-                    maxHeight = sbRight.clientHeight / 2; // Puxa 50% do menu direito exato se existir
+                    maxHeight = sbRight.clientHeight / 2; 
                 }
                 
                 if (this.scrollHeight > maxHeight) {
@@ -1057,14 +1116,6 @@
             
             const viewDocMainEl = document.getElementById("view-doc-main");
             if (viewDocMainEl) {
-                viewDocMainEl.classList.add('p-6', 'border', 'border-slate-200', 'dark:border-slate-800', 'rounded-xl');
-                viewDocMainEl.classList.remove('p-0');
-                
-                if (viewDocMainEl.parentElement) {
-                    viewDocMainEl.parentElement.classList.add('p-4');
-                    viewDocMainEl.parentElement.classList.remove('p-0');
-                }
-                
                 viewDocMainEl.innerHTML = `<div class="text-center text-slate-400 my-20 dark:text-slate-500">Raiz ativa. Organize e veja seus dados.</div>`;
             }
             
@@ -1621,14 +1672,6 @@
             
             const dEl = document.getElementById("view-doc-comp");
             if (dEl) {
-                dEl.classList.add('p-6', 'border', 'border-slate-200', 'dark:border-slate-800', 'rounded-xl');
-                dEl.classList.remove('p-0');
-                
-                if (dEl.parentElement) {
-                    dEl.parentElement.classList.add('p-4');
-                    dEl.parentElement.classList.remove('p-0');
-                }
-                
                 dEl.innerHTML = `<div class="text-center text-slate-400 my-20 dark:text-slate-700">Painel secundário inativo. Selecione este monitor e clique em um arquivo da árvore para carregá-lo aqui.</div>`;
             }
             
@@ -1839,19 +1882,12 @@
                 
                 try { buildNotesTree(); } catch(e) {}
 
-                // Tratamento especial para PDF com altura dinâmica de leitura flexbox
+                // Tratamento especial para PDF com altura fluida (FLEXBOX)
                 if (filename.toLowerCase().endsWith('.pdf')) {
                     
                     if (dEl) {
-                        dEl.classList.remove('p-6', 'border', 'border-slate-200', 'dark:border-slate-800', 'rounded-xl');
-                        dEl.classList.add('p-0');
-                        
-                        if (dEl.parentElement) {
-                            dEl.parentElement.classList.remove('p-4');
-                            dEl.parentElement.classList.add('p-0');
-                        }
-                        
-                        dEl.innerHTML = `<iframe src="/api/note-raw?file=${encodeURIComponent(filename)}" class="w-full h-full border-0 bg-white" style="min-height: 100%; display: block;"></iframe>`;
+                        // Reseta as margens do PDF para colar nas pontas da tela e remove cálculos rígidos
+                        dEl.innerHTML = `<iframe src="/api/note-raw?file=${encodeURIComponent(filename)}" class="w-full h-full border-0 bg-white" style="display: block; min-height: 100%;"></iframe>`;
                     }
                     
                     let btnReprocess;
@@ -1927,14 +1963,6 @@
                 }
 
                 if (dEl) {
-                    dEl.classList.add('p-6', 'border', 'border-slate-200', 'dark:border-slate-800', 'rounded-xl');
-                    dEl.classList.remove('p-0');
-                    
-                    if (dEl.parentElement) {
-                        dEl.parentElement.classList.add('p-4');
-                        dEl.parentElement.classList.remove('p-0');
-                    }
-                    
                     dEl.innerHTML = renderMarkdownHTML(content, filename);
                 }
                 
@@ -2503,7 +2531,7 @@
                         const hasStar = !!favoriteItems[cleanItemPath];
                         let starBadge = "";
                         if (hasStar) {
-                            starBadge = `<i data-lucide="star" class="w-3 h-3 text-amber-500 fill-amber-500 inline shrink-0 ml-1"></i>`;
+                            starBadge = `<i data-lucide="star" class="w-3 h-3 text-amber-500 inline shrink-0 ml-1" style="fill: currentColor;"></i>`;
                         }
                         
                         const isCollapsed = !!collapsedFolders[cleanItemPath];
