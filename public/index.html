@@ -510,7 +510,7 @@
                         </div>
                     </div>
 
-                    <div class="flex flex-1 overflow-hidden relative bg-[#fafafa] dark:bg-slate-950 p-4">
+                    <div id="view-doc-main-wrapper" class="flex flex-1 overflow-hidden relative bg-[#fafafa] dark:bg-slate-950 p-4">
                         <div id="view-doc-main" class="w-full h-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl overflow-y-auto p-6 font-serif text-xs text-slate-700 dark:text-slate-300 select-text shadow-sm leading-relaxed">
                             <div class="text-center text-slate-400 my-20">Nenhum documento aberto no monitor principal.</div>
                         </div>
@@ -552,9 +552,9 @@
                         </div>
                     </div>
 
-                    <div id="pane-comparison-doc" class="flex-1 flex flex-col overflow-hidden p-4 bg-[#fafafa] dark:bg-slate-950 h-full">
+                    <div id="pane-comparison-doc" class="flex-1 flex flex-col overflow-hidden bg-[#fafafa] dark:bg-slate-950 h-full">
                         
-                        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-2.5 mb-3 flex items-center justify-between shadow-xs">
+                        <div class="bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 p-2.5 flex items-center justify-between shadow-xs">
                             <span id="comp-note-title" class="text-xs font-bold text-slate-400 truncate pr-2 px-2 max-w-[200px]">Monitor de Comparação</span>
                             <div class="flex items-center gap-2 flex-shrink-0">
                                 
@@ -591,7 +591,7 @@
                             </div>
                         </div>
                         
-                        <div class="flex-1 relative overflow-hidden font-serif">
+                        <div id="view-doc-comp-wrapper" class="flex-1 relative overflow-hidden font-serif p-4">
                             <div id="view-doc-comp" class="w-full h-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl overflow-y-auto p-6 text-xs text-slate-700 dark:text-slate-300 select-text leading-relaxed shadow-sm">
                                 <div class="text-center text-slate-400 my-20 dark:text-slate-600">Painel secundário inativo. Selecione este monitor e clique em um arquivo da árvore para carregá-lo aqui.</div>
                             </div>
@@ -891,15 +891,6 @@
                 }
             }
 
-            const pdfIframes = document.querySelectorAll('iframe');
-            pdfIframes.forEach(iframe => {
-                if (isMainExpanded || isCompExpanded) {
-                    iframe.style.height = "calc(100vh - 45px)";
-                } else {
-                    iframe.style.height = "calc(100vh - 240px)";
-                }
-            });
-
             try { lucide.createIcons(); } catch(e) {}
 
             setTimeout(() => {
@@ -1066,6 +1057,14 @@
             
             const viewDocMainEl = document.getElementById("view-doc-main");
             if (viewDocMainEl) {
+                viewDocMainEl.classList.add('p-6', 'border', 'border-slate-200', 'dark:border-slate-800', 'rounded-xl');
+                viewDocMainEl.classList.remove('p-0');
+                
+                if (viewDocMainEl.parentElement) {
+                    viewDocMainEl.parentElement.classList.add('p-4');
+                    viewDocMainEl.parentElement.classList.remove('p-0');
+                }
+                
                 viewDocMainEl.innerHTML = `<div class="text-center text-slate-400 my-20 dark:text-slate-500">Raiz ativa. Organize e veja seus dados.</div>`;
             }
             
@@ -1622,6 +1621,14 @@
             
             const dEl = document.getElementById("view-doc-comp");
             if (dEl) {
+                dEl.classList.add('p-6', 'border', 'border-slate-200', 'dark:border-slate-800', 'rounded-xl');
+                dEl.classList.remove('p-0');
+                
+                if (dEl.parentElement) {
+                    dEl.parentElement.classList.add('p-4');
+                    dEl.parentElement.classList.remove('p-0');
+                }
+                
                 dEl.innerHTML = `<div class="text-center text-slate-400 my-20 dark:text-slate-700">Painel secundário inativo. Selecione este monitor e clique em um arquivo da árvore para carregá-lo aqui.</div>`;
             }
             
@@ -1832,12 +1839,19 @@
                 
                 try { buildNotesTree(); } catch(e) {}
 
-                // Tratamento especial para PDF com altura dinâmica de leitura
+                // Tratamento especial para PDF com altura dinâmica de leitura flexbox
                 if (filename.toLowerCase().endsWith('.pdf')) {
                     
-                    let targetHeight = (isMainExpanded || isCompExpanded) ? "calc(100vh - 45px)" : "calc(100vh - 240px)";
                     if (dEl) {
-                        dEl.innerHTML = `<iframe src="/api/note-raw?file=${encodeURIComponent(filename)}" class="w-full border-0 rounded-xl bg-white shadow-sm" style="height: ${targetHeight};"></iframe>`;
+                        dEl.classList.remove('p-6', 'border', 'border-slate-200', 'dark:border-slate-800', 'rounded-xl');
+                        dEl.classList.add('p-0');
+                        
+                        if (dEl.parentElement) {
+                            dEl.parentElement.classList.remove('p-4');
+                            dEl.parentElement.classList.add('p-0');
+                        }
+                        
+                        dEl.innerHTML = `<iframe src="/api/note-raw?file=${encodeURIComponent(filename)}" class="w-full h-full border-0 bg-white" style="min-height: 100%; display: block;"></iframe>`;
                     }
                     
                     let btnReprocess;
@@ -1913,6 +1927,14 @@
                 }
 
                 if (dEl) {
+                    dEl.classList.add('p-6', 'border', 'border-slate-200', 'dark:border-slate-800', 'rounded-xl');
+                    dEl.classList.remove('p-0');
+                    
+                    if (dEl.parentElement) {
+                        dEl.parentElement.classList.add('p-4');
+                        dEl.parentElement.classList.remove('p-0');
+                    }
+                    
                     dEl.innerHTML = renderMarkdownHTML(content, filename);
                 }
                 
