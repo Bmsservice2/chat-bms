@@ -54,12 +54,83 @@
 </head>
 <body class="bg-[#f3f4f6] dark:bg-slate-950 text-slate-800 dark:text-slate-100 font-sans h-screen flex flex-col overflow-hidden select-none transition-colors duration-200">
 
+    <!-- ========================================== -->
+    <!-- TELA DE LOGIN & SPLASH SCREEN (AUTENTICAÇÃO)-->
+    <!-- ========================================== -->
+    <div id="auth-gate" class="fixed inset-0 bg-slate-950 z-[100] flex items-center justify-center transition-all duration-1000 opacity-100">
+        
+        <!-- Splash Animado -->
+        <div id="auth-splash" class="absolute inset-0 flex flex-col items-center justify-center transition-all duration-700 opacity-100 scale-100">
+            <svg viewBox="0 0 100 100" class="w-24 h-24 drop-shadow-2xl mb-5 animate-pulse">
+                <path d="M 35 10 V 70 A 25 25 0 0 0 85 70 A 25 25 0 0 0 35 45" fill="none" stroke="#8bc34a" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M 47 10 V 70 A 13 13 0 0 0 73 70 A 13 13 0 0 0 47 57" fill="none" stroke="#0ea5e9" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span class="font-black text-4xl tracking-tight text-white drop-shadow-lg">
+                BMS <span class="text-blue-500 font-medium">Knowledge</span>
+            </span>
+            <div class="mt-6 w-16 h-1 bg-blue-900 rounded-full overflow-hidden shadow-lg shadow-blue-500/50">
+                <div class="w-full h-full bg-blue-500 animate-pulse"></div>
+            </div>
+            <p class="text-[10px] text-slate-500 font-bold uppercase tracking-widest mt-4">Iniciando Motor Neural...</p>
+        </div>
+
+        <!-- Formulário de Login Oculto Inicialmente -->
+        <div id="auth-box" class="hidden absolute flex-col items-center justify-center transition-all duration-700 opacity-0 translate-y-8 w-full max-w-sm px-6">
+            <div class="bg-slate-900/90 backdrop-blur-md border border-slate-800 p-8 rounded-3xl shadow-[0_0_50px_rgba(0,0,0,0.5)] w-full flex flex-col gap-6 relative overflow-hidden">
+                
+                <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-600 via-emerald-400 to-blue-600"></div>
+                
+                <div class="text-center mt-2">
+                    <div class="w-12 h-12 mx-auto bg-slate-800 border border-slate-700 rounded-xl flex items-center justify-center mb-4 shadow-inner">
+                        <i data-lucide="shield-check" class="w-6 h-6 text-emerald-400"></i>
+                    </div>
+                    <h2 class="text-2xl font-black text-white mb-1">Acesso Restrito</h2>
+                    <p class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Centro Operacional de Inteligência</p>
+                </div>
+
+                <div class="flex flex-col gap-4 mt-2">
+                    <div>
+                        <label class="text-[9px] font-black text-slate-500 uppercase tracking-widest mb-1.5 block ml-1">Identificação</label>
+                        <div class="relative">
+                            <i data-lucide="user" class="w-4 h-4 text-slate-500 absolute left-4 top-1/2 -translate-y-1/2"></i>
+                            <input type="text" id="auth-user" placeholder="Usuário do sistema" class="w-full bg-slate-950/50 border border-slate-700 rounded-xl py-3 pl-11 pr-4 text-xs font-bold text-white focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all placeholder:font-normal">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="text-[9px] font-black text-slate-500 uppercase tracking-widest mb-1.5 block ml-1">Credencial de Segurança</label>
+                        <div class="relative">
+                            <i data-lucide="lock" class="w-4 h-4 text-slate-500 absolute left-4 top-1/2 -translate-y-1/2"></i>
+                            <input type="password" id="auth-pass" placeholder="••••••••" class="w-full bg-slate-950/50 border border-slate-700 rounded-xl py-3 pl-11 pr-4 text-xs font-mono text-white focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all" onkeydown="if(event.key==='Enter') executeLogin()">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-2">
+                    <button onclick="executeLogin()" id="btn-login" class="w-full py-3.5 bg-blue-600 hover:bg-blue-500 active:scale-95 text-white font-black text-xs uppercase tracking-wider rounded-xl shadow-lg shadow-blue-900/40 transition-all flex items-center justify-center gap-2">
+                        Autenticar <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                    </button>
+                    <div id="auth-error" class="hidden text-center text-[10px] font-black uppercase text-red-400 mt-4 bg-red-950/30 py-2 rounded-lg border border-red-900/50">
+                        Credenciais Inválidas ou Recusadas.
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- INPUTS GLOBAIS DE ARQUIVO (OCULTOS)        -->
+    <!-- ========================================== -->
     <input type="file" id="global-vault-upload" class="hidden" multiple />
     
     <input type="file" id="global-folder-upload" class="hidden" webkitdirectory directory multiple />
     
     <input type="file" id="chat-context-upload" class="hidden" />
 
+    <!-- ========================================== -->
+    <!-- MENU DE CONTEXTO FLUTUANTE DA ÁRVORE       -->
+    <!-- ========================================== -->
     <div id="custom-context-menu" class="hidden absolute bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl shadow-2xl py-1.5 w-44 z-50 text-xs font-bold text-slate-600 dark:text-slate-300">
         
         <button onclick="openRenameModal()" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 flex items-center gap-2">
@@ -76,6 +147,9 @@
         
     </div>
 
+    <!-- ========================================== -->
+    <!-- MODAL DE DIÁLOGO GERAL (AÇÕES DO COFRE)    -->
+    <!-- ========================================== -->
     <div id="custom-dialog-modal" class="hidden fixed inset-0 bg-slate-950/40 dark:bg-slate-950/60 backdrop-blur-xs flex items-center justify-center z-50">
         <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-2xl p-5 w-80 max-w-full flex flex-col gap-4">
             
@@ -84,7 +158,8 @@
             </h3>
             
             <div id="modal-body-content" class="flex flex-col gap-2 text-xs font-semibold text-slate-600 dark:text-slate-400">
-                </div>
+                <!-- Conteúdo Injetado dinamicamente via JS -->
+            </div>
             
             <div class="flex justify-end gap-2 text-xs font-bold mt-2">
                 
@@ -100,6 +175,9 @@
         </div>
     </div>
 
+    <!-- ========================================== -->
+    <!-- MODAL DE CONTA E PLANO (BOTÃO DE IA OCR)   -->
+    <!-- ========================================== -->
     <div id="account-settings-modal" class="hidden fixed inset-0 bg-slate-950/40 dark:bg-slate-950/60 backdrop-blur-xs flex items-center justify-center z-50">
         <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-2xl p-6 w-[400px] max-w-full flex flex-col gap-4">
             
@@ -117,6 +195,7 @@
                 </div>
             </div>
             
+            <!-- BOTÃO MÁQUINA DO TEMPO (GERA MD DOS PDFs ANTIGOS DO COFRE VIA OCR) -->
             <button id="btn-retroactive" onclick="triggerRetroactiveMD()" class="w-full px-4 py-2.5 bg-amber-500 hover:bg-amber-600 text-white font-bold rounded-xl transition-all shadow-sm flex items-center justify-center gap-2 mb-2">
                 <i data-lucide="refresh-cw" class="w-4 h-4"></i> Gerar Markdown de PDFs Antigos
             </button>
@@ -149,9 +228,13 @@
         </div>
     </div>
 
+    <!-- ========================================== -->
+    <!-- MODAL DO SPEEDTEST NATIVO DA VPS           -->
+    <!-- ========================================== -->
     <div id="speedtest-modal" class="hidden fixed inset-0 bg-slate-950/40 dark:bg-slate-950/60 backdrop-blur-xs flex items-center justify-center z-50 transition-opacity duration-300 opacity-0">
         <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl shadow-2xl p-6 w-[350px] max-w-full flex flex-col gap-4 transform transition-all duration-300 scale-95" id="speedtest-content">
             
+            <!-- ETAPA 1 DO SPEEDTEST -->
             <div id="st-state-1" class="flex flex-col items-center pt-2">
                 <div class="w-14 h-14 bg-blue-100 dark:bg-blue-900/50 rounded-full flex items-center justify-center text-blue-600 dark:text-blue-400 mb-3 relative">
                     <i data-lucide="wifi" class="w-7 h-7"></i>
@@ -175,6 +258,7 @@
                 </div>
             </div>
             
+            <!-- ETAPA 2 DO SPEEDTEST -->
             <div id="st-state-2" class="hidden flex flex-col items-center py-4">
                 <h3 class="font-black text-slate-800 dark:text-white text-sm mb-6 uppercase tracking-widest text-slate-400">
                     Medindo Banda...
@@ -199,6 +283,7 @@
                 </div>
             </div>
             
+            <!-- ETAPA 3 DO SPEEDTEST -->
             <div id="st-state-3" class="hidden flex flex-col items-center pt-2">
                 <div class="w-16 h-16 bg-emerald-100 dark:bg-emerald-900/50 rounded-full flex items-center justify-center text-emerald-600 dark:text-emerald-400 mb-3">
                     <i data-lucide="check-circle-2" class="w-8 h-8"></i>
@@ -226,6 +311,9 @@
         </div>
     </div>
 
+    <!-- ========================================== -->
+    <!-- CABEÇALHO SUPERIOR DO SISTEMA (HEADER)     -->
+    <!-- ========================================== -->
     <header class="bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 h-16 min-h-16 flex items-center justify-between px-6 z-20 shadow-xs transition-all duration-300">
         
         <div class="flex items-center gap-1.5">
@@ -247,6 +335,7 @@
 
         <div class="flex items-center gap-3">
             
+            <!-- NOVO: BOTÃO DE TELA CHEIA GLOBAL DO SISTEMA -->
             <button onclick="toggleAppFullscreen()" class="p-2.5 border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-700 transition-all shadow-xs active:scale-95" title="Tela Cheia do Sistema">
                 <i data-lucide="expand" class="w-4 h-4"></i>
             </button>
@@ -256,6 +345,7 @@
                 <i data-lucide="sun" class="w-4 h-4 hidden dark:block"></i>
             </button>
 
+            <!-- DROPDOWN DE UPLOAD DO COFRE -->
             <div class="relative">
                 <button onclick="toggleCustomDropdown('dropdown-upload', event)" class="border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 text-xs font-bold px-4 py-2.5 rounded-xl flex items-center gap-2 hover:bg-slate-50 dark:hover:bg-slate-700 transition-all active:scale-95 shadow-xs">
                     <i data-lucide="upload-cloud" class="w-4 h-4 text-blue-600"></i> Upload Box
@@ -281,8 +371,14 @@
         </div>
     </header>
 
+    <!-- ========================================== -->
+    <!-- ESTEIRA OPERACIONAL DAS 4 COLUNAS          -->
+    <!-- ========================================== -->
     <div class="flex flex-1 overflow-hidden relative" onclick="closeAllDropdownsMenu()">
         
+        <!-- ========================================== -->
+        <!-- COLUNA 1: GAVETA ESQUERDA (ÁRVORE)         -->
+        <!-- ========================================== -->
         <aside id="sidebar-left" class="w-64 bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 flex flex-col overflow-hidden p-4 relative flex-shrink-0 transition-all duration-300 ease-in-out" onclick="clearTreeSelection(event)">
             
             <div class="flex items-center justify-between mb-4 px-1">
@@ -308,7 +404,8 @@
             </div>
 
             <div id="file-tree" class="flex-1 overflow-y-auto space-y-0.5 pr-1 text-xs font-semibold text-slate-600 dark:text-slate-300 no-scrollbar relative">
-                </div>
+                <!-- Arquivos injetados via JavaScript -->
+            </div>
 
             <div class="mt-2">
                 <div onclick="openSpeedTestModal()" class="mb-2 bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-800 rounded-xl p-2.5 cursor-pointer hover:ring-2 hover:ring-blue-500/50 transition-all flex items-center justify-between group">
@@ -342,12 +439,17 @@
             </div>
         </aside>
 
+        <!-- SPLITTER 1 (VISUAL) -->
         <div id="resizer-left" class="w-2 bg-slate-200 dark:bg-slate-800 hover:bg-blue-500 dark:hover:bg-blue-500 cursor-col-resize z-10 flex-shrink-0 transition-all flex items-center justify-center rounded-full group">
             <div class="w-0.5 h-12 bg-slate-400 dark:bg-slate-500 group-hover:bg-white rounded-full transition-colors"></div>
         </div>
 
+        <!-- ========================================== -->
+        <!-- COLUNAS CENTRAIS: WORKSPACE                -->
+        <!-- ========================================== -->
         <main id="center-panel" class="flex-1 flex flex-col min-w-[300px] overflow-hidden p-5 gap-4 transition-all duration-300">
             
+            <!-- MENUS DE PERSONALIZAÇÃO JURÍDICA (4 COLUNAS) -->
             <div class="grid grid-cols-4 gap-4 w-full flex-shrink-0 transition-all duration-300">
                 
                 <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-3 flex items-center shadow-xs relative cursor-pointer" onclick="toggleCustomDropdown('dropdown-area', event)">
@@ -446,8 +548,10 @@
                 </div>
             </div>
 
+            <!-- TELA DIVIDIDA DOS DOIS MONITORES -->
             <div class="flex flex-1 gap-4 overflow-hidden relative mt-2 h-full">
                 
+                <!-- MONITOR 1 (PRINCIPAL) -->
                 <div id="center-preview-container" onclick="selectMonitor('main')" class="flex-1 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-xs flex flex-col overflow-hidden h-full ring-2 ring-blue-600 dark:ring-blue-500 cursor-pointer relative transition-all duration-300">
                     
                     <div class="absolute top-0 left-1/2 -translate-x-1/2 px-3 py-0.5 bg-blue-600 text-white text-[9px] font-black uppercase rounded-b-md shadow-md z-10" id="dot-active-main">
@@ -458,6 +562,7 @@
                         
                         <div class="flex items-center gap-2.5">
                             
+                            <!-- BOTOES DE HISTORICO - MONITOR 1 -->
                             <div class="flex items-center bg-slate-100 dark:bg-slate-800 rounded-md">
                                 <button onclick="goBack('main')" id="btn-back-main" class="p-1 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 disabled:opacity-30 disabled:cursor-not-allowed transition-colors" disabled>
                                     <i data-lucide="chevron-left" class="w-3.5 h-3.5"></i>
@@ -475,6 +580,7 @@
                         
                         <div class="flex items-center gap-2 flex-shrink-0">
                             
+                            <!-- BOTÃO DE REPROCESSAMENTO OCR -->
                             <button id="btn-reprocess-main" onclick="reprocessMD('main')" class="hidden px-2 py-1 bg-amber-500 hover:bg-amber-600 text-white rounded-md transition-all text-[9px] font-bold uppercase tracking-wider shadow-xs" title="Forçar a IA a reler este PDF">
                                 <i data-lucide="refresh-cw" class="w-3 h-3 inline"></i> Reler PDF
                             </button>
@@ -493,6 +599,7 @@
                                 <i data-lucide="printer" class="w-4 h-4"></i>
                             </button>
                             
+                            <!-- DROPDOWN DE AMPLIAÇÃO MONITOR 1 -->
                             <div class="relative flex items-center" id="expand-wrapper-main">
                                 <button onclick="toggleCustomDropdown('dropdown-expand-main', event)" class="p-1.5 text-slate-400 dark:text-slate-500 hover:text-slate-600 rounded-lg transition-all" title="Ampliar">
                                     <i data-lucide="maximize" class="w-4 h-4"></i>
@@ -507,6 +614,7 @@
                                 </div>
                             </div>
                             
+                            <!-- BOTÃO PARA SAIR DA EXPANSÃO -->
                             <button id="btn-restore-main" onclick="exitExpansion('main')" class="hidden p-1.5 text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-slate-800 hover:bg-blue-100 dark:hover:bg-slate-700 rounded-lg transition-all" title="Restaurar Visão Normal">
                                 <i data-lucide="minimize" class="w-4 h-4"></i>
                             </button>
@@ -518,14 +626,17 @@
                         <div id="view-doc-main" class="w-full h-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl overflow-y-auto p-6 font-serif text-xs text-slate-700 dark:text-slate-300 select-text shadow-sm leading-relaxed">
                             <div class="text-center text-slate-400 my-20">Nenhum documento aberto no monitor principal.</div>
                         </div>
+                        <!-- MARKDOWN VIEW: FUNDO BRANCO E FONTE ESCURA -->
                         <div id="view-raw-main" class="hidden w-full h-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl text-slate-800 dark:text-blue-400 overflow-y-auto p-4 font-mono text-xs whitespace-pre-wrap select-text shadow-sm"></div>
                     </div>
                 </div>
 
+                <!-- SPLITTER 2 (VISUAL) -->
                 <div id="resizer-center" class="w-2 bg-slate-200 dark:bg-slate-800 hover:bg-blue-500 dark:hover:bg-blue-500 cursor-col-resize z-10 flex-shrink-0 transition-all flex items-center justify-center rounded-full group">
                     <div class="w-0.5 h-12 bg-slate-400 dark:bg-slate-500 group-hover:bg-white rounded-full transition-colors"></div>
                 </div>
 
+                <!-- MONITOR 2 (COMPARAÇÃO E MALHA NEURAL) -->
                 <section id="sidebar-comparison" onclick="selectMonitor('comp')" class="w-[45%] bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl flex flex-col overflow-hidden shadow-xs h-full flex-shrink-0 transition-all duration-300 cursor-pointer relative">
                     
                     <div class="absolute top-0 left-1/2 -translate-x-1/2 px-3 py-0.5 bg-blue-600 text-white text-[9px] font-black uppercase rounded-b-md shadow-md z-10 hidden" id="dot-active-comp">
@@ -535,6 +646,7 @@
                     <div class="p-3.5 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between bg-slate-50 dark:bg-slate-900 flex-shrink-0 mt-2">
                         <div class="flex items-center gap-2">
                             
+                            <!-- BOTOES DE HISTORICO - MONITOR 2 -->
                             <div class="flex items-center bg-slate-200 dark:bg-slate-800 rounded-md mr-1">
                                 <button onclick="goBack('comp')" id="btn-back-comp" class="p-1 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 disabled:opacity-30 disabled:cursor-not-allowed transition-colors" disabled>
                                     <i data-lucide="chevron-left" class="w-3.5 h-3.5"></i>
@@ -556,12 +668,14 @@
                         </div>
                     </div>
 
+                    <!-- PANE COMPARAÇÃO (DOCUMENTO 2) -->
                     <div id="pane-comparison-doc" class="flex-1 flex flex-col overflow-hidden p-4 bg-[#fafafa] dark:bg-slate-950 h-full">
                         
                         <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-2.5 mb-3 flex items-center justify-between shadow-xs">
                             <span id="comp-note-title" class="text-xs font-bold text-slate-400 truncate pr-2 px-2 max-w-[200px]">Monitor de Comparação</span>
                             <div class="flex items-center gap-2 flex-shrink-0">
                                 
+                                <!-- BOTÃO REFAZER OCR MONITOR 2 -->
                                 <button id="btn-reprocess-comp" onclick="reprocessMD('comp')" class="hidden px-2 py-1 bg-amber-500 hover:bg-amber-600 text-white rounded-md transition-all text-[9px] font-bold uppercase tracking-wider shadow-xs" title="Forçar a IA a reler este PDF">
                                     <i data-lucide="refresh-cw" class="w-3 h-3 inline"></i> Reler PDF
                                 </button>
@@ -571,6 +685,7 @@
                                     <button id="btn-tab-comp-raw" onclick="switchTab('comp', 'raw')" class="px-3 py-1 text-slate-500 dark:text-slate-400 transition-colors">Markdown</button>
                                 </div>
                                 
+                                <!-- DROPDOWN DE AMPLIAÇÃO MONITOR 2 -->
                                 <div class="relative flex items-center" id="expand-wrapper-comp">
                                     <button onclick="toggleCustomDropdown('dropdown-expand-comp', event)" class="p-1.5 text-slate-400 dark:text-slate-500 hover:text-slate-600 rounded-lg transition-all mx-0.5" title="Ampliar">
                                         <i data-lucide="maximize" class="w-4 h-4"></i>
@@ -585,6 +700,7 @@
                                     </div>
                                 </div>
                                 
+                                <!-- BOTÃO PARA SAIR DA EXPANSÃO -->
                                 <button id="btn-restore-comp" onclick="exitExpansion('comp')" class="hidden p-1.5 text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-slate-800 hover:bg-blue-100 dark:hover:bg-slate-700 rounded-lg transition-all mx-0.5" title="Restaurar Visão Normal">
                                     <i data-lucide="minimize" class="w-4 h-4"></i>
                                 </button>
@@ -599,10 +715,12 @@
                             <div id="view-doc-comp" class="w-full h-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl overflow-y-auto p-6 text-xs text-slate-700 dark:text-slate-300 select-text leading-relaxed shadow-sm">
                                 <div class="text-center text-slate-400 my-20 dark:text-slate-600">Painel secundário inativo. Selecione este monitor e clique em um arquivo da árvore para carregá-lo aqui.</div>
                             </div>
+                            <!-- MARKDOWN VIEW: FUNDO BRANCO E FONTE ESCURA -->
                             <div id="view-raw-comp" class="hidden w-full h-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl text-slate-800 dark:text-slate-300 overflow-y-auto p-4 font-mono text-xs whitespace-pre-wrap select-text shadow-sm"></div>
                         </div>
                     </div>
 
+                    <!-- PANE MALHA NEURAL (OBSIDIAN CANVAS) -->
                     <div id="pane-comparison-graph" class="hidden flex-1 flex flex-col overflow-hidden relative bg-slate-50 dark:bg-slate-950 w-full h-full">
                         <canvas id="graph-canvas" class="w-full h-full block cursor-grab active:cursor-grabbing"></canvas>
                         <div class="absolute top-2 left-2 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xs px-2 py-1 rounded-md text-[9px] font-bold border border-slate-200 dark:border-slate-800 tracking-wide uppercase text-slate-400">
@@ -613,10 +731,14 @@
             </div>
         </main>
 
+        <!-- SPLITTER 3 (VISUAL) -->
         <div id="resizer-right" class="w-2 bg-slate-200 dark:bg-slate-800 hover:bg-blue-500 dark:hover:bg-blue-500 cursor-col-resize z-10 flex-shrink-0 transition-all flex items-center justify-center rounded-full group">
             <div class="w-0.5 h-12 bg-slate-400 dark:bg-slate-500 group-hover:bg-white rounded-full transition-colors"></div>
         </div>
 
+        <!-- ========================================== -->
+        <!-- COLUNA 4: ASSISTENTE CHAT DA INTELIGÊNCIA  -->
+        <!-- ========================================== -->
         <aside id="sidebar-right" class="w-80 bg-white dark:bg-slate-900 border-l border-slate-200 dark:border-slate-800 flex flex-col overflow-hidden shadow-2xl flex-shrink-0 transition-all duration-300 ease-in-out">
             
             <div class="p-4 border-b border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-900 flex items-center justify-between">
@@ -639,6 +761,7 @@
                 <input type="password" id="app-password" value="" placeholder="Insira a chave operacional..." class="w-full bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-lg px-3 py-1.5 text-xs font-mono text-slate-700 dark:text-slate-300 focus:outline-none">
             </div>
 
+            <!-- CONTAINER DO CHAT -->
             <div id="chat-messages" class="flex-1 overflow-y-auto p-4 flex flex-col gap-4 bg-[#fafafa] dark:bg-slate-950 select-text no-scrollbar">
                 <div class="w-full flex justify-start shrink-0">
                     <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 rounded-2xl rounded-tl-none p-3.5 text-xs max-w-[90%] shadow-xs leading-relaxed">
@@ -647,6 +770,7 @@
                 </div>
             </div>
 
+            <!-- ÁREA DE ANEXOS DO CHAT -->
             <div id="chat-attachment-area" class="hidden px-3 py-2 bg-blue-50 dark:bg-slate-800 border-t border-blue-100 dark:border-slate-700 flex items-center justify-between text-[11px] font-bold text-blue-700 dark:text-blue-300">
                 <div class="flex items-center gap-1.5 truncate">
                     <i data-lucide="paperclip" class="w-3.5 h-3.5"></i>
@@ -657,6 +781,7 @@
                 </button>
             </div>
 
+            <!-- INPUT DO CHAT COM EXPANSAO DINAMICA -->
             <div class="p-3 border-t border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900">
                 <div class="relative flex items-end gap-2 bg-slate-50 dark:bg-slate-800 rounded-xl p-1.5 border border-slate-200 dark:border-slate-700 transition-all">
                     <button id="btn-chat-attach" class="p-2 text-slate-400 hover:text-blue-600 mb-0.5 rounded-xl">
@@ -673,6 +798,9 @@
         </aside>
     </div>
 
+    <!-- ========================================================================= -->
+    <!-- SCRIPT JAVASCRIPT EXPANSO E SEM COMPRESSÕES DE LINHAS                     -->
+    <!-- ========================================================================= -->
     <script>
         // Inicializa os ícones do Lucide
         try {
@@ -2938,18 +3066,18 @@
         setInterval(buildNotesTree, 10000);
 
         // =========================================================================
-        // MOTOR DE CHAT DE INTELIGÊNCIA ARTIFICIAL
+        // MOTOR DE CHAT DE INTELIGência ARTIFICIAL
         // =========================================================================
 
         async function sendChatMessage() {
             let query = chatInput.value.trim(); 
-            if (!query || !appPassword) {
+            if (!query) {
                 return;
             }
             
-            const pwd = appPassword.value.trim(); 
+            const pwd = window._appSessionToken; 
             if (!pwd) {
-                alert("Por favor, insira o Token de Validação Local na barra lateral.");
+                alert("Sessão inválida. Por favor, recarregue a página e faça login novamente.");
                 return;
             }
 
@@ -3047,9 +3175,86 @@
             };
         }
 
-        // CARREGA A ÁRVORE E A MALHA NEURAL NO BOOT DA PÁGINA
-        buildNotesTree();
-        reloadGlobalGraph();
+        // =========================================================================
+        // ROTINAS DE INICIALIZAÇÃO DA PÁGINA (LOGIN E COMPONENTES)
+        // =========================================================================
+        
+        window._appSessionToken = ""; 
+
+        document.addEventListener("DOMContentLoaded", () => {
+            // Inicia animação de Splash Screen do Login
+            setTimeout(() => {
+                const splash = document.getElementById("auth-splash");
+                const box = document.getElementById("auth-box");
+                if(splash) {
+                    splash.classList.remove("opacity-100", "scale-100");
+                    splash.classList.add("opacity-0", "scale-95");
+                    setTimeout(() => {
+                        splash.classList.add("hidden");
+                        if(box) {
+                            box.classList.remove("hidden");
+                            setTimeout(() => {
+                                box.classList.remove("opacity-0", "translate-y-8");
+                                box.classList.add("opacity-100", "translate-y-0");
+                                const u = document.getElementById("auth-user");
+                                if(u) {
+                                    u.focus();
+                                }
+                            }, 50);
+                        }
+                    }, 700);
+                }
+            }, 2000);
+        });
+
+        window.executeLogin = function() {
+            const u = document.getElementById("auth-user");
+            const p = document.getElementById("auth-pass");
+            const err = document.getElementById("auth-error");
+            const btn = document.getElementById("btn-login");
+
+            if(!u || !p) {
+                return;
+            }
+
+            // Ocultação Base64 (bms:luiza)
+            const inputHash = btoa(u.value.trim().toLowerCase() + ":" + p.value.trim());
+
+            btn.innerHTML = `<i data-lucide="loader" class="w-4 h-4 animate-spin"></i> Autenticando...`;
+            try { lucide.createIcons(); } catch(e) {}
+
+            setTimeout(() => {
+                if (inputHash === "Ym1zOmx1aXph") {
+                    window._appSessionToken = p.value.trim(); 
+                    if(err) {
+                        err.classList.add("hidden");
+                    }
+                    
+                    const gate = document.getElementById("auth-gate");
+                    if(gate) {
+                        gate.classList.remove("opacity-100");
+                        gate.classList.add("opacity-0");
+                        setTimeout(() => {
+                            gate.classList.add("hidden");
+                            // Após logar, carrega o sistema
+                            buildNotesTree();
+                            reloadGlobalGraph();
+                        }, 1000);
+                    }
+                } else {
+                    if(err) {
+                        err.classList.remove("hidden");
+                    }
+                    btn.innerHTML = `Autenticar <i data-lucide="arrow-right" class="w-4 h-4"></i>`;
+                    try { lucide.createIcons(); } catch(e) {}
+                    
+                    const box = document.getElementById("auth-box");
+                    box.classList.add("animate-pulse");
+                    setTimeout(() => box.classList.remove("animate-pulse"), 500);
+                }
+            }, 800); 
+        };
+
     </script>
 </body>
 </html>
