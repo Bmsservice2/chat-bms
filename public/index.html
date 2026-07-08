@@ -530,7 +530,7 @@
                             </button>
                             
                             <!-- DROPDOWN DE AMPLIAÇÃO MONITOR 1 -->
-                            <div class="relative flex items-center">
+                            <div class="relative flex items-center" id="expand-wrapper-main">
                                 <button onclick="toggleCustomDropdown('dropdown-expand-main', event)" class="p-1.5 text-slate-400 dark:text-slate-500 hover:text-slate-600 rounded-lg transition-all" title="Ampliar">
                                     <i data-lucide="maximize" class="w-4 h-4"></i>
                                 </button>
@@ -543,6 +543,11 @@
                                     </button>
                                 </div>
                             </div>
+                            
+                            <!-- BOTÃO PARA SAIR DA EXPANSÃO -->
+                            <button id="btn-restore-main" onclick="exitExpansion('main')" class="hidden p-1.5 text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-slate-800 hover:bg-blue-100 dark:hover:bg-slate-700 rounded-lg transition-all" title="Restaurar Visão Normal">
+                                <i data-lucide="minimize" class="w-4 h-4"></i>
+                            </button>
 
                         </div>
                     </div>
@@ -551,7 +556,7 @@
                         <div id="view-doc-main" class="w-full h-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl overflow-y-auto p-6 font-serif text-xs text-slate-700 dark:text-slate-300 select-text shadow-sm leading-relaxed">
                             <div class="text-center text-slate-400 my-20">Nenhum documento aberto no monitor principal.</div>
                         </div>
-                        <!-- MARKDOWN VIEW: FUNDO BRANCO E FONTE ESCURA (NOVO) -->
+                        <!-- MARKDOWN VIEW: FUNDO BRANCO E FONTE ESCURA -->
                         <div id="view-raw-main" class="hidden w-full h-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl text-slate-800 dark:text-blue-400 overflow-y-auto p-4 font-mono text-xs whitespace-pre-wrap select-text shadow-sm"></div>
                     </div>
                 </div>
@@ -611,7 +616,7 @@
                                 </div>
                                 
                                 <!-- DROPDOWN DE AMPLIAÇÃO MONITOR 2 -->
-                                <div class="relative flex items-center">
+                                <div class="relative flex items-center" id="expand-wrapper-comp">
                                     <button onclick="toggleCustomDropdown('dropdown-expand-comp', event)" class="p-1.5 text-slate-400 dark:text-slate-500 hover:text-slate-600 rounded-lg transition-all mx-0.5" title="Ampliar">
                                         <i data-lucide="maximize" class="w-4 h-4"></i>
                                     </button>
@@ -624,6 +629,11 @@
                                         </button>
                                     </div>
                                 </div>
+                                
+                                <!-- BOTÃO PARA SAIR DA EXPANSÃO -->
+                                <button id="btn-restore-comp" onclick="exitExpansion('comp')" class="hidden p-1.5 text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-slate-800 hover:bg-blue-100 dark:hover:bg-slate-700 rounded-lg transition-all mx-0.5" title="Restaurar Visão Normal">
+                                    <i data-lucide="minimize" class="w-4 h-4"></i>
+                                </button>
 
                                 <button onclick="clearComparisonDoc()" class="text-slate-400 hover:text-red-500 mx-1">
                                     <i data-lucide="x" class="w-3.5 h-3.5"></i>
@@ -635,7 +645,7 @@
                             <div id="view-doc-comp" class="w-full h-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl overflow-y-auto p-6 text-xs text-slate-700 dark:text-slate-300 select-text leading-relaxed shadow-sm">
                                 <div class="text-center text-slate-400 my-20 dark:text-slate-600">Painel secundário inativo. Selecione este monitor e clique em um arquivo da árvore para carregá-lo aqui.</div>
                             </div>
-                            <!-- MARKDOWN VIEW: FUNDO BRANCO E FONTE ESCURA (NOVO) -->
+                            <!-- MARKDOWN VIEW: FUNDO BRANCO E FONTE ESCURA -->
                             <div id="view-raw-comp" class="hidden w-full h-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl text-slate-800 dark:text-slate-300 overflow-y-auto p-4 font-mono text-xs whitespace-pre-wrap select-text shadow-sm"></div>
                         </div>
                     </div>
@@ -788,7 +798,7 @@
         let activeMonitor = "main"; // Foco Inicial no Monitor 1
 
         // ==========================================
-        // VARIÁVEIS GLOBAIS DE HISTÓRICO DE NAVEGAÇÃO
+        // VARIÁVEIS GLOBAIS DE HISTÓRICO DE NAVEGAÇÃO E EXPANSÃO IMMERSIVA
         // ==========================================
         let mainHistory = [{ type: 'empty' }];
         let mainHistoryIndex = 0;
@@ -802,13 +812,51 @@
         let isCompExpanded = false;
 
         // =========================================================================
-        // EXPANSÃO INTEGRAL DE TELA JURÍDICA (MÁXIMA VISUALIZAÇÃO DE PDFs)
+        // EXPANSÃO INTEGRAL DE TELA JURÍDICA (MÁXIMA VISUALIZAÇÃO DE PDFs E BOTÕES)
         // =========================================================================
+        
+        window.exitExpansion = function(monitor) {
+            // Se estiver em modo tela cheia do navegador, sai
+            if (document.fullscreenElement) {
+                document.exitFullscreen().catch(e => console.error(e));
+            }
+            // Se estiver na tela dividida expandida, recolhe
+            if (monitor === 'main' && isMainExpanded) {
+                toggleSplitMaximize('main');
+            }
+            if (monitor === 'comp' && isCompExpanded) {
+                toggleSplitMaximize('comp');
+            }
+        };
+        
         window.toggleSplitMaximize = function(monitor) {
+            
+            let expandWrapper, restoreBtn;
+            
             if (monitor === 'main') {
                 isMainExpanded = !isMainExpanded;
+                expandWrapper = document.getElementById('expand-wrapper-main');
+                restoreBtn = document.getElementById('btn-restore-main');
+                
+                if (isMainExpanded) {
+                    if (expandWrapper) expandWrapper.classList.add('hidden');
+                    if (restoreBtn) restoreBtn.classList.remove('hidden');
+                } else {
+                    if (expandWrapper) expandWrapper.classList.remove('hidden');
+                    if (restoreBtn) restoreBtn.classList.add('hidden');
+                }
             } else if (monitor === 'comp') {
                 isCompExpanded = !isCompExpanded;
+                expandWrapper = document.getElementById('expand-wrapper-comp');
+                restoreBtn = document.getElementById('btn-restore-comp');
+                
+                if (isCompExpanded) {
+                    if (expandWrapper) expandWrapper.classList.add('hidden');
+                    if (restoreBtn) restoreBtn.classList.remove('hidden');
+                } else {
+                    if (expandWrapper) expandWrapper.classList.remove('hidden');
+                    if (restoreBtn) restoreBtn.classList.add('hidden');
+                }
             }
 
             const header = document.querySelector('header');
@@ -823,7 +871,6 @@
             const compBox = document.getElementById('sidebar-comparison');
             const resizerCenter = document.getElementById('resizer-center');
 
-            // Se QUALQUER uma das abas estiver em expansão total, oculta topo do site
             if (isMainExpanded || isCompExpanded) {
                 if (header) {
                     header.classList.add('hidden');
@@ -846,7 +893,6 @@
                 }
             }
 
-            // Monitor Principal engole a Gaveta da Esquerda
             if (isMainExpanded) {
                 if (sidebarLeft) {
                     sidebarLeft.classList.add('hidden');
@@ -863,7 +909,6 @@
                 }
             }
 
-            // Monitor de Comparação engole o Chat da Direita
             if (isCompExpanded) {
                 if (sidebarRight) {
                     sidebarRight.classList.add('hidden');
@@ -880,18 +925,48 @@
                 }
             }
 
-            // Se ambos os monitores estiverem expandidos ao mesmo tempo, force a divisão em 50/50% da tela
-            if (isMainExpanded && isCompExpanded) {
+            if (isMainExpanded && !isCompExpanded) {
+                if (compBox) {
+                    compBox.classList.add('hidden');
+                }
+                if (resizerCenter) {
+                    resizerCenter.classList.add('hidden');
+                }
+            } else if (isCompExpanded && !isMainExpanded) {
+                if (mainBox) {
+                    mainBox.classList.add('hidden');
+                }
+                if (resizerCenter) {
+                    resizerCenter.classList.add('hidden');
+                }
+            } else if (isMainExpanded && isCompExpanded) {
+                if (mainBox) {
+                    mainBox.classList.remove('hidden');
+                }
+                if (compBox) {
+                    compBox.classList.remove('hidden');
+                }
+                if (resizerCenter) {
+                    resizerCenter.classList.remove('hidden');
+                }
                 if (compBox) {
                     compBox.style.width = "50%";
                 }
             } else {
+                if (mainBox) {
+                    mainBox.classList.remove('hidden');
+                }
+                if (compBox) {
+                    compBox.classList.remove('hidden');
+                }
+                if (resizerCenter) {
+                    resizerCenter.classList.remove('hidden');
+                }
                 if (compBox) {
                     compBox.style.width = ""; 
                 }
             }
 
-            // Ajusta a altura dos iframes ativos instantaneamente para ocupar o espaço livre
             const pdfIframes = document.querySelectorAll('iframe');
             pdfIframes.forEach(iframe => {
                 if (isMainExpanded || isCompExpanded) {
@@ -900,6 +975,8 @@
                     iframe.style.height = "calc(100vh - 240px)";
                 }
             });
+
+            try { lucide.createIcons(); } catch(e) {}
 
             setTimeout(() => {
                 resizeCanvas();
@@ -913,16 +990,40 @@
             const containerId = monitor === 'main' ? 'center-preview-container' : 'sidebar-comparison';
             const container = document.getElementById(containerId); 
             
+            const expandWrapper = document.getElementById(monitor === 'main' ? 'expand-wrapper-main' : 'expand-wrapper-comp');
+            const restoreBtn = document.getElementById(monitor === 'main' ? 'btn-restore-main' : 'btn-restore-comp');
+            
             if (!container) {
                 return;
             }
             
             if (!document.fullscreenElement) {
-                container.requestFullscreen().catch(e => console.error(e));
+                container.requestFullscreen().then(() => {
+                    if (expandWrapper) expandWrapper.classList.add('hidden');
+                    if (restoreBtn) restoreBtn.classList.remove('hidden');
+                }).catch(e => console.error(e));
             } else {
                 document.exitFullscreen();
             }
         };
+
+        // Reverte os botões se o usuário apertar ESC para sair da Tela Cheia
+        document.addEventListener('fullscreenchange', () => {
+            if (!document.fullscreenElement) {
+                if (!isMainExpanded) {
+                    const wrMain = document.getElementById('expand-wrapper-main');
+                    const btMain = document.getElementById('btn-restore-main');
+                    if (wrMain) wrMain.classList.remove('hidden');
+                    if (btMain) btMain.classList.add('hidden');
+                }
+                if (!isCompExpanded) {
+                    const wrComp = document.getElementById('expand-wrapper-comp');
+                    const btComp = document.getElementById('btn-restore-comp');
+                    if (wrComp) wrComp.classList.remove('hidden');
+                    if (btComp) btComp.classList.add('hidden');
+                }
+            }
+        });
 
         // =========================================================================
         // EXPANSÃO DINÂMICA DA CAIXA DE CHAT (MAX 50% DA TELA)
