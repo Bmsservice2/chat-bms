@@ -149,16 +149,15 @@ async function processDocumentWithClaude(fileBuffer, fileExt, originalName) {
         let extractedText = "";
         let isScanned = false;
 
+        // VERIFICA SE O PDF TEM TEXTO SELECIONÁVEL OU É UMA IMAGEM ESCANEADA
         if (fileExt === '.pdf') {
             try {
-                // Tenta extrair o texto diretamente do PDF em milissegundos
                 const pdfData = await pdfParse(fileBuffer);
                 extractedText = pdfData.text || "";
                 
-                // Heurística de verificação: se o PDF tiver pouquíssimo texto extraível, 
-                // assumimos que é uma imagem escaneada.
+                // Limpa o texto para verificar se é um PDF fantasma (composto só de espaços ou sujeira)
                 const alphanumericText = extractedText.replace(/[^a-zA-Z0-9À-ÿ]/g, '');
-                if (alphanumericText.length < 50) {
+                if (alphanumericText.length < 150) {
                     isScanned = true;
                 }
             } catch(err) {
@@ -171,48 +170,79 @@ async function processDocumentWithClaude(fileBuffer, fileExt, originalName) {
 
         const systemPrompt = "Você é um motor de indexação corporativa operando a base de dados do Obsidian. Seu papel é transcrever documentos inteiros ou reescrever textos extraídos em Markdown profissional.\n\nDIRETRIZES:\n1. Extraia TODO O TEXTO VISÍVEL, sem ocultar partes.\n2. Corrija quebras de linha erradas.\n3. Crie títulos (##) para seções principais.\n4. OBRIGATÓRIO: Crie uma seção '### Metadados' no final contendo de 3 a 5 #tags relevantes ao conteúdo e links em formato [[...]] para assuntos principais como nomes de empresas ou temas jurídicos.\n\nRetorne APENAS o código Markdown bruto. Não adicione texto de conversa nem explique o que você fez.";
 
-        // ROTA 1: PDF ESCANEADO (Usa OCR nativo da Anthropic - Mais demorado e pesado)
+        // Função de Repetição Automática (Auto-Retry) para contornar o Limite 429 da Anthropic
+        const makeRequestWithRetry = async (apiCallFn) => {
+            let retries = 0;
+            while (retries < 3) {
+                try {
+                    return await apiCallFn();
+                } catch (err) {
+                    if (err.status === 429) {
+                        console.log(`[RATE LIMIT 429] Limite de 10.000 tokens atingido. Tentativa ${retries + 1}/3. Servidor pausado por 25s...`);
+                        await new Promise(res => setTimeout(res, 25000));
+                        retries++;
+                    } else {
+                        throw err;
+                    }
+                }
+            }
+            throw new Error("RATE_LIMIT_EXCEEDED");
+        };
+
+        // ROTA 1: PDF ESCANEADO (Usa Visão Computacional OCR)
         if (isScanned && fileExt === '.pdf') {
-            console.log(`[MOTOR OCR] PDF '${originalName}' é escaneado/imagem. Invocando Visão Computacional do Claude...`);
+            console.log(`[MOTOR OCR] O PDF '${originalName}' é uma imagem. Iniciando leitura visual de alto custo...`);
             const base64PDF = fileBuffer.toString('base64');
             
-            const response = await anthropic.messages.create({
-                model: process.env.CLAUDE_MODEL || "claude-3-5-sonnet-20241022",
-                max_tokens: 4096, // CORREÇÃO: Limite exato para evitar travamento da API
-                system: systemPrompt,
-                messages: [{
-                    role: "user",
-                    content: [
-                        { 
-                            type: "document", 
-                            source: { type: "base64", media_type: "application/pdf", data: base64PDF } 
-                        },
-                        { 
-                            type: "text", 
-                            text: `Este documento é um PDF escaneado (imagem). Por favor, leia e transcreva O TEXTO COMPLETO E EXATO de todas as páginas para Markdown estruturado. Extraia tudo. Arquivo original: ${originalName}` 
-                        }
-                    ]
-                }]
-            }, { 
-                headers: { "anthropic-beta": "pdfs-2024-09-25" } 
-            });
+            try {
+                const response = await makeRequestWithRetry(() => anthropic.messages.create({
+                    model: process.env.CLAUDE_MODEL || "claude-3-5-sonnet-20241022",
+                    max_tokens: 4096, 
+                    system: systemPrompt,
+                    messages: [{
+                        role: "user",
+                        content: [
+                            { type: "document", source: { type: "base64", media_type: "application/pdf", data: base64PDF } },
+                            { type: "text", text: `Este documento é um PDF escaneado (imagem). Por favor, transcreva O TEXTO COMPLETO E EXATO de todas as páginas para Markdown. Arquivo original: ${originalName}` }
+                        ]
+                    }]
+                }, { 
+                    headers: { "anthropic-beta": "pdfs-2024-09-25" } 
+                }));
 
-            return response.content.find(c => c.type === "text")?.text || `> Erro da Inteligência Artificial ao tentar ler as imagens do PDF escaneado. O retorno foi vazio.`;
+                return response.content.find(c => c.type === "text")?.text || `> Erro da Inteligência Artificial ao tentar ler as imagens do PDF escaneado.`;
+            } catch (err) {
+                if (err.message === "RATE_LIMIT_EXCEEDED") {
+                    return `> **[LIMITE DA IA ATINGIDO]** A API bloqueou a leitura visual deste PDF por estourar o seu plano de 10.000 tokens/minuto.\n\n**O que aconteceu?** PDFs escaneados consomem milhares de tokens. Se o PDF tiver muitas páginas ou você processou vários arquivos seguidos, a cota não suportou.\n\n**Solução:** Aguarde 1 minuto para o seu limite recarregar e clique no botão 'Reler PDF' acima para tentar novamente.`;
+                }
+                throw err;
+            }
         }
 
-        // ROTA 2: PDF COM TEXTO SELECIONÁVEL (Processo ultra-rápido de baixo custo)
-        console.log(`[MOTOR TEXTO] Lendo texto puro e formatando '${originalName}'...`);
-        const response = await anthropic.messages.create({
-            model: process.env.CLAUDE_MODEL || "claude-3-5-sonnet-20241022",
-            max_tokens: 4096, // CORREÇÃO: Voltando para 4096 evita o crash da API de texto
-            system: systemPrompt,
-            messages: [{ 
-                role: "user", 
-                content: `Transforme o texto extraído abaixo em Markdown estruturado rico e legível. Preserve o conteúdo na íntegra.\n\nOriginal: ${originalName}\n\nConteúdo Extraído:\n${extractedText.substring(0, 35000)}` 
-            }]
-        });
+        // ROTA 2: ARQUIVO COM TEXTO PURO (Processo ultra-rápido de baixo custo)
+        console.log(`[MOTOR TEXTO] Formatando o texto puro extraído de '${originalName}'...`);
         
-        return response.content.find(c => c.type === "text")?.text || `> Erro da Inteligência Artificial ao formatar o texto bruto.`;
+        // Cortamos o texto em 20.000 caracteres (~5.000 tokens) para garantir que NUNCA estoure o limite de 10k de entrada
+        const safeTextPayload = extractedText.substring(0, 20000); 
+
+        try {
+            const response = await makeRequestWithRetry(() => anthropic.messages.create({
+                model: process.env.CLAUDE_MODEL || "claude-3-5-sonnet-20241022",
+                max_tokens: 4096, 
+                system: systemPrompt,
+                messages: [{ 
+                    role: "user", 
+                    content: `Transforme o texto extraído abaixo em Markdown estruturado rico e legível. Preserve o conteúdo na íntegra.\n\nOriginal: ${originalName}\n\nConteúdo Extraído:\n${safeTextPayload}` 
+                }]
+            }));
+            
+            return response.content.find(c => c.type === "text")?.text || `> Erro da Inteligência Artificial ao formatar o texto bruto.`;
+        } catch (err) {
+            if (err.message === "RATE_LIMIT_EXCEEDED") {
+                return `> **[LIMITE DA IA ATINGIDO]** A API bloqueou a formatação deste texto por estourar o limite de 10.000 tokens/min. Aguarde 1 minuto e clique em 'Reler PDF'.`;
+            }
+            throw err;
+        }
 
     } catch (e) {
         console.error("Erro Crítico no Auto-Markdown/OCR:", e);
@@ -323,6 +353,7 @@ app.post("/api/rename-item", (req, res) => {
     }
 });
 
+// A ROTA DA MALHA NEURAL ATUALIZADA (CLONE OBSIDIAN)
 app.get("/api/graph-data", (req, res) => {
     try {
         const check = listNotesLocal();
@@ -334,6 +365,7 @@ app.get("/api/graph-data", (req, res) => {
         let nodesMap = new Map();
         let edges = [];
 
+        // FUNÇÃO OBSIDIAN CLONE: Une MD e PDF no mesmo nó principal
         const getLogicalNode = (filePath) => {
             const ext = path.extname(filePath).toLowerCase();
             const base = filePath.substring(0, filePath.lastIndexOf('.'));
@@ -347,6 +379,7 @@ app.get("/api/graph-data", (req, res) => {
             return filePath;
         };
 
+        // PASSO 1: Cria os nós-raiz (os arquivos reais)
         files.forEach(f => {
             const logicalPath = getLogicalNode(f.path);
             if (!nodesMap.has(logicalPath)) {
@@ -359,6 +392,7 @@ app.get("/api/graph-data", (req, res) => {
             }
         });
 
+        // PASSO 2: Mapeia Tags e Nós Fantasmas Lendo os MDs
         files.forEach(file => {
             if (file.path.toLowerCase().endsWith('.pdf')) {
                 return;
@@ -368,17 +402,20 @@ app.get("/api/graph-data", (req, res) => {
                 const fullContent = fs.readFileSync(getSafePath(file.path), "utf-8");
                 const sourceLogicalPath = getLogicalNode(file.path); 
                 
+                // Mapeia links de conexão do Obsidian: [[Assunto Qualquer]]
                 const linkRegex = /\[\[(.*?)\]\]/g; 
                 let match;
                 while ((match = linkRegex.exec(fullContent)) !== null) {
                     let rawLink = match[1].split('|')[0].trim();
                     let targetName = rawLink.toLowerCase();
                     
+                    // Procura se esse link já bate com algum arquivo existente
                     let foundKey = Array.from(nodesMap.keys()).find(k => k.split('/').pop().replace(/\.(md|pdf|txt)$/i, "").toLowerCase() === targetName);
                     
                     if (foundKey) {
                         edges.push({ source: sourceLogicalPath, target: foundKey });
                     } else {
+                        // NÓ FANTASMA (Concept): O arquivo não existe, mas o tema conecta os arquivos!
                         let conceptId = `concept:${targetName}`;
                         if (!nodesMap.has(conceptId)) {
                             nodesMap.set(conceptId, { 
@@ -391,6 +428,7 @@ app.get("/api/graph-data", (req, res) => {
                     }
                 }
 
+                // Mapeia hashtags padrão
                 const tagRegex = /#([a-zA-Z0-9À-ÿ_-]+)/g; 
                 let tMatch;
                 while ((tMatch = tagRegex.exec(fullContent)) !== null) {
@@ -411,6 +449,7 @@ app.get("/api/graph-data", (req, res) => {
             }
         });
 
+        // Evita duplicidade de elásticos puxando e empurrando (A -> B é igual a B -> A)
         const uniqueEdges = [];
         const edgeSet = new Set();
         
@@ -546,6 +585,9 @@ app.post("/api/chat", async (req, res) => {
         return res.status(500).json({ error: "Configuração de Chave Anthropic incompleta." });
     }
     
+    // ==================================================
+    // VALIDAÇÃO DE SEGURANÇA BASE64 (LOGIN INVISÍVEL)
+    // ==================================================
     const requestToken = req.headers["x-app-password"];
     
     if (!requestToken) {
