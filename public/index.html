@@ -226,7 +226,7 @@
         </div>
     </div>
 
-    <header class="bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 h-16 min-h-16 flex items-center justify-between px-6 z-20 shadow-xs">
+    <header class="bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 h-16 min-h-16 flex items-center justify-between px-6 z-20 shadow-xs transition-all duration-300">
         
         <div class="flex items-center gap-1.5">
             <div class="w-10 h-10 flex items-center justify-center mr-1">
@@ -342,9 +342,9 @@
             <div class="w-0.5 h-12 bg-slate-400 dark:bg-slate-500 group-hover:bg-white rounded-full transition-colors"></div>
         </div>
 
-        <main id="center-panel" class="flex-1 flex flex-col min-w-[300px] overflow-hidden p-5 gap-4">
+        <main id="center-panel" class="flex-1 flex flex-col min-w-[300px] overflow-hidden p-5 gap-4 transition-all duration-300">
             
-            <div class="grid grid-cols-4 gap-4 w-full flex-shrink-0">
+            <div class="grid grid-cols-4 gap-4 w-full flex-shrink-0 transition-all duration-300">
                 
                 <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-3 flex items-center shadow-xs relative cursor-pointer" onclick="toggleCustomDropdown('dropdown-area', event)">
                     <div class="p-2 bg-blue-50 dark:bg-slate-800 text-blue-600 dark:text-blue-400 rounded-lg mr-3">
@@ -442,15 +442,15 @@
                 </div>
             </div>
 
-            <div class="flex flex-1 gap-4 overflow-hidden relative mt-2">
+            <div class="flex flex-1 gap-4 overflow-hidden relative mt-2 h-full">
                 
-                <div id="center-preview-container" onclick="selectMonitor('main')" class="flex-1 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-xs flex flex-col overflow-hidden h-full ring-2 ring-blue-600 dark:ring-blue-500 cursor-pointer relative transition-all">
+                <div id="center-preview-container" onclick="selectMonitor('main')" class="flex-1 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-xs flex flex-col overflow-hidden h-full ring-2 ring-blue-600 dark:ring-blue-500 cursor-pointer relative transition-all duration-300">
                     
                     <div class="absolute top-0 left-1/2 -translate-x-1/2 px-3 py-0.5 bg-blue-600 text-white text-[9px] font-black uppercase rounded-b-md shadow-md z-10" id="dot-active-main">
                         Foco Ativo
                     </div>
 
-                    <div class="flex items-center justify-between px-5 py-3.5 border-b border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900 mt-2">
+                    <div class="flex items-center justify-between px-5 py-3.5 border-b border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900 mt-2 flex-shrink-0">
                         
                         <div class="flex items-center gap-2.5">
                             
@@ -493,7 +493,7 @@
                                 <button onclick="toggleCustomDropdown('dropdown-expand-main', event)" class="p-1.5 text-slate-400 dark:text-slate-500 hover:text-slate-600 rounded-lg transition-all" title="Ampliar">
                                     <i data-lucide="maximize" class="w-4 h-4"></i>
                                 </button>
-                                <div id="dropdown-expand-main" class="hidden absolute top-[105%] right-0 mt-1 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl shadow-2xl py-1.5 w-48 z-50 flex flex-col text-xs font-bold text-slate-600 dark:text-slate-300">
+                                <div id="dropdown-expand-main" class="hidden absolute top-[105%] right-0 mt-1 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl shadow-2xl py-1.5 w-48 z-50 text-xs font-bold text-slate-600 dark:text-slate-300 flex flex-col">
                                     <button onclick="fullscreenMonitor('main'); closeAllDropdownsMenu()" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 flex items-center gap-2">
                                         <i data-lucide="monitor" class="w-3.5 h-3.5"></i> Tela Cheia Total
                                     </button>
@@ -518,7 +518,7 @@
                     <div class="w-0.5 h-12 bg-slate-400 dark:bg-slate-500 group-hover:bg-white rounded-full transition-colors"></div>
                 </div>
 
-                <section id="sidebar-comparison" onclick="selectMonitor('comp')" class="w-[45%] bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl flex flex-col overflow-hidden shadow-xs h-full flex-shrink-0 transition-all cursor-pointer relative">
+                <section id="sidebar-comparison" onclick="selectMonitor('comp')" class="w-[45%] bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl flex flex-col overflow-hidden shadow-xs h-full flex-shrink-0 transition-all duration-300 cursor-pointer relative">
                     
                     <div class="absolute top-0 left-1/2 -translate-x-1/2 px-3 py-0.5 bg-blue-600 text-white text-[9px] font-black uppercase rounded-b-md shadow-md z-10 hidden" id="dot-active-comp">
                         Foco Ativo
@@ -567,7 +567,7 @@
                                     <button onclick="toggleCustomDropdown('dropdown-expand-comp', event)" class="p-1.5 text-slate-400 dark:text-slate-500 hover:text-slate-600 rounded-lg transition-all mx-0.5" title="Ampliar">
                                         <i data-lucide="maximize" class="w-4 h-4"></i>
                                     </button>
-                                    <div id="dropdown-expand-comp" class="hidden absolute top-[105%] right-0 mt-1 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl shadow-2xl py-1.5 w-48 z-50 flex flex-col text-xs font-bold text-slate-600 dark:text-slate-300">
+                                    <div id="dropdown-expand-comp" class="hidden absolute top-[105%] right-0 mt-1 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl shadow-2xl py-1.5 w-48 z-50 text-xs font-bold text-slate-600 dark:text-slate-300 flex flex-col">
                                         <button onclick="fullscreenMonitor('comp'); closeAllDropdownsMenu()" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 flex items-center gap-2">
                                             <i data-lucide="monitor" class="w-3.5 h-3.5"></i> Tela Cheia Total
                                         </button>
@@ -587,7 +587,7 @@
                             <div id="view-doc-comp" class="w-full h-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl overflow-y-auto p-6 text-xs text-slate-700 dark:text-slate-300 select-text leading-relaxed shadow-sm">
                                 <div class="text-center text-slate-400 my-20 dark:text-slate-600">Painel secundário inativo. Selecione este monitor e clique em um arquivo da árvore para carregá-lo aqui.</div>
                             </div>
-                            <div id="view-raw-comp" class="hidden w-full h-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl text-slate-800 dark:text-blue-400 overflow-y-auto p-4 font-mono text-xs whitespace-pre-wrap select-text shadow-sm"></div>
+                            <div id="view-raw-comp" class="hidden w-full h-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl text-slate-800 dark:text-slate-300 overflow-y-auto p-4 font-mono text-xs whitespace-pre-wrap select-text shadow-sm"></div>
                         </div>
                     </div>
 
@@ -728,7 +728,7 @@
         let activeMonitor = "main"; // Foco Inicial no Monitor 1
 
         // ==========================================
-        // VARIÁVEIS GLOBAIS DE HISTÓRICO DE NAVEGAÇÃO E EXPANSÃO
+        // VARIÁVEIS GLOBAIS DE HISTÓRICO DE NAVEGAÇÃO E EXPANSÃO IMMERSIVA
         // ==========================================
         let mainHistory = [{ type: 'empty' }];
         let mainHistoryIndex = 0;
@@ -742,43 +742,142 @@
         let isCompExpanded = false;
 
         // =========================================================================
-        // LÓGICA DE MAXIMIZAR TELA DIVIDIDA (SPLIT SCREEN MAXIMIZE)
+        // EXPANSÃO INTEGRAL DE TELA JURÍDICA (MÁXIMA VISUALIZAÇÃO DE PDFs)
         // =========================================================================
         window.toggleSplitMaximize = function(monitor) {
             if (monitor === 'main') {
-                const sidebarLeft = document.getElementById('sidebar-left');
-                const resizerLeft = document.getElementById('resizer-left');
                 isMainExpanded = !isMainExpanded;
-                
-                if (isMainExpanded) {
-                    if (sidebarLeft) { sidebarLeft.classList.add('hidden'); }
-                    if (resizerLeft) { resizerLeft.classList.add('hidden'); }
-                } else {
-                    if (sidebarLeft) { sidebarLeft.classList.remove('hidden'); }
-                    if (resizerLeft) { resizerLeft.classList.remove('hidden'); }
-                }
             } else if (monitor === 'comp') {
-                const sidebarRight = document.getElementById('sidebar-right');
-                const resizerRight = document.getElementById('resizer-right');
                 isCompExpanded = !isCompExpanded;
-                
-                if (isCompExpanded) {
-                    if (sidebarRight) { sidebarRight.classList.add('hidden'); }
-                    if (resizerRight) { resizerRight.classList.add('hidden'); }
-                } else {
-                    if (sidebarRight) { sidebarRight.classList.remove('hidden'); }
-                    if (resizerRight) { resizerRight.classList.remove('hidden'); }
+            }
+
+            const header = document.querySelector('header');
+            const centerPanel = document.getElementById('center-panel');
+            const topMenus = centerPanel ? centerPanel.querySelector('.grid') : null;
+            const sidebarLeft = document.getElementById('sidebar-left');
+            const resizerLeft = document.getElementById('resizer-left');
+            const sidebarRight = document.getElementById('sidebar-right');
+            const resizerRight = document.getElementById('resizer-right');
+            
+            const mainBox = document.getElementById('center-preview-container');
+            const compBox = document.getElementById('sidebar-comparison');
+            const resizerCenter = document.getElementById('resizer-center');
+
+            // Se QUALQUER uma das abas estiver em expansão total, oculta topo do site
+            if (isMainExpanded || isCompExpanded) {
+                if (header) {
+                    header.classList.add('hidden');
+                }
+                if (topMenus) {
+                    topMenus.classList.add('hidden');
+                }
+                if (centerPanel) {
+                    centerPanel.className = "flex-1 flex flex-col min-w-[300px] overflow-hidden p-0 gap-0";
+                }
+            } else {
+                if (header) {
+                    header.classList.remove('hidden');
+                }
+                if (topMenus) {
+                    topMenus.classList.remove('hidden');
+                }
+                if (centerPanel) {
+                    centerPanel.className = "flex-1 flex flex-col min-w-[300px] overflow-hidden p-5 gap-4 transition-all duration-300";
                 }
             }
-            
-            // Recalcula o tamanho da malha neural após a transição do CSS
+
+            // Oculta/Mostra Árvore da Esquerda
+            if (isMainExpanded) {
+                if (sidebarLeft) {
+                    sidebarLeft.classList.add('hidden');
+                }
+                if (resizerLeft) {
+                    resizerLeft.classList.add('hidden');
+                }
+            } else {
+                if (sidebarLeft) {
+                    sidebarLeft.classList.remove('hidden');
+                }
+                if (resizerLeft) {
+                    resizerLeft.classList.remove('hidden');
+                }
+            }
+
+            // Oculta/Mostra Painel de Chat da Direita
+            if (isCompExpanded) {
+                if (sidebarRight) {
+                    sidebarRight.classList.add('hidden');
+                }
+                if (resizerRight) {
+                    resizerRight.classList.add('hidden');
+                }
+            } else {
+                if (sidebarRight) {
+                    sidebarRight.classList.remove('hidden');
+                }
+                if (resizerRight) {
+                    resizerRight.classList.remove('hidden');
+                }
+            }
+
+            // Gerenciamento de visibilidade mútua (Engolir telas adjacentes)
+            if (isMainExpanded && !isCompExpanded) {
+                if (compBox) {
+                    compBox.classList.add('hidden');
+                }
+                if (resizerCenter) {
+                    resizerCenter.classList.add('hidden');
+                }
+            } else if (isCompExpanded && !isMainExpanded) {
+                if (mainBox) {
+                    mainBox.classList.add('hidden');
+                }
+                if (resizerCenter) {
+                    resizerCenter.classList.add('hidden');
+                }
+            } else if (isMainExpanded && isCompExpanded) {
+                // AMBOS EXPANDIDOS: Dividem a página 50/50 de ponta a ponta perfeitamente
+                if (mainBox) {
+                    mainBox.classList.remove('hidden');
+                }
+                if (compBox) {
+                    compBox.classList.remove('hidden');
+                }
+                if (resizerCenter) {
+                    resizerCenter.classList.remove('hidden');
+                }
+                if (sidebarComparison) {
+                    sidebarComparison.style.width = "50%";
+                }
+            } else {
+                if (mainBox) {
+                    mainBox.classList.remove('hidden');
+                }
+                if (compBox) {
+                    compBox.classList.remove('hidden');
+                }
+                if (resizerCenter) {
+                    resizerCenter.classList.remove('hidden');
+                }
+            }
+
+            // Ajusta a altura dos iframes ativos instantaneamente para ocupar o espaço livre
+            const pdfIframes = document.querySelectorAll('iframe');
+            pdfIframes.forEach(iframe => {
+                if (isMainExpanded || isCompExpanded) {
+                    iframe.style.height = "calc(100vh - 75px)";
+                } else {
+                    iframe.style.height = "calc(100vh - 240px)";
+                }
+            });
+
             setTimeout(() => {
                 resizeCanvas();
-            }, 100);
+            }, 60);
         };
 
         // =========================================================================
-        // LÓGICA DE TELA CHEIA TOTAL (FULLSCREEN API)
+        // LÓGICA DE TELA CHEIA TOTAL (FULLSCREEN API DO NAVEGADOR)
         // =========================================================================
         window.fullscreenMonitor = function(monitor) {
             const containerId = monitor === 'main' ? 'center-preview-container' : 'sidebar-comparison';
@@ -1038,9 +1137,15 @@
             const s2 = document.getElementById("st-state-2");
             const s3 = document.getElementById("st-state-3");
             
-            if (s1) s1.classList.remove("hidden");
-            if (s2) s2.classList.add("hidden");
-            if (s3) s3.classList.add("hidden");
+            if (s1) {
+                s1.classList.remove("hidden");
+            }
+            if (s2) {
+                s2.classList.add("hidden");
+            }
+            if (s3) {
+                s3.classList.add("hidden");
+            }
         }
 
         function closeSpeedTest() {
@@ -1086,8 +1191,12 @@
             const s1 = document.getElementById("st-state-1");
             const s2 = document.getElementById("st-state-2");
             
-            if (s1) s1.classList.add("hidden");
-            if (s2) s2.classList.remove("hidden");
+            if (s1) {
+                s1.classList.add("hidden");
+            }
+            if (s2) {
+                s2.classList.remove("hidden");
+            }
             
             updateSpeedometer(0);
 
@@ -1140,9 +1249,15 @@
                     const s3 = document.getElementById("st-state-3");
                     const finVal = document.getElementById("st-final-value"); 
                     
-                    if (s2_final) s2_final.classList.add("hidden");
-                    if (s3) s3.classList.remove("hidden");
-                    if (finVal) finVal.innerText = finalMbps.toFixed(1);
+                    if (s2_final) {
+                        s2_final.classList.add("hidden");
+                    }
+                    if (s3) {
+                        s3.classList.remove("hidden");
+                    }
+                    if (finVal) {
+                        finVal.innerText = finalMbps.toFixed(1);
+                    }
                 }, 800);
                 
             } catch (e) {
@@ -1188,17 +1303,6 @@
             const dpUpload = document.getElementById("dropdown-upload");
             if (dpUpload) {
                 dpUpload.classList.add("hidden");
-            }
-            
-            // Novos Dropdowns de Expansão (Tela Cheia / Tela Dividida)
-            const dpExpMain = document.getElementById("dropdown-expand-main");
-            if (dpExpMain) {
-                dpExpMain.classList.add("hidden");
-            }
-            
-            const dpExpComp = document.getElementById("dropdown-expand-comp");
-            if (dpExpComp) {
-                dpExpComp.classList.add("hidden");
             }
         }
 
@@ -1362,15 +1466,31 @@
                 const vRaw = document.getElementById("view-raw-main");
                 
                 if (type === 'doc') {
-                    if (vDoc) vDoc.classList.remove("hidden"); 
-                    if (vRaw) vRaw.classList.add("hidden");
-                    if (tDoc) tDoc.className = "px-3 py-1 bg-white dark:bg-slate-700 dark:text-white rounded-md shadow-xs transition-colors";
-                    if (tRaw) tRaw.className = "px-3 py-1 text-slate-500 dark:text-slate-400 transition-colors";
+                    if (vDoc) {
+                        vDoc.classList.remove("hidden"); 
+                    }
+                    if (vRaw) {
+                        vRaw.classList.add("hidden");
+                    }
+                    if (tDoc) {
+                        tDoc.className = "px-3 py-1 bg-white dark:bg-slate-700 dark:text-white rounded-md shadow-xs transition-colors";
+                    }
+                    if (tRaw) {
+                        tRaw.className = "px-3 py-1 text-slate-500 dark:text-slate-400 transition-colors";
+                    }
                 } else {
-                    if (vDoc) vDoc.classList.add("hidden"); 
-                    if (vRaw) vRaw.classList.remove("hidden");
-                    if (tRaw) tRaw.className = "px-3 py-1 bg-white dark:bg-slate-700 dark:text-white rounded-md shadow-xs transition-colors";
-                    if (tDoc) tDoc.className = "px-3 py-1 text-slate-500 dark:text-slate-400 transition-colors";
+                    if (vDoc) {
+                        vDoc.classList.add("hidden"); 
+                    }
+                    if (vRaw) {
+                        vRaw.classList.remove("hidden");
+                    }
+                    if (tRaw) {
+                        tRaw.className = "px-3 py-1 bg-white dark:bg-slate-700 dark:text-white rounded-md shadow-xs transition-colors";
+                    }
+                    if (tDoc) {
+                        tDoc.className = "px-3 py-1 text-slate-500 dark:text-slate-400 transition-colors";
+                    }
                 }
             } else {
                 const tDoc = document.getElementById("btn-tab-comp-formatted");
@@ -1379,15 +1499,31 @@
                 const vRaw = document.getElementById("view-raw-comp");
                 
                 if (type === 'doc') {
-                    if (vDoc) vDoc.classList.remove("hidden"); 
-                    if (vRaw) vRaw.classList.add("hidden");
-                    if (tDoc) tDoc.className = "px-3 py-1 bg-white dark:bg-slate-700 dark:text-white rounded-md shadow-xs transition-colors";
-                    if (tRaw) tRaw.className = "px-3 py-1 text-slate-500 dark:text-slate-400 transition-colors";
+                    if (vDoc) {
+                        vDoc.classList.remove("hidden"); 
+                    }
+                    if (vRaw) {
+                        vRaw.classList.add("hidden");
+                    }
+                    if (tDoc) {
+                        tDoc.className = "px-3 py-1 bg-white dark:bg-slate-700 dark:text-white rounded-md shadow-xs transition-colors";
+                    }
+                    if (tRaw) {
+                        tRaw.className = "px-3 py-1 text-slate-500 dark:text-slate-400 transition-colors";
+                    }
                 } else {
-                    if (vDoc) vDoc.classList.add("hidden"); 
-                    if (vRaw) vRaw.classList.remove("hidden");
-                    if (tRaw) tRaw.className = "px-3 py-1 bg-white dark:bg-slate-700 dark:text-white rounded-md shadow-xs transition-colors";
-                    if (tDoc) tDoc.className = "px-3 py-1 text-slate-500 dark:text-slate-400 transition-colors";
+                    if (vDoc) {
+                        vDoc.classList.add("hidden"); 
+                    }
+                    if (vRaw) {
+                        vRaw.classList.remove("hidden");
+                    }
+                    if (tRaw) {
+                        tRaw.className = "px-3 py-1 bg-white dark:bg-slate-700 dark:text-white rounded-md shadow-xs transition-colors";
+                    }
+                    if (tDoc) {
+                        tDoc.className = "px-3 py-1 text-slate-500 dark:text-slate-400 transition-colors";
+                    }
                 }
             }
         };
@@ -1622,8 +1758,9 @@
                 // Tratamento especial para PDF com altura dinâmica de leitura
                 if (filename.toLowerCase().endsWith('.pdf')) {
                     
+                    let targetHeight = (isMainExpanded || isCompExpanded) ? "calc(100vh - 75px)" : "calc(100vh - 240px)";
                     if (dEl) {
-                        dEl.innerHTML = `<iframe src="/api/note-raw?file=${encodeURIComponent(filename)}" class="w-full border-0 rounded-xl bg-white shadow-sm" style="height: calc(100vh - 240px);"></iframe>`;
+                        dEl.innerHTML = `<iframe src="/api/note-raw?file=${encodeURIComponent(filename)}" class="w-full border-0 rounded-xl bg-white shadow-sm" style="height: ${targetHeight};"></iframe>`;
                     }
                     
                     let btnReprocess;
