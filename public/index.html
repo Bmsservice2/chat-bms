@@ -135,6 +135,7 @@
                         Credenciais Inválidas ou Recusadas.
                     </div>
                 </div>
+                
             </div>
             
             <div class="mt-8 flex items-center gap-2 text-[9px] text-slate-500 font-bold uppercase tracking-widest opacity-80">
@@ -175,6 +176,31 @@
             <div class="flex justify-end gap-2 text-xs font-bold mt-2">
                 <button onclick="closeCustomModal()" class="px-3 py-2 bg-slate-100 text-slate-600 rounded-xl hover:bg-slate-200 transition-all">Cancelar</button>
                 <button id="modal-confirm-btn" class="px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl transition-all">Confirmar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- MODAL DA LIXEIRA                           -->
+    <!-- ========================================== -->
+    <div id="trash-modal" class="hidden fixed inset-0 bg-slate-900/40 backdrop-blur-sm flex items-center justify-center z-50">
+        <div class="bg-white border border-slate-200 rounded-2xl shadow-2xl p-6 w-[400px] flex flex-col gap-4">
+            <div class="flex items-center gap-3 border-b border-slate-100 pb-3">
+                <div class="w-10 h-10 bg-red-50 text-red-500 rounded-xl flex items-center justify-center">
+                    <i data-lucide="trash-2" class="w-5 h-5"></i>
+                </div>
+                <div>
+                    <h3 class="font-black text-slate-800 text-sm">Lixeira do Sistema</h3>
+                    <p class="text-[9px] text-slate-500 uppercase tracking-widest font-bold">Auto-exclusão em 30 dias</p>
+                </div>
+            </div>
+            <div class="py-8 flex flex-col items-center justify-center text-slate-400 gap-3">
+                <i data-lucide="inbox" class="w-10 h-10 opacity-30"></i>
+                <span class="text-xs font-bold">Nenhum item na lixeira</span>
+            </div>
+            <div class="flex justify-between items-center pt-3 border-t border-slate-100">
+                <button onclick="document.getElementById('trash-modal').classList.add('hidden')" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold text-xs rounded-xl transition-colors">Fechar</button>
+                <button class="px-4 py-2 bg-red-50 text-red-500 font-bold text-xs rounded-xl opacity-50 cursor-not-allowed">Esvaziar Tudo</button>
             </div>
         </div>
     </div>
@@ -261,10 +287,10 @@
     <!-- ========================================== -->
     <!-- CABEÇALHO SUPERIOR DO SISTEMA (HEADER)     -->
     <!-- ========================================== -->
-    <header class="bg-white border-b border-slate-200 h-16 min-h-16 flex items-center justify-between px-6 z-20 shadow-sm transition-all duration-300">
+    <header class="bg-white border-b border-slate-200 h-[68px] min-h-[68px] flex items-center justify-between px-8 z-20 shadow-sm transition-all duration-300">
         
-        <div class="flex items-center gap-1.5">
-            <div class="w-10 h-10 flex items-center justify-center mr-1">
+        <div class="flex items-center gap-2">
+            <div class="w-9 h-9 flex items-center justify-center mr-1">
                 <svg viewBox="0 0 100 100" class="w-full h-full drop-shadow-sm">
                     <path d="M 35 10 V 70 A 25 25 0 0 0 85 70 A 25 25 0 0 0 35 45" fill="none" stroke="#eab308" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"/>
                     <path d="M 47 10 V 70 A 13 13 0 0 0 73 70 A 13 13 0 0 0 47 57" fill="none" stroke="#3b82f6" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
@@ -275,36 +301,40 @@
             </span>
         </div>
         
-        <div class="flex-1 max-w-xl mx-8 relative">
-            <i data-lucide="search" class="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2"></i>
-            <input type="text" id="global-search-bar" oninput="searchFileTree()" placeholder="Buscar processos, leis, jurisprudências, petições... (Ctrl + K)" class="w-full bg-slate-50 border border-slate-200 rounded-full pl-10 pr-4 py-2 text-xs focus:outline-none focus:bg-white focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all font-semibold text-slate-700 placeholder:text-slate-400 shadow-inner">
+        <div class="flex-1 max-w-2xl mx-10 relative">
+            <i data-lucide="search" class="w-4 h-4 text-slate-400 absolute left-4 top-1/2 -translate-y-1/2"></i>
+            <input type="text" id="global-search-bar" oninput="searchFileTree()" placeholder="Buscar processos, leis, jurisprudências, petições... (Ctrl + K)" class="w-full bg-slate-50 border border-transparent rounded-full py-2.5 pl-11 pr-12 text-[11px] focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all font-medium text-slate-700 placeholder:text-slate-400 shadow-inner">
+            <div class="absolute right-4 top-1/2 -translate-y-1/2 flex items-center gap-1 opacity-60">
+                <i data-lucide="command" class="w-3 h-3 text-slate-400"></i>
+                <span class="font-sans text-[10px] font-bold text-slate-400">K</span>
+            </div>
         </div>
 
-        <div class="flex items-center gap-3">
+        <div class="flex items-center gap-4">
             
-            <button onclick="toggleAppFullscreen()" class="p-2.5 border border-slate-200 bg-white text-slate-600 rounded-xl hover:bg-slate-50 transition-all shadow-sm active:scale-95" title="Tela Cheia do Sistema">
-                <i data-lucide="expand" class="w-4 h-4"></i>
+            <button onclick="toggleAppFullscreen()" class="p-2 text-slate-400 hover:text-blue-600 rounded-xl transition-colors" title="Tela Cheia do Sistema">
+                <i data-lucide="expand" class="w-5 h-5"></i>
             </button>
 
             <!-- DROPDOWN DE UPLOAD DO COFRE -->
             <div class="relative ml-1">
-                <button onclick="toggleCustomDropdown('dropdown-upload', event)" class="border border-slate-200 bg-white text-slate-600 text-xs font-bold px-4 py-2 rounded-xl flex items-center gap-2 hover:bg-slate-50 transition-all active:scale-95 shadow-sm">
+                <button onclick="toggleCustomDropdown('dropdown-upload', event)" class="border border-slate-200 bg-white text-slate-600 text-xs font-bold px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-slate-50 transition-all active:scale-95 shadow-sm">
                     <i data-lucide="upload-cloud" class="w-4 h-4 text-blue-600"></i> Upload
                 </button>
                 
                 <div id="dropdown-upload" class="hidden absolute top-[110%] right-0 mt-1 bg-white border border-slate-200 rounded-xl shadow-xl py-1.5 w-48 z-50 flex flex-col text-xs font-bold text-slate-600">
-                    <button onclick="document.getElementById('global-vault-upload').click(); document.getElementById('dropdown-upload').classList.add('hidden')" class="w-full text-left px-3 py-2 hover:bg-slate-50 flex items-center gap-2 transition-all">
+                    <button onclick="document.getElementById('global-vault-upload').click(); document.getElementById('dropdown-upload').classList.add('hidden')" class="w-full text-left px-3 py-2 hover:bg-slate-50 flex items-center gap-2 transition-colors">
                         <i data-lucide="file-plus" class="w-4 h-4 text-blue-500"></i> Arquivos Avulsos
                     </button>
-                    <button onclick="document.getElementById('global-folder-upload').click(); document.getElementById('dropdown-upload').classList.add('hidden')" class="w-full text-left px-3 py-2 hover:bg-slate-50 flex items-center gap-2 transition-all">
+                    <button onclick="document.getElementById('global-folder-upload').click(); document.getElementById('dropdown-upload').classList.add('hidden')" class="w-full text-left px-3 py-2 hover:bg-slate-50 flex items-center gap-2 transition-colors">
                         <i data-lucide="folder-plus" class="w-4 h-4 text-amber-500"></i> Pasta Completa
                     </button>
                 </div>
             </div>
             
-            <div class="w-px h-6 bg-slate-200 mx-1"></div>
+            <div class="w-px h-6 bg-slate-200 mx-2"></div>
             
-            <div id="server-status-badge" class="flex items-center gap-2 bg-slate-50 px-3 py-2 rounded-xl border border-slate-200 shadow-sm transition-all duration-300">
+            <div id="server-status-badge" class="flex items-center gap-2 bg-slate-50 px-3 py-2 rounded-lg border border-slate-200 shadow-sm transition-all duration-300">
                 <div id="server-status-dot" class="w-2 h-2 bg-slate-400 rounded-full"></div>
                 <span id="server-status-text" class="text-[10px] font-black tracking-wide uppercase text-slate-500">Checando...</span>
             </div>
@@ -318,11 +348,11 @@
     <div class="flex flex-1 overflow-hidden relative" onclick="closeAllDropdownsMenu()">
         
         <!-- ========================================== -->
-        <!-- COLUNA 1: GAVETA ESQUERDA (ÁRVORE - DARK TEMA DA IMAGEM)  -->
+        <!-- COLUNA 1: GAVETA ESQUERDA (ÁRVORE ESCURA)  -->
         <!-- ========================================== -->
-        <aside id="sidebar-left" class="w-64 bg-brand-sidebar border-r border-slate-800/50 flex flex-col overflow-hidden py-4 px-2 relative flex-shrink-0 transition-all duration-300 ease-in-out text-slate-300" onclick="clearTreeSelection(event)">
+        <aside id="sidebar-left" class="w-[260px] bg-brand-sidebar border-r border-slate-800 flex flex-col overflow-hidden py-4 px-2 relative flex-shrink-0 transition-all duration-300 ease-in-out text-slate-300" onclick="clearTreeSelection(event)">
             
-            <div class="flex items-center justify-between mb-4 px-2 mt-2">
+            <div class="flex items-center justify-between mb-4 px-3 mt-2">
                 <span class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">
                     Processos e Cofre
                 </span>
@@ -337,19 +367,32 @@
                     </button>
                     
                     <div id="filter-menu-dropdown" class="hidden absolute top-6 right-0 bg-slate-800 border border-slate-700 rounded-xl shadow-xl py-1 w-44 z-30 text-xs font-bold text-slate-300">
-                        <button onclick="changeFilter('all')" class="w-full text-left px-3 py-2 hover:bg-slate-700">Mostrar Todos</button>
-                        <button onclick="changeFilter('md')" class="w-full text-left px-3 py-2 hover:bg-slate-700">Apenas Texto (.md)</button>
-                        <button onclick="changeFilter('pdf')" class="w-full text-left px-3 py-2 hover:bg-slate-700">Apenas PDFs (.pdf)</button>
+                        <button onclick="changeFilter('all')" class="w-full text-left px-3 py-2 hover:bg-slate-700 flex items-center gap-2">Mostrar Todos</button>
+                        <button onclick="changeFilter('md')" class="w-full text-left px-3 py-2 hover:bg-slate-700 flex items-center gap-2">Apenas Texto (.md)</button>
+                        <button onclick="changeFilter('pdf')" class="w-full text-left px-3 py-2 hover:bg-slate-700 flex items-center gap-2">Apenas PDFs (.pdf)</button>
                     </div>
                 </div>
             </div>
 
-            <div id="file-tree" class="flex-1 overflow-y-auto space-y-0.5 pr-1 text-xs font-semibold text-slate-400 no-scrollbar relative px-1">
+            <div id="file-tree" class="flex-1 overflow-y-auto space-y-0.5 text-xs font-medium text-slate-400 no-scrollbar relative px-1">
                 <!-- Arquivos injetados via JavaScript -->
             </div>
 
             <div class="mt-4 border-t border-white/5 pt-4 px-1">
-                <div onclick="openSpeedTestModal()" class="mb-3 bg-white/5 border border-white/5 rounded-xl p-3 cursor-pointer hover:bg-white/10 transition-colors flex items-center justify-between group">
+                
+                <!-- MENU LIXEIRA E FAVORITOS (ONBOARDING) -->
+                <div class="flex gap-2 mb-3">
+                    <div onclick="changeFilter('favorites')" class="flex-1 bg-white/5 border border-white/5 rounded-xl p-2 flex items-center justify-center gap-2 cursor-pointer hover:bg-white/10 transition-colors group" title="Listar Favoritos">
+                        <i data-lucide="star" class="w-3.5 h-3.5 text-amber-500 group-hover:scale-110 transition-transform"></i>
+                        <span class="text-[10px] font-bold text-slate-300 group-hover:text-white transition-colors">Favoritos</span>
+                    </div>
+                    <div onclick="openTrashModal()" class="flex-1 bg-white/5 border border-white/5 rounded-xl p-2 flex items-center justify-center gap-2 cursor-pointer hover:bg-red-500/20 transition-colors group" title="Lixeira (Auto-limpeza: 30 dias)">
+                        <i data-lucide="trash-2" class="w-3.5 h-3.5 text-red-400 group-hover:scale-110 transition-transform"></i>
+                        <span class="text-[10px] font-bold text-slate-300 group-hover:text-white transition-colors">Lixeira</span>
+                    </div>
+                </div>
+
+                <div onclick="openSpeedTestModal()" class="mb-2 bg-white/5 border border-white/5 rounded-xl p-3 cursor-pointer hover:bg-white/10 transition-colors flex items-center justify-between group">
                     <div class="flex items-center gap-2.5">
                         <div class="text-blue-400 group-hover:scale-110 transition-transform">
                             <i data-lucide="wifi" class="w-4 h-4"></i>
@@ -381,8 +424,8 @@
         </aside>
 
         <!-- SPLITTER 1 (VISUAL) -->
-        <div id="resizer-left" class="w-1.5 bg-brand-sidebar hover:bg-blue-600 cursor-col-resize z-30 shrink-0 transition-colors flex items-center justify-center border-l border-white/5 group">
-            <div class="w-0.5 h-12 bg-slate-600 group-hover:bg-white rounded-full transition-colors"></div>
+        <div id="resizer-left" class="w-1.5 bg-brand-sidebar hover:bg-blue-600 cursor-col-resize z-10 flex-shrink-0 transition-colors flex items-center justify-center border-l border-white/5 group">
+            <div class="w-0.5 h-12 bg-slate-700 group-hover:bg-white rounded-full transition-colors"></div>
         </div>
 
         <!-- ========================================== -->
@@ -400,21 +443,21 @@
                     <div class="flex-1 min-w-0">
                         <p class="text-[9px] text-slate-400 font-bold uppercase tracking-widest mb-0.5">Área Jurídica</p>
                         <div class="flex items-center justify-between">
-                            <span id="label-ctx-area" class="text-xs font-bold text-slate-700 truncate">Geral (Misto)</span>
-                            <i data-lucide="chevron-down" class="w-3.5 h-3.5 text-slate-400 shrink-0"></i>
+                            <span id="label-ctx-area" class="text-[13px] font-bold text-slate-800 truncate">Geral (Misto)</span>
+                            <i data-lucide="chevron-down" class="w-4 h-4 text-slate-400 shrink-0"></i>
                         </div>
                     </div>
                     <input type="hidden" id="ctx-area" value="Geral/Nenhuma">
                     
                     <div id="dropdown-area" class="hidden absolute top-[105%] left-0 mt-1 bg-white border border-slate-200 rounded-xl shadow-xl py-1.5 w-full z-50 flex flex-col max-h-48 overflow-y-auto no-scrollbar text-xs font-bold text-slate-600">
-                        <button onclick="selectOption('area', 'Geral/Nenhuma', 'Geral (Misto)', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 truncate">Geral (Misto)</button>
-                        <button onclick="selectOption('area', 'Direito Trabalhista', 'Direito Trabalhista', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 truncate">Direito Trabalhista</button>
-                        <button onclick="selectOption('area', 'Direito Cível', 'Direito Cível', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 truncate">Direito Cível</button>
-                        <button onclick="selectOption('area', 'Direito Penal', 'Direito Penal', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 truncate">Direito Penal</button>
-                        <button onclick="selectOption('area', 'Direito Tributário', 'Direito Tributário', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 truncate">Direito Tributário</button>
-                        <button onclick="selectOption('area', 'Direito Empresarial', 'Direito Empresarial', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 truncate">Direito Empresarial</button>
-                        <button onclick="selectOption('area', 'Direito de Família', 'Direito de Família', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 truncate">Direito de Família</button>
-                        <button onclick="selectOption('area', 'Direito Administrativo', 'Direito Administrativo', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 truncate">Direito Administrativo</button>
+                        <button onclick="selectOption('area', 'Geral/Nenhuma', 'Geral (Misto)', event)" class="w-full text-left px-3 py-2.5 hover:bg-slate-50 truncate">Geral (Misto)</button>
+                        <button onclick="selectOption('area', 'Direito Trabalhista', 'Direito Trabalhista', event)" class="w-full text-left px-3 py-2.5 hover:bg-slate-50 truncate">Direito Trabalhista</button>
+                        <button onclick="selectOption('area', 'Direito Cível', 'Direito Cível', event)" class="w-full text-left px-3 py-2.5 hover:bg-slate-50 truncate">Direito Cível</button>
+                        <button onclick="selectOption('area', 'Direito Penal', 'Direito Penal', event)" class="w-full text-left px-3 py-2.5 hover:bg-slate-50 truncate">Direito Penal</button>
+                        <button onclick="selectOption('area', 'Direito Tributário', 'Direito Tributário', event)" class="w-full text-left px-3 py-2.5 hover:bg-slate-50 truncate">Direito Tributário</button>
+                        <button onclick="selectOption('area', 'Direito Empresarial', 'Direito Empresarial', event)" class="w-full text-left px-3 py-2.5 hover:bg-slate-50 truncate">Direito Empresarial</button>
+                        <button onclick="selectOption('area', 'Direito de Família', 'Direito de Família', event)" class="w-full text-left px-3 py-2.5 hover:bg-slate-50 truncate">Direito de Família</button>
+                        <button onclick="selectOption('area', 'Direito Administrativo', 'Direito Administrativo', event)" class="w-full text-left px-3 py-2.5 hover:bg-slate-50 truncate">Direito Administrativo</button>
                     </div>
                 </div>
 
@@ -425,20 +468,20 @@
                     <div class="flex-1 min-w-0">
                         <p class="text-[9px] text-slate-400 font-bold uppercase tracking-widest mb-0.5">Tipo de Peça</p>
                         <div class="flex items-center justify-between">
-                            <span id="label-ctx-type" class="text-xs font-bold text-slate-700 truncate">Análise Interna</span>
-                            <i data-lucide="chevron-down" class="w-3.5 h-3.5 text-slate-400 shrink-0"></i>
+                            <span id="label-ctx-type" class="text-[13px] font-bold text-slate-800 truncate">Análise Interna</span>
+                            <i data-lucide="chevron-down" class="w-4 h-4 text-slate-400 shrink-0"></i>
                         </div>
                     </div>
                     <input type="hidden" id="ctx-type" value="Análise/Documento">
                     
                     <div id="dropdown-type" class="hidden absolute top-[105%] left-0 mt-1 bg-white border border-slate-200 rounded-xl shadow-xl py-1.5 w-full z-50 flex flex-col max-h-48 overflow-y-auto no-scrollbar text-xs font-bold text-slate-600">
-                        <button onclick="selectOption('type', 'Análise/Documento', 'Análise Interna', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 truncate">Análise Interna</button>
-                        <button onclick="selectOption('type', 'Petição Inicial', 'Petição Inicial', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 truncate">Petição Inicial</button>
-                        <button onclick="selectOption('type', 'Contestação', 'Contestação', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 truncate">Contestação</button>
-                        <button onclick="selectOption('type', 'Recurso', 'Recurso (Apelação/RO)', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 truncate">Recurso (Apelação/RO)</button>
-                        <button onclick="selectOption('type', 'Alegações Finais', 'Alegações Finais', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 truncate">Alegações Finais</button>
-                        <button onclick="selectOption('type', 'Contrato/Acordo', 'Contrato / Acordo', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 truncate">Contrato / Acordo</button>
-                        <button onclick="selectOption('type', 'Parecer Jurídico', 'Parecer Jurídico', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 truncate">Parecer Jurídico</button>
+                        <button onclick="selectOption('type', 'Análise/Documento', 'Análise Interna', event)" class="w-full text-left px-3 py-2.5 hover:bg-slate-50 truncate">Análise Interna</button>
+                        <button onclick="selectOption('type', 'Petição Inicial', 'Petição Inicial', event)" class="w-full text-left px-3 py-2.5 hover:bg-slate-50 truncate">Petição Inicial</button>
+                        <button onclick="selectOption('type', 'Contestação', 'Contestação', event)" class="w-full text-left px-3 py-2.5 hover:bg-slate-50 truncate">Contestação</button>
+                        <button onclick="selectOption('type', 'Recurso', 'Recurso (Apelação/RO)', event)" class="w-full text-left px-3 py-2.5 hover:bg-slate-50 truncate">Recurso (Apelação/RO)</button>
+                        <button onclick="selectOption('type', 'Alegações Finais', 'Alegações Finais', event)" class="w-full text-left px-3 py-2.5 hover:bg-slate-50 truncate">Alegações Finais</button>
+                        <button onclick="selectOption('type', 'Contrato/Acordo', 'Contrato / Acordo', event)" class="w-full text-left px-3 py-2.5 hover:bg-slate-50 truncate">Contrato / Acordo</button>
+                        <button onclick="selectOption('type', 'Parecer Jurídico', 'Parecer Jurídico', event)" class="w-full text-left px-3 py-2.5 hover:bg-slate-50 truncate">Parecer Jurídico</button>
                     </div>
                 </div>
 
@@ -449,19 +492,19 @@
                     <div class="flex-1 min-w-0">
                         <p class="text-[9px] text-slate-400 font-bold uppercase tracking-widest mb-0.5">Fase Atual</p>
                         <div class="flex items-center justify-between">
-                            <span id="label-ctx-phase" class="text-xs font-bold text-slate-700 truncate">Fase de Estudo</span>
-                            <i data-lucide="chevron-down" class="w-3.5 h-3.5 text-slate-400 shrink-0"></i>
+                            <span id="label-ctx-phase" class="text-[13px] font-bold text-slate-800 truncate">Fase de Estudo</span>
+                            <i data-lucide="chevron-down" class="w-4 h-4 text-slate-400 shrink-0"></i>
                         </div>
                     </div>
                     <input type="hidden" id="ctx-phase" value="Fase de Estudo">
                     
                     <div id="dropdown-phase" class="hidden absolute top-[105%] left-0 mt-1 bg-white border border-slate-200 rounded-xl shadow-xl py-1.5 w-full z-50 flex flex-col max-h-48 overflow-y-auto no-scrollbar text-xs font-bold text-slate-600">
-                        <button onclick="selectOption('phase', 'Fase de Estudo', 'Fase de Estudo', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 truncate">Fase de Estudo</button>
-                        <button onclick="selectOption('phase', 'Fase de Conhecimento', 'Fase de Conhecimento', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 truncate">Fase de Conhecimento</button>
-                        <button onclick="selectOption('phase', 'Fase de Instrução/Provas', 'Fase de Instrução', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 truncate">Fase de Instrução</button>
-                        <button onclick="selectOption('phase', 'Fase Recursal', 'Fase Recursal', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 truncate">Fase Recursal</button>
-                        <button onclick="selectOption('phase', 'Fase de Execução', 'Fase de Execução', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 truncate">Fase de Execução</button>
-                        <button onclick="selectOption('phase', 'Acordo ou Mediação', 'Acordo/Mediação', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 truncate">Acordo/Mediação</button>
+                        <button onclick="selectOption('phase', 'Fase de Estudo', 'Fase de Estudo', event)" class="w-full text-left px-3 py-2.5 hover:bg-slate-50 truncate">Fase de Estudo</button>
+                        <button onclick="selectOption('phase', 'Fase de Conhecimento', 'Fase de Conhecimento', event)" class="w-full text-left px-3 py-2.5 hover:bg-slate-50 truncate">Fase de Conhecimento</button>
+                        <button onclick="selectOption('phase', 'Fase de Instrução/Provas', 'Fase de Instrução', event)" class="w-full text-left px-3 py-2.5 hover:bg-slate-50 truncate">Fase de Instrução</button>
+                        <button onclick="selectOption('phase', 'Fase Recursal', 'Fase Recursal', event)" class="w-full text-left px-3 py-2.5 hover:bg-slate-50 truncate">Fase Recursal</button>
+                        <button onclick="selectOption('phase', 'Fase de Execução', 'Fase de Execução', event)" class="w-full text-left px-3 py-2.5 hover:bg-slate-50 truncate">Fase de Execução</button>
+                        <button onclick="selectOption('phase', 'Acordo ou Mediação', 'Acordo/Mediação', event)" class="w-full text-left px-3 py-2.5 hover:bg-slate-50 truncate">Acordo/Mediação</button>
                     </div>
                 </div>
 
@@ -472,19 +515,19 @@
                     <div class="flex-1 min-w-0">
                         <p class="text-[9px] text-slate-400 font-bold uppercase tracking-widest mb-0.5">Objetivo Direto</p>
                         <div class="flex items-center justify-between">
-                            <span id="label-ctx-obj" class="text-xs font-bold text-slate-700 truncate">Auditoria Geral</span>
-                            <i data-lucide="chevron-down" class="w-3.5 h-3.5 text-slate-400 shrink-0"></i>
+                            <span id="label-ctx-obj" class="text-[13px] font-bold text-slate-800 truncate">Auditoria Geral</span>
+                            <i data-lucide="chevron-down" class="w-4 h-4 text-slate-400 shrink-0"></i>
                         </div>
                     </div>
                     <input type="hidden" id="ctx-obj" value="Auditar/Resumir">
                     
                     <div id="dropdown-obj" class="hidden absolute top-[105%] left-0 mt-1 bg-white border border-slate-200 rounded-xl shadow-xl py-1.5 w-full z-50 flex flex-col max-h-48 overflow-y-auto no-scrollbar text-xs font-bold text-slate-600">
-                        <button onclick="selectOption('obj', 'Auditar/Resumir', 'Auditoria Geral', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 truncate">Auditoria Geral</button>
-                        <button onclick="selectOption('obj', 'Encontrar Contradições', 'Achar Contradições', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 truncate">Achar Contradições</button>
-                        <button onclick="selectOption('obj', 'Elaborar Minuta', 'Elaborar Minuta', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 truncate">Elaborar Minuta</button>
-                        <button onclick="selectOption('obj', 'Análise de Risco Jurídico', 'Análise de Risco', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 truncate">Análise de Risco</button>
-                        <button onclick="selectOption('obj', 'Pesquisa Jurisprudencial', 'Levantar Jurisprudência', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 truncate">Levantar Jurisprudência</button>
-                        <button onclick="selectOption('obj', 'Sistematizar Fatos', 'Resumir Fatos/Prazos', event)" class="w-full text-left px-3 py-2 hover:bg-slate-50 truncate">Resumir Fatos/Prazos</button>
+                        <button onclick="selectOption('obj', 'Auditar/Resumir', 'Auditoria Geral', event)" class="w-full text-left px-3 py-2.5 hover:bg-slate-50 truncate">Auditoria Geral</button>
+                        <button onclick="selectOption('obj', 'Encontrar Contradições', 'Achar Contradições', event)" class="w-full text-left px-3 py-2.5 hover:bg-slate-50 truncate">Achar Contradições</button>
+                        <button onclick="selectOption('obj', 'Elaborar Minuta', 'Elaborar Minuta', event)" class="w-full text-left px-3 py-2.5 hover:bg-slate-50 truncate">Elaborar Minuta</button>
+                        <button onclick="selectOption('obj', 'Análise de Risco Jurídico', 'Análise de Risco', event)" class="w-full text-left px-3 py-2.5 hover:bg-slate-50 truncate">Análise de Risco</button>
+                        <button onclick="selectOption('obj', 'Pesquisa Jurisprudencial', 'Levantar Jurisprudência', event)" class="w-full text-left px-3 py-2.5 hover:bg-slate-50 truncate">Levantar Jurisprudência</button>
+                        <button onclick="selectOption('obj', 'Sistematizar Fatos', 'Resumir Fatos/Prazos', event)" class="w-full text-left px-3 py-2.5 hover:bg-slate-50 truncate">Resumir Fatos/Prazos</button>
                     </div>
                 </div>
             </div>
@@ -495,15 +538,13 @@
                 <!-- MONITOR 1 (PRINCIPAL EM CARD BRANCO) -->
                 <div id="center-preview-container" onclick="selectMonitor('main')" class="flex-1 bg-white border border-slate-200 rounded-2xl shadow-sm flex flex-col overflow-hidden h-full ring-2 ring-transparent cursor-pointer relative transition-all duration-300">
                     
-                    <div class="absolute top-0 left-1/2 -translate-x-1/2 px-3 py-0.5 bg-blue-600 text-white text-[9px] font-black uppercase rounded-b-md shadow-md z-10" id="dot-active-main">
+                    <div class="absolute top-0 left-1/2 -translate-x-1/2 px-4 py-0.5 bg-blue-600 text-white text-[9px] font-black uppercase rounded-b-md shadow-md z-10" id="dot-active-main">
                         Foco Ativo
                     </div>
 
                     <div class="flex items-center justify-between px-5 py-4 border-b border-slate-100 bg-white shrink-0">
                         
-                        <div class="flex items-center gap-2.5">
-                            
-                            <!-- BOTOES DE HISTORICO - MONITOR 1 -->
+                        <div class="flex items-center gap-3">
                             <div class="flex items-center bg-slate-50 border border-slate-200 rounded-md">
                                 <button onclick="goBack('main')" id="btn-back-main" class="p-1.5 text-slate-400 hover:text-blue-600 disabled:opacity-30 disabled:cursor-not-allowed transition-colors" disabled>
                                     <i data-lucide="chevron-left" class="w-4 h-4"></i>
@@ -522,7 +563,7 @@
                         <div class="flex items-center gap-2 shrink-0">
                             
                             <!-- BOTÃO DE REPROCESSAMENTO OCR -->
-                            <button id="btn-reprocess-main" onclick="reprocessMD('main')" class="hidden px-2.5 py-1 bg-amber-500 hover:bg-amber-600 text-white rounded-lg transition-all text-[10px] font-bold shadow-sm" title="Forçar a IA a reler este PDF">
+                            <button id="btn-reprocess-main" onclick="reprocessMD('main')" class="hidden px-3 py-1.5 bg-amber-500 hover:bg-amber-600 text-white rounded-lg transition-all text-[10px] font-bold shadow-sm" title="Forçar a IA a reler este PDF">
                                 <i data-lucide="refresh-cw" class="w-3 h-3 inline"></i> Reler PDF
                             </button>
                             
@@ -567,13 +608,12 @@
                         <div id="view-doc-main" class="w-full h-full bg-white border border-slate-200 rounded-xl overflow-y-auto p-6 font-serif text-xs text-slate-700 select-text shadow-sm leading-relaxed">
                             <div class="text-center text-slate-400 my-20 font-sans">Selecione um documento na árvore à esquerda.</div>
                         </div>
-                        <!-- MARKDOWN VIEW: FUNDO BRANCO E FONTE ESCURA (NOVO) -->
                         <div id="view-raw-main" class="hidden w-full h-full bg-white border border-slate-200 rounded-xl text-slate-800 overflow-y-auto p-6 font-mono text-xs whitespace-pre-wrap select-text shadow-sm leading-relaxed"></div>
                     </div>
                 </div>
 
                 <!-- SPLITTER 2 (VISUAL) -->
-                <div id="resizer-center" class="w-1.5 bg-transparent hover:bg-blue-500 cursor-col-resize z-10 flex-shrink-0 transition-colors flex items-center justify-center rounded-full group">
+                <div id="resizer-center" class="w-2 bg-transparent hover:bg-blue-500 cursor-col-resize z-10 flex-shrink-0 transition-colors flex items-center justify-center rounded-full group">
                     <div class="w-0.5 h-12 bg-slate-300 group-hover:bg-white rounded-full transition-colors"></div>
                 </div>
 
@@ -616,7 +656,6 @@
                             <span id="comp-note-title" class="text-xs font-bold text-slate-500 truncate pr-2 px-2 max-w-[200px]">Monitor de Comparação</span>
                             <div class="flex items-center gap-1.5 flex-shrink-0">
                                 
-                                <!-- BOTÃO REFAZER OCR MONITOR 2 -->
                                 <button id="btn-reprocess-comp" onclick="reprocessMD('comp')" class="hidden px-2.5 py-1 bg-amber-500 hover:bg-amber-600 text-white rounded-md transition-all text-[9px] font-bold uppercase shadow-sm" title="Forçar a IA a reler este PDF">
                                     <i data-lucide="refresh-cw" class="w-3 h-3 inline"></i>
                                 </button>
@@ -626,7 +665,6 @@
                                     <button id="btn-tab-comp-raw" onclick="switchTab('comp', 'raw')" class="px-2 py-0.5 text-slate-500 hover:text-slate-800 transition-colors">MD</button>
                                 </div>
                                 
-                                <!-- DROPDOWN DE AMPLIAÇÃO MONITOR 2 -->
                                 <div class="relative flex items-center" id="expand-wrapper-comp">
                                     <button onclick="toggleCustomDropdown('dropdown-expand-comp', event)" class="p-1 hover:text-blue-600 transition-colors mx-0.5" title="Ampliar">
                                         <i data-lucide="maximize" class="w-4 h-4 text-slate-400"></i>
@@ -641,7 +679,6 @@
                                     </div>
                                 </div>
                                 
-                                <!-- BOTÃO PARA SAIR DA EXPANSÃO -->
                                 <button id="btn-restore-comp" onclick="exitExpansion('comp')" class="hidden p-1 text-blue-600 bg-blue-50 rounded-lg transition-colors mx-0.5" title="Restaurar Visão Normal">
                                     <i data-lucide="minimize" class="w-4 h-4"></i>
                                 </button>
@@ -664,7 +701,7 @@
                     <!-- PANE MALHA NEURAL (OBSIDIAN CANVAS) ADAPTADA PARA O NOVO DESIGN -->
                     <div id="pane-comparison-graph" class="hidden flex-1 flex flex-col overflow-hidden relative bg-white w-full h-full">
                         
-                        <!-- NOVO: BOTÕES DE FILTRO IGUAIS À IMAGEM NO TOPO DA MALHA -->
+                        <!-- BOTÕES DE FILTRO NO TOPO DA MALHA -->
                         <div class="px-5 py-3 border-b border-slate-100 bg-white flex gap-2 overflow-x-auto no-scrollbar shrink-0 z-10 shadow-sm">
                             <button class="px-4 py-1.5 bg-slate-800 text-white text-[10px] font-bold rounded-full whitespace-nowrap shadow-sm">Todos os tipos</button>
                             <button class="px-4 py-1.5 bg-white border border-slate-200 text-slate-500 text-[10px] font-bold rounded-full whitespace-nowrap hover:bg-slate-50 shadow-sm transition-colors">Pessoas</button>
@@ -678,7 +715,7 @@
                         <div class="flex-1 relative w-full h-full overflow-hidden bg-slate-50/50">
                             <canvas id="graph-canvas" class="w-full h-full block cursor-grab active:cursor-grabbing"></canvas>
                             
-                            <!-- NOVO: LEGENDA NO RODAPÉ IGUAL À IMAGEM -->
+                            <!-- LEGENDA NO RODAPÉ -->
                             <div class="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center justify-center gap-4 text-[9px] font-bold text-slate-500 bg-white/90 backdrop-blur px-5 py-2.5 rounded-full border border-slate-200 shadow-sm z-20 whitespace-nowrap pointer-events-none">
                                 <span>Legenda:</span>
                                 <div class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-blue-600"></span> Processo</div>
@@ -720,6 +757,25 @@
                         Sincronização efetuada. A inteligência já pode ler seus arquivos estruturados via Markdown e OCR Computacional.
                     </div>
                 </div>
+
+                <!-- SUGESTÕES INICIAIS DO CHAT -->
+                <div id="chat-suggestions" class="flex flex-col gap-2.5 w-full mt-2 shrink-0 animate-fade-in">
+                    <span class="text-[9px] font-bold text-slate-400 uppercase tracking-widest pl-1">Sugestões de comandos</span>
+                    <div class="flex flex-col gap-2">
+                        <button onclick="promptAndSend('Faça um resumo executivo deste documento destacando os pontos principais.')" class="bg-white border border-slate-200 text-slate-600 px-3 py-2.5 rounded-xl text-[10px] font-bold hover:border-blue-300 hover:text-blue-600 transition-all shadow-sm text-left flex items-center gap-2">
+                            <div class="w-6 h-6 bg-blue-50 text-blue-500 rounded-md flex items-center justify-center shrink-0"><i data-lucide="file-text" class="w-3.5 h-3.5"></i></div> 
+                            Resumo do documento
+                        </button>
+                        <button onclick="promptAndSend('Identifique e liste todos os prazos, datas e valores financeiros citados.')" class="bg-white border border-slate-200 text-slate-600 px-3 py-2.5 rounded-xl text-[10px] font-bold hover:border-amber-300 hover:text-amber-600 transition-all shadow-sm text-left flex items-center gap-2">
+                            <div class="w-6 h-6 bg-amber-50 text-amber-500 rounded-md flex items-center justify-center shrink-0"><i data-lucide="calendar" class="w-3.5 h-3.5"></i></div> 
+                            Extrair Prazos e Datas
+                        </button>
+                        <button onclick="promptAndSend('Quais são os principais riscos ou vulnerabilidades jurídicas neste texto?')" class="bg-white border border-slate-200 text-slate-600 px-3 py-2.5 rounded-xl text-[10px] font-bold hover:border-red-300 hover:text-red-600 transition-all shadow-sm text-left flex items-center gap-2">
+                            <div class="w-6 h-6 bg-red-50 text-red-500 rounded-md flex items-center justify-center shrink-0"><i data-lucide="alert-triangle" class="w-3.5 h-3.5"></i></div> 
+                            Analisar Riscos Locais
+                        </button>
+                    </div>
+                </div>
             </div>
 
             <!-- ÁREA DE ANEXOS DO CHAT -->
@@ -733,7 +789,7 @@
                 </button>
             </div>
 
-            <!-- INPUT DO CHAT COM O FORMATO DA IMAGEM -->
+            <!-- INPUT DO CHAT EM FORMATO PILL -->
             <div class="p-5 border-t border-slate-100 bg-white shrink-0 shadow-[0_-10px_20px_rgba(0,0,0,0.02)]">
                 <div class="relative flex items-center bg-slate-50 rounded-full border border-slate-200 p-1 pr-1.5 shadow-inner transition-all focus-within:border-blue-400 focus-within:ring-2 focus-within:ring-blue-100">
                     <button id="btn-chat-attach" class="p-2 text-slate-400 hover:text-blue-600 transition-colors shrink-0">
@@ -818,19 +874,24 @@
 
         let activeMonitor = "main"; // Foco Inicial no Monitor 1
 
-        // ==========================================
-        // VARIÁVEIS GLOBAIS DE HISTÓRICO DE NAVEGAÇÃO E EXPANSÃO IMMERSIVA
-        // ==========================================
         let mainHistory = [{ type: 'empty' }];
         let mainHistoryIndex = 0;
-        
         let compHistory = [{ type: 'empty' }];
         let compHistoryIndex = 0;
-        
         let isNavigatingHistory = false;
-        
         let isMainExpanded = false;
         let isCompExpanded = false;
+
+        // =========================================================================
+        // FUNÇÃO DE PROMPT E ENVIO RÁPIDO DO CHAT
+        // =========================================================================
+        window.promptAndSend = function(msg) {
+            const input = document.getElementById('chat-input');
+            if(input) {
+                input.value = msg;
+                sendChatMessage();
+            }
+        };
 
         // =========================================================================
         // TELA CHEIA GLOBAL DO SISTEMA
@@ -844,6 +905,16 @@
                 }
             }
         };
+
+        // =========================================================================
+        // MODAL DA LIXEIRA
+        // =========================================================================
+        window.openTrashModal = function() {
+            const modal = document.getElementById("trash-modal"); 
+            if (modal) {
+                modal.classList.remove("hidden");
+            }
+        }
 
         // =========================================================================
         // FUNÇÕES DE FAVORITOS E SELEÇÃO (RESTAURADAS E BLINDADAS)
@@ -912,12 +983,10 @@
         // =========================================================================
         
         window.exitExpansion = function(monitor) {
-            // Se estiver em modo tela cheia do navegador, sai
             if (document.fullscreenElement) {
                 document.exitFullscreen().catch(e => console.error(e));
             }
             
-            // Se estiver na tela dividida expandida, recolhe
             if (monitor === 'main' && isMainExpanded) {
                 toggleSplitMaximize('main');
             }
@@ -1323,10 +1392,6 @@
         }
         window.addEventListener("resize", resizeCanvas); 
         resizeCanvas();
-
-        function toggleDarkMode() {
-            // Removido (mantendo apenas o tema claro)
-        }
 
         // =========================================================================
         // SPEEDTEST E MODAIS NATIVOS
@@ -2541,6 +2606,11 @@
                         items = items.filter(i => i.type === "directory" || i.path.endsWith(".pdf"));
                     }
                     
+                    // Lógica para listar apenas favoritos
+                    if (currentFilterType === "favorites") {
+                        items = items.filter(i => favoriteItems[i.path.replace(/\/$/, "")]);
+                    }
+                    
                     fileTree.ondragover = (e) => { 
                         e.preventDefault(); 
                     };
@@ -2567,11 +2637,15 @@
                         let isHidden = false; 
                         let currentPathCheck = "";
                         
-                        for (let i = 0; i < pathParts.length - 1; i++) {
-                            currentPathCheck += (i === 0 ? "" : "/") + pathParts[i];
-                            if (collapsedFolders[currentPathCheck]) { 
-                                isHidden = true; 
-                                break; 
+                        // Se o filtro for favoritos, não colapsa a exibição das pastas pai. 
+                        // Mostra plano para o usuário ver todos.
+                        if (currentFilterType !== "favorites") {
+                            for (let i = 0; i < pathParts.length - 1; i++) {
+                                currentPathCheck += (i === 0 ? "" : "/") + pathParts[i];
+                                if (collapsedFolders[currentPathCheck]) { 
+                                    isHidden = true; 
+                                    break; 
+                                }
                             }
                         }
                         
@@ -2630,7 +2704,8 @@
                         };
 
                         const btn = document.createElement("button"); 
-                        const depth = (item.path.match(/\//g) || []).length - (isDir ? 1 : 0);
+                        // Ajusta identação baseado na profundidade (se for pesquisa/favorito, plana para alinhar)
+                        const depth = currentFilterType === "favorites" ? 0 : (item.path.match(/\//g) || []).length - (isDir ? 1 : 0);
                         
                         btn.className = "flex-1 text-left flex items-center gap-2 truncate text-xs focus:outline-none";
                         btn.style.paddingLeft = `${depth * 10}px`;
@@ -2659,7 +2734,7 @@
                         const isCollapsed = !!collapsedFolders[cleanItemPath];
                         let chevronIcon = `<div class="w-3.5 shrink-0"></div>`;
                         
-                        if (isDir) {
+                        if (isDir && currentFilterType !== "favorites") {
                             if (isCollapsed) {
                                 chevronIcon = `<i data-lucide="chevron-right" class="w-3 h-3 shrink-0 text-slate-400"></i>`;
                             } else {
@@ -3009,7 +3084,7 @@
         // setInterval(buildNotesTree, 10000); 
 
         // =========================================================================
-        // MOTOR DE CHAT DE INTELIGÊNCIA ARTIFICIAL
+        // MOTOR DE CHAT DE INTELIGÊNCIA ARTIFICIAL E SUGESTÕES DE ONBOARDING
         // =========================================================================
 
         async function sendChatMessage() {
@@ -3029,6 +3104,12 @@
             chatInput.value = ""; 
             chatInput.style.height = "auto";
             chatInput.style.overflowY = "hidden";
+            
+            // Ocultar Sugestões do Chat ao enviar
+            const suggestionsBlock = document.getElementById("chat-suggestions");
+            if (suggestionsBlock) {
+                suggestionsBlock.style.display = "none";
+            }
             
             const ctxArea = document.getElementById("ctx-area");
             const ctxType = document.getElementById("ctx-type");
@@ -3117,97 +3198,6 @@
                 } 
             };
         }
-
-        // =========================================================================
-        // ROTINAS DE INICIALIZAÇÃO DA PÁGINA (LOGIN E COMPONENTES)
-        // =========================================================================
-        
-        document.addEventListener("DOMContentLoaded", () => {
-            const savedToken = sessionStorage.getItem("bms_auth_token");
-            const gate = document.getElementById("auth-gate");
-
-            if (savedToken === "Ym1zOmx1aXph") {
-                if (gate) {
-                    gate.classList.add("hidden");
-                }
-                buildNotesTree();
-                reloadGlobalGraph();
-                return;
-            }
-
-            // Inicia animação de Splash Screen do Login
-            setTimeout(() => {
-                const splash = document.getElementById("auth-splash");
-                const box = document.getElementById("auth-box");
-                if(splash) {
-                    splash.classList.remove("opacity-100", "scale-100");
-                    splash.classList.add("opacity-0", "scale-95");
-                    setTimeout(() => {
-                        splash.classList.add("hidden");
-                        if(box) {
-                            box.classList.remove("hidden");
-                            setTimeout(() => {
-                                box.classList.remove("opacity-0", "translate-y-12");
-                                box.classList.add("opacity-100", "translate-y-0");
-                                const u = document.getElementById("auth-user");
-                                if(u) {
-                                    u.focus();
-                                }
-                            }, 50);
-                        }
-                    }, 700);
-                }
-            }, 2000);
-        });
-
-        window.executeLogin = function() {
-            const u = document.getElementById("auth-user");
-            const p = document.getElementById("auth-pass");
-            const err = document.getElementById("auth-error");
-            const btn = document.getElementById("btn-login");
-
-            if(!u || !p) {
-                return;
-            }
-
-            // Ocultação Base64 (bms:luiza)
-            const inputHash = btoa(u.value.trim().toLowerCase() + ":" + p.value.trim());
-
-            btn.innerHTML = `<i data-lucide="loader" class="w-4 h-4 animate-spin"></i> Autenticando...`;
-            try { lucide.createIcons(); } catch(e) {}
-
-            setTimeout(() => {
-                if (inputHash === "Ym1zOmx1aXph") {
-                    sessionStorage.setItem("bms_auth_token", inputHash); 
-                    
-                    if(err) {
-                        err.classList.add("hidden");
-                    }
-                    
-                    const gate = document.getElementById("auth-gate");
-                    if(gate) {
-                        gate.classList.remove("opacity-100");
-                        gate.classList.add("opacity-0");
-                        setTimeout(() => {
-                            gate.classList.add("hidden");
-                            
-                            buildNotesTree();
-                            reloadGlobalGraph();
-                        }, 1000);
-                    }
-                } else {
-                    if(err) {
-                        err.classList.remove("hidden");
-                    }
-                    btn.innerHTML = `Autenticar <i data-lucide="arrow-right" class="w-4 h-4"></i>`;
-                    try { lucide.createIcons(); } catch(e) {}
-                    
-                    const box = document.getElementById("auth-box");
-                    box.classList.add("animate-pulse");
-                    setTimeout(() => box.classList.remove("animate-pulse"), 500);
-                }
-            }, 800); 
-        };
 
     </script>
 </body>
