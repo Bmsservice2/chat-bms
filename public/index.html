@@ -22,7 +22,7 @@
                 }
             }
         };
-        // Força tema claro sempre (Dark mode removido)
+        // Força tema claro sempre (Dark mode removido do código)
         document.documentElement.classList.remove("dark");
     </script>
     
@@ -33,7 +33,7 @@
         textarea::-webkit-scrollbar { width: 4px; }
         textarea::-webkit-scrollbar-thumb { background-color: #cbd5e1; border-radius: 10px; }
 
-        /* Animações do Fundo de Login (Claro) */
+        /* Animações do Fundo de Login (Tema Claro Premium) */
         @keyframes blob {
             0% { transform: translate(0px, 0px) scale(1); }
             33% { transform: translate(30px, -50px) scale(1.1); }
@@ -43,10 +43,10 @@
         .animate-blob { animation: blob 10s infinite alternate ease-in-out; }
     </style>
 </head>
-<body class="bg-brand-bg text-slate-800 font-sans h-screen flex overflow-hidden select-none">
+<body class="bg-brand-bg text-slate-800 font-sans h-screen flex flex-col overflow-hidden select-none">
 
     <!-- ========================================== -->
-    <!-- TELA DE LOGIN & SPLASH SCREEN (TEMA CLARO) -->
+    <!-- TELA DE LOGIN & SPLASH SCREEN (BLINDADA)   -->
     <!-- ========================================== -->
     <div id="auth-gate" class="fixed inset-0 bg-slate-50 z-[100] flex items-center justify-center transition-all duration-1000 opacity-100 overflow-hidden font-sans">
         
@@ -108,19 +108,22 @@
                     </div>
                 </div>
             </div>
-            <div class="mt-8 flex items-center gap-2 text-[9px] text-slate-500 font-bold uppercase tracking-widest">
+            <div class="mt-8 flex items-center gap-2 text-[9px] text-slate-500 font-bold uppercase tracking-widest opacity-80">
                 <i data-lucide="lock" class="w-3 h-3"></i> Conexão Criptografada AES-256
             </div>
         </div>
     </div>
 
     <!-- ========================================== -->
-    <!-- ELEMENTOS OCULTOS E MODAIS GERAIS          -->
+    <!-- INPUTS GLOBAIS DE ARQUIVO (OCULTOS)        -->
     <!-- ========================================== -->
     <input type="file" id="global-vault-upload" class="hidden" multiple />
     <input type="file" id="global-folder-upload" class="hidden" webkitdirectory directory multiple />
     <input type="file" id="chat-context-upload" class="hidden" />
 
+    <!-- ========================================== -->
+    <!-- MODAIS E MENUS FLUTUANTES GERAIS           -->
+    <!-- ========================================== -->
     <div id="custom-context-menu" class="hidden absolute bg-white border border-slate-200 rounded-xl shadow-xl py-1.5 w-44 z-50 text-xs font-bold text-slate-700">
         <button onclick="openRenameModal()" class="w-full text-left px-3 py-2 hover:bg-slate-50 flex items-center gap-2"><i data-lucide="edit-2" class="w-3.5 h-3.5 text-blue-500"></i> Renomear / Mover</button>
         <button onclick="openMenuComparison()" class="w-full text-left px-3 py-2 hover:bg-slate-50 flex items-center gap-2 text-blue-600"><i data-lucide="git-compare" class="w-3.5 h-3.5"></i> Abrir na Comparação</button>
@@ -155,33 +158,8 @@
                 <span class="text-xs font-bold">Nenhum item na lixeira</span>
             </div>
             <div class="flex justify-between items-center pt-3 border-t border-slate-100 mt-2">
-                <button onclick="document.getElementById('trash-modal').classList.add('hidden')" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold text-xs rounded-xl transition-colors">Fechar</button>
+                <button onclick="document.getElementById('trash-modal').classList.add('hidden')" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold text-xs rounded-xl transition-colors">Fechar Lixeira</button>
                 <button class="px-4 py-2 bg-red-50 text-red-500 font-bold text-xs rounded-xl opacity-50 cursor-not-allowed">Esvaziar Tudo</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- MODAL DE CONTA E PLANO -->
-    <div id="account-settings-modal" class="hidden fixed inset-0 bg-slate-900/40 backdrop-blur-sm flex items-center justify-center z-50">
-        <div class="bg-white border border-slate-200 rounded-2xl shadow-2xl p-6 w-[400px] max-w-full flex flex-col gap-4">
-            <div class="flex items-center gap-3 border-b border-slate-100 pb-4">
-                <div class="w-12 h-12 bg-blue-50 rounded-full flex items-center justify-center text-blue-600 font-bold text-xl">TS</div>
-                <div>
-                    <h3 class="font-bold text-slate-800">Ambiente de Testes</h3>
-                    <p class="text-[10px] text-slate-500 font-medium">BETA V1.0 - BMS Service</p>
-                </div>
-            </div>
-            <button id="btn-retroactive" onclick="triggerRetroactiveMD()" class="w-full px-4 py-2.5 bg-amber-500 hover:bg-amber-600 text-white font-bold rounded-xl transition-all shadow-sm flex items-center justify-center gap-2 mb-2">
-                <i data-lucide="refresh-cw" class="w-4 h-4"></i> Gerar Markdown de PDFs Antigos
-            </button>
-            <p class="text-[9px] text-slate-400 text-center mb-4 leading-tight">O motor de Visão Computacional da Inteligência Artificial varrerá seu cofre e apagará os arquivos com erro antigo, recriando o texto Markdown com formatação perfeita.</p>
-            <div class="flex flex-col gap-2 text-xs font-semibold text-slate-600">
-                <div class="flex justify-between p-2 bg-slate-50 rounded-lg"><span>Plano Habilitado:</span> <span class="text-emerald-600">Profissional (Ilimitado)</span></div>
-                <div class="flex justify-between p-2 bg-slate-50 rounded-lg"><span>Tokens Restantes:</span> <span>Infinitos (Local Mode)</span></div>
-                <div class="flex justify-between p-2 bg-slate-50 rounded-lg"><span>Status da VPS:</span> <span class="text-blue-600">Conectado / Alta Prioridade</span></div>
-            </div>
-            <div class="flex justify-end gap-2 text-xs font-bold mt-2 pt-4 border-t border-slate-100">
-                <button onclick="document.getElementById('account-settings-modal').classList.add('hidden')" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl transition-all w-full">Fechar Painel</button>
             </div>
         </div>
     </div>
@@ -232,310 +210,314 @@
     </div>
 
     <!-- ========================================== -->
-    <!-- SIDEBAR ESQUERDA (NAVEGAÇÃO - DESIGN NOVO) -->
+    <!-- CABEÇALHO SUPERIOR DO SISTEMA (HEADER)     -->
     <!-- ========================================== -->
-    <aside id="sidebar-left" class="w-[260px] bg-brand-sidebar flex flex-col shrink-0 z-30 transition-all duration-300 relative text-slate-300" onclick="clearTreeSelection(event)">
+    <header class="bg-white border-b border-slate-200 h-[68px] min-h-[68px] flex items-center justify-between px-8 z-20 shadow-sm transition-all duration-300 shrink-0">
         
-        <div class="h-[72px] flex items-center gap-3 px-6 shrink-0 border-b border-white/5">
-            <div class="w-8 h-8 flex items-center justify-center shrink-0">
-                <svg viewBox="0 0 100 100" class="w-full h-full drop-shadow-md">
+        <div class="flex items-center gap-3">
+            <!-- BOTÃO HAMBÚRGUER (ESCONDER MENU ESQUERDO) -->
+            <button onclick="toggleSidebar()" class="p-2 -ml-3 text-slate-400 hover:text-blue-600 rounded-lg transition-colors focus:outline-none" title="Esconder/Mostrar Menu Lateral">
+                <i data-lucide="menu" class="w-5 h-5"></i>
+            </button>
+
+            <div class="w-9 h-9 flex items-center justify-center mr-1">
+                <svg viewBox="0 0 100 100" class="w-full h-full drop-shadow-sm">
                     <path d="M 35 10 V 70 A 25 25 0 0 0 85 70 A 25 25 0 0 0 35 45" fill="none" stroke="#eab308" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"/>
                     <path d="M 47 10 V 70 A 13 13 0 0 0 73 70 A 13 13 0 0 0 47 57" fill="none" stroke="#3b82f6" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
             </div>
-            <span class="font-black text-lg tracking-tight text-white whitespace-nowrap overflow-hidden">BMS <span class="text-amber-500 font-normal">Knowledge</span></span>
+            <span class="font-black text-xl tracking-tight text-slate-800">
+                BMS <span class="text-amber-500 font-medium">Knowledge</span>
+            </span>
         </div>
-
-        <div class="flex-1 overflow-y-auto no-scrollbar flex flex-col pt-6 pb-4">
-            <div class="px-4 mb-6 shrink-0">
-                <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-3 px-2 overflow-hidden whitespace-nowrap">Navegação</p>
-                <div class="flex flex-col gap-1 text-xs font-semibold">
-                    <button class="flex items-center gap-3 px-3 py-2 text-slate-400 hover:text-white hover:bg-white/5 rounded-lg transition-colors overflow-hidden" title="Visão geral"><i data-lucide="layout-dashboard" class="w-4 h-4 shrink-0"></i> <span class="whitespace-nowrap">Visão geral</span></button>
-                    <button class="flex items-center justify-between px-3 py-2.5 bg-blue-600/90 border-l-[3px] border-blue-400 text-white rounded-r-lg shadow-md transition-colors overflow-hidden" title="Processos"><div class="flex items-center gap-3"><i data-lucide="folder-open" class="w-4 h-4 shrink-0"></i> <span class="whitespace-nowrap">Processos</span></div></button>
-                    <button class="flex items-center gap-3 px-3 py-2 text-slate-400 hover:text-white hover:bg-white/5 rounded-lg transition-colors overflow-hidden" title="Análises"><i data-lucide="line-chart" class="w-4 h-4 shrink-0"></i> <span class="whitespace-nowrap">Análises</span></button>
-                    <button class="flex items-center justify-between px-3 py-2 text-slate-400 hover:text-white hover:bg-white/5 rounded-lg transition-colors overflow-hidden" title="Tarefas"><div class="flex items-center gap-3"><i data-lucide="check-square" class="w-4 h-4 shrink-0"></i> <span class="whitespace-nowrap">Tarefas</span></div><span class="bg-slate-700/50 text-slate-300 text-[10px] px-1.5 py-0.5 rounded-full">8</span></button>
-                    <button class="flex items-center gap-3 px-3 py-2 text-slate-400 hover:text-white hover:bg-white/5 rounded-lg transition-colors overflow-hidden" title="Inteligência"><i data-lucide="cpu" class="w-4 h-4 shrink-0"></i> <span class="whitespace-nowrap">Inteligência</span></button>
-                    <button class="flex items-center gap-3 px-3 py-2 text-slate-400 hover:text-white hover:bg-white/5 rounded-lg transition-colors overflow-hidden" title="Biblioteca"><i data-lucide="book-open" class="w-4 h-4 shrink-0"></i> <span class="whitespace-nowrap">Biblioteca</span></button>
-                </div>
-            </div>
-
-            <div class="flex-1 flex flex-col overflow-hidden px-2">
-                <div class="flex items-center justify-between mb-3 px-4 shrink-0 overflow-hidden">
-                    <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest whitespace-nowrap">Este Processo</p>
-                    <div class="flex gap-1.5 relative shrink-0" onclick="e => e.stopPropagation()">
-                        <button id="btn-filter-tree" onclick="toggleFilterDropdown(event)" class="text-slate-400 hover:text-white transition-colors" title="Filtros"><i data-lucide="filter" class="w-3.5 h-3.5"></i></button>
-                        <button onclick="createNewFolderManual(event)" class="text-slate-400 hover:text-white transition-colors" title="Nova Pasta"><i data-lucide="folder-plus" class="w-3.5 h-3.5"></i></button>
-                        <div id="filter-menu-dropdown" class="hidden absolute top-6 right-0 bg-slate-800 border border-slate-700 rounded-xl shadow-xl py-1 w-44 z-30 text-xs font-bold text-slate-300">
-                            <button onclick="changeFilter('all')" class="w-full text-left px-3 py-2 hover:bg-white/10">Mostrar Todos</button>
-                            <button onclick="changeFilter('md')" class="w-full text-left px-3 py-2 hover:bg-white/10">Apenas Texto (.md)</button>
-                            <button onclick="changeFilter('pdf')" class="w-full text-left px-3 py-2 hover:bg-white/10">Apenas PDFs (.pdf)</button>
-                        </div>
-                    </div>
-                </div>
-
-                <div id="file-tree" class="flex-1 overflow-y-auto space-y-0.5 text-[11px] font-medium text-slate-300 no-scrollbar relative px-2">
-                    <!-- Arquivos Injetados aqui -->
-                </div>
-            </div>
-
-            <div class="border-t border-white/5 mt-4 pt-4 px-4 flex flex-col gap-1 text-xs font-semibold shrink-0">
-                <button class="flex items-center gap-3 px-3 py-2 text-slate-400 hover:text-white hover:bg-white/5 rounded-lg transition-colors overflow-hidden" title="Linha do Tempo"><i data-lucide="git-commit" class="w-4 h-4 shrink-0"></i> <span class="whitespace-nowrap">Linha do tempo</span></button>
-                <button onclick="changeFilter('favorites')" class="flex items-center gap-3 px-3 py-2 text-slate-400 hover:text-white hover:bg-white/5 rounded-lg transition-colors overflow-hidden" title="Favoritos"><i data-lucide="star" class="w-4 h-4 shrink-0 text-amber-500"></i> <span class="whitespace-nowrap">Favoritos</span></button>
-                <button onclick="openTrashModal()" class="flex items-center gap-3 px-3 py-2 text-slate-400 hover:text-white hover:bg-white/5 rounded-lg transition-colors overflow-hidden" title="Lixeira"><i data-lucide="trash-2" class="w-4 h-4 shrink-0 text-red-400"></i> <span class="whitespace-nowrap">Lixeira</span></button>
-                
-                <button onclick="toggleSidebar()" class="flex items-center gap-3 px-3 py-2 text-slate-500 hover:text-white hover:bg-white/5 rounded-lg transition-colors mt-2 overflow-hidden" title="Recolher menu">
-                    <i data-lucide="chevrons-left" id="sidebar-icon-toggle" class="w-4 h-4 shrink-0 transition-transform"></i> <span class="whitespace-nowrap">Esconder menu</span>
-                </button>
-            </div>
-        </div>
-    </aside>
-
-    <!-- ÁREA GLOBAL -->
-    <div class="flex-1 flex flex-col overflow-hidden relative" onclick="closeAllDropdownsMenu()">
         
-        <!-- HEADER TOP BRANCO -->
-        <header class="h-[72px] bg-white border-b border-slate-200 flex items-center justify-between px-8 shrink-0 z-20">
+        <div class="flex-1 max-w-2xl mx-10 relative">
+            <i data-lucide="search" class="w-4 h-4 text-slate-400 absolute left-4 top-1/2 -translate-y-1/2"></i>
+            <input type="text" id="global-search-bar" oninput="searchFileTree()" placeholder="Buscar processos, leis, jurisprudências, petições... (Ctrl + K)" class="w-full bg-slate-50 border border-slate-200 rounded-full py-2.5 pl-11 pr-16 text-[11px] focus:outline-none focus:bg-white focus:ring-2 focus:ring-blue-500/20 transition-all font-medium text-slate-700 placeholder:text-slate-400 shadow-inner">
+            <div class="absolute right-4 top-1/2 -translate-y-1/2 flex items-center gap-1 opacity-60">
+                <i data-lucide="command" class="w-3 h-3 text-slate-400"></i>
+                <span class="font-sans text-[10px] font-bold text-slate-400">K</span>
+            </div>
+        </div>
+
+        <div class="flex items-center gap-5">
+            <button onclick="toggleAppFullscreen()" class="text-slate-400 hover:text-blue-600 transition-colors" title="Tela Cheia do Sistema">
+                <i data-lucide="expand" class="w-5 h-5"></i>
+            </button>
+
+            <!-- DROPDOWN DE UPLOAD DO COFRE -->
+            <div class="relative ml-1">
+                <button onclick="toggleCustomDropdown('dropdown-upload', event)" class="bg-white border border-slate-200 text-slate-600 text-[11px] font-bold px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-slate-50 transition-all active:scale-95 shadow-sm">
+                    <i data-lucide="upload-cloud" class="w-4 h-4 text-blue-600"></i> Upload
+                </button>
+                <div id="dropdown-upload" class="hidden absolute top-[115%] right-0 mt-1 bg-white border border-slate-200 rounded-xl shadow-xl py-1.5 w-48 z-50 flex flex-col text-xs font-bold text-slate-600">
+                    <button onclick="document.getElementById('global-vault-upload').click(); document.getElementById('dropdown-upload').classList.add('hidden')" class="w-full text-left px-3 py-2 hover:bg-slate-50 flex items-center gap-2 transition-colors"><i data-lucide="file-plus" class="w-4 h-4 text-blue-500"></i> Arquivos Avulsos</button>
+                    <button onclick="document.getElementById('global-folder-upload').click(); document.getElementById('dropdown-upload').classList.add('hidden')" class="w-full text-left px-3 py-2 hover:bg-slate-50 flex items-center gap-2 transition-colors"><i data-lucide="folder-plus" class="w-4 h-4 text-amber-500"></i> Pasta Completa</button>
+                </div>
+            </div>
             
-            <div class="flex items-center gap-4">
-                <button onclick="toggleSidebar()" class="p-2 text-slate-400 hover:text-blue-600 hover:bg-slate-50 rounded-lg transition-colors" title="Ocultar/Mostrar Menu Lateral">
-                    <i data-lucide="menu" class="w-5 h-5"></i>
-                </button>
-                
-                <div class="flex items-center text-[11px] font-semibold text-slate-400 gap-2">
-                    <i data-lucide="corner-up-left" class="w-3.5 h-3.5"></i>
-                    <span class="hover:text-blue-600 cursor-pointer">Processos</span>
-                    <i data-lucide="chevron-right" class="w-3 h-3"></i>
-                    <span class="hover:text-blue-600 cursor-pointer">TRT 1ª Região</span>
-                    <i data-lucide="chevron-right" class="w-3 h-3"></i>
-                    <span class="hover:text-blue-600 cursor-pointer">8412/2021</span>
-                    <i data-lucide="chevron-right" class="w-3 h-3"></i>
-                    <span class="hover:text-blue-600 cursor-pointer">Peças</span>
-                    <i data-lucide="chevron-right" class="w-3 h-3"></i>
-                    <span class="text-slate-800 font-bold">01 - Edital e Anexos</span>
-                </div>
-            </div>
-
-            <div class="flex-1 max-w-2xl mx-10 relative">
-                <i data-lucide="search" class="w-4 h-4 text-slate-400 absolute left-4 top-1/2 -translate-y-1/2"></i>
-                <input type="text" id="global-search-bar" oninput="searchFileTree()" placeholder="Buscar documentos, pessoas, teses, leis..." class="w-full bg-slate-50 border border-slate-200 rounded-full py-2.5 pl-11 pr-12 text-[11px] focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all font-medium text-slate-700 placeholder:text-slate-400 shadow-inner">
-                <div class="absolute right-4 top-1/2 -translate-y-1/2 flex items-center gap-1 opacity-50">
-                    <kbd class="font-sans text-[10px] bg-white px-1.5 py-0.5 rounded border border-slate-200">Ctrl</kbd>
-                    <kbd class="font-sans text-[10px] bg-white px-1.5 py-0.5 rounded border border-slate-200">K</kbd>
-                </div>
-            </div>
-
-            <div class="flex items-center gap-5">
-                <button onclick="toggleAppFullscreen()" class="text-slate-400 hover:text-slate-600 transition-colors" title="Tela Cheia">
-                    <i data-lucide="expand" class="w-4 h-4"></i>
-                </button>
-                <button class="relative text-slate-400 hover:text-slate-600 transition-colors">
-                    <i data-lucide="bell" class="w-4 h-4"></i>
-                    <span class="absolute -top-0.5 -right-0.5 w-2 h-2 bg-red-500 rounded-full border border-white"></span>
-                </button>
-                
-                <div class="relative ml-1">
-                    <div onclick="toggleCustomDropdown('dropdown-profile', event)" class="flex items-center gap-2.5 border-l border-slate-200 pl-5 cursor-pointer hover:opacity-80 transition-opacity">
-                        <div class="w-8 h-8 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center font-black text-[11px]">AC</div>
-                        <div class="flex flex-col">
-                            <span class="text-[11px] font-bold text-slate-800 leading-tight">Ana Carolina</span>
-                            <span class="text-[9px] text-slate-500 font-semibold leading-tight">Advogada</span>
-                        </div>
-                        <i data-lucide="chevron-down" class="w-3 h-3 text-slate-400 ml-1"></i>
-                    </div>
-                    
-                    <div id="dropdown-profile" class="hidden absolute top-[120%] right-0 mt-1 bg-white border border-slate-200 rounded-xl shadow-xl py-1.5 w-48 z-50 flex flex-col text-xs font-bold text-slate-600">
-                        <button onclick="document.getElementById('account-settings-modal').classList.remove('hidden'); closeAllDropdownsMenu()" class="w-full text-left px-4 py-2 hover:bg-slate-50 flex items-center gap-2 transition-colors"><i data-lucide="user" class="w-4 h-4 text-slate-400"></i> Minha Conta</button>
-                        <button class="w-full text-left px-4 py-2 hover:bg-slate-50 flex items-center gap-2 transition-colors"><i data-lucide="users" class="w-4 h-4 text-slate-400"></i> Gestão de Equipe</button>
-                        <div class="h-px bg-slate-100 my-1 w-full"></div>
-                        <button onclick="logoutSystem()" class="w-full text-left px-4 py-2 hover:bg-red-50 text-red-600 flex items-center gap-2 transition-colors"><i data-lucide="log-out" class="w-4 h-4"></i> Sair do Sistema</button>
-                    </div>
-                </div>
-            </div>
-        </header>
-
-        <!-- ÁREA CENTRAL COM SCROLL (BACKGROUND CINZA CLARO) -->
-        <div class="flex-1 overflow-y-auto no-scrollbar flex flex-col p-8 gap-6 relative">
+            <div class="w-px h-6 bg-slate-200 mx-2"></div>
             
-            <!-- CABEÇALHO DO PROCESSO & BOTÕES DE AÇÃO -->
-            <div class="shrink-0 flex justify-between items-start">
-                <div>
-                    <div class="flex items-center gap-3 mb-2">
-                        <h1 class="text-3xl font-black text-slate-900 tracking-tight">Processo nº 8412/2021</h1>
-                        <button id="btn-favorite-star" onclick="toggleActiveFileFavorite()" class="text-slate-300 hover:text-amber-500 transition-colors focus:outline-none"><i data-lucide="star" class="w-5 h-5"></i></button>
-                    </div>
-                    <div class="flex items-center gap-3 text-[11px] font-semibold text-slate-500">
-                        <span class="flex items-center gap-1.5"><i data-lucide="map-pin" class="w-3.5 h-3.5"></i> TRT da 1ª Região</span>
-                        <span class="w-1 h-1 bg-slate-300 rounded-full"></span>
-                        <span>4ª Vara do Trabalho do Rio de Janeiro</span>
-                        <span class="w-1 h-1 bg-slate-300 rounded-full"></span>
-                        <span>Reclamante: Luiz Cândido Gomes</span>
-                        <span class="w-1 h-1 bg-slate-300 rounded-full"></span>
-                        <span>Reclamado: BMS Service LTDA</span>
-                        <span class="ml-2 px-2.5 py-0.5 bg-amber-50 text-amber-600 border border-amber-200 rounded-full font-bold flex items-center gap-1.5 shadow-sm">
-                            <span class="w-1.5 h-1.5 bg-amber-500 rounded-full animate-pulse"></span> Processo ativo
-                        </span>
-                    </div>
-                </div>
-                
-                <div class="flex items-center gap-2.5">
-                    <div class="relative z-20">
-                        <button onclick="toggleCustomDropdown('dropdown-upload', event)" class="px-4 py-2 bg-brand-sidebar hover:bg-slate-800 text-white text-[11px] font-bold rounded-lg flex items-center gap-2 transition-all shadow-sm">
-                            <i data-lucide="plus" class="w-3.5 h-3.5"></i> Nova análise
-                        </button>
-                        <div id="dropdown-upload" class="hidden absolute top-[105%] right-0 mt-1 bg-white border border-slate-200 rounded-xl shadow-xl py-1.5 w-48 z-50 text-xs font-bold text-slate-600">
-                            <button onclick="document.getElementById('global-vault-upload').click();" class="w-full text-left px-3 py-2 hover:bg-slate-50 flex items-center gap-2"><i data-lucide="file-plus" class="w-4 h-4 text-blue-500"></i> Arquivo Avulso</button>
-                            <button onclick="document.getElementById('global-folder-upload').click();" class="w-full text-left px-3 py-2 hover:bg-slate-50 flex items-center gap-2"><i data-lucide="folder-plus" class="w-4 h-4 text-amber-500"></i> Pasta Completa</button>
-                        </div>
-                    </div>
-                    <button onclick="promptAndSend('Gere um resumo executivo deste processo')" class="px-4 py-2 bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 text-[11px] font-bold rounded-lg flex items-center gap-2 transition-all shadow-sm">
-                        <i data-lucide="file-text" class="w-3.5 h-3.5"></i> Resumo executivo
-                    </button>
-                    <button class="px-4 py-2 bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 text-[11px] font-bold rounded-lg flex items-center gap-2 transition-all shadow-sm">
-                        <i data-lucide="git-compare" class="w-3.5 h-3.5"></i> Comparar versões
-                    </button>
-                    <button class="px-4 py-2 bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 text-[11px] font-bold rounded-lg flex items-center gap-2 transition-all shadow-sm">
-                        <i data-lucide="upload" class="w-3.5 h-3.5"></i> Exportar <i data-lucide="chevron-down" class="w-3 h-3 ml-1 text-slate-400"></i>
-                    </button>
-                </div>
+            <div id="server-status-badge" class="flex items-center gap-2 bg-slate-50 px-3 py-2 rounded-lg border border-slate-200 shadow-sm transition-all duration-300">
+                <div id="server-status-dot" class="w-2 h-2 bg-slate-400 rounded-full"></div>
+                <span id="server-status-text" class="text-[10px] font-black tracking-wide uppercase text-slate-500">Checando...</span>
             </div>
+        </div>
+    </header>
 
-            <!-- TABS & OS 4 MENUS DE CONTEXTO ANTIGOS (ADAPTADOS PARA O DESIGN) -->
-            <div class="flex items-end justify-between border-b border-slate-200 shrink-0">
-                <div class="flex items-center gap-8 text-[11px] font-bold">
-                    <button class="pb-3 border-b-2 border-blue-600 text-blue-600 px-1">Leitura</button>
-                    <button class="pb-3 border-b-2 border-transparent text-slate-500 hover:text-slate-800 px-1">Insights</button>
-                    <button class="pb-3 border-b-2 border-transparent text-slate-500 hover:text-slate-800 px-1">Malha Neural</button>
-                    <button class="pb-3 border-b-2 border-transparent text-slate-500 hover:text-slate-800 px-1">Cronologia</button>
-                </div>
+    <!-- ========================================== -->
+    <!-- ESTEIRA OPERACIONAL DAS 4 COLUNAS          -->
+    <!-- ========================================== -->
+    <div class="flex flex-1 overflow-hidden relative" onclick="closeAllDropdownsMenu()">
+        
+        <!-- ========================================== -->
+        <!-- COLUNA 1: GAVETA ESQUERDA (ÁRVORE ESCURA)  -->
+        <!-- ========================================== -->
+        <aside id="sidebar-left" class="w-[260px] bg-brand-sidebar border-r border-slate-800 flex flex-col overflow-hidden py-4 px-2 relative shrink-0 transition-all duration-300 ease-in-out text-slate-300" onclick="clearTreeSelection(event)">
+            
+            <div class="flex items-center justify-between mb-4 px-3 mt-2">
+                <span class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">
+                    Processos e Cofre
+                </span>
                 
-                <!-- Os Filtros Antigos Colocados Aqui -->
-                <div class="flex items-center gap-2 pb-2">
-                    <div class="relative z-20">
-                        <button onclick="toggleCustomDropdown('dropdown-area', event)" class="px-3 py-1.5 bg-white border border-slate-200 text-slate-600 text-[10px] font-bold rounded-md flex items-center gap-1.5 hover:bg-slate-50 shadow-sm">
-                            Área: <span id="label-ctx-area" class="text-blue-600">Geral</span> <i data-lucide="chevron-down" class="w-3 h-3"></i>
-                        </button>
-                        <input type="hidden" id="ctx-area" value="Geral">
-                        <div id="dropdown-area" class="hidden absolute top-[105%] right-0 mt-1 bg-white border border-slate-200 rounded-xl shadow-xl py-1.5 w-40 text-xs font-bold text-slate-600">
-                            <button onclick="selectOption('area', 'Geral', 'Geral', event)" class="w-full text-left px-3 py-1.5 hover:bg-slate-50">Geral (Misto)</button>
-                            <button onclick="selectOption('area', 'Trabalhista', 'Trabalhista', event)" class="w-full text-left px-3 py-1.5 hover:bg-slate-50">Direito Trabalhista</button>
-                        </div>
-                    </div>
-                    <div class="relative z-20">
-                        <button onclick="toggleCustomDropdown('dropdown-type', event)" class="px-3 py-1.5 bg-white border border-slate-200 text-slate-600 text-[10px] font-bold rounded-md flex items-center gap-1.5 hover:bg-slate-50 shadow-sm">
-                            Peça: <span id="label-ctx-type" class="text-purple-600">Análise</span> <i data-lucide="chevron-down" class="w-3 h-3"></i>
-                        </button>
-                        <input type="hidden" id="ctx-type" value="Análise">
-                        <div id="dropdown-type" class="hidden absolute top-[105%] right-0 mt-1 bg-white border border-slate-200 rounded-xl shadow-xl py-1.5 w-40 text-xs font-bold text-slate-600">
-                            <button onclick="selectOption('type', 'Análise', 'Análise', event)" class="w-full text-left px-3 py-1.5 hover:bg-slate-50">Análise Interna</button>
-                            <button onclick="selectOption('type', 'Petição Inicial', 'Petição', event)" class="w-full text-left px-3 py-1.5 hover:bg-slate-50">Petição Inicial</button>
-                        </div>
-                    </div>
-                    <div class="relative z-20">
-                        <button onclick="toggleCustomDropdown('dropdown-phase', event)" class="px-3 py-1.5 bg-white border border-slate-200 text-slate-600 text-[10px] font-bold rounded-md flex items-center gap-1.5 hover:bg-slate-50 shadow-sm">
-                            Fase: <span id="label-ctx-phase" class="text-amber-600">Estudo</span> <i data-lucide="chevron-down" class="w-3 h-3"></i>
-                        </button>
-                        <input type="hidden" id="ctx-phase" value="Estudo">
-                        <div id="dropdown-phase" class="hidden absolute top-[105%] right-0 mt-1 bg-white border border-slate-200 rounded-xl shadow-xl py-1.5 w-40 text-xs font-bold text-slate-600">
-                            <button onclick="selectOption('phase', 'Estudo', 'Estudo', event)" class="w-full text-left px-3 py-1.5 hover:bg-slate-50">Fase de Estudo</button>
-                            <button onclick="selectOption('phase', 'Conhecimento', 'Conhecimento', event)" class="w-full text-left px-3 py-1.5 hover:bg-slate-50">Fase de Conhecimento</button>
-                        </div>
-                    </div>
-                    <div class="relative z-20">
-                        <button onclick="toggleCustomDropdown('dropdown-obj', event)" class="px-3 py-1.5 bg-white border border-slate-200 text-slate-600 text-[10px] font-bold rounded-md flex items-center gap-1.5 hover:bg-slate-50 shadow-sm">
-                            Objetivo: <span id="label-ctx-obj" class="text-emerald-600">Auditar</span> <i data-lucide="chevron-down" class="w-3 h-3"></i>
-                        </button>
-                        <input type="hidden" id="ctx-obj" value="Auditar">
-                        <div id="dropdown-obj" class="hidden absolute top-[105%] right-0 mt-1 bg-white border border-slate-200 rounded-xl shadow-xl py-1.5 w-40 text-xs font-bold text-slate-600">
-                            <button onclick="selectOption('obj', 'Auditar', 'Auditar', event)" class="w-full text-left px-3 py-1.5 hover:bg-slate-50">Auditoria Geral</button>
-                            <button onclick="selectOption('obj', 'Contradições', 'Contradições', event)" class="w-full text-left px-3 py-1.5 hover:bg-slate-50">Achar Contradições</button>
-                        </div>
+                <div class="flex gap-1.5 relative" onclick="e => e.stopPropagation()">
+                    <button id="btn-filter-tree" onclick="toggleFilterDropdown(event)" class="text-slate-400 hover:text-white transition-colors">
+                        <i data-lucide="filter" class="w-3.5 h-3.5"></i>
+                    </button>
+                    <button onclick="createNewFolderManual(event)" class="text-slate-400 hover:text-white transition-colors">
+                        <i data-lucide="folder-plus" class="w-3.5 h-3.5"></i>
+                    </button>
+                    <div id="filter-menu-dropdown" class="hidden absolute top-6 right-0 bg-slate-800 border border-slate-700 rounded-xl shadow-xl py-1 w-44 z-30 text-xs font-bold text-slate-300">
+                        <button onclick="changeFilter('all')" class="w-full text-left px-3 py-2 hover:bg-slate-700 rounded-t-xl">Mostrar Todos</button>
+                        <button onclick="changeFilter('md')" class="w-full text-left px-3 py-2 hover:bg-slate-700">Apenas Texto (.md)</button>
+                        <button onclick="changeFilter('pdf')" class="w-full text-left px-3 py-2 hover:bg-slate-700 rounded-b-xl">Apenas PDFs (.pdf)</button>
                     </div>
                 </div>
             </div>
 
-            <!-- O WORKSPACE TRIPLO DIVIDIDO (SPLIT PANELS) -->
-            <div class="flex w-full min-h-[700px] shrink-0 gap-4 mb-4 relative">
+            <div id="file-tree" class="flex-1 overflow-y-auto space-y-0.5 text-xs font-medium text-slate-400 no-scrollbar relative px-1">
+                <!-- Arquivos injetados via JavaScript -->
+            </div>
+
+            <div class="mt-4 border-t border-white/5 pt-4 px-1 shrink-0">
                 
-                <!-- MONITOR 1 (PDF) -->
-                <div id="center-preview-container" class="flex-1 bg-white border border-slate-200 rounded-2xl shadow-sm flex flex-col overflow-hidden relative min-w-[300px]" onclick="selectMonitor('main')">
-                    
-                    <div class="absolute top-0 left-1/2 -translate-x-1/2 px-4 py-0.5 bg-blue-600 text-white text-[9px] font-black uppercase rounded-b-md shadow-md z-10 hidden" id="dot-active-main">Foco Ativo</div>
-
-                    <div class="flex items-center justify-between px-5 py-3 border-b border-slate-100 shrink-0">
-                        <div class="flex items-center gap-3">
-                            <i data-lucide="file-text" class="w-4 h-4 text-emerald-500"></i>
-                            <h2 id="active-note-title" class="text-xs font-bold text-slate-800 truncate max-w-[150px]">Nenhum arquivo</h2>
-                            <span class="px-2 py-1 bg-slate-50 text-slate-500 text-[9px] font-bold rounded border border-slate-200">Versão 1 de 2 <i data-lucide="chevron-down" class="w-2.5 h-2.5 inline"></i></span>
-                            <span class="px-2 py-1 bg-emerald-50 text-emerald-600 text-[9px] font-bold rounded-full border border-emerald-100">OCR concluído</span>
-                            <button id="btn-reprocess-main" onclick="reprocessMD('main')" class="hidden ml-1 text-slate-400 hover:text-blue-500"><i data-lucide="refresh-cw" class="w-3 h-3"></i></button>
-                        </div>
-                        <div class="flex items-center gap-1 text-slate-400">
-                            <div class="flex bg-slate-50 p-0.5 rounded border border-slate-200 text-[9px] font-bold mr-2">
-                                <button id="btn-tab-main-formatted" onclick="switchTab('main', 'doc')" class="px-2 py-0.5 bg-white text-slate-700 rounded shadow-sm">Visual</button>
-                                <button id="btn-tab-main-raw" onclick="switchTab('main', 'raw')" class="px-2 py-0.5 text-slate-500 hover:text-slate-700">MD</button>
-                            </div>
-                            <button onclick="downloadActiveFile()" class="p-1.5 hover:text-blue-500"><i data-lucide="download" class="w-3.5 h-3.5"></i></button>
-                            <button onclick="printActiveFile()" class="p-1.5 hover:text-blue-500"><i data-lucide="printer" class="w-3.5 h-3.5"></i></button>
-                            <button onclick="fullscreenMonitor('main')" class="p-1.5 hover:text-blue-500"><i data-lucide="maximize" class="w-3.5 h-3.5"></i></button>
-                        </div>
+                <!-- BOTOES DE FAVORITOS E LIXEIRA (PEDIDO DO USUÁRIO) -->
+                <div class="flex gap-2 mb-3">
+                    <div onclick="changeFilter('favorites')" class="flex-1 bg-white/5 border border-white/5 rounded-xl p-2.5 flex items-center justify-center gap-2 cursor-pointer hover:bg-white/10 transition-colors group" title="Listar Favoritos">
+                        <i data-lucide="star" class="w-4 h-4 text-amber-500 group-hover:scale-110 transition-transform"></i>
+                        <span class="text-[10px] font-bold text-slate-300 group-hover:text-white transition-colors">Favoritos</span>
                     </div>
-
-                    <div class="flex items-center justify-between px-5 py-1.5 border-b border-slate-100 bg-white shrink-0 text-slate-500 text-[10px] font-semibold">
-                        <div class="flex items-center gap-4">
-                            <i data-lucide="layout-grid" class="w-3.5 h-3.5 cursor-pointer hover:text-blue-600"></i>
-                            <i data-lucide="list" class="w-3.5 h-3.5 cursor-pointer text-blue-600"></i>
-                            <div class="flex items-center gap-2 mx-1 border-l border-slate-200 pl-3">
-                                <i data-lucide="chevron-left" class="w-3.5 h-3.5 cursor-pointer hover:text-blue-600"></i> 1 / 102 <i data-lucide="chevron-right" class="w-3.5 h-3.5 cursor-pointer hover:text-blue-600"></i>
-                            </div>
-                            <div class="flex items-center gap-3 border-l border-slate-200 pl-3">
-                                <i data-lucide="minus" class="w-3.5 h-3.5 cursor-pointer hover:text-blue-600"></i> 100% <i data-lucide="plus" class="w-3.5 h-3.5 cursor-pointer hover:text-blue-600"></i>
-                            </div>
-                        </div>
-                        <div class="flex items-center gap-4">
-                            <button class="flex items-center gap-1 hover:text-blue-600"><i data-lucide="highlighter" class="w-3 h-3"></i> Destaques</button>
-                            <button class="flex items-center gap-1 hover:text-blue-600"><i data-lucide="message-square" class="w-3 h-3"></i> Anotações</button>
-                            <button class="flex items-center gap-1 hover:text-blue-600"><i data-lucide="save" class="w-3 h-3"></i> Salvar</button>
-                        </div>
-                    </div>
-
-                    <div class="flex-1 flex overflow-hidden">
-                        <div class="w-20 border-r border-slate-100 flex flex-col p-2 gap-3 overflow-y-auto no-scrollbar shrink-0 bg-white">
-                            <div class="aspect-[1/1.4] border-2 border-blue-500 rounded p-1 shadow-sm relative"><div class="w-full h-full bg-slate-50 flex items-center justify-center"></div><p class="text-center mt-1 text-[8px] font-bold text-blue-600 absolute -bottom-4 left-0 w-full">1</p></div>
-                            <div class="aspect-[1/1.4] border border-slate-200 rounded p-1 shadow-sm relative mt-3"><div class="w-full h-full bg-slate-50 flex items-center justify-center"></div><p class="text-center mt-1 text-[8px] font-bold text-slate-400 absolute -bottom-4 left-0 w-full">2</p></div>
-                        </div>
-
-                        <div id="view-doc-main-container" class="flex-1 flex overflow-hidden bg-slate-50 p-0 relative">
-                            <div id="view-doc-main" class="w-full h-full bg-white overflow-y-auto p-6 font-serif text-[11px] text-slate-700 select-text leading-relaxed">
-                                <div class="text-center text-slate-400 my-20 font-sans">Selecione um documento na árvore à esquerda.</div>
-                            </div>
-                            <div id="view-raw-main" class="hidden w-full h-full bg-white overflow-y-auto p-6 font-mono text-[10px] whitespace-pre-wrap select-text leading-relaxed"></div>
-                        </div>
-
-                        <div class="w-10 border-l border-slate-100 flex flex-col items-center py-4 gap-4 text-slate-400 shrink-0 bg-white">
-                            <div class="w-5 h-5 rounded-full bg-slate-800 text-white flex items-center justify-center text-[9px] font-bold shadow-md cursor-pointer hover:bg-blue-600 transition-colors">3</div>
-                            <i data-lucide="message-square" class="w-3.5 h-3.5 cursor-pointer hover:text-blue-600 transition-colors" title="Pedir Resumo à IA" onclick="promptAndSend('Faça um resumo desta página.')"></i>
-                            <i data-lucide="bookmark" class="w-3.5 h-3.5 cursor-pointer hover:text-blue-600 transition-colors"></i>
-                            <i data-lucide="code" class="w-3.5 h-3.5 cursor-pointer hover:text-blue-600 transition-colors"></i>
-                            <i data-lucide="maximize" class="w-3.5 h-3.5 cursor-pointer hover:text-blue-600 transition-colors mt-auto" onclick="fullscreenMonitor('main')"></i>
-                        </div>
+                    <div onclick="openTrashModal()" class="flex-1 bg-white/5 border border-white/5 rounded-xl p-2.5 flex items-center justify-center gap-2 cursor-pointer hover:bg-red-500/20 hover:border-red-500/30 transition-colors group" title="Lixeira (Auto-limpeza: 30 dias)">
+                        <i data-lucide="trash-2" class="w-4 h-4 text-red-400 group-hover:scale-110 transition-transform"></i>
+                        <span class="text-[10px] font-bold text-slate-300 group-hover:text-white transition-colors">Lixeira</span>
                     </div>
                 </div>
 
-                <!-- SPLITTER 1 -->
-                <div id="resizer-center" class="w-1.5 hover:bg-blue-500 cursor-col-resize z-10 flex-shrink-0 flex items-center justify-center rounded-full group">
-                    <div class="w-0.5 h-12 bg-slate-200 group-hover:bg-white rounded-full transition-colors"></div>
+                <div onclick="openSpeedTestModal()" class="mb-1 bg-white/5 border border-white/5 rounded-xl p-3 cursor-pointer hover:bg-white/10 transition-colors flex items-center justify-between group">
+                    <div class="flex items-center gap-3">
+                        <div class="text-blue-400 group-hover:scale-110 transition-transform">
+                            <i data-lucide="wifi" class="w-4 h-4"></i>
+                        </div>
+                        <span class="text-[10px] font-bold text-slate-300 group-hover:text-white transition-colors">Teste de Rede</span>
+                    </div>
+                    <i data-lucide="chevron-right" class="w-3.5 h-3.5 text-slate-500 group-hover:text-white transition-colors"></i>
                 </div>
 
-                <!-- MONITOR 2 (MALHA NEURAL) -->
-                <section id="sidebar-comparison" class="w-[35%] bg-white border border-slate-200 rounded-2xl shadow-sm flex flex-col overflow-hidden h-full flex-shrink-0 relative min-w-[280px]" onclick="selectMonitor('comp')">
+                <!-- BOTAO ESCONDER MENU -->
+                <div onclick="toggleSidebar()" class="mt-2 bg-transparent rounded-xl p-2 cursor-pointer hover:bg-white/5 transition-colors flex items-center gap-3 group">
+                    <div class="text-slate-500 group-hover:text-white transition-colors">
+                        <i data-lucide="panel-left-close" class="w-4 h-4"></i>
+                    </div>
+                    <span class="text-[10px] font-bold text-slate-400 group-hover:text-white transition-colors">Esconder menu</span>
+                </div>
+            </div>
+        </aside>
+
+        <!-- SPLITTER 1 (VISUAL) -->
+        <div id="resizer-left" class="w-1.5 bg-brand-sidebar hover:bg-blue-600 cursor-col-resize z-10 shrink-0 transition-colors flex items-center justify-center border-l border-white/5 group">
+            <div class="w-0.5 h-12 bg-slate-700 group-hover:bg-white rounded-full transition-colors"></div>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- COLUNAS CENTRAIS: WORKSPACE (FUNDO CINZA)  -->
+        <!-- ========================================== -->
+        <main id="center-panel" class="flex-1 flex flex-col min-w-[300px] overflow-hidden p-6 gap-5 bg-brand-light transition-all duration-300">
+            
+            <!-- MENUS DE PERSONALIZAÇÃO JURÍDICA (4 COLUNAS EM CARDS BRANCOS) -->
+            <div class="grid grid-cols-4 gap-5 w-full shrink-0 transition-all duration-300">
+                
+                <div class="bg-white border border-slate-200 rounded-2xl p-3.5 flex items-center shadow-sm relative cursor-pointer hover:border-blue-300 hover:shadow-md transition-all" onclick="toggleCustomDropdown('dropdown-area', event)">
+                    <div class="w-9 h-9 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center mr-3">
+                        <i data-lucide="scale" class="w-4 h-4"></i>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <p class="text-[9px] text-slate-400 font-bold uppercase tracking-widest mb-0.5">Área Jurídica</p>
+                        <div class="flex items-center justify-between">
+                            <span id="label-ctx-area" class="text-[13px] font-bold text-slate-800 truncate">Geral (Misto)</span>
+                            <i data-lucide="chevron-down" class="w-4 h-4 text-slate-400 shrink-0"></i>
+                        </div>
+                    </div>
+                    <input type="hidden" id="ctx-area" value="Geral/Nenhuma">
                     
-                    <div class="absolute top-0 left-1/2 -translate-x-1/2 px-4 py-0.5 bg-blue-600 text-white text-[9px] font-black uppercase rounded-b-md shadow-md z-10 hidden" id="dot-active-comp">Foco Ativo</div>
+                    <div id="dropdown-area" class="hidden absolute top-[105%] left-0 mt-1 bg-white border border-slate-200 rounded-xl shadow-xl py-1.5 w-full z-50 flex flex-col max-h-48 overflow-y-auto no-scrollbar text-xs font-bold text-slate-600">
+                        <button onclick="selectOption('area', 'Geral/Nenhuma', 'Geral (Misto)', event)" class="w-full text-left px-3 py-2.5 hover:bg-slate-50 truncate">Geral (Misto)</button>
+                        <button onclick="selectOption('area', 'Direito Trabalhista', 'Direito Trabalhista', event)" class="w-full text-left px-3 py-2.5 hover:bg-slate-50 truncate">Direito Trabalhista</button>
+                        <button onclick="selectOption('area', 'Direito Cível', 'Direito Cível', event)" class="w-full text-left px-3 py-2.5 hover:bg-slate-50 truncate">Direito Cível</button>
+                        <button onclick="selectOption('area', 'Direito Penal', 'Direito Penal', event)" class="w-full text-left px-3 py-2.5 hover:bg-slate-50 truncate">Direito Penal</button>
+                        <button onclick="selectOption('area', 'Direito Tributário', 'Direito Tributário', event)" class="w-full text-left px-3 py-2.5 hover:bg-slate-50 truncate">Direito Tributário</button>
+                        <button onclick="selectOption('area', 'Direito Empresarial', 'Direito Empresarial', event)" class="w-full text-left px-3 py-2.5 hover:bg-slate-50 truncate">Direito Empresarial</button>
+                        <button onclick="selectOption('area', 'Direito de Família', 'Direito de Família', event)" class="w-full text-left px-3 py-2.5 hover:bg-slate-50 truncate">Direito de Família</button>
+                        <button onclick="selectOption('area', 'Direito Administrativo', 'Direito Administrativo', event)" class="w-full text-left px-3 py-2.5 hover:bg-slate-50 truncate">Direito Administrativo</button>
+                    </div>
+                </div>
+
+                <div class="bg-white border border-slate-200 rounded-2xl p-3.5 flex items-center shadow-sm relative cursor-pointer hover:border-purple-300 hover:shadow-md transition-all" onclick="toggleCustomDropdown('dropdown-type', event)">
+                    <div class="w-9 h-9 bg-purple-50 text-purple-600 rounded-xl flex items-center justify-center mr-3">
+                        <i data-lucide="file-text" class="w-4 h-4"></i>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <p class="text-[9px] text-slate-400 font-bold uppercase tracking-widest mb-0.5">Tipo de Peça</p>
+                        <div class="flex items-center justify-between">
+                            <span id="label-ctx-type" class="text-[13px] font-bold text-slate-800 truncate">Análise Interna</span>
+                            <i data-lucide="chevron-down" class="w-4 h-4 text-slate-400 shrink-0"></i>
+                        </div>
+                    </div>
+                    <input type="hidden" id="ctx-type" value="Análise/Documento">
+                    
+                    <div id="dropdown-type" class="hidden absolute top-[105%] left-0 mt-1 bg-white border border-slate-200 rounded-xl shadow-xl py-1.5 w-full z-50 flex flex-col max-h-48 overflow-y-auto no-scrollbar text-xs font-bold text-slate-600">
+                        <button onclick="selectOption('type', 'Análise/Documento', 'Análise Interna', event)" class="w-full text-left px-3 py-2.5 hover:bg-slate-50 truncate">Análise Interna</button>
+                        <button onclick="selectOption('type', 'Petição Inicial', 'Petição Inicial', event)" class="w-full text-left px-3 py-2.5 hover:bg-slate-50 truncate">Petição Inicial</button>
+                        <button onclick="selectOption('type', 'Contestação', 'Contestação', event)" class="w-full text-left px-3 py-2.5 hover:bg-slate-50 truncate">Contestação</button>
+                        <button onclick="selectOption('type', 'Recurso', 'Recurso (Apelação)', event)" class="w-full text-left px-3 py-2.5 hover:bg-slate-50 truncate">Recurso (Apelação)</button>
+                        <button onclick="selectOption('type', 'Alegações Finais', 'Alegações Finais', event)" class="w-full text-left px-3 py-2.5 hover:bg-slate-50 truncate">Alegações Finais</button>
+                        <button onclick="selectOption('type', 'Parecer Jurídico', 'Parecer Jurídico', event)" class="w-full text-left px-3 py-2.5 hover:bg-slate-50 truncate">Parecer Jurídico</button>
+                    </div>
+                </div>
+
+                <div class="bg-white border border-slate-200 rounded-2xl p-3.5 flex items-center shadow-sm relative cursor-pointer hover:border-amber-300 hover:shadow-md transition-all" onclick="toggleCustomDropdown('dropdown-phase', event)">
+                    <div class="w-9 h-9 bg-amber-50 text-amber-600 rounded-xl flex items-center justify-center mr-3">
+                        <i data-lucide="folder-git" class="w-4 h-4"></i>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <p class="text-[9px] text-slate-400 font-bold uppercase tracking-widest mb-0.5">Fase Atual</p>
+                        <div class="flex items-center justify-between">
+                            <span id="label-ctx-phase" class="text-[13px] font-bold text-slate-800 truncate">Fase de Estudo</span>
+                            <i data-lucide="chevron-down" class="w-4 h-4 text-slate-400 shrink-0"></i>
+                        </div>
+                    </div>
+                    <input type="hidden" id="ctx-phase" value="Fase de Estudo">
+                    
+                    <div id="dropdown-phase" class="hidden absolute top-[105%] left-0 mt-1 bg-white border border-slate-200 rounded-xl shadow-xl py-1.5 w-full z-50 flex flex-col max-h-48 overflow-y-auto no-scrollbar text-xs font-bold text-slate-600">
+                        <button onclick="selectOption('phase', 'Fase de Estudo', 'Fase de Estudo', event)" class="w-full text-left px-3 py-2.5 hover:bg-slate-50 truncate">Fase de Estudo</button>
+                        <button onclick="selectOption('phase', 'Fase de Conhecimento', 'Fase de Conhecimento', event)" class="w-full text-left px-3 py-2.5 hover:bg-slate-50 truncate">Fase de Conhecimento</button>
+                        <button onclick="selectOption('phase', 'Fase de Instrução', 'Fase de Instrução', event)" class="w-full text-left px-3 py-2.5 hover:bg-slate-50 truncate">Fase de Instrução</button>
+                        <button onclick="selectOption('phase', 'Fase Recursal', 'Fase Recursal', event)" class="w-full text-left px-3 py-2.5 hover:bg-slate-50 truncate">Fase Recursal</button>
+                        <button onclick="selectOption('phase', 'Fase de Execução', 'Fase de Execução', event)" class="w-full text-left px-3 py-2.5 hover:bg-slate-50 truncate">Fase de Execução</button>
+                    </div>
+                </div>
+
+                <div class="bg-white border border-slate-200 rounded-2xl p-3.5 flex items-center shadow-sm relative cursor-pointer hover:border-emerald-300 hover:shadow-md transition-all" onclick="toggleCustomDropdown('dropdown-obj', event)">
+                    <div class="w-9 h-9 bg-emerald-50 text-emerald-600 rounded-xl flex items-center justify-center mr-3">
+                        <i data-lucide="target" class="w-4 h-4"></i>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <p class="text-[9px] text-slate-400 font-bold uppercase tracking-widest mb-0.5">Objetivo Direto</p>
+                        <div class="flex items-center justify-between">
+                            <span id="label-ctx-obj" class="text-[13px] font-bold text-slate-800 truncate">Auditoria Geral</span>
+                            <i data-lucide="chevron-down" class="w-4 h-4 text-slate-400 shrink-0"></i>
+                        </div>
+                    </div>
+                    <input type="hidden" id="ctx-obj" value="Auditar/Resumir">
+                    
+                    <div id="dropdown-obj" class="hidden absolute top-[105%] left-0 mt-1 bg-white border border-slate-200 rounded-xl shadow-xl py-1.5 w-full z-50 flex flex-col max-h-48 overflow-y-auto no-scrollbar text-xs font-bold text-slate-600">
+                        <button onclick="selectOption('obj', 'Auditar/Resumir', 'Auditoria Geral', event)" class="w-full text-left px-3 py-2.5 hover:bg-slate-50 truncate">Auditoria Geral</button>
+                        <button onclick="selectOption('obj', 'Encontrar Contradições', 'Achar Contradições', event)" class="w-full text-left px-3 py-2.5 hover:bg-slate-50 truncate">Achar Contradições</button>
+                        <button onclick="selectOption('obj', 'Elaborar Minuta', 'Elaborar Minuta', event)" class="w-full text-left px-3 py-2.5 hover:bg-slate-50 truncate">Elaborar Minuta</button>
+                        <button onclick="selectOption('obj', 'Análise de Risco', 'Análise de Risco', event)" class="w-full text-left px-3 py-2.5 hover:bg-slate-50 truncate">Análise de Risco</button>
+                        <button onclick="selectOption('obj', 'Levantar Jurisprudência', 'Levantar Jurisprudência', event)" class="w-full text-left px-3 py-2.5 hover:bg-slate-50 truncate">Levantar Jurisprudência</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TELA DIVIDIDA DOS DOIS MONITORES -->
+            <div class="flex flex-1 gap-5 overflow-hidden relative mt-1 h-full">
+                
+                <!-- MONITOR 1 (PRINCIPAL EM CARD BRANCO) -->
+                <div id="center-preview-container" onclick="selectMonitor('main')" class="flex-1 bg-white border border-slate-200 rounded-2xl shadow-sm flex flex-col overflow-hidden h-full ring-2 ring-transparent cursor-pointer relative transition-all duration-300">
+                    
+                    <div class="absolute top-0 left-1/2 -translate-x-1/2 px-4 py-0.5 bg-blue-600 text-white text-[9px] font-black uppercase rounded-b-md shadow-md z-10 hidden" id="dot-active-main">
+                        Foco Ativo
+                    </div>
 
                     <div class="flex items-center justify-between px-5 py-4 border-b border-slate-100 bg-white shrink-0">
                         <div class="flex items-center gap-3">
+                            <div class="flex items-center bg-slate-50 border border-slate-200 rounded-md">
+                                <button onclick="goBack('main')" id="btn-back-main" class="p-1.5 text-slate-400 hover:text-blue-600 disabled:opacity-30 disabled:cursor-not-allowed transition-colors" disabled>
+                                    <i data-lucide="chevron-left" class="w-4 h-4"></i>
+                                </button>
+                                <button onclick="goForward('main')" id="btn-forward-main" class="p-1.5 text-slate-400 hover:text-blue-600 disabled:opacity-30 disabled:cursor-not-allowed transition-colors" disabled>
+                                    <i data-lucide="chevron-right" class="w-4 h-4"></i>
+                                </button>
+                            </div>
+                            
+                            <h2 id="active-note-title" class="text-sm font-bold text-slate-800 truncate max-w-[200px] ml-1">Selecione um arquivo principal</h2>
+                            <button id="btn-favorite-star" onclick="toggleActiveFileFavorite()" class="text-slate-300 hover:text-amber-500 transition-colors focus:outline-none">
+                                <i data-lucide="star" class="w-4 h-4"></i>
+                            </button>
+                        </div>
+                        
+                        <div class="flex items-center gap-2 shrink-0">
+                            <!-- BOTÃO DE REPROCESSAMENTO OCR -->
+                            <button id="btn-reprocess-main" onclick="reprocessMD('main')" class="hidden px-3 py-1.5 bg-amber-500 hover:bg-amber-600 text-white rounded-lg transition-all text-[10px] font-bold shadow-sm" title="Forçar a IA a reler este PDF">
+                                <i data-lucide="refresh-cw" class="w-3 h-3 inline"></i> Reler PDF
+                            </button>
+                            
+                            <div class="flex bg-slate-50 border border-slate-200 p-0.5 rounded-lg text-[10px] font-bold mx-2">
+                                <button id="btn-tab-main-formatted" onclick="switchTab('main', 'doc')" class="px-3 py-1.5 bg-white text-slate-800 rounded-md shadow-sm transition-colors">Visual</button>
+                                <button id="btn-tab-main-raw" onclick="switchTab('main', 'raw')" class="px-3 py-1.5 text-slate-500 hover:text-slate-800 transition-colors">Markdown</button>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-center gap-1.5">
+                            <button onclick="downloadActiveFile()" class="p-1.5 text-slate-400 hover:text-blue-600 rounded-lg transition-colors" title="Download"><i data-lucide="download" class="w-4 h-4"></i></button>
+                            <button onclick="printActiveFile()" class="p-1.5 text-slate-400 hover:text-blue-600 rounded-lg transition-colors" title="Imprimir"><i data-lucide="printer" class="w-4 h-4"></i></button>
+                            
+                            <div class="relative flex items-center" id="expand-wrapper-main">
+                                <button onclick="toggleCustomDropdown('dropdown-expand-main', event)" class="p-1.5 text-slate-400 hover:text-blue-600 rounded-lg transition-colors" title="Ampliar"><i data-lucide="maximize" class="w-4 h-4"></i></button>
+                                <div id="dropdown-expand-main" class="hidden absolute top-[105%] right-0 mt-1 bg-white border border-slate-200 rounded-xl shadow-xl py-1.5 w-48 z-50 text-xs font-bold text-slate-600 flex flex-col">
+                                    <button onclick="fullscreenMonitor('main'); closeAllDropdownsMenu()" class="w-full text-left px-3 py-2 hover:bg-slate-50 flex items-center gap-2"><i data-lucide="monitor" class="w-4 h-4"></i> Tela Cheia Total</button>
+                                    <button onclick="toggleSplitMaximize('main'); closeAllDropdownsMenu()" class="w-full text-left px-3 py-2 hover:bg-slate-50 flex items-center gap-2"><i data-lucide="layout-template" class="w-4 h-4"></i> Expandir Tela Dividida</button>
+                                </div>
+                            </div>
+                            <button id="btn-restore-main" onclick="exitExpansion('main')" class="hidden p-1.5 text-blue-600 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors" title="Restaurar Visão Normal"><i data-lucide="minimize" class="w-4 h-4"></i></button>
+                        </div>
+                    </div>
+
+                    <div class="flex flex-1 overflow-hidden relative bg-[#fafafa] p-4" id="view-doc-main-container">
+                        <div id="view-doc-main" class="w-full h-full bg-white border border-slate-200 rounded-xl overflow-y-auto p-6 font-serif text-xs text-slate-700 select-text shadow-sm leading-relaxed">
+                            <div class="text-center text-slate-400 my-20 font-sans">Selecione um documento na árvore à esquerda.</div>
+                        </div>
+                        <div id="view-raw-main" class="hidden w-full h-full bg-white border border-slate-200 rounded-xl text-slate-800 overflow-y-auto p-6 font-mono text-xs whitespace-pre-wrap select-text shadow-sm leading-relaxed"></div>
+                    </div>
+                </div>
+
+                <!-- SPLITTER 2 (VISUAL) -->
+                <div id="resizer-center" class="w-2 bg-transparent hover:bg-blue-500 cursor-col-resize z-10 flex-shrink-0 transition-colors flex items-center justify-center rounded-full group">
+                    <div class="w-0.5 h-12 bg-slate-300 group-hover:bg-white rounded-full transition-colors"></div>
+                </div>
+
+                <!-- MONITOR 2 (COMPARAÇÃO E MALHA NEURAL EM CARD BRANCO) -->
+                <section id="sidebar-comparison" onclick="selectMonitor('comp')" class="w-[45%] bg-white border border-slate-200 rounded-2xl shadow-sm flex flex-col overflow-hidden h-full flex-shrink-0 transition-all duration-300 cursor-pointer relative min-w-[300px]">
+                    
+                    <div class="absolute top-0 left-1/2 -translate-x-1/2 px-4 py-0.5 bg-blue-600 text-white text-[9px] font-black uppercase rounded-b-md shadow-md z-10 hidden" id="dot-active-comp">
+                        Foco Ativo
+                    </div>
+
+                    <div class="px-5 py-4 border-b border-slate-100 flex items-center justify-between bg-white shrink-0">
+                        <div class="flex items-center gap-3">
                             <div class="flex items-center bg-slate-50 border border-slate-200 rounded-md mr-1">
-                                <button onclick="goBack('comp')" id="btn-back-comp" class="p-1.5 text-slate-400 hover:text-blue-600 disabled:opacity-30 disabled:cursor-not-allowed transition-colors" disabled><i data-lucide="chevron-left" class="w-3.5 h-3.5"></i></button>
-                                <button onclick="goForward('comp')" id="btn-forward-comp" class="p-1.5 text-slate-400 hover:text-blue-600 disabled:opacity-30 disabled:cursor-not-allowed transition-colors" disabled><i data-lucide="chevron-right" class="w-3.5 h-3.5"></i></button>
+                                <button onclick="goBack('comp')" id="btn-back-comp" class="p-1.5 text-slate-400 hover:text-blue-600 disabled:opacity-30 disabled:cursor-not-allowed transition-colors" disabled><i data-lucide="chevron-left" class="w-4 h-4"></i></button>
+                                <button onclick="goForward('comp')" id="btn-forward-comp" class="p-1.5 text-slate-400 hover:text-blue-600 disabled:opacity-30 disabled:cursor-not-allowed transition-colors" disabled><i data-lucide="chevron-right" class="w-4 h-4"></i></button>
                             </div>
                             <div class="w-7 h-7 bg-blue-600 text-white rounded-lg flex items-center justify-center shadow-sm"><i data-lucide="git-compare" class="w-4 h-4"></i></div>
                             <span class="font-black text-xs uppercase tracking-wider text-slate-800">Módulo Lógico</span>
@@ -568,7 +550,7 @@
                                 <button onclick="clearComparisonDoc()" class="p-1 text-slate-400 hover:text-red-500 transition-colors mx-1"><i data-lucide="x" class="w-4 h-4"></i></button>
                             </div>
                         </div>
-                        <div id="view-doc-comp-wrapper" class="flex-1 relative overflow-hidden font-serif">
+                        <div class="flex-1 relative overflow-hidden font-serif" id="view-doc-comp-wrapper">
                             <div id="view-doc-comp" class="w-full h-full bg-white border border-slate-200 rounded-xl overflow-y-auto p-6 text-xs text-slate-700 select-text leading-relaxed shadow-sm">
                                 <div class="text-center text-slate-400 my-20 font-sans">Painel secundário inativo. Selecione este monitor e clique em um arquivo da árvore para carregá-lo aqui.</div>
                             </div>
@@ -576,7 +558,7 @@
                         </div>
                     </div>
 
-                    <!-- PANE MALHA NEURAL (OBSIDIAN CANVAS) -->
+                    <!-- PANE MALHA NEURAL (OBSIDIAN CANVAS) ADAPTADA PARA O NOVO DESIGN -->
                     <div id="pane-comparison-graph" class="hidden flex-1 flex flex-col overflow-hidden relative bg-white w-full h-full">
                         <div class="px-5 py-3 border-b border-slate-100 bg-white flex gap-2 overflow-x-auto no-scrollbar shrink-0 z-10 shadow-sm">
                             <button class="px-4 py-1.5 bg-slate-800 text-white text-[10px] font-bold rounded-full whitespace-nowrap shadow-sm">Todos os tipos</button>
@@ -584,6 +566,7 @@
                             <button class="px-4 py-1.5 bg-white border border-slate-200 text-slate-500 text-[10px] font-bold rounded-full whitespace-nowrap hover:bg-slate-50 shadow-sm transition-colors">Órgãos</button>
                             <button class="px-4 py-1.5 bg-white border border-slate-200 text-slate-500 text-[10px] font-bold rounded-full whitespace-nowrap hover:bg-slate-50 shadow-sm transition-colors">Documentos</button>
                             <button class="px-4 py-1.5 bg-white border border-slate-200 text-slate-500 text-[10px] font-bold rounded-full whitespace-nowrap hover:bg-slate-50 shadow-sm transition-colors">Leis</button>
+                            <button class="px-4 py-1.5 bg-white border border-slate-200 text-slate-500 text-[10px] font-bold rounded-full whitespace-nowrap hover:bg-slate-50 shadow-sm transition-colors">Prazos</button>
                         </div>
                         <div class="flex-1 relative w-full h-full overflow-hidden bg-slate-50/50">
                             <canvas id="graph-canvas" class="w-full h-full block cursor-grab active:cursor-grabbing"></canvas>
@@ -594,6 +577,7 @@
                                 <div class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-purple-500"></span> Órgãos</div>
                                 <div class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-amber-500"></span> Leis</div>
                                 <div class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-blue-400"></span> Documentos</div>
+                                <div class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-red-500"></span> Prazos</div>
                             </div>
                         </div>
                     </div>
@@ -602,79 +586,87 @@
         </main>
 
         <!-- SPLITTER 3 (VISUAL) -->
-        <div id="resizer-right" class="w-1.5 hover:bg-blue-500 cursor-col-resize z-10 flex-shrink-0 flex items-center justify-center rounded-full group">
-            <div class="w-0.5 h-12 bg-slate-200 group-hover:bg-white rounded-full transition-colors"></div>
+        <div id="resizer-right" class="w-1.5 bg-transparent hover:bg-blue-500 cursor-col-resize z-10 flex-shrink-0 transition-colors flex items-center justify-center rounded-full group">
+            <div class="w-0.5 h-12 bg-slate-300 group-hover:bg-white rounded-full transition-colors"></div>
         </div>
 
-        <!-- MONITOR 3: ASSISTENTE IA -->
-        <aside id="sidebar-right" class="w-[280px] bg-white border border-slate-200 rounded-2xl shadow-sm flex flex-col overflow-hidden shrink-0 relative min-w-[250px] my-5 mr-5">
+        <!-- ========================================== -->
+        <!-- COLUNA 4: ASSISTENTE CHAT DA INTELIGÊNCIA  -->
+        <!-- ========================================== -->
+        <aside id="sidebar-right" class="w-[300px] bg-white border-l border-slate-200 flex flex-col overflow-hidden shadow-sm flex-shrink-0 transition-all duration-300 ease-in-out z-10">
             
-            <div class="px-5 pt-4 pb-3 border-b border-slate-100 shrink-0">
-                <div class="flex items-center gap-2 mb-2">
-                    <i data-lucide="sparkles" class="w-3.5 h-3.5 text-amber-500"></i>
-                    <h2 class="text-xs font-bold text-slate-800">Assistente Jurídico IA</h2>
+            <div class="p-6 border-b border-slate-100 bg-white flex flex-col justify-center shrink-0">
+                <div class="flex items-center gap-2 mb-3">
+                    <i data-lucide="sparkles" class="w-4 h-4 text-amber-500"></i>
+                    <h2 class="text-sm font-bold text-slate-800">Assistente Jurídico IA</h2>
                 </div>
-                <h3 class="font-black text-sm text-slate-800">Olá, Ana! 👋</h3>
-                <p class="text-[9px] text-slate-500 mt-0.5">Em que posso ajudar hoje?</p>
+                <h3 class="font-black text-lg text-slate-800">Olá, Ana! 👋</h3>
+                <p class="text-[11px] text-slate-500 mt-1 leading-snug">Em que posso ajudar com este processo hoje?</p>
             </div>
 
-            <div id="chat-messages" class="flex-1 overflow-y-auto p-4 flex flex-col gap-3 bg-white no-scrollbar scroll-smooth">
-                <!-- SUGESTÕES ONBOARDING (SOME APÓS ENVIAR MENSAGEM) -->
-                <div id="chat-suggestions" class="flex flex-col gap-2 w-full mt-1 shrink-0">
-                    <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest pl-1 mb-1">Sugestões de Comandos</p>
-                    
-                    <button onclick="promptAndSend('Gere um resumo executivo deste documento destacando os pontos principais.')" class="bg-white border border-slate-200 p-2.5 rounded-xl text-left hover:border-blue-300 hover:bg-blue-50 transition-colors shadow-sm group">
-                        <div class="flex items-center gap-2 mb-1.5">
-                            <div class="w-5 h-5 bg-blue-50 text-blue-600 rounded flex items-center justify-center"><i data-lucide="file-text" class="w-3 h-3"></i></div>
-                            <span class="text-[10px] font-bold text-slate-700 group-hover:text-blue-700">Resumo da Peça</span>
-                        </div>
-                        <p class="text-[9px] text-slate-500">Condense os argumentos principais.</p>
-                    </button>
+            <!-- CONTAINER DO CHAT -->
+            <div id="chat-messages" class="flex-1 overflow-y-auto p-5 flex flex-col gap-4 bg-[#f8fafc] select-text no-scrollbar relative scroll-smooth">
+                <div class="w-full flex justify-start shrink-0">
+                    <div class="bg-white border border-slate-200 text-slate-700 rounded-2xl rounded-tl-sm px-4 py-3 text-[11px] max-w-[90%] shadow-sm leading-relaxed">
+                        Sincronização efetuada. A inteligência já pode ler seus arquivos estruturados via Markdown e OCR Computacional.
+                    </div>
+                </div>
 
-                    <button onclick="promptAndSend('Identifique e extraia todos os prazos, datas e intimações pendentes no documento.')" class="bg-white border border-slate-200 p-2.5 rounded-xl text-left hover:border-emerald-300 hover:bg-emerald-50 transition-colors shadow-sm group">
-                        <div class="flex items-center gap-2 mb-1.5">
-                            <div class="w-5 h-5 bg-emerald-50 text-emerald-600 rounded flex items-center justify-center"><i data-lucide="calendar" class="w-3 h-3"></i></div>
-                            <span class="text-[10px] font-bold text-slate-700 group-hover:text-emerald-700">Extrair Prazos</span>
-                        </div>
-                        <p class="text-[9px] text-slate-500">Mapeie datas críticas do processo.</p>
-                    </button>
-
-                    <button onclick="promptAndSend('Faça uma análise de risco sobre as cláusulas e argumentos desfavoráveis.')" class="bg-white border border-slate-200 p-2.5 rounded-xl text-left hover:border-amber-300 hover:bg-amber-50 transition-colors shadow-sm group">
-                        <div class="flex items-center gap-2 mb-1.5">
-                            <div class="w-5 h-5 bg-amber-50 text-amber-600 rounded flex items-center justify-center"><i data-lucide="alert-triangle" class="w-3 h-3"></i></div>
-                            <span class="text-[10px] font-bold text-slate-700 group-hover:text-amber-700">Analisar Riscos</span>
-                        </div>
-                        <p class="text-[9px] text-slate-500">Identifique vulnerabilidades lógicas.</p>
-                    </button>
+                <!-- SUGESTÕES INICIAIS DO CHAT -->
+                <div id="chat-suggestions" class="flex flex-col gap-2.5 w-full mt-2 shrink-0">
+                    <span class="text-[9px] font-bold text-slate-400 uppercase tracking-widest pl-1">Sugestões</span>
+                    <div class="flex flex-col gap-2">
+                        <button onclick="promptAndSend('Faça um resumo executivo deste documento destacando os pontos principais.')" class="bg-white border border-slate-200 text-slate-600 px-3 py-2.5 rounded-xl text-[10px] font-bold hover:border-blue-300 hover:text-blue-600 transition-all shadow-sm text-left flex items-center gap-2">
+                            <div class="w-6 h-6 bg-blue-50 text-blue-500 rounded-md flex items-center justify-center shrink-0"><i data-lucide="file-text" class="w-3.5 h-3.5"></i></div> 
+                            Resumo do documento
+                        </button>
+                        <button onclick="promptAndSend('Identifique e liste todos os prazos, datas e valores financeiros citados.')" class="bg-white border border-slate-200 text-slate-600 px-3 py-2.5 rounded-xl text-[10px] font-bold hover:border-amber-300 hover:text-amber-600 transition-all shadow-sm text-left flex items-center gap-2">
+                            <div class="w-6 h-6 bg-amber-50 text-amber-500 rounded-md flex items-center justify-center shrink-0"><i data-lucide="calendar" class="w-3.5 h-3.5"></i></div> 
+                            Extrair Prazos e Datas
+                        </button>
+                        <button onclick="promptAndSend('Quais são os principais riscos ou vulnerabilidades jurídicas neste texto?')" class="bg-white border border-slate-200 text-slate-600 px-3 py-2.5 rounded-xl text-[10px] font-bold hover:border-red-300 hover:text-red-600 transition-all shadow-sm text-left flex items-center gap-2">
+                            <div class="w-6 h-6 bg-red-50 text-red-500 rounded-md flex items-center justify-center shrink-0"><i data-lucide="alert-triangle" class="w-3.5 h-3.5"></i></div> 
+                            Analisar Riscos Locais
+                        </button>
+                    </div>
                 </div>
             </div>
 
-            <div id="chat-attachment-area" class="hidden px-4 py-2 bg-slate-100 border-t border-slate-200 flex items-center justify-between text-[9px] font-bold text-slate-700 shrink-0">
+            <!-- ÁREA DE ANEXOS DO CHAT -->
+            <div id="chat-attachment-area" class="hidden px-4 py-2 bg-slate-100 border-t border-slate-200 flex items-center justify-between text-[10px] font-bold text-slate-700 shrink-0">
                 <div class="flex items-center gap-2 truncate">
-                    <i data-lucide="paperclip" class="w-3 h-3 text-blue-500 shrink-0"></i>
+                    <i data-lucide="paperclip" class="w-3.5 h-3.5 text-blue-500 shrink-0"></i>
                     <span id="chat-attachment-name" class="truncate">anexo.md</span>
                 </div>
                 <button id="btn-remove-attachment" class="text-red-500 hover:text-red-700 transition-colors ml-2">
-                    <i data-lucide="x" class="w-3 h-3"></i>
+                    <i data-lucide="x" class="w-3.5 h-3.5"></i>
                 </button>
             </div>
 
-            <div class="p-4 border-t border-slate-100 bg-white shrink-0 shadow-[0_-10px_20px_rgba(0,0,0,0.02)]">
-                <div class="relative flex items-center bg-slate-50 border border-slate-200 rounded-2xl p-1 pr-1 shadow-inner focus-within:border-blue-400 focus-within:ring-1 focus-within:ring-blue-100">
-                    <button id="btn-chat-attach" class="p-1.5 text-slate-400 hover:text-blue-600 shrink-0"><i data-lucide="paperclip" class="w-3.5 h-3.5"></i></button>
-                    <textarea id="chat-input" rows="1" placeholder="Pergunte algo..." class="flex-1 bg-transparent py-2 px-1.5 text-[10px] font-medium focus:outline-none text-slate-800 resize-none h-7 leading-tight placeholder:text-slate-400"></textarea>
-                    <button id="btn-send" class="w-6 h-6 flex items-center justify-center bg-slate-800 text-white rounded-xl hover:bg-slate-700 shadow-md shrink-0"><i data-lucide="send" class="w-3 h-3 ml-[-1px]"></i></button>
+            <!-- INPUT DO CHAT COM O FORMATO DA IMAGEM -->
+            <div class="p-5 border-t border-slate-100 bg-white shrink-0 shadow-[0_-10px_20px_rgba(0,0,0,0.02)]">
+                <div class="relative flex items-center bg-slate-50 rounded-full border border-slate-200 p-1 pr-1.5 shadow-inner transition-all focus-within:border-blue-400 focus-within:ring-2 focus-within:ring-blue-100">
+                    <button id="btn-chat-attach" class="p-2 text-slate-400 hover:text-blue-600 transition-colors shrink-0">
+                        <i data-lucide="paperclip" class="w-4 h-4"></i>
+                    </button>
+                    
+                    <textarea id="chat-input" rows="1" placeholder="Pergunte algo sobre o processo..." class="flex-1 bg-transparent py-2.5 px-1.5 text-[11px] font-medium focus:outline-none text-slate-800 resize-none h-9 leading-tight placeholder:text-slate-400"></textarea>
+                    
+                    <button id="btn-send" class="w-8 h-8 flex items-center justify-center bg-brand-sidebar text-white rounded-full hover:bg-slate-800 transition-all shadow-md shrink-0 active:scale-95">
+                        <i data-lucide="send" class="w-3.5 h-3.5 ml-[-1px]"></i>
+                    </button>
                 </div>
+                <p class="text-center text-[8px] text-slate-400 mt-2.5 font-medium uppercase tracking-wider">IA pode cometer erros. Verifique as informações.</p>
             </div>
         </aside>
-
     </div>
 
     <!-- ========================================================================= -->
     <!-- SCRIPT JAVASCRIPT EXPANSO E BLINDADO                                      -->
     <!-- ========================================================================= -->
     <script>
-        try { lucide.createIcons(); } catch (e) { console.error("Erro ícones:", e); }
+        // Inicializa os ícones do Lucide
+        try { lucide.createIcons(); } catch (e) { console.error("Erro ao carregar ícones:", e); }
 
         document.addEventListener('keydown', (e) => {
             if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
@@ -684,12 +676,16 @@
             }
         });
 
+        // ==========================================
+        // VARIÁVEIS GLOBAIS
+        // ==========================================
         const messagesContainer = document.getElementById("chat-messages");
         const chatInput = document.getElementById("chat-input");
         const btnSend = document.getElementById("btn-send");
         const fileTree = document.getElementById("file-tree");
         const globalSearchBar = document.getElementById("global-search-bar");
         const filterDropdown = document.getElementById("filter-menu-dropdown");
+        
         const canvas = document.getElementById("graph-canvas");
         const ctx = canvas ? canvas.getContext("2d") : null;
 
@@ -708,7 +704,9 @@
         
         let favoriteItems = JSON.parse(localStorage.getItem("bms_favorites_map") || "{}");
         let collapsedFolders = JSON.parse(localStorage.getItem("bms_collapsed_folders") || "{}");
-        let activeMonitor = "main"; 
+
+        let activeMonitor = "main"; // Foco Inicial no Monitor 1
+
         let mainHistory = [{ type: 'empty' }];
         let mainHistoryIndex = 0;
         let compHistory = [{ type: 'empty' }];
@@ -717,80 +715,60 @@
         let isMainExpanded = false;
         let isCompExpanded = false;
 
-        // Toggle para ocultar o Menu Lateral
-        let isSidebarCollapsed = false;
+        // =========================================================================
+        // ====== NOVO: ESCONDER MENU LATERAL ======
+        // =========================================================================
+        let isSidebarHidden = false;
         window.toggleSidebar = function() {
             const sb = document.getElementById("sidebar-left");
             const resizer = document.getElementById("resizer-left");
-            const icon = document.getElementById("sidebar-icon-toggle");
-            const texts = sb.querySelectorAll(".sidebar-text");
             
-            isSidebarCollapsed = !isSidebarCollapsed;
+            isSidebarHidden = !isSidebarHidden;
             
-            if (isSidebarCollapsed) {
-                sb.classList.remove("w-[260px]");
-                sb.classList.add("w-[72px]");
-                texts.forEach(t => t.classList.add("hidden"));
-                if(icon) icon.style.transform = "rotate(180deg)";
+            if (isSidebarHidden) {
+                if(sb) sb.classList.add("hidden");
+                if(resizer) resizer.classList.add("hidden");
             } else {
-                sb.classList.remove("w-[72px]");
-                sb.classList.add("w-[260px]");
-                texts.forEach(t => t.classList.remove("hidden"));
-                if(icon) icon.style.transform = "rotate(0deg)";
+                if(sb) sb.classList.remove("hidden");
+                if(resizer) resizer.classList.remove("hidden");
             }
             
-            setTimeout(resizeCanvas, 300);
+            setTimeout(resizeCanvas, 60);
         };
 
-        window.logoutSystem = function() {
-            sessionStorage.removeItem("bms_auth_token");
-            location.reload();
-        };
-
-        document.addEventListener("DOMContentLoaded", () => {
-            const savedToken = sessionStorage.getItem("bms_auth_token");
-            const gate = document.getElementById("auth-gate");
-            if (savedToken === "Ym1zOmx1aXph") {
-                if (gate) gate.classList.add("hidden");
-                buildNotesTree(); reloadGlobalGraph(); return;
+        // =========================================================================
+        // ATALHO DE ENVIO (SUGESTÕES ONBOARDING)
+        // =========================================================================
+        window.promptAndSend = function(msg) {
+            const input = document.getElementById('chat-input');
+            if(input) {
+                input.value = msg;
+                sendChatMessage();
             }
-            setTimeout(() => {
-                const splash = document.getElementById("auth-splash"); const box = document.getElementById("auth-box");
-                if(splash) {
-                    splash.classList.remove("opacity-100", "scale-100"); splash.classList.add("opacity-0", "scale-95");
-                    setTimeout(() => {
-                        splash.classList.add("hidden");
-                        if(box) {
-                            box.classList.remove("hidden");
-                            setTimeout(() => { box.classList.remove("opacity-0", "translate-y-12"); box.classList.add("opacity-100", "translate-y-0"); const u = document.getElementById("auth-user"); if(u) u.focus(); }, 50);
-                        }
-                    }, 700);
-                }
-            }, 2000);
-        });
-
-        window.executeLogin = function() {
-            const u = document.getElementById("auth-user"); const p = document.getElementById("auth-pass"); const err = document.getElementById("auth-error"); const btn = document.getElementById("btn-login");
-            if(!u || !p) return;
-            const inputHash = btoa(u.value.trim().toLowerCase() + ":" + p.value.trim());
-            btn.innerHTML = `<i data-lucide="loader" class="w-4 h-4 animate-spin"></i> Autenticando...`; try { lucide.createIcons(); } catch(e) {}
-            setTimeout(() => {
-                if (inputHash === "Ym1zOmx1aXph") {
-                    sessionStorage.setItem("bms_auth_token", inputHash); 
-                    if(err) err.classList.add("hidden");
-                    const gate = document.getElementById("auth-gate");
-                    if(gate) {
-                        gate.classList.remove("opacity-100"); gate.classList.add("opacity-0");
-                        setTimeout(() => { gate.classList.add("hidden"); buildNotesTree(); reloadGlobalGraph(); }, 1000);
-                    }
-                } else {
-                    if(err) err.classList.remove("hidden");
-                    btn.innerHTML = `Autenticar <i data-lucide="arrow-right" class="w-4 h-4"></i>`; try { lucide.createIcons(); } catch(e) {}
-                    const box = document.getElementById("auth-box"); box.classList.add("animate-pulse"); setTimeout(() => box.classList.remove("animate-pulse"), 500);
-                }
-            }, 800); 
         };
 
+        // =========================================================================
+        // TELA CHEIA GLOBAL DO SISTEMA
+        // =========================================================================
+        window.toggleAppFullscreen = function() {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen().catch(err => console.error(err));
+            } else {
+                if (document.exitFullscreen) document.exitFullscreen();
+            }
+        };
+
+        // =========================================================================
+        // MODAL DA LIXEIRA 
+        // =========================================================================
+        window.openTrashModal = function() {
+            const modal = document.getElementById("trash-modal"); 
+            if (modal) modal.classList.remove("hidden");
+        }
+
+        // =========================================================================
+        // FUNÇÕES DE FAVORITOS E SELEÇÃO
+        // =========================================================================
         window.clearTreeSelection = function(e) {
             if (e.target.id === "file-tree" || e.target.tagName === "ASIDE") clearMainMonitor();
         };
@@ -809,7 +787,7 @@
             const btnFav = document.getElementById("btn-favorite-star");
             if (!btnFav) return;
             if (!selectedFileId) {
-                btnFav.innerHTML = `<i data-lucide="star" class="w-4 h-4 text-slate-300"></i>`;
+                btnFav.innerHTML = `<i data-lucide="star" class="w-4 h-4 text-slate-400"></i>`;
                 try { lucide.createIcons(); } catch(e) {} return;
             }
             const cleanPath = selectedFileId.replace(/\/$/, "");
@@ -817,6 +795,249 @@
             else btnFav.innerHTML = `<i data-lucide="star" class="w-4 h-4 text-slate-300 hover:text-amber-500 transition-colors"></i>`;
             try { lucide.createIcons(); } catch(e) {}
         };
+
+        window.exitExpansion = function(monitor) {
+            if (document.fullscreenElement) document.exitFullscreen().catch(e => console.error(e));
+            if (monitor === 'main' && isMainExpanded) toggleSplitMaximize('main');
+            if (monitor === 'comp' && isCompExpanded) toggleSplitMaximize('comp');
+        };
+        
+        window.toggleSplitMaximize = function(monitor) {
+            let expandWrapper, restoreBtn;
+            if (monitor === 'main') {
+                isMainExpanded = !isMainExpanded;
+                expandWrapper = document.getElementById('expand-wrapper-main');
+                restoreBtn = document.getElementById('btn-restore-main');
+                if (isMainExpanded) {
+                    if (expandWrapper) expandWrapper.classList.add('hidden');
+                    if (restoreBtn) restoreBtn.classList.remove('hidden');
+                } else {
+                    if (expandWrapper) expandWrapper.classList.remove('hidden');
+                    if (restoreBtn) restoreBtn.classList.add('hidden');
+                }
+            } else if (monitor === 'comp') {
+                isCompExpanded = !isCompExpanded;
+                expandWrapper = document.getElementById('expand-wrapper-comp');
+                restoreBtn = document.getElementById('btn-restore-comp');
+                if (isCompExpanded) {
+                    if (expandWrapper) expandWrapper.classList.add('hidden');
+                    if (restoreBtn) restoreBtn.classList.remove('hidden');
+                } else {
+                    if (expandWrapper) expandWrapper.classList.remove('hidden');
+                    if (restoreBtn) restoreBtn.classList.add('hidden');
+                }
+            }
+
+            const header = document.querySelector('header');
+            const centerPanel = document.getElementById('center-panel');
+            const topMenus = centerPanel ? centerPanel.querySelector('.grid') : null;
+            const sidebarRight = document.getElementById('sidebar-right');
+            const resizerRight = document.getElementById('resizer-right');
+            
+            const mainBox = document.getElementById('center-preview-container');
+            const compBox = document.getElementById('sidebar-comparison');
+
+            // Quando expande o painel de leitura, esconde o header global, sidebar direita e menu lateral esquedo (se estiver visível)
+            if (isMainExpanded || isCompExpanded) {
+                if (header) header.classList.add('hidden');
+                if (topMenus) topMenus.classList.add('hidden');
+                if (centerPanel) centerPanel.className = "flex-1 flex flex-col min-w-[300px] overflow-hidden p-0 gap-0 transition-all duration-300";
+            } else {
+                if (header) header.classList.remove('hidden');
+                if (topMenus) topMenus.classList.remove('hidden');
+                if (centerPanel) centerPanel.className = "flex-1 flex flex-col min-w-[300px] overflow-hidden p-6 gap-5 bg-brand-light transition-all duration-300";
+            }
+
+            // A Esquerda já é controlada separadamente pelo toggle novo, então forçamos ocultar ao expandir
+            const sbLeft = document.getElementById("sidebar-left");
+            const rsLeft = document.getElementById("resizer-left");
+            if (isMainExpanded) {
+                if (sbLeft && !isSidebarHidden) sbLeft.classList.add('hidden');
+                if (rsLeft && !isSidebarHidden) rsLeft.classList.add('hidden');
+            } else {
+                if (sbLeft && !isSidebarHidden) sbLeft.classList.remove('hidden');
+                if (rsLeft && !isSidebarHidden) rsLeft.classList.remove('hidden');
+            }
+
+            if (isCompExpanded) {
+                if (sidebarRight) sidebarRight.classList.add('hidden');
+                if (resizerRight) resizerRight.classList.add('hidden');
+            } else {
+                if (sidebarRight) sidebarRight.classList.remove('hidden');
+                if (resizerRight) resizerRight.classList.remove('hidden');
+            }
+
+            if (isMainExpanded && isCompExpanded) { if (compBox) compBox.style.width = "50%"; } 
+            else { if (compBox) compBox.style.width = ""; }
+
+            try { lucide.createIcons(); } catch(e) {}
+            setTimeout(() => { resizeCanvas(); }, 60);
+        };
+
+        window.fullscreenMonitor = function(monitor) {
+            const containerId = monitor === 'main' ? 'center-preview-container' : 'sidebar-comparison';
+            const container = document.getElementById(containerId); 
+            const expandWrapper = document.getElementById(monitor === 'main' ? 'expand-wrapper-main' : 'expand-wrapper-comp');
+            const restoreBtn = document.getElementById(monitor === 'main' ? 'btn-restore-main' : 'btn-restore-comp');
+            
+            if (!container) return;
+            if (!document.fullscreenElement) {
+                container.requestFullscreen().then(() => {
+                    if (expandWrapper) expandWrapper.classList.add('hidden');
+                    if (restoreBtn) restoreBtn.classList.remove('hidden');
+                }).catch(e => console.error(e));
+            } else {
+                document.exitFullscreen();
+            }
+        };
+
+        document.addEventListener('fullscreenchange', () => {
+            if (!document.fullscreenElement) {
+                if (!isMainExpanded) {
+                    const wrMain = document.getElementById('expand-wrapper-main');
+                    const btMain = document.getElementById('btn-restore-main');
+                    if (wrMain) wrMain.classList.remove('hidden');
+                    if (btMain) btMain.classList.add('hidden');
+                }
+                if (!isCompExpanded) {
+                    const wrComp = document.getElementById('expand-wrapper-comp');
+                    const btComp = document.getElementById('btn-restore-comp');
+                    if (wrComp) wrComp.classList.remove('hidden');
+                    if (btComp) btComp.classList.add('hidden');
+                }
+            }
+        });
+
+        if (chatInput) {
+            chatInput.addEventListener("input", function() {
+                this.style.height = "auto";
+                let maxHeight = window.innerHeight / 2; 
+                const sbRight = document.getElementById('sidebar-right');
+                if (sbRight) maxHeight = sbRight.clientHeight / 2; 
+                if (this.scrollHeight > maxHeight) {
+                    this.style.height = maxHeight + "px";
+                    this.style.overflowY = "auto";
+                } else {
+                    this.style.height = this.scrollHeight + "px";
+                    this.style.overflowY = "hidden";
+                }
+            });
+        }
+
+        window.updateHistoryUI = function() {
+            const bMain = document.getElementById("btn-back-main");
+            const fMain = document.getElementById("btn-forward-main");
+            const bComp = document.getElementById("btn-back-comp");
+            const fComp = document.getElementById("btn-forward-comp");
+            if (bMain) bMain.disabled = mainHistoryIndex <= 0;
+            if (fMain) fMain.disabled = mainHistoryIndex >= mainHistory.length - 1;
+            if (bComp) bComp.disabled = compHistoryIndex <= 0;
+            if (fComp) fComp.disabled = compHistoryIndex >= compHistory.length - 1;
+        };
+
+        window.goBack = async function(monitor) {
+            if (monitor === 'main' && mainHistoryIndex > 0) { mainHistoryIndex--; await restoreState('main', mainHistory[mainHistoryIndex]); } 
+            else if (monitor === 'comp' && compHistoryIndex > 0) { compHistoryIndex--; await restoreState('comp', compHistory[compHistoryIndex]); }
+        };
+
+        window.goForward = async function(monitor) {
+            if (monitor === 'main' && mainHistoryIndex < mainHistory.length - 1) { mainHistoryIndex++; await restoreState('main', mainHistory[mainHistoryIndex]); } 
+            else if (monitor === 'comp' && compHistoryIndex < compHistory.length - 1) { compHistoryIndex++; await restoreState('comp', compHistory[compHistoryIndex]); }
+        };
+
+        window.restoreState = async function(monitor, state) {
+            isNavigatingHistory = true; let previousMonitor = activeMonitor; selectMonitor(monitor);
+            if (state.type === 'file') { if (monitor === 'comp') setComparisonMode('compare'); await loadNoteContent(state.path); } 
+            else if (state.type === 'graph') { setComparisonMode('graph'); } 
+            else if (state.type === 'empty') { if (monitor === 'comp') { setComparisonMode('compare'); clearComparisonDoc(true); } else { clearMainMonitor(true); } }
+            selectMonitor(previousMonitor); isNavigatingHistory = false; updateHistoryUI();
+        };
+
+        window.clearMainMonitor = function(fromHistory = false) {
+            selectedFileId = null;
+            const activeNoteTitleEl = document.getElementById("active-note-title");
+            if (activeNoteTitleEl) activeNoteTitleEl.innerText = "Selecione um arquivo principal";
+            
+            const viewDocMainEl = document.getElementById("view-doc-main");
+            if (viewDocMainEl) {
+                const parentContainer = document.getElementById("view-doc-main-container");
+                if (parentContainer) { parentContainer.classList.add("p-4"); parentContainer.classList.remove("p-0"); }
+                viewDocMainEl.className = "w-full h-full bg-white border border-slate-200 rounded-xl overflow-y-auto p-6 font-serif text-xs text-slate-700 select-text shadow-sm leading-relaxed";
+                viewDocMainEl.innerHTML = `<div class="text-center text-slate-400 my-20 font-sans">Selecione um documento na árvore à esquerda.</div>`;
+            }
+            try { updateFavoriteStarUI(); } catch(e) {}
+            try { buildNotesTree(); } catch(e) {}
+            if (!fromHistory && !isNavigatingHistory) {
+                const lastState = mainHistory[mainHistoryIndex];
+                if (!lastState || lastState.type !== 'empty') {
+                    mainHistory = mainHistory.slice(0, mainHistoryIndex + 1); mainHistory.push({ type: 'empty' }); mainHistoryIndex++; updateHistoryUI();
+                }
+            }
+        };
+
+        const sidebarLeft = document.getElementById('sidebar-left'); const sidebarComparison = document.getElementById('sidebar-comparison'); const sidebarRight = document.getElementById('sidebar-right');
+        const resizerLeft = document.getElementById('resizer-left'); const resizerCenter = document.getElementById('resizer-center'); const resizerRight = document.getElementById('resizer-right');
+        let isResizingLeft = false; let isResizingCenter = false; let isResizingRight = false;
+
+        if (resizerLeft) resizerLeft.addEventListener('mousedown', (e) => { isResizingLeft = true; document.body.style.cursor = 'col-resize'; e.preventDefault(); });
+        if (resizerCenter) resizerCenter.addEventListener('mousedown', (e) => { isResizingCenter = true; document.body.style.cursor = 'col-resize'; e.preventDefault(); });
+        if (resizerRight) resizerRight.addEventListener('mousedown', (e) => { isResizingRight = true; document.body.style.cursor = 'col-resize'; e.preventDefault(); });
+
+        document.addEventListener('mousemove', (e) => {
+            if (isResizingLeft && sidebarLeft && !isSidebarHidden) { let w = e.clientX; if (w > 150 && w < window.innerWidth * 0.3) sidebarLeft.style.width = w + "px"; }
+            if (isResizingCenter && sidebarComparison) { let calculatedWidth = window.innerWidth - e.clientX - (sidebarRight ? sidebarRight.clientWidth : 320); if (calculatedWidth > 200 && calculatedWidth < window.innerWidth * 0.5) sidebarComparison.style.width = calculatedWidth + "px"; }
+            if (isResizingRight && sidebarRight) { let w = window.innerWidth - e.clientX; if (w > 200 && w < window.innerWidth * 0.3) sidebarRight.style.width = w + "px"; }
+            if (canvas) resizeCanvas();
+        });
+
+        document.addEventListener('mouseup', () => { isResizingLeft = false; isResizingCenter = false; isResizingRight = false; document.body.style.cursor = 'default'; });
+        function resizeCanvas() { if (canvas && canvas.parentElement) { canvas.width = canvas.parentElement.clientWidth; canvas.height = canvas.parentElement.clientHeight; } }
+        window.addEventListener("resize", resizeCanvas); resizeCanvas();
+
+        function openSpeedTestModal() {
+            const modal = document.getElementById("speedtest-modal"); if (!modal) return;
+            modal.classList.remove("hidden");
+            setTimeout(() => { modal.classList.remove("opacity-0"); const content = document.getElementById("speedtest-content"); if (content) content.classList.remove("scale-95"); }, 10);
+            const s1 = document.getElementById("st-state-1"); const s2 = document.getElementById("st-state-2"); const s3 = document.getElementById("st-state-3");
+            if (s1) s1.classList.remove("hidden"); if (s2) s2.classList.add("hidden"); if (s3) s3.classList.add("hidden");
+        }
+
+        function closeSpeedTest() {
+            const modal = document.getElementById("speedtest-modal"); if (!modal) return;
+            modal.classList.add("opacity-0"); const content = document.getElementById("speedtest-content"); if (content) content.classList.add("scale-95");
+            setTimeout(() => { modal.classList.add("hidden"); }, 300);
+        }
+
+        function updateSpeedometer(mbps) {
+            const valEl = document.getElementById("st-value"); if (valEl) valEl.innerText = mbps.toFixed(1);
+            let maxSpeed = 100; let mapped = Math.min(Math.max(mbps, 0), maxSpeed); let rot = -90 + (mapped / maxSpeed) * 180;
+            const needle = document.getElementById("st-needle"); if (needle) needle.style.transform = `translateX(-50%) rotate(${rot}deg)`;
+            let offset = 125 - (mapped / maxSpeed) * 125; const prog = document.getElementById("st-progress"); if (prog) prog.style.strokeDashoffset = offset;
+        }
+
+        async function startSpeedTest() {
+            const s1 = document.getElementById("st-state-1"); const s2 = document.getElementById("st-state-2");
+            if (s1) s1.classList.add("hidden"); if (s2) s2.classList.remove("hidden");
+            updateSpeedometer(0);
+            try {
+                let totalLoaded = 0; const startTime = Date.now(); let lastUiUpdate = startTime; const TEST_DURATION_MS = 6000; 
+                while (Date.now() - startTime < TEST_DURATION_MS) {
+                    const res = await fetch('/api/speedtest?cacheBust=' + Date.now()); if (!res.ok) throw new Error("Falha");
+                    const reader = res.body.getReader(); 
+                    while(true) {
+                        const {done, value} = await reader.read(); if (done) break;
+                        totalLoaded += value.length; const now = Date.now();
+                        if (now - lastUiUpdate > 100) { const duration = (now - startTime) / 1000; const mbps = ((totalLoaded * 8) / 1000000) / duration; updateSpeedometer(mbps); lastUiUpdate = now; }
+                        if (Date.now() - startTime >= TEST_DURATION_MS) { reader.cancel(); break; }
+                    }
+                }
+                const finalDuration = (Date.now() - startTime) / 1000; const finalMbps = ((totalLoaded * 8) / 1000000) / finalDuration; updateSpeedometer(finalMbps);
+                setTimeout(() => {
+                    const s2_final = document.getElementById("st-state-2"); const s3 = document.getElementById("st-state-3"); const finVal = document.getElementById("st-final-value"); 
+                    if (s2_final) s2_final.classList.add("hidden"); if (s3) s3.classList.remove("hidden"); if (finVal) finVal.innerText = finalMbps.toFixed(1);
+                }, 800);
+            } catch (e) { alert("Erro ao testar velocidade. Verifique sua conexão local."); closeSpeedTest(); }
+        }
 
         function closeAllDropdownsMenu() {
             if (filterDropdown) filterDropdown.classList.add("hidden");
@@ -828,13 +1049,24 @@
             const dpUpload = document.getElementById("dropdown-upload"); if (dpUpload) dpUpload.classList.add("hidden");
             const dpExpMain = document.getElementById("dropdown-expand-main"); if (dpExpMain) dpExpMain.classList.add("hidden");
             const dpExpComp = document.getElementById("dropdown-expand-comp"); if (dpExpComp) dpExpComp.classList.add("hidden");
-            const dpProfile = document.getElementById("dropdown-profile"); if (dpProfile) dpProfile.classList.add("hidden");
         }
 
         function toggleFilterDropdown(e) { e.stopPropagation(); closeAllDropdownsMenu(); if (filterDropdown) filterDropdown.classList.remove("hidden"); }
         function toggleCustomDropdown(id, e) { e.stopPropagation(); const el = document.getElementById(id); if (el) { const isHidden = el.classList.contains("hidden"); closeAllDropdownsMenu(); if (isHidden) el.classList.remove("hidden"); } }
         function selectOption(category, value, label, e) { e.stopPropagation(); const vi = document.getElementById(`ctx-${category}`); const ls = document.getElementById(`label-ctx-${category}`); const dp = document.getElementById(`dropdown-${category}`); if (vi) vi.value = value; if (ls) ls.innerText = label; if (dp) dp.classList.add("hidden"); }
-        function changeFilter(type) { currentFilterType = type; closeAllDropdownsMenu(); buildNotesTree(); }
+        
+        function changeFilter(type) { 
+            currentFilterType = type; 
+            closeAllDropdownsMenu(); 
+            buildNotesTree(); 
+        }
+
+        window.triggerRetroactiveMD = async function() {
+            const btn = document.getElementById("btn-retroactive"); if (!btn) return;
+            btn.innerHTML = `<i data-lucide="loader" class="w-4 h-4 inline-block mr-1 animate-spin"></i> Processando Cofre...`; btn.classList.add("opacity-50", "pointer-events-none");
+            try { await fetch("/api/sync-retroactive", { method: "POST" }); alert("Processo iniciado no Servidor!"); } catch(e) { alert("Erro ao iniciar sincronização."); }
+            btn.innerHTML = `<i data-lucide="check" class="w-4 h-4 inline-block mr-1"></i> Varredura Iniciada`; try { lucide.createIcons(); } catch(e) {}
+        };
 
         window.selectMonitor = function(monitor) {
             activeMonitor = monitor;
@@ -913,7 +1145,7 @@
                 dEl.className = "w-full h-full bg-white border border-slate-200 rounded-xl overflow-y-auto p-6 text-xs text-slate-700 select-text leading-relaxed shadow-sm";
                 const parentContainer = document.getElementById("view-doc-comp-wrapper");
                 if (parentContainer) { parentContainer.classList.add("p-4"); parentContainer.classList.remove("p-0"); }
-                dEl.innerHTML = `<div class="text-center text-slate-400 my-20 font-sans">Painel secundário inativo. Selecione um arquivo da árvore.</div>`;
+                dEl.innerHTML = `<div class="text-center text-slate-400 my-20 font-sans">Painel secundário inativo. Selecione este monitor e clique em um arquivo da árvore para carregá-lo aqui.</div>`;
             }
             const rEl = document.getElementById("view-raw-comp"); if (rEl) rEl.innerText = "";
             try { buildNotesTree(); } catch(e) {}
@@ -931,7 +1163,7 @@
             let rEl; let btn;
             if (isMain) { rEl = document.getElementById("view-raw-main"); btn = document.getElementById("btn-reprocess-main"); } 
             else { rEl = document.getElementById("view-raw-comp"); btn = document.getElementById("btn-reprocess-comp"); }
-            if (rEl) { rEl.innerText = "A Inteligência Artificial está transcrevendo a imagem para texto... Isso pode levar alguns segundos."; switchTab(monitor, 'raw'); }
+            if (rEl) { rEl.innerText = "A Inteligência Artificial está transcrevendo a imagem para texto... Isso pode levar alguns segundos dependendo do tamanho do PDF."; switchTab(monitor, 'raw'); }
             if (btn) btn.innerHTML = `<i data-lucide="loader" class="w-3 h-3 inline mr-1 animate-spin"></i> Relendo...`;
             try { lucide.createIcons(); } catch(e) {}
             try {
@@ -1001,9 +1233,9 @@
 
                 if (filename.toLowerCase().endsWith('.pdf')) {
                     if (dEl) {
-                        dEl.className = "w-full h-full border-0 bg-slate-100";
+                        dEl.className = "w-full h-full border-0 bg-white";
                         if (dEl.parentElement) { dEl.parentElement.classList.remove('p-4'); dEl.parentElement.classList.add('p-0'); }
-                        dEl.innerHTML = `<iframe src="/api/note-raw?file=${encodeURIComponent(filename)}" class="w-full h-full border-0 bg-white" style="display: block; min-height: 100%;"></iframe>`;
+                        dEl.innerHTML = `<iframe src="/api/note-raw?file=${encodeURIComponent(filename)}" class="w-full h-full border-0 bg-slate-100" style="display: block; min-height: 100%;"></iframe>`;
                     }
                     let btnReprocess;
                     if (isMain) btnReprocess = document.getElementById("btn-reprocess-main"); else btnReprocess = document.getElementById("btn-reprocess-comp");
@@ -1069,11 +1301,36 @@
             const link = document.createElement("a"); link.href = URL.createObjectURL(blob); link.download = selectedFileId.split('/').pop(); link.click();
         }
 
+        window.downloadCompFile = function() {
+            if (!comparisonFileId || !compContentBuffer) return;
+            const blob = new Blob([compContentBuffer], { type: "text/markdown;charset=utf-8" });
+            const link = document.createElement("a"); link.href = URL.createObjectURL(blob); link.download = comparisonFileId.split('/').pop(); link.click();
+        };
+
         function printActiveFile() {
             if (!selectedFileId) return;
             const docElement = document.getElementById("view-doc-main"); if (!docElement) return;
             const printWindow = window.open("", "_blank"); printWindow.document.write(`<html><head><title>BMS - Imprimir</title></head><body style="font-family:serif;">${docElement.innerHTML}</body></html>`); printWindow.document.close(); printWindow.print();
         }
+
+        async function checkRealServerStatus() {
+            if (!serverStatusBadge || !serverStatusDot || !serverStatusText) return;
+            try {
+                const res = await fetch("/api/status");
+                if (res.ok) {
+                    serverStatusBadge.className = "flex items-center gap-2 bg-emerald-50 px-3 py-2 rounded-lg border border-emerald-100 shadow-sm transition-all";
+                    serverStatusDot.className = "w-2 h-2 bg-emerald-500 rounded-full animate-pulse";
+                    serverStatusText.innerText = "SERVIDOR ATIVO";
+                    serverStatusText.className = "text-[10px] font-black tracking-wide uppercase text-emerald-700";
+                } else throw new Error(); 
+            } catch (err) {
+                serverStatusBadge.className = "flex items-center gap-2 bg-red-50 px-3 py-2 rounded-lg border border-red-100 shadow-sm transition-all";
+                serverStatusDot.className = "w-2 h-2 bg-red-500 rounded-full";
+                serverStatusText.innerText = "SERVIDOR INATIVO";
+                serverStatusText.className = "text-[10px] font-black tracking-wide uppercase text-red-700";
+            }
+        }
+        setInterval(checkRealServerStatus, 4000); checkRealServerStatus();
 
         function searchFileTree() {
             if (!globalSearchBar || !fileTree) return;
@@ -1083,11 +1340,11 @@
 
         function triggerInlineContextMenu(e, path) {
             e.stopPropagation(); contextMenuSelectedPath = path; const menu = document.getElementById("custom-context-menu"); closeAllDropdownsMenu();
-            if (menu) { menu.classList.remove("hidden"); menu.style.left = `${e.clientX - 100}px`; menu.style.top = `${e.clientY}px`; }
+            if (menu) { menu.classList.remove("hidden"); menu.style.left = `${e.clientX - 160}px`; menu.style.top = `${e.clientY + 10}px`; }
         }
 
         function closeCustomModal() { const modal = document.getElementById("custom-dialog-modal"); if (modal) modal.classList.add("hidden"); }
-
+        
         function openRenameModal() {
             const ctxMenu = document.getElementById("custom-context-menu"); if (ctxMenu) ctxMenu.classList.add("hidden");
             const modal = document.getElementById("custom-dialog-modal"); if (!modal) return;
@@ -1096,7 +1353,7 @@
             modal.classList.remove("hidden");
             document.getElementById("modal-confirm-btn").onclick = async () => { const newPath = document.getElementById("modal-input-field").value.trim(); if (newPath) { await renameItem(contextMenuSelectedPath, newPath); closeCustomModal(); } };
         }
-
+        
         function openDeleteModal() {
             const ctxMenu = document.getElementById("custom-context-menu"); if (ctxMenu) ctxMenu.classList.add("hidden");
             const modal = document.getElementById("custom-dialog-modal"); if (!modal) return;
@@ -1232,20 +1489,20 @@
                         const isCollapsed = !!collapsedFolders[cleanItemPath]; let chevronIcon = `<div class="w-3.5 shrink-0"></div>`;
                         if (isDir && currentFilterType !== "favorites") { if (isCollapsed) chevronIcon = `<i data-lucide="chevron-right" class="w-3 h-3 shrink-0 text-slate-400"></i>`; else chevronIcon = `<i data-lucide="chevron-down" class="w-3 h-3 shrink-0 text-slate-400"></i>`; }
                         
-                        btn.innerHTML = `<span class="sidebar-text flex items-center gap-1.5 w-full">${chevronIcon}<i data-lucide="${icon}" class="w-3.5 h-3.5 ${iconColor} shrink-0"></i> <span class="truncate">${cleanItemPath.split('/').pop()}</span> ${starBadge}</span>`;
+                        btn.innerHTML = `${chevronIcon}<i data-lucide="${icon}" class="w-3.5 h-3.5 ${iconColor} shrink-0"></i> <span class="truncate">${cleanItemPath.split('/').pop()}</span> ${starBadge}`;
                         if (!isDir) { btn.onclick = (e) => { e.stopPropagation(); loadNoteContent(item.path); }; } 
                         else { btn.onclick = (e) => { e.stopPropagation(); collapsedFolders[cleanItemPath] = !collapsedFolders[cleanItemPath]; localStorage.setItem("bms_collapsed_folders", JSON.stringify(collapsedFolders)); selectedFileId = item.path; buildNotesTree(); }; }
 
-                        const menuBtn = document.createElement("button"); menuBtn.className = "sidebar-text opacity-0 group-hover:opacity-100 p-1 hover:text-white rounded transition-all focus:outline-none";
+                        const menuBtn = document.createElement("button"); menuBtn.className = "opacity-0 group-hover:opacity-100 p-1 hover:text-white rounded transition-all focus:outline-none";
                         menuBtn.innerHTML = `<i data-lucide="more-horizontal" class="w-3.5 h-3.5"></i>`; menuBtn.onclick = (e) => { triggerInlineContextMenu(e, item.path); };
 
                         row.appendChild(btn); row.appendChild(menuBtn); fileTree.appendChild(row);
                     });
                     try { lucide.createIcons(); } catch(e) {}
                     
-                    if(isSidebarCollapsed) {
-                        const texts = fileTree.querySelectorAll(".sidebar-text");
-                        texts.forEach(t => t.style.display = "none");
+                    if(isSidebarHidden) {
+                        const sb = document.getElementById("sidebar-left");
+                        if(sb) sb.classList.add("hidden");
                     }
                 }
             } catch(e) { console.error(e); }
@@ -1373,12 +1630,13 @@
             let query = chatInput.value.trim(); 
             if (!query) return;
             const pwd = sessionStorage.getItem("bms_auth_token") ? "luiza" : null; 
-            if (!pwd) { alert("Sessão inválida. Por favor, recarregue a página e faça login novamente."); return; }
+            if (!pwd) { alert("Sessão inválida. Faça login novamente."); return; }
+
             renderMessageBlock("user", query); 
             chatInput.value = ""; chatInput.style.height = "auto"; chatInput.style.overflowY = "hidden";
             
-            const suggestionsBlock = document.getElementById("chat-suggestions");
-            if (suggestionsBlock) suggestionsBlock.style.display = "none";
+            const suggestions = document.getElementById("chat-suggestions");
+            if (suggestions) suggestions.style.display = "none";
             
             const ctxArea = document.getElementById("ctx-area"); const ctxType = document.getElementById("ctx-type"); const ctxPhase = document.getElementById("ctx-phase"); const ctxObj = document.getElementById("ctx-obj");
             let areaVal = ctxArea ? ctxArea.value : ""; let typeVal = ctxType ? ctxType.value : ""; let phaseVal = ctxPhase ? ctxPhase.value : ""; let objVal = ctxObj ? ctxObj.value : "";
@@ -1412,6 +1670,50 @@
 
         if (btnSend) btnSend.onclick = sendChatMessage;
         if (chatInput) chatInput.onkeydown = (e) => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); sendChatMessage(); } };
+
+        // =========================================================================
+        // INITIALIZATION IIFE
+        // =========================================================================
+        (function initAuth() {
+            try {
+                const savedToken = sessionStorage.getItem("bms_auth_token");
+                const gate = document.getElementById("auth-gate");
+
+                if (savedToken === "Ym1zOmx1aXph") {
+                    if (gate) {
+                        gate.style.display = "none";
+                    }
+                    buildNotesTree();
+                    reloadGlobalGraph();
+                    return;
+                }
+
+                setTimeout(() => {
+                    const splash = document.getElementById("auth-splash");
+                    const box = document.getElementById("auth-box");
+                    if (splash) {
+                        splash.classList.remove("opacity-100", "scale-100");
+                        splash.classList.add("opacity-0", "scale-95");
+                        setTimeout(() => {
+                            splash.classList.add("hidden");
+                            if (box) {
+                                box.classList.remove("hidden");
+                                setTimeout(() => {
+                                    box.classList.remove("opacity-0", "translate-y-12");
+                                    box.classList.add("opacity-100", "translate-y-0");
+                                    const u = document.getElementById("auth-user");
+                                    if(u) u.focus();
+                                }, 50);
+                            }
+                        }, 700);
+                    }
+                }, 2000);
+            } catch(err) {
+                console.error("Falha no boot da aplicação:", err);
+                const gate = document.getElementById("auth-gate");
+                if (gate) gate.classList.add("hidden");
+            }
+        })();
 
     </script>
 </body>
