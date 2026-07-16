@@ -69,9 +69,32 @@
         .animate-blob {
             animation: blob 10s infinite alternate ease-in-out;
         }
+        
+        /* Transição suave para recolher a sidebar */
+        #main-sidebar {
+            transition: width 0.3s ease-in-out;
+        }
+        .sidebar-text {
+            transition: opacity 0.2s ease-in-out;
+            white-space: nowrap;
+        }
+        
+        /* Animação para o Toast */
+        @keyframes slideInRight {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        .toast-animate {
+            animation: slideInRight 0.3s ease-out forwards;
+        }
     </style>
 </head>
 <body class="bg-brand-light dark:bg-slate-950 text-slate-800 dark:text-slate-100 font-sans h-screen flex overflow-hidden select-none transition-colors duration-200">
+
+    <!-- ========================================== -->
+    <!-- CONTAINER DE NOTIFICAÇÕES (TOASTS)         -->
+    <!-- ========================================== -->
+    <div id="toast-container" class="fixed bottom-6 right-6 z-[200] flex flex-col gap-3 pointer-events-none"></div>
 
     <!-- ========================================== -->
     <!-- TELA DE LOGIN & SPLASH SCREEN              -->
@@ -145,12 +168,15 @@
     </div>
 
     <!-- ========================================== -->
-    <!-- ELEMENTOS OCULTOS & MODAIS                 -->
+    <!-- INPUTS GLOBAIS DE ARQUIVO (OCULTOS)        -->
     <!-- ========================================== -->
     <input type="file" id="global-vault-upload" class="hidden" multiple />
     <input type="file" id="global-folder-upload" class="hidden" webkitdirectory directory multiple />
     <input type="file" id="chat-context-upload" class="hidden" />
 
+    <!-- ========================================== -->
+    <!-- MODAIS E MENUS FLUTUANTES GERAIS           -->
+    <!-- ========================================== -->
     <div id="custom-context-menu" class="hidden absolute bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl shadow-xl py-1 w-44 z-50 text-xs font-bold text-slate-600 dark:text-slate-300">
         <button onclick="openRenameModal()" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-700 flex items-center gap-2"><i data-lucide="edit-2" class="w-3.5 h-3.5 text-blue-500"></i> Renomear / Mover</button>
         <button onclick="openDeleteModal()" class="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-700 text-red-600 dark:text-red-400 flex items-center gap-2"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i> Apagar Registro</button>
@@ -168,40 +194,41 @@
     </div>
 
     <!-- ========================================== -->
-    <!-- SIDEBAR ESQUERDA (NAVEGAÇÃO)               -->
+    <!-- BARRA LATERAL ESQUERDA (SIDEBAR DASHBOARD) -->
     <!-- ========================================== -->
-    <aside class="w-[260px] bg-brand-dark flex flex-col overflow-hidden shrink-0 z-20 text-slate-300" onclick="clearTreeSelection(event)">
+    <aside id="main-sidebar" class="w-[260px] bg-brand-dark flex flex-col overflow-hidden shrink-0 z-20 text-slate-300 relative" onclick="clearTreeSelection(event)">
         
-        <div class="h-[72px] flex items-center gap-3 px-6 shrink-0 border-b border-white/5">
+        <!-- Logotipo Superior -->
+        <div class="h-[72px] flex items-center gap-3 px-6 shrink-0 border-b border-white/5 overflow-hidden">
             <div class="w-8 h-8 flex items-center justify-center shrink-0">
                 <svg viewBox="0 0 100 100" class="w-full h-full drop-shadow-md">
                     <path d="M 35 10 V 70 A 25 25 0 0 0 85 70 A 25 25 0 0 0 35 45" fill="none" stroke="#eab308" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"/>
                     <path d="M 47 10 V 70 A 13 13 0 0 0 73 70 A 13 13 0 0 0 47 57" fill="none" stroke="#3b82f6" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
             </div>
-            <span class="font-black text-[17px] tracking-tight text-white">BMS <span class="text-amber-500 font-normal">Knowledge</span></span>
+            <span class="sidebar-text font-black text-[17px] tracking-tight text-white">BMS <span class="text-amber-500 font-normal">Knowledge</span></span>
         </div>
 
         <div class="flex-1 overflow-y-auto no-scrollbar flex flex-col pt-6 pb-4">
             
             <div class="px-4 mb-6">
-                <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-3 px-2">Navegação</p>
+                <p class="sidebar-text text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-3 px-2">Navegação</p>
                 <div class="flex flex-col gap-1 text-xs font-semibold">
-                    <button class="flex items-center gap-3 px-3 py-2 text-slate-400 hover:text-white hover:bg-white/5 rounded-lg transition-colors"><i data-lucide="layout-dashboard" class="w-4 h-4"></i> Visão geral</button>
-                    <button class="flex items-center justify-between px-3 py-2.5 bg-blue-600 border-l-4 border-blue-400 text-white rounded-r-lg shadow-md transition-colors"><div class="flex items-center gap-3"><i data-lucide="folder-open" class="w-4 h-4"></i> Processos</div></button>
-                    <button class="flex items-center gap-3 px-3 py-2 text-slate-400 hover:text-white hover:bg-white/5 rounded-lg transition-colors"><i data-lucide="line-chart" class="w-4 h-4"></i> Análises</button>
-                    <button class="flex items-center justify-between px-3 py-2 text-slate-400 hover:text-white hover:bg-white/5 rounded-lg transition-colors"><div class="flex items-center gap-3"><i data-lucide="check-square" class="w-4 h-4"></i> Tarefas</div><span class="bg-slate-700/50 text-slate-300 text-[10px] px-1.5 py-0.5 rounded-full">8</span></button>
-                    <button class="flex items-center gap-3 px-3 py-2 text-slate-400 hover:text-white hover:bg-white/5 rounded-lg transition-colors"><i data-lucide="cpu" class="w-4 h-4"></i> Inteligência</button>
-                    <button class="flex items-center gap-3 px-3 py-2 text-slate-400 hover:text-white hover:bg-white/5 rounded-lg transition-colors"><i data-lucide="book-open" class="w-4 h-4"></i> Biblioteca</button>
+                    <button onclick="showToast('Módulo Visão Geral em desenvolvimento.', 'info')" class="flex items-center gap-3 px-3 py-2 text-slate-400 hover:text-white hover:bg-white/5 rounded-lg transition-colors"><i data-lucide="layout-dashboard" class="w-4 h-4 shrink-0"></i> <span class="sidebar-text">Visão geral</span></button>
+                    <button class="flex items-center justify-between px-3 py-2.5 bg-blue-600 border-l-4 border-blue-400 text-white rounded-r-lg shadow-md transition-colors"><div class="flex items-center gap-3"><i data-lucide="folder-open" class="w-4 h-4 shrink-0"></i> <span class="sidebar-text">Processos</span></div></button>
+                    <button onclick="showToast('Módulo de Análises Estatísticas em breve.', 'info')" class="flex items-center gap-3 px-3 py-2 text-slate-400 hover:text-white hover:bg-white/5 rounded-lg transition-colors"><i data-lucide="line-chart" class="w-4 h-4 shrink-0"></i> <span class="sidebar-text">Análises</span></button>
+                    <button onclick="showToast('Gestão de Tarefas sincronizando...', 'info')" class="flex items-center justify-between px-3 py-2 text-slate-400 hover:text-white hover:bg-white/5 rounded-lg transition-colors"><div class="flex items-center gap-3"><i data-lucide="check-square" class="w-4 h-4 shrink-0"></i> <span class="sidebar-text">Tarefas</span></div><span class="sidebar-text bg-slate-700/50 text-slate-300 text-[10px] px-1.5 py-0.5 rounded-full">8</span></button>
+                    <button onclick="showToast('Configurações de IA acessadas.', 'info')" class="flex items-center gap-3 px-3 py-2 text-slate-400 hover:text-white hover:bg-white/5 rounded-lg transition-colors"><i data-lucide="cpu" class="w-4 h-4 shrink-0"></i> <span class="sidebar-text">Inteligência</span></button>
+                    <button onclick="showToast('Acessando Biblioteca Global.', 'info')" class="flex items-center gap-3 px-3 py-2 text-slate-400 hover:text-white hover:bg-white/5 rounded-lg transition-colors"><i data-lucide="book-open" class="w-4 h-4 shrink-0"></i> <span class="sidebar-text">Biblioteca</span></button>
                 </div>
             </div>
 
             <div class="flex-1 flex flex-col overflow-hidden px-2">
                 <div class="flex items-center justify-between mb-3 px-4">
-                    <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Este Processo</p>
-                    <div class="flex gap-1 relative" onclick="e => e.stopPropagation()">
-                        <button id="btn-filter-tree" onclick="toggleFilterDropdown(event)" class="text-slate-400 hover:text-white transition-colors"><i data-lucide="filter" class="w-3.5 h-3.5"></i></button>
-                        <button onclick="createNewFolderManual(event)" class="text-slate-400 hover:text-white transition-colors"><i data-lucide="folder-plus" class="w-3.5 h-3.5"></i></button>
+                    <p class="sidebar-text text-[10px] font-bold text-slate-500 uppercase tracking-widest">Este Processo</p>
+                    <div class="sidebar-text flex gap-1 relative" onclick="e => e.stopPropagation()">
+                        <button id="btn-filter-tree" onclick="toggleFilterDropdown(event)" class="text-slate-400 hover:text-white transition-colors" title="Filtrar arquivos"><i data-lucide="filter" class="w-3.5 h-3.5"></i></button>
+                        <button onclick="createNewFolderManual(event)" class="text-slate-400 hover:text-white transition-colors" title="Nova Pasta"><i data-lucide="folder-plus" class="w-3.5 h-3.5"></i></button>
                         <div id="filter-menu-dropdown" class="hidden absolute top-6 right-0 bg-brand-panel border border-slate-700 rounded-xl shadow-xl py-1 w-44 z-30 text-xs font-bold text-slate-300">
                             <button onclick="changeFilter('all')" class="w-full text-left px-3 py-2 hover:bg-white/5">Mostrar Todos</button>
                             <button onclick="changeFilter('md')" class="w-full text-left px-3 py-2 hover:bg-white/5">Apenas Texto (.md)</button>
@@ -215,11 +242,15 @@
                 </div>
             </div>
 
-            <div class="border-t border-white/5 mt-4 pt-4 px-4 flex flex-col gap-1 text-xs font-semibold">
-                <button class="flex items-center gap-3 px-3 py-2 text-slate-400 hover:text-white hover:bg-white/5 rounded-lg transition-colors"><i data-lucide="git-commit" class="w-4 h-4"></i> Linha do tempo</button>
-                <button class="flex items-center gap-3 px-3 py-2 text-slate-400 hover:text-white hover:bg-white/5 rounded-lg transition-colors"><i data-lucide="star" class="w-4 h-4"></i> Favoritos</button>
-                <button class="flex items-center gap-3 px-3 py-2 text-slate-400 hover:text-white hover:bg-white/5 rounded-lg transition-colors"><i data-lucide="trash-2" class="w-4 h-4"></i> Lixeira</button>
-                <button class="flex items-center gap-3 px-3 py-2 text-slate-500 hover:text-white hover:bg-white/5 rounded-lg transition-colors mt-2"><i data-lucide="chevrons-left" class="w-4 h-4"></i> Recolher menu</button>
+            <div class="border-t border-white/5 mt-4 pt-4 px-4 flex flex-col gap-1 text-xs font-semibold overflow-hidden">
+                <button onclick="showToast('Linha do Tempo em construção.', 'info')" class="flex items-center gap-3 px-3 py-2 text-slate-400 hover:text-white hover:bg-white/5 rounded-lg transition-colors"><i data-lucide="git-commit" class="w-4 h-4 shrink-0"></i> <span class="sidebar-text">Linha do tempo</span></button>
+                <button onclick="showToast('Favoritos sincronizados.', 'success')" class="flex items-center gap-3 px-3 py-2 text-slate-400 hover:text-white hover:bg-white/5 rounded-lg transition-colors"><i data-lucide="star" class="w-4 h-4 shrink-0"></i> <span class="sidebar-text">Favoritos</span></button>
+                <button onclick="showToast('Lixeira vazia.', 'info')" class="flex items-center gap-3 px-3 py-2 text-slate-400 hover:text-white hover:bg-white/5 rounded-lg transition-colors"><i data-lucide="trash-2" class="w-4 h-4 shrink-0"></i> <span class="sidebar-text">Lixeira</span></button>
+                
+                <button onclick="toggleSidebar()" class="flex items-center gap-3 px-3 py-2 text-slate-500 hover:text-white hover:bg-white/5 rounded-lg transition-colors mt-2" title="Recolher / Expandir Menu">
+                    <i data-lucide="chevrons-left" id="sidebar-icon-toggle" class="w-4 h-4 shrink-0 transition-transform"></i> 
+                    <span class="sidebar-text">Recolher menu</span>
+                </button>
             </div>
         </div>
     </aside>
@@ -230,10 +261,10 @@
     <div class="flex-1 flex flex-col overflow-hidden bg-brand-light dark:bg-[#f8fafc]" onclick="closeAllDropdownsMenu()">
         
         <!-- HEADER SUPERIOR -->
-        <header class="h-[72px] bg-white border-b border-slate-200 flex items-center justify-between px-8 shrink-0">
+        <header class="h-[72px] bg-white border-b border-slate-200 flex items-center justify-between px-8 shrink-0 relative z-10">
             <div class="flex items-center text-[11px] font-semibold text-slate-400 gap-2">
                 <i data-lucide="corner-up-left" class="w-3.5 h-3.5 text-slate-400"></i>
-                <span class="hover:text-blue-600 cursor-pointer transition-colors">Processos</span>
+                <span class="hover:text-blue-600 cursor-pointer transition-colors" onclick="showToast('Voltando para listagem de processos...', 'info')">Processos</span>
                 <i data-lucide="chevron-right" class="w-3 h-3"></i>
                 <span class="hover:text-blue-600 cursor-pointer transition-colors">TRT 1ª Região</span>
                 <i data-lucide="chevron-right" class="w-3 h-3"></i>
@@ -246,7 +277,7 @@
 
             <div class="flex-1 max-w-2xl mx-10 relative">
                 <i data-lucide="search" class="w-4 h-4 text-slate-400 absolute left-4 top-1/2 -translate-y-1/2"></i>
-                <input type="text" id="global-search-bar" oninput="searchFileTree()" placeholder="Buscar documentos, pessoas, teses, leis..." class="w-full bg-slate-100 border border-transparent rounded-full py-2.5 pl-11 pr-16 text-[11px] focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all font-medium text-slate-700 placeholder:text-slate-400">
+                <input type="text" id="global-search-bar" oninput="searchFileTree()" onkeydown="if(event.key==='Enter') showToast('Buscando em todo o sistema...', 'info')" placeholder="Buscar documentos, pessoas, teses, leis..." class="w-full bg-slate-100 border border-transparent rounded-full py-2.5 pl-11 pr-16 text-[11px] focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all font-medium text-slate-700 placeholder:text-slate-400">
                 <div class="absolute right-4 top-1/2 -translate-y-1/2 flex items-center gap-1 opacity-60">
                     <i data-lucide="command" class="w-3 h-3 text-slate-500"></i>
                     <span class="font-sans text-[10px] font-bold text-slate-500">K</span>
@@ -254,23 +285,33 @@
             </div>
 
             <div class="flex items-center gap-5">
-                <button onclick="toggleAppFullscreen()" class="text-slate-400 hover:text-slate-600 transition-colors" title="Tela Cheia">
+                <button onclick="toggleAppFullscreen()" class="text-slate-400 hover:text-slate-600 transition-colors" title="Tela Cheia do Sistema">
                     <i data-lucide="expand" class="w-4 h-4"></i>
                 </button>
-                <button class="relative text-slate-400 hover:text-slate-600 transition-colors">
+                <button onclick="showToast('Nenhuma notificação recente.', 'info')" class="relative text-slate-400 hover:text-slate-600 transition-colors" title="Notificações">
                     <i data-lucide="bell" class="w-4 h-4"></i>
                     <span class="absolute -top-0.5 -right-0.5 w-2 h-2 bg-red-500 rounded-full border border-white"></span>
                 </button>
                 
-                <div class="flex items-center gap-2.5 border-l border-slate-200 pl-5 cursor-pointer hover:opacity-80 transition-opacity">
-                    <div class="w-8 h-8 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center font-black text-[11px]">
-                        AC
+                <div class="relative">
+                    <div onclick="toggleCustomDropdown('dropdown-profile', event)" class="flex items-center gap-2.5 border-l border-slate-200 pl-5 cursor-pointer hover:opacity-80 transition-opacity">
+                        <div class="w-8 h-8 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center font-black text-[11px]">
+                            AC
+                        </div>
+                        <div class="flex flex-col">
+                            <span class="text-[11px] font-bold text-slate-800 leading-tight">Ana Carolina</span>
+                            <span class="text-[9px] text-slate-500 font-semibold leading-tight">Advogada</span>
+                        </div>
+                        <i data-lucide="chevron-down" class="w-3 h-3 text-slate-400 ml-1"></i>
                     </div>
-                    <div class="flex flex-col">
-                        <span class="text-[11px] font-bold text-slate-800 leading-tight">Ana Carolina</span>
-                        <span class="text-[9px] text-slate-500 font-semibold leading-tight">Advogada</span>
+                    
+                    <!-- Dropdown de Perfil -->
+                    <div id="dropdown-profile" class="hidden absolute top-[115%] right-0 mt-1 bg-white border border-slate-200 rounded-xl shadow-xl py-1.5 w-48 z-50 text-xs font-bold text-slate-600">
+                        <button onclick="showToast('Acessando configurações de conta...', 'info')" class="w-full text-left px-3 py-2 hover:bg-slate-50 flex items-center gap-2"><i data-lucide="user" class="w-4 h-4 text-slate-400"></i> Minha Conta</button>
+                        <button onclick="showToast('Gerenciamento de equipe...', 'info')" class="w-full text-left px-3 py-2 hover:bg-slate-50 flex items-center gap-2"><i data-lucide="users" class="w-4 h-4 text-slate-400"></i> Equipe</button>
+                        <div class="h-px bg-slate-100 my-1"></div>
+                        <button onclick="logoutSystem()" class="w-full text-left px-3 py-2 hover:bg-red-50 text-red-600 flex items-center gap-2"><i data-lucide="log-out" class="w-4 h-4"></i> Sair do Sistema</button>
                     </div>
-                    <i data-lucide="chevron-down" class="w-3 h-3 text-slate-400 ml-1"></i>
                 </div>
             </div>
         </header>
@@ -279,12 +320,12 @@
         <div class="flex-1 overflow-y-auto no-scrollbar flex flex-col relative px-8 py-6">
             
             <!-- HEADER DO PROCESSO E TABS -->
-            <div class="shrink-0 mb-6">
+            <div class="shrink-0 mb-6 relative z-0">
                 <div class="flex justify-between items-start mb-6">
                     <div>
                         <div class="flex items-center gap-3 mb-2">
                             <h1 class="text-3xl font-black text-slate-900 tracking-tight">Processo nº 8412/2021</h1>
-                            <button id="btn-favorite-star" onclick="toggleActiveFileFavorite()" class="text-slate-300 hover:text-amber-500 transition-colors focus:outline-none">
+                            <button id="btn-favorite-star" onclick="toggleActiveFileFavorite()" class="text-slate-300 hover:text-amber-500 transition-colors focus:outline-none" title="Favoritar Processo">
                                 <i data-lucide="star" class="w-5 h-5"></i>
                             </button>
                         </div>
@@ -303,7 +344,7 @@
                     </div>
                     
                     <div class="flex items-center gap-2.5">
-                        <div class="relative">
+                        <div class="relative z-20">
                             <button onclick="toggleCustomDropdown('dropdown-upload', event)" class="px-4 py-2.5 bg-brand-dark hover:bg-slate-800 text-white text-[11px] font-bold rounded-lg flex items-center gap-2 transition-all shadow-sm">
                                 <i data-lucide="plus" class="w-3.5 h-3.5"></i> Nova análise
                             </button>
@@ -312,24 +353,30 @@
                                 <button onclick="document.getElementById('global-folder-upload').click();" class="w-full text-left px-3 py-2 hover:bg-slate-50 flex items-center gap-2"><i data-lucide="folder-plus" class="w-4 h-4 text-amber-500"></i> Pasta Completa</button>
                             </div>
                         </div>
-                        <button class="px-4 py-2.5 bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 text-[11px] font-bold rounded-lg flex items-center gap-2 transition-all shadow-sm">
+                        <button onclick="promptAndSend('Gere um resumo executivo completo e formatado sobre este processo, destacando pontos principais.')" class="px-4 py-2.5 bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 text-[11px] font-bold rounded-lg flex items-center gap-2 transition-all shadow-sm">
                             <i data-lucide="file-text" class="w-3.5 h-3.5"></i> Resumo executivo
                         </button>
-                        <button class="px-4 py-2.5 bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 text-[11px] font-bold rounded-lg flex items-center gap-2 transition-all shadow-sm">
+                        <button onclick="showToast('Selecione uma segunda versão do arquivo na árvore para habilitar a comparação.', 'info')" class="px-4 py-2.5 bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 text-[11px] font-bold rounded-lg flex items-center gap-2 transition-all shadow-sm">
                             <i data-lucide="git-compare" class="w-3.5 h-3.5"></i> Comparar versões
                         </button>
-                        <button class="px-4 py-2.5 bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 text-[11px] font-bold rounded-lg flex items-center gap-2 transition-all shadow-sm">
-                            <i data-lucide="upload" class="w-3.5 h-3.5"></i> Exportar <i data-lucide="chevron-down" class="w-3 h-3 ml-1 text-slate-400"></i>
-                        </button>
+                        <div class="relative z-20">
+                            <button onclick="toggleCustomDropdown('dropdown-export', event)" class="px-4 py-2.5 bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 text-[11px] font-bold rounded-lg flex items-center gap-2 transition-all shadow-sm">
+                                <i data-lucide="upload" class="w-3.5 h-3.5"></i> Exportar <i data-lucide="chevron-down" class="w-3 h-3 ml-1 text-slate-400"></i>
+                            </button>
+                            <div id="dropdown-export" class="hidden absolute top-[105%] right-0 mt-1 bg-white border border-slate-200 rounded-xl shadow-xl py-1.5 w-40 z-50 text-xs font-bold text-slate-600">
+                                <button onclick="showToast('Exportando dossiê em PDF...', 'success')" class="w-full text-left px-3 py-2 hover:bg-slate-50 flex items-center gap-2"><i data-lucide="file-text" class="w-4 h-4 text-red-500"></i> Para PDF</button>
+                                <button onclick="showToast('Exportando dossiê em DOCX...', 'success')" class="w-full text-left px-3 py-2 hover:bg-slate-50 flex items-center gap-2"><i data-lucide="file-text" class="w-4 h-4 text-blue-500"></i> Para Word</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
-                <!-- TABS -->
-                <div class="flex items-center gap-8 border-b border-slate-200 text-[11px] font-bold">
-                    <button class="pb-3 border-b-2 border-blue-600 text-blue-600 px-1">Leitura</button>
-                    <button class="pb-3 border-b-2 border-transparent text-slate-500 hover:text-slate-800 px-1 transition-colors">Insights</button>
-                    <button class="pb-3 border-b-2 border-transparent text-slate-500 hover:text-slate-800 px-1 transition-colors">Malha Neural</button>
-                    <button class="pb-3 border-b-2 border-transparent text-slate-500 hover:text-slate-800 px-1 transition-colors">Cronologia</button>
+                <!-- TABS NAVEGAÇÃO INTERNA DO PROCESSO -->
+                <div class="flex items-center gap-8 border-b border-slate-200 text-[11px] font-bold" id="process-tabs">
+                    <button onclick="switchProcessTab(this, 'Leitura')" class="process-tab pb-3 border-b-2 border-blue-600 text-blue-600 px-1 transition-colors">Leitura</button>
+                    <button onclick="switchProcessTab(this, 'Insights')" class="process-tab pb-3 border-b-2 border-transparent text-slate-500 hover:text-slate-800 px-1 transition-colors">Insights</button>
+                    <button onclick="switchProcessTab(this, 'Malha Neural')" class="process-tab pb-3 border-b-2 border-transparent text-slate-500 hover:text-slate-800 px-1 transition-colors">Malha Neural</button>
+                    <button onclick="switchProcessTab(this, 'Cronologia')" class="process-tab pb-3 border-b-2 border-transparent text-slate-500 hover:text-slate-800 px-1 transition-colors">Cronologia</button>
                 </div>
             </div>
 
@@ -344,11 +391,11 @@
                         <div class="flex items-center gap-3">
                             <i data-lucide="file-text" class="w-4 h-4 text-emerald-500"></i>
                             <h2 id="active-note-title" class="text-xs font-bold text-slate-800 truncate max-w-[200px]">Selecione um arquivo principal</h2>
-                            <div class="px-2 py-1 bg-slate-50 text-slate-500 text-[10px] font-bold rounded border border-slate-200 flex items-center gap-1 cursor-pointer hover:bg-slate-100 transition-colors">
+                            <div class="px-2 py-1 bg-slate-50 text-slate-500 text-[10px] font-bold rounded border border-slate-200 flex items-center gap-1 cursor-pointer hover:bg-slate-100 transition-colors" onclick="showToast('Apenas 1 versão detectada neste bloco.', 'info')">
                                 Versão 1 de 2 <i data-lucide="chevron-down" class="w-3 h-3"></i>
                             </div>
-                            <span class="px-2.5 py-1 bg-emerald-50 text-emerald-600 text-[10px] font-bold rounded-full border border-emerald-100">OCR concluído</span>
-                            <button id="btn-reprocess-main" onclick="reprocessMD('main')" class="hidden ml-1 text-slate-400 hover:text-blue-500 transition-colors" title="Reler PDF"><i data-lucide="refresh-cw" class="w-3 h-3"></i></button>
+                            <span class="px-2.5 py-1 bg-emerald-50 text-emerald-600 text-[10px] font-bold rounded-full border border-emerald-100 cursor-help" title="Leitura Visual (OCR) confirmada">OCR concluído</span>
+                            <button id="btn-reprocess-main" onclick="reprocessMD('main')" class="hidden ml-1 text-slate-400 hover:text-blue-500 transition-colors" title="Reler PDF via IA"><i data-lucide="refresh-cw" class="w-3 h-3"></i></button>
                         </div>
                         
                         <div class="flex items-center gap-1.5 text-slate-400">
@@ -358,29 +405,29 @@
                                 <button id="btn-tab-main-raw" onclick="switchTab('main', 'raw')" class="px-2 py-0.5 text-slate-500 hover:text-slate-700">MD</button>
                             </div>
                             
-                            <button onclick="downloadActiveFile()" class="p-1 hover:text-blue-500 transition-colors"><i data-lucide="download" class="w-4 h-4"></i></button>
-                            <button onclick="printActiveFile()" class="p-1 hover:text-blue-500 transition-colors"><i data-lucide="printer" class="w-4 h-4"></i></button>
-                            <button onclick="fullscreenMonitor('main')" class="p-1 hover:text-blue-500 transition-colors"><i data-lucide="maximize" class="w-4 h-4"></i></button>
+                            <button onclick="downloadActiveFile()" class="p-1 hover:text-blue-500 transition-colors" title="Baixar Arquivo Markdown"><i data-lucide="download" class="w-4 h-4"></i></button>
+                            <button onclick="printActiveFile()" class="p-1 hover:text-blue-500 transition-colors" title="Imprimir Visualização"><i data-lucide="printer" class="w-4 h-4"></i></button>
+                            <button onclick="fullscreenMonitor('main')" class="p-1 hover:text-blue-500 transition-colors" title="Expandir Leitor"><i data-lucide="maximize" class="w-4 h-4"></i></button>
                         </div>
                     </div>
 
                     <!-- Toolbar Secundaria (Iguais ao Design) -->
-                    <div class="flex items-center justify-between px-4 py-2 border-b border-slate-100 bg-white shrink-0 text-slate-500 text-[11px] font-semibold">
+                    <div class="flex items-center justify-between px-4 py-2 border-b border-slate-100 bg-white shrink-0 text-slate-500 text-[11px] font-semibold z-10">
                         <div class="flex items-center gap-5">
-                            <i data-lucide="layout-grid" class="w-4 h-4 cursor-pointer hover:text-blue-600 transition-colors"></i>
-                            <i data-lucide="list" class="w-4 h-4 cursor-pointer hover:text-blue-600 transition-colors"></i>
+                            <i data-lucide="layout-grid" class="w-4 h-4 cursor-pointer hover:text-blue-600 transition-colors" onclick="showToast('Visualização em Grade ativada.', 'success')" title="Visualização em Grade"></i>
+                            <i data-lucide="list" class="w-4 h-4 cursor-pointer text-blue-600 transition-colors" onclick="showToast('Visualização em Lista ativada.', 'info')" title="Visualização em Lista"></i>
                             <div class="flex items-center gap-2 mx-2">
-                                <i data-lucide="chevron-left" class="w-4 h-4 cursor-pointer hover:text-blue-600 transition-colors"></i> 1 / 102 <i data-lucide="chevron-right" class="w-4 h-4 cursor-pointer hover:text-blue-600 transition-colors"></i>
+                                <i data-lucide="chevron-left" class="w-4 h-4 cursor-pointer hover:text-blue-600 transition-colors" onclick="showToast('Página anterior', 'info')"></i> 1 / 102 <i data-lucide="chevron-right" class="w-4 h-4 cursor-pointer hover:text-blue-600 transition-colors" onclick="showToast('Próxima página', 'info')"></i>
                             </div>
                             <div class="flex items-center gap-3">
-                                <i data-lucide="minus" class="w-4 h-4 cursor-pointer hover:text-blue-600 transition-colors"></i> 100% <i data-lucide="plus" class="w-4 h-4 cursor-pointer hover:text-blue-600 transition-colors"></i>
+                                <i data-lucide="minus" class="w-4 h-4 cursor-pointer hover:text-blue-600 transition-colors" onclick="showToast('Reduzindo zoom', 'info')"></i> 100% <i data-lucide="plus" class="w-4 h-4 cursor-pointer hover:text-blue-600 transition-colors" onclick="showToast('Aumentando zoom', 'info')"></i>
                             </div>
                         </div>
                         <div class="flex items-center gap-5">
-                            <button class="flex items-center gap-1.5 hover:text-blue-600 transition-colors"><i data-lucide="highlighter" class="w-3.5 h-3.5"></i> Destaques</button>
-                            <button class="flex items-center gap-1.5 hover:text-blue-600 transition-colors"><i data-lucide="message-square" class="w-3.5 h-3.5"></i> Anotações</button>
-                            <button class="flex items-center gap-1.5 hover:text-blue-600 transition-colors"><i data-lucide="save" class="w-3.5 h-3.5"></i> Salvar</button>
-                            <button class="flex items-center gap-1.5 hover:text-blue-600 transition-colors"><i data-lucide="printer" class="w-3.5 h-3.5"></i> Imprimir</button>
+                            <button onclick="showToast('Modo de marcação livre ativo.', 'success')" class="flex items-center gap-1.5 hover:text-blue-600 transition-colors"><i data-lucide="highlighter" class="w-3.5 h-3.5"></i> Destaques</button>
+                            <button onclick="showToast('Clique em um parágrafo para anotar.', 'info')" class="flex items-center gap-1.5 hover:text-blue-600 transition-colors"><i data-lucide="message-square" class="w-3.5 h-3.5"></i> Anotações</button>
+                            <button onclick="showToast('Anotações salvas com sucesso!', 'success')" class="flex items-center gap-1.5 hover:text-blue-600 transition-colors"><i data-lucide="save" class="w-3.5 h-3.5"></i> Salvar</button>
+                            <button onclick="printActiveFile()" class="flex items-center gap-1.5 hover:text-blue-600 transition-colors"><i data-lucide="printer" class="w-3.5 h-3.5"></i> Imprimir</button>
                         </div>
                     </div>
 
@@ -389,13 +436,13 @@
                         
                         <!-- Barra Esquerda de Miniaturas Fake -->
                         <div class="w-24 border-r border-slate-100 flex flex-col p-3 gap-3 overflow-y-auto no-scrollbar shrink-0 bg-white">
-                            <div class="aspect-[1/1.4] border-2 border-blue-500 rounded p-1 shadow-sm relative"><div class="w-full h-full bg-slate-50 border border-slate-100 flex items-center justify-center"><i data-lucide="file-text" class="w-4 h-4 text-slate-300"></i></div><p class="text-center mt-1 text-[9px] font-bold text-blue-600 absolute -bottom-5 left-0 w-full">1</p></div>
-                            <div class="aspect-[1/1.4] border border-slate-200 rounded p-1 shadow-sm relative mt-5"><div class="w-full h-full bg-slate-50 border border-slate-100 flex items-center justify-center"><i data-lucide="file-text" class="w-4 h-4 text-slate-300"></i></div><p class="text-center mt-1 text-[9px] font-bold text-slate-400 absolute -bottom-5 left-0 w-full">2</p></div>
-                            <div class="aspect-[1/1.4] border border-slate-200 rounded p-1 shadow-sm relative mt-5"><div class="w-full h-full bg-slate-50 border border-slate-100 flex items-center justify-center"><i data-lucide="file-text" class="w-4 h-4 text-slate-300"></i></div><p class="text-center mt-1 text-[9px] font-bold text-slate-400 absolute -bottom-5 left-0 w-full">3</p></div>
-                            <div class="aspect-[1/1.4] border border-slate-200 rounded p-1 shadow-sm relative mt-5"><div class="w-full h-full bg-slate-50 border border-slate-100 flex items-center justify-center"><i data-lucide="file-text" class="w-4 h-4 text-slate-300"></i></div><p class="text-center mt-1 text-[9px] font-bold text-slate-400 absolute -bottom-5 left-0 w-full">4</p></div>
+                            <div class="aspect-[1/1.4] border-2 border-blue-500 rounded p-1 shadow-sm relative cursor-pointer"><div class="w-full h-full bg-slate-50 border border-slate-100 flex items-center justify-center"><i data-lucide="file-text" class="w-4 h-4 text-slate-300"></i></div><p class="text-center mt-1 text-[9px] font-bold text-blue-600 absolute -bottom-5 left-0 w-full">1</p></div>
+                            <div class="aspect-[1/1.4] border border-slate-200 rounded p-1 shadow-sm relative mt-5 cursor-pointer hover:border-blue-300 transition-colors"><div class="w-full h-full bg-slate-50 border border-slate-100 flex items-center justify-center"><i data-lucide="file-text" class="w-4 h-4 text-slate-300"></i></div><p class="text-center mt-1 text-[9px] font-bold text-slate-400 absolute -bottom-5 left-0 w-full">2</p></div>
+                            <div class="aspect-[1/1.4] border border-slate-200 rounded p-1 shadow-sm relative mt-5 cursor-pointer hover:border-blue-300 transition-colors"><div class="w-full h-full bg-slate-50 border border-slate-100 flex items-center justify-center"><i data-lucide="file-text" class="w-4 h-4 text-slate-300"></i></div><p class="text-center mt-1 text-[9px] font-bold text-slate-400 absolute -bottom-5 left-0 w-full">3</p></div>
+                            <div class="aspect-[1/1.4] border border-slate-200 rounded p-1 shadow-sm relative mt-5 cursor-pointer hover:border-blue-300 transition-colors"><div class="w-full h-full bg-slate-50 border border-slate-100 flex items-center justify-center"><i data-lucide="file-text" class="w-4 h-4 text-slate-300"></i></div><p class="text-center mt-1 text-[9px] font-bold text-slate-400 absolute -bottom-5 left-0 w-full">4</p></div>
                         </div>
 
-                        <!-- O PDF REAL VAI AQUI (Substitui o id view-doc-main-container antigo) -->
+                        <!-- O PDF REAL VAI AQUI -->
                         <div id="view-doc-main-container" class="flex-1 flex overflow-hidden bg-slate-50 p-0 relative">
                             <div id="view-doc-main" class="w-full h-full bg-white overflow-y-auto p-6 font-serif text-xs text-slate-700 select-text leading-relaxed">
                                 <div class="text-center text-slate-400 my-20 font-sans">Selecione um documento na árvore à esquerda.</div>
@@ -405,46 +452,45 @@
 
                         <!-- Barra Direita Flutuante -->
                         <div class="w-12 border-l border-slate-100 flex flex-col items-center py-4 gap-5 text-slate-400 shrink-0 bg-white">
-                            <div class="w-6 h-6 rounded-full bg-slate-800 text-white flex items-center justify-center text-[10px] font-bold shadow-md cursor-pointer hover:bg-blue-600 transition-colors">3</div>
-                            <i data-lucide="message-square" class="w-4 h-4 cursor-pointer hover:text-blue-600 transition-colors"></i>
-                            <i data-lucide="bookmark" class="w-4 h-4 cursor-pointer hover:text-blue-600 transition-colors"></i>
-                            <i data-lucide="code" class="w-4 h-4 cursor-pointer hover:text-blue-600 transition-colors"></i>
-                            <i data-lucide="scissors" class="w-4 h-4 cursor-pointer hover:text-blue-600 transition-colors"></i>
-                            <i data-lucide="maximize" class="w-4 h-4 cursor-pointer hover:text-blue-600 transition-colors mt-auto"></i>
+                            <div class="w-6 h-6 rounded-full bg-slate-800 text-white flex items-center justify-center text-[10px] font-bold shadow-md cursor-pointer hover:bg-blue-600 transition-colors" title="3 Anotações na página" onclick="showToast('Exibindo comentários do documento.', 'info')">3</div>
+                            <i data-lucide="message-square" class="w-4 h-4 cursor-pointer hover:text-blue-600 transition-colors" title="Pedir Resumo à IA" onclick="promptAndSend('Faça um resumo analítico desta página aberta.')"></i>
+                            <i data-lucide="bookmark" class="w-4 h-4 cursor-pointer hover:text-blue-600 transition-colors" title="Salvar Marcador" onclick="showToast('Marcador de página salvo com sucesso.', 'success')"></i>
+                            <i data-lucide="code" class="w-4 h-4 cursor-pointer hover:text-blue-600 transition-colors" title="Ver Metadados XML" onclick="showToast('Inspecionando metadados do documento...', 'info')"></i>
+                            <i data-lucide="scissors" class="w-4 h-4 cursor-pointer hover:text-blue-600 transition-colors" title="Recortar Trecho" onclick="showToast('Ferramenta de recorte de PDF ativada.', 'success')"></i>
+                            <i data-lucide="maximize" class="w-4 h-4 cursor-pointer hover:text-blue-600 transition-colors mt-auto" title="Tela Cheia" onclick="fullscreenMonitor('main')"></i>
                         </div>
                     </div>
                 </div>
 
                 <!-- COLUNA 2: MALHA NEURAL (CANVAS FÍSICO AQUI) -->
                 <div class="bg-white border border-slate-200 rounded-xl shadow-sm flex flex-col overflow-hidden relative">
-                    <div class="flex items-center justify-between px-5 py-4 shrink-0">
+                    <div class="flex items-center justify-between px-5 py-4 shrink-0 z-10 bg-white">
                         <div class="flex items-center gap-3">
                             <h2 class="text-sm font-bold text-slate-800">Malha Neural</h2>
                             <span class="text-[9px] text-slate-400 font-bold uppercase border border-slate-200 px-2 py-0.5 rounded-full tracking-wider">Mapa de Relações</span>
                         </div>
                         <div class="flex items-center gap-2.5 text-slate-400">
-                            <i data-lucide="help-circle" class="w-4 h-4 cursor-pointer hover:text-slate-600"></i>
-                            <i data-lucide="settings" class="w-4 h-4 cursor-pointer hover:text-slate-600"></i>
+                            <i data-lucide="help-circle" class="w-4 h-4 cursor-pointer hover:text-slate-600" onclick="showToast('A Malha Neural conecta automaticamente #tags e [[links]] do Obsidian.', 'info')"></i>
+                            <i data-lucide="settings" class="w-4 h-4 cursor-pointer hover:text-slate-600" onclick="showToast('Menu de configurações de gravidade e nós em breve.', 'info')"></i>
                         </div>
                     </div>
                     
-                    <div class="px-5 pb-3 flex gap-2 overflow-x-auto no-scrollbar shrink-0">
-                        <button class="px-4 py-1.5 bg-brand-dark text-white text-[10px] font-bold rounded-full whitespace-nowrap shadow-sm">Todos os tipos</button>
-                        <button class="px-4 py-1.5 bg-white border border-slate-200 text-slate-500 text-[10px] font-bold rounded-full whitespace-nowrap hover:bg-slate-50 shadow-sm">Pessoas</button>
-                        <button class="px-4 py-1.5 bg-white border border-slate-200 text-slate-500 text-[10px] font-bold rounded-full whitespace-nowrap hover:bg-slate-50 shadow-sm">Órgãos</button>
-                        <button class="px-4 py-1.5 bg-white border border-slate-200 text-slate-500 text-[10px] font-bold rounded-full whitespace-nowrap hover:bg-slate-50 shadow-sm">Documentos</button>
-                        <button class="px-4 py-1.5 bg-white border border-slate-200 text-slate-500 text-[10px] font-bold rounded-full whitespace-nowrap hover:bg-slate-50 shadow-sm">Leis</button>
-                        <button class="px-4 py-1.5 bg-white border border-slate-200 text-slate-500 text-[10px] font-bold rounded-full whitespace-nowrap hover:bg-slate-50 shadow-sm">Prazos</button>
+                    <div class="px-5 pb-3 flex gap-2 overflow-x-auto no-scrollbar shrink-0 z-10 bg-white">
+                        <button onclick="showToast('Filtro: Todos os nós', 'success')" class="px-4 py-1.5 bg-brand-dark text-white text-[10px] font-bold rounded-full whitespace-nowrap shadow-sm">Todos os tipos</button>
+                        <button onclick="showToast('Filtro: Pessoas', 'success')" class="px-4 py-1.5 bg-white border border-slate-200 text-slate-500 text-[10px] font-bold rounded-full whitespace-nowrap hover:bg-slate-50 shadow-sm transition-colors">Pessoas</button>
+                        <button onclick="showToast('Filtro: Órgãos', 'success')" class="px-4 py-1.5 bg-white border border-slate-200 text-slate-500 text-[10px] font-bold rounded-full whitespace-nowrap hover:bg-slate-50 shadow-sm transition-colors">Órgãos</button>
+                        <button onclick="showToast('Filtro: Documentos', 'success')" class="px-4 py-1.5 bg-white border border-slate-200 text-slate-500 text-[10px] font-bold rounded-full whitespace-nowrap hover:bg-slate-50 shadow-sm transition-colors">Documentos</button>
+                        <button onclick="showToast('Filtro: Leis', 'success')" class="px-4 py-1.5 bg-white border border-slate-200 text-slate-500 text-[10px] font-bold rounded-full whitespace-nowrap hover:bg-slate-50 shadow-sm transition-colors">Leis</button>
+                        <button onclick="showToast('Filtro: Prazos', 'success')" class="px-4 py-1.5 bg-white border border-slate-200 text-slate-500 text-[10px] font-bold rounded-full whitespace-nowrap hover:bg-slate-50 shadow-sm transition-colors">Prazos</button>
                     </div>
 
                     <!-- Canvas -->
                     <div class="flex-1 relative bg-slate-50/50 w-full h-full overflow-hidden border-t border-slate-100">
-                        <!-- Abaixo, escondemos a pane de comparação que antes ocupava essa tela e forçamos a malha a ficar sempre visível aqui -->
                         <div id="pane-comparison-graph" class="w-full h-full absolute inset-0 z-10">
                             <canvas id="graph-canvas" class="w-full h-full block cursor-grab active:cursor-grabbing"></canvas>
                         </div>
                         
-                        <div class="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center justify-center gap-4 text-[9px] font-bold text-slate-500 bg-white/90 backdrop-blur px-4 py-2 rounded-full border border-slate-200 shadow-sm z-20 whitespace-nowrap">
+                        <div class="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center justify-center gap-4 text-[9px] font-bold text-slate-500 bg-white/90 backdrop-blur px-4 py-2 rounded-full border border-slate-200 shadow-sm z-20 whitespace-nowrap pointer-events-none">
                             <span>Legenda:</span>
                             <div class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-blue-600"></span> Processo</div>
                             <div class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-emerald-500"></span> Pessoas</div>
@@ -454,12 +500,7 @@
                             <div class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-red-500"></span> Prazos</div>
                         </div>
 
-                        <!-- Ocultando os nós de comparação antigos via CSS -->
-                        <div id="pane-comparison-doc" class="hidden">
-                            <div id="comp-note-title"></div>
-                            <div id="view-doc-comp"></div>
-                            <div id="view-raw-comp"></div>
-                        </div>
+                        <div id="pane-comparison-doc" class="hidden"></div>
                     </div>
                 </div>
 
@@ -477,92 +518,99 @@
                     </div>
 
                     <!-- Area Flexível (Mensagens do Chat + Cards Estáticos Iniciais) -->
-                    <div id="chat-messages" class="flex-1 overflow-y-auto p-5 flex flex-col gap-4 bg-white no-scrollbar relative">
+                    <div id="chat-messages" class="flex-1 overflow-y-auto p-5 flex flex-col gap-4 bg-white no-scrollbar relative scroll-smooth">
                         
-                        <!-- Cards Estáticos Iniciais (Vão sendo empurrados p/ cima quando o chat enviar msgs) -->
+                        <!-- Cards Estáticos Iniciais -->
                         <div class="flex flex-col gap-4 w-full shrink-0" id="ai-static-cards">
                             <!-- Card 1 -->
-                            <div class="border border-slate-200 rounded-xl p-3 shadow-sm">
-                                <h4 class="text-[11px] font-bold text-blue-600 flex items-center gap-1.5 mb-1"><div class="w-5 h-5 bg-blue-100 flex items-center justify-center rounded"><i data-lucide="file-text" class="w-3 h-3"></i></div> Resumo do processo</h4>
+                            <div class="border border-slate-200 rounded-xl p-3 shadow-sm hover:shadow-md transition-shadow">
+                                <h4 class="text-[11px] font-bold text-blue-600 flex items-center gap-1.5 mb-1"><div class="w-5 h-5 bg-blue-50 border border-blue-100 flex items-center justify-center rounded"><i data-lucide="file-text" class="w-3 h-3"></i></div> Resumo do processo</h4>
                                 <p class="text-[10px] text-slate-600 leading-relaxed mb-2 mt-2">Ação trabalhista que discute verbas contratuais e adicionais por serviços prestados entre 2019 e 2021.</p>
-                                <a href="#" class="text-[10px] font-bold text-blue-600 hover:underline">Ver resumo completo →</a>
+                                <button onclick="promptAndSend('Gere o resumo completo deste processo identificando as partes, os pedidos e o valor da causa.')" class="text-[10px] font-bold text-blue-600 hover:text-blue-800 hover:underline transition-colors focus:outline-none">Ver resumo completo →</button>
                             </div>
 
                             <!-- Card 2 e 3 (Row) -->
                             <div class="flex gap-3">
-                                <div class="flex-1 border border-slate-200 rounded-xl p-3 shadow-sm">
-                                    <p class="text-[9px] font-semibold text-slate-500 mb-1">Prazos próximos</p>
-                                    <div class="flex items-end justify-between">
-                                        <span class="text-xl font-black text-emerald-600 leading-none">2 <i data-lucide="arrow-down" class="w-3 h-3 inline"></i></span>
-                                        <i data-lucide="calendar" class="w-4 h-4 text-blue-500 opacity-50"></i>
+                                <div class="flex-1 border border-slate-200 rounded-xl p-3 shadow-sm hover:shadow-md transition-shadow cursor-pointer" onclick="promptAndSend('Liste todos os prazos próximos a vencer e as datas estipuladas no processo.')">
+                                    <p class="text-[9px] font-semibold text-slate-500 mb-1 uppercase tracking-wider">Prazos próximos</p>
+                                    <div class="flex items-end justify-between mt-2">
+                                        <span class="text-2xl font-black text-emerald-600 leading-none tracking-tighter">2 <i data-lucide="arrow-down" class="w-3 h-3 inline text-emerald-500 mb-1"></i></span>
+                                        <i data-lucide="calendar" class="w-4 h-4 text-blue-500 opacity-50 mb-0.5"></i>
                                     </div>
-                                    <span class="text-[9px] text-slate-400 font-semibold block mt-1">a vencer</span>
+                                    <span class="text-[9px] text-emerald-600/70 font-bold block mt-1">a vencer</span>
                                 </div>
-                                <div class="flex-1 border border-slate-200 rounded-xl p-3 shadow-sm">
-                                    <p class="text-[9px] font-semibold text-slate-500 mb-1">Riscos identificados</p>
-                                    <div class="flex items-end justify-between">
-                                        <span class="text-xl font-black text-amber-500 leading-none">3 <i data-lucide="arrow-right" class="w-3 h-3 inline"></i></span>
-                                        <i data-lucide="alert-triangle" class="w-4 h-4 text-amber-500 opacity-50"></i>
+                                <div class="flex-1 border border-slate-200 rounded-xl p-3 shadow-sm hover:shadow-md transition-shadow cursor-pointer" onclick="promptAndSend('Descreva detalhadamente os riscos identificados neste caso e a probabilidade de condenação.')">
+                                    <p class="text-[9px] font-semibold text-slate-500 mb-1 uppercase tracking-wider">Riscos</p>
+                                    <div class="flex items-end justify-between mt-2">
+                                        <span class="text-2xl font-black text-amber-500 leading-none tracking-tighter">3 <i data-lucide="arrow-right" class="w-3 h-3 inline text-amber-400 mb-1"></i></span>
+                                        <i data-lucide="alert-triangle" class="w-4 h-4 text-amber-500 opacity-50 mb-0.5"></i>
                                     </div>
-                                    <span class="text-[9px] text-slate-400 font-semibold block mt-1">médios</span>
+                                    <span class="text-[9px] text-amber-500/70 font-bold block mt-1">médios</span>
                                 </div>
                             </div>
 
                             <!-- Card 4 -->
-                            <div class="border border-slate-200 rounded-xl p-3 shadow-sm">
-                                <h4 class="text-[11px] font-bold text-emerald-600 flex items-center gap-1.5 mb-2"><div class="w-5 h-5 bg-emerald-100 flex items-center justify-center rounded"><i data-lucide="target" class="w-3 h-3"></i></div> Pontos críticos</h4>
+                            <div class="border border-slate-200 rounded-xl p-3 shadow-sm hover:shadow-md transition-shadow">
+                                <h4 class="text-[11px] font-bold text-emerald-600 flex items-center gap-1.5 mb-2"><div class="w-5 h-5 bg-emerald-50 border border-emerald-100 flex items-center justify-center rounded"><i data-lucide="target" class="w-3 h-3"></i></div> Pontos críticos</h4>
                                 <ul class="text-[10px] text-slate-600 space-y-1.5 list-disc pl-4 font-medium">
                                     <li>Cláusula de reajuste contratual não cumprida.</li>
                                     <li>Adicional de insalubridade em desacordo com laudo.</li>
                                     <li>Intervalos intrajornada não comprovados.</li>
                                 </ul>
-                                <a href="#" class="text-[10px] font-bold text-blue-600 hover:underline block mt-2">Ver todos os pontos →</a>
+                                <button onclick="promptAndSend('Liste e explique todos os pontos críticos identificados que são desfavoráveis a nós no processo.')" class="text-[10px] font-bold text-blue-600 hover:underline block mt-3 focus:outline-none hover:text-blue-800 transition-colors">Ver todos os pontos →</button>
                             </div>
 
                             <!-- Card 5 -->
-                            <div class="border border-slate-200 rounded-xl p-3 shadow-sm flex items-center justify-between">
-                                <div class="flex items-center gap-1.5">
-                                    <div class="w-5 h-5 bg-red-100 flex items-center justify-center rounded text-red-600"><i data-lucide="alert-circle" class="w-3 h-3"></i></div>
-                                    <h4 class="text-[11px] font-bold text-slate-800">Contradições encontradas</h4>
+                            <div class="border border-slate-200 rounded-xl p-3 shadow-sm flex items-center justify-between hover:shadow-md transition-shadow cursor-pointer" onclick="promptAndSend('Aponte as contradições encontradas entre as provas e o depoimento no documento.')">
+                                <div>
+                                    <div class="flex items-center gap-1.5">
+                                        <div class="w-5 h-5 bg-red-50 border border-red-100 flex items-center justify-center rounded text-red-500"><i data-lucide="alert-circle" class="w-3 h-3"></i></div>
+                                        <h4 class="text-[11px] font-bold text-slate-800">Contradições encontradas</h4>
+                                    </div>
+                                    <p class="text-[10px] font-bold text-blue-600 hover:underline mt-1.5 ml-6">Ver detalhes →</p>
                                 </div>
-                                <span class="font-black text-[13px] text-brand-dark">2</span>
+                                <span class="font-black text-lg text-brand-dark pr-2">2</span>
                             </div>
-                            <a href="#" class="text-[10px] font-bold text-blue-600 hover:underline mt-[-6px] ml-1">Ver detalhes →</a>
                         </div>
                     </div>
 
                     <!-- Input Área e Sugestões -->
-                    <div class="p-5 border-t border-slate-100 bg-white shrink-0">
-                        <p class="text-[11px] font-bold text-slate-800 mb-2">Sugestões para você</p>
+                    <div class="p-5 border-t border-slate-100 bg-white shrink-0 z-10 shadow-[0_-10px_20px_rgba(0,0,0,0.02)]">
+                        <p class="text-[11px] font-bold text-slate-800 mb-2.5">Sugestões para você</p>
                         <div class="flex flex-col gap-1.5 mb-4">
-                            <button onclick="document.getElementById('chat-input').value='Quais os riscos do caso?'; sendChatMessage()" class="text-left px-3 py-1.5 border border-blue-200 bg-blue-50 text-blue-700 rounded-full text-[10px] font-bold hover:bg-blue-100 transition-colors">Quais os riscos do caso?</button>
-                            <button onclick="document.getElementById('chat-input').value='Mostrar jurisprudência relacionada'; sendChatMessage()" class="text-left px-3 py-1.5 border border-blue-200 text-blue-600 rounded-full text-[10px] font-bold hover:bg-blue-50 transition-colors">Mostrar jurisprudência relacionada</button>
-                            <button onclick="document.getElementById('chat-input').value='Verificar prazos e intimações pendentes'; sendChatMessage()" class="text-left px-3 py-1.5 border border-blue-200 text-blue-600 rounded-full text-[10px] font-bold hover:bg-blue-50 transition-colors">Verificar prazos e intimações pendentes</button>
-                            <button onclick="document.getElementById('chat-input').value='Analisar cláusulas do contrato'; sendChatMessage()" class="text-left px-3 py-1.5 border border-blue-200 text-blue-600 rounded-full text-[10px] font-bold hover:bg-blue-50 transition-colors">Analisar cláusulas do contrato</button>
-                            <button onclick="document.getElementById('chat-input').value='Gerar tese defensiva'; sendChatMessage()" class="text-left px-3 py-1.5 border border-blue-200 text-blue-600 rounded-full text-[10px] font-bold hover:bg-blue-50 transition-colors">Gerar tese defensiva</button>
+                            <button onclick="promptAndSend('Quais os riscos do caso?')" class="text-left px-3.5 py-1.5 border border-blue-200 bg-blue-50 text-blue-700 rounded-full text-[10px] font-bold hover:bg-blue-100 transition-colors truncate shadow-sm">Quais os riscos do caso?</button>
+                            <button onclick="promptAndSend('Mostrar jurisprudência relacionada')" class="text-left px-3.5 py-1.5 border border-slate-200 text-slate-600 bg-white rounded-full text-[10px] font-bold hover:bg-slate-50 hover:border-slate-300 transition-colors truncate shadow-sm">Mostrar jurisprudência relacionada</button>
+                            <button onclick="promptAndSend('Verificar prazos e intimações pendentes')" class="text-left px-3.5 py-1.5 border border-slate-200 text-slate-600 bg-white rounded-full text-[10px] font-bold hover:bg-slate-50 hover:border-slate-300 transition-colors truncate shadow-sm">Verificar prazos e intimações pendentes</button>
+                            <button onclick="promptAndSend('Analisar cláusulas do contrato')" class="text-left px-3.5 py-1.5 border border-slate-200 text-slate-600 bg-white rounded-full text-[10px] font-bold hover:bg-slate-50 hover:border-slate-300 transition-colors truncate shadow-sm">Analisar cláusulas do contrato</button>
+                            <button onclick="promptAndSend('Gerar tese defensiva baseada no contexto')" class="text-left px-3.5 py-1.5 border border-slate-200 text-slate-600 bg-white rounded-full text-[10px] font-bold hover:bg-slate-50 hover:border-slate-300 transition-colors truncate shadow-sm">Gerar tese defensiva</button>
                         </div>
 
-                        <div id="chat-attachment-area" class="hidden mb-2 px-3 py-1.5 bg-slate-100 rounded text-[10px] font-bold text-slate-700 flex justify-between items-center">
-                            <span id="chat-attachment-name" class="truncate">anexo</span>
-                            <button id="btn-remove-attachment" class="text-red-500"><i data-lucide="x" class="w-3 h-3"></i></button>
+                        <div id="chat-attachment-area" class="hidden mb-3 px-3 py-1.5 bg-slate-100 rounded-lg border border-slate-200 text-[10px] font-bold text-slate-700 flex justify-between items-center shadow-inner">
+                            <div class="flex items-center gap-1.5 overflow-hidden">
+                                <i data-lucide="paperclip" class="w-3.5 h-3.5 text-blue-500 shrink-0"></i>
+                                <span id="chat-attachment-name" class="truncate">anexo</span>
+                            </div>
+                            <button id="btn-remove-attachment" class="text-red-500 hover:text-red-700 transition-colors ml-2"><i data-lucide="x" class="w-3.5 h-3.5"></i></button>
                         </div>
 
-                        <div class="relative flex items-center bg-slate-50 border border-slate-200 rounded-full p-1 pr-1.5 shadow-inner">
-                            <textarea id="chat-input" rows="1" placeholder="Pergunte algo sobre o processo..." class="flex-1 bg-transparent py-2 px-3 text-[11px] font-medium focus:outline-none text-slate-800 resize-none h-8 leading-tight placeholder:text-slate-400"></textarea>
-                            <button id="btn-send" class="w-7 h-7 flex items-center justify-center bg-brand-dark text-white rounded-full hover:bg-slate-800 transition-all shadow-md shrink-0"><i data-lucide="send" class="w-3.5 h-3.5 ml-[-1px]"></i></button>
+                        <div class="relative flex items-center bg-slate-50 border border-slate-200 rounded-full p-1 pr-1.5 shadow-inner transition-all focus-within:border-blue-400 focus-within:ring-2 focus-within:ring-blue-100">
+                            <button id="btn-chat-attach" class="p-2 text-slate-400 hover:text-blue-600 transition-colors shrink-0"><i data-lucide="paperclip" class="w-4 h-4"></i></button>
+                            <textarea id="chat-input" rows="1" placeholder="Pergunte algo sobre o processo..." class="flex-1 bg-transparent py-2.5 px-1.5 text-[11px] font-medium focus:outline-none text-slate-800 resize-none h-9 leading-tight placeholder:text-slate-400"></textarea>
+                            <button id="btn-send" class="w-8 h-8 flex items-center justify-center bg-brand-dark text-white rounded-full hover:bg-slate-800 transition-all shadow-md shrink-0 active:scale-95"><i data-lucide="send" class="w-3.5 h-3.5 ml-[-1px]"></i></button>
                         </div>
-                        <p class="text-center text-[9px] text-slate-400 mt-2 font-medium">IA pode cometer erros. Verifique as informações.</p>
+                        <p class="text-center text-[8px] text-slate-400 mt-2.5 font-medium uppercase tracking-wider">IA pode cometer erros. Verifique as informações.</p>
                     </div>
+
                 </div>
             </div>
 
             <!-- ROW DE WIDGETS INFERIORES -->
             <div class="grid grid-cols-4 gap-6 shrink-0 mt-6 mb-10">
-                <div class="bg-white border border-slate-200 rounded-xl p-5 shadow-sm flex flex-col relative overflow-hidden">
-                    <div class="flex items-center gap-2 mb-4 font-bold text-xs text-slate-800"><i data-lucide="activity" class="w-4 h-4 text-amber-500"></i> Riscos do caso</div>
+                <div class="bg-white border border-slate-200 rounded-xl p-5 shadow-sm flex flex-col relative overflow-hidden group hover:shadow-md transition-shadow">
+                    <div class="flex items-center gap-2 mb-4 font-bold text-xs text-slate-800"><div class="w-6 h-6 bg-amber-50 rounded flex items-center justify-center text-amber-500"><i data-lucide="activity" class="w-3.5 h-3.5"></i></div> Riscos do caso</div>
                     <div class="flex items-center gap-4 flex-1 z-10">
-                        <div class="w-16 h-16 rounded-full border-4 border-amber-400 flex items-center justify-center flex-col shrink-0 relative">
-                            <svg class="absolute inset-0 w-full h-full" viewBox="0 0 36 36"><path class="text-amber-100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-width="3"/><path class="text-amber-500" stroke-dasharray="45, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-width="3"/></svg>
+                        <div class="w-16 h-16 rounded-full border-4 border-amber-400 flex items-center justify-center flex-col shrink-0 relative bg-white">
+                            <svg class="absolute inset-0 w-full h-full" viewBox="0 0 36 36"><path class="text-amber-100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-width="3"/><path class="text-amber-500 transition-all duration-1000 ease-out" stroke-dasharray="45, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-width="3"/></svg>
                             <span class="text-[10px] font-black text-slate-800 uppercase mt-1">Médio</span>
                             <span class="text-[8px] font-bold text-slate-400">45/100</span>
                         </div>
@@ -572,43 +620,43 @@
                             <li>Jurisprudência majoritariamente desfavorável</li>
                         </ul>
                     </div>
-                    <a href="#" class="text-[10px] font-bold text-slate-400 hover:text-blue-500 absolute bottom-4 left-5 z-10">Ver análise completa →</a>
+                    <button onclick="promptAndSend('Análise de Risco: detalhe completamente os riscos deste caso e gere uma métrica de risco.')" class="text-left text-[10px] font-bold text-slate-400 hover:text-blue-600 transition-colors absolute bottom-4 left-5 z-10">Ver análise completa →</button>
                 </div>
 
-                <div class="bg-white border border-slate-200 rounded-xl p-5 shadow-sm flex flex-col relative pb-10">
-                    <div class="flex items-center gap-2 mb-4 font-bold text-xs text-slate-800"><i data-lucide="lightbulb" class="w-4 h-4 text-emerald-500"></i> Teses possíveis</div>
-                    <ul class="text-[10px] text-slate-500 font-medium space-y-2 list-disc pl-3 leading-snug flex-1">
+                <div class="bg-white border border-slate-200 rounded-xl p-5 shadow-sm flex flex-col relative pb-10 group hover:shadow-md transition-shadow">
+                    <div class="flex items-center gap-2 mb-4 font-bold text-xs text-slate-800"><div class="w-6 h-6 bg-emerald-50 rounded flex items-center justify-center text-emerald-500"><i data-lucide="lightbulb" class="w-3.5 h-3.5"></i></div> Teses possíveis</div>
+                    <ul class="text-[10px] text-slate-500 font-medium space-y-2.5 list-disc pl-4 leading-snug flex-1">
                         <li>Inexistência de vínculo de subordinação</li>
                         <li>Cumprimento das obrigações contratuais</li>
                         <li>Inexistência de dano ou prejuízo</li>
                     </ul>
-                    <a href="#" class="text-[10px] font-bold text-slate-400 hover:text-blue-500 absolute bottom-4 left-5">Ver teses sugeridas →</a>
+                    <button onclick="promptAndSend('Gere uma tese de defesa detalhada baseada na inexistência de vínculo e cumprimento de obrigações.')" class="text-left text-[10px] font-bold text-slate-400 hover:text-blue-600 transition-colors absolute bottom-4 left-5">Ver teses sugeridas →</button>
                 </div>
 
-                <div class="bg-white border border-slate-200 rounded-xl p-5 shadow-sm flex flex-col relative pb-10">
-                    <div class="flex items-center gap-2 mb-4 font-bold text-xs text-slate-800"><i data-lucide="scale" class="w-4 h-4 text-purple-500"></i> Jurisprudência relacionada</div>
+                <div class="bg-white border border-slate-200 rounded-xl p-5 shadow-sm flex flex-col relative pb-10 group hover:shadow-md transition-shadow">
+                    <div class="flex items-center gap-2 mb-4 font-bold text-xs text-slate-800"><div class="w-6 h-6 bg-purple-50 rounded flex items-center justify-center text-purple-500"><i data-lucide="scale" class="w-3.5 h-3.5"></i></div> Jurisprudência</div>
                     <div class="flex justify-between items-start flex-1">
-                        <ul class="text-[10px] text-slate-500 font-medium space-y-2 list-disc pl-3 leading-snug">
-                            <li class="font-bold text-slate-700">13 decisões encontradas</li>
-                            <li>2 favoráveis</li>
-                            <li>9 desfavoráveis</li>
-                            <li>2 neutras</li>
+                        <ul class="text-[10px] text-slate-500 font-medium space-y-2 list-disc pl-4 leading-snug">
+                            <li class="font-bold text-slate-700 list-none -ml-4 mb-2">13 decisões encontradas</li>
+                            <li><span class="text-emerald-600 font-bold">2 favoráveis</span></li>
+                            <li><span class="text-red-500 font-bold">9 desfavoráveis</span></li>
+                            <li><span class="text-slate-400 font-bold">2 neutras</span></li>
                         </ul>
-                        <div class="w-10 h-10 bg-purple-50 rounded-xl flex items-center justify-center text-purple-400 opacity-60">
+                        <div class="w-10 h-10 bg-purple-50 rounded-xl flex items-center justify-center text-purple-400 opacity-60 mt-2">
                             <i data-lucide="message-square" class="w-5 h-5"></i>
                         </div>
                     </div>
-                    <a href="#" class="text-[10px] font-bold text-slate-400 hover:text-blue-500 absolute bottom-4 left-5">Ver jurisprudência →</a>
+                    <button onclick="promptAndSend('Liste a jurisprudência mais relevante para este tipo de processo nos Tribunais Superiores.')" class="text-left text-[10px] font-bold text-slate-400 hover:text-blue-600 transition-colors absolute bottom-4 left-5">Ver jurisprudência completa →</button>
                 </div>
 
-                <div class="bg-white border border-slate-200 rounded-xl p-5 shadow-sm flex flex-col relative pb-10">
-                    <div class="flex items-center gap-2 mb-4 font-bold text-xs text-slate-800"><i data-lucide="list-checks" class="w-4 h-4 text-slate-400"></i> Próximos passos sugeridos</div>
-                    <ol class="text-[10px] text-slate-500 font-medium space-y-2 list-decimal pl-4 leading-snug flex-1">
+                <div class="bg-white border border-slate-200 rounded-xl p-5 shadow-sm flex flex-col relative pb-10 group hover:shadow-md transition-shadow">
+                    <div class="flex items-center gap-2 mb-4 font-bold text-xs text-slate-800"><div class="w-6 h-6 bg-slate-100 rounded flex items-center justify-center text-slate-600"><i data-lucide="list-checks" class="w-3.5 h-3.5"></i></div> Próximos passos sugeridos</div>
+                    <ol class="text-[10px] text-slate-500 font-medium space-y-2.5 list-decimal pl-5 leading-snug flex-1">
                         <li>Protocolar contestação</li>
                         <li>Juntar documentos complementares</li>
                         <li>Requerer produção de prova pericial</li>
                     </ol>
-                    <a href="#" class="text-[10px] font-bold text-slate-400 hover:text-blue-500 absolute bottom-4 left-5">Ver plano de ação →</a>
+                    <button onclick="promptAndSend('Gere um plano de ação completo com os próximos passos jurídicos, datas e tarefas.')" class="text-left text-[10px] font-bold text-slate-400 hover:text-blue-600 transition-colors absolute bottom-4 left-5">Ver plano de ação →</button>
                 </div>
             </div>
 
@@ -625,6 +673,83 @@
                 if (sb) { sb.focus(); sb.select(); }
             }
         });
+
+        // =========================================================================
+        // COMPONENTES DE INTERAÇÃO UI / UX (TOASTS E EFEITOS)
+        // =========================================================================
+        
+        window.showToast = function(message, type = "info") {
+            const container = document.getElementById("toast-container");
+            if (!container) return;
+            
+            const toast = document.createElement("div");
+            toast.className = `toast-animate flex items-center gap-3 px-4 py-3 rounded-xl shadow-lg border text-[11px] font-bold backdrop-blur-md z-50 ${
+                type === 'success' ? 'bg-emerald-50/90 text-emerald-700 border-emerald-200' :
+                type === 'error' ? 'bg-red-50/90 text-red-700 border-red-200' :
+                'bg-blue-50/90 text-blue-700 border-blue-200'
+            }`;
+            
+            let icon = 'info';
+            if (type === 'success') icon = 'check-circle';
+            if (type === 'error') icon = 'alert-triangle';
+
+            toast.innerHTML = `<i data-lucide="${icon}" class="w-4 h-4 shrink-0"></i> <span>${message}</span>`;
+            container.appendChild(toast);
+            lucide.createIcons();
+
+            setTimeout(() => {
+                toast.style.transition = 'opacity 0.3s ease-in-out, transform 0.3s ease-in-out';
+                toast.style.opacity = '0';
+                toast.style.transform = 'translateY(10px)';
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        };
+
+        window.promptAndSend = function(msg) {
+            const input = document.getElementById('chat-input');
+            if(input) {
+                input.value = msg;
+                sendChatMessage();
+                showToast("Comando enviado para a Inteligência Artificial.", "info");
+            }
+        };
+
+        window.switchProcessTab = function(element, tabName) {
+            const tabs = document.querySelectorAll(".process-tab");
+            tabs.forEach(t => {
+                t.className = "process-tab pb-3 border-b-2 border-transparent text-slate-500 hover:text-slate-800 px-1 transition-colors";
+            });
+            element.className = "process-tab pb-3 border-b-2 border-blue-600 text-blue-600 px-1 transition-colors";
+            showToast(`Visão de ${tabName} carregada.`, "info");
+        };
+
+        let isSidebarCollapsed = false;
+        window.toggleSidebar = function() {
+            const sb = document.getElementById("main-sidebar");
+            const icon = document.getElementById("sidebar-icon-toggle");
+            const texts = sb.querySelectorAll(".sidebar-text");
+            isSidebarCollapsed = !isSidebarCollapsed;
+            
+            if(isSidebarCollapsed) {
+                sb.style.width = "80px";
+                texts.forEach(t => t.style.opacity = "0");
+                setTimeout(() => texts.forEach(t => t.style.display = "none"), 200);
+                if(icon) icon.style.transform = "rotate(180deg)";
+            } else {
+                sb.style.width = "260px";
+                texts.forEach(t => t.style.display = "");
+                setTimeout(() => texts.forEach(t => t.style.opacity = "1"), 50);
+                if(icon) icon.style.transform = "rotate(0deg)";
+            }
+            setTimeout(resizeCanvas, 300);
+        };
+
+        window.logoutSystem = function() {
+            sessionStorage.removeItem("bms_auth_token");
+            showToast("Encerrando sessão segura...", "error");
+            setTimeout(() => location.reload(), 800);
+        };
+
 
         const messagesContainer = document.getElementById("chat-messages");
         const chatInput = document.getElementById("chat-input");
@@ -648,14 +773,6 @@
         let favoriteItems = JSON.parse(localStorage.getItem("bms_favorites_map") || "{}");
         let collapsedFolders = JSON.parse(localStorage.getItem("bms_collapsed_folders") || "{}");
 
-        window.toggleAppFullscreen = function() {
-            if (!document.fullscreenElement) {
-                document.documentElement.requestFullscreen().catch(err => console.error(err));
-            } else {
-                if (document.exitFullscreen) document.exitFullscreen();
-            }
-        };
-
         window.fullscreenMonitor = function(monitor) {
             const containerId = monitor === 'main' ? 'view-doc-main-container' : 'pane-comparison-graph';
             const container = document.getElementById(containerId); 
@@ -664,36 +781,10 @@
             else document.exitFullscreen();
         };
 
-        window.clearTreeSelection = function(e) {
-            if (e.target.id === "file-tree" || e.target.tagName === "ASIDE") clearMainMonitor();
-        };
-
-        window.toggleActiveFileFavorite = function() {
-            if (!selectedFileId) return;
-            const cleanPath = selectedFileId.replace(/\/$/, "");
-            if (favoriteItems[cleanPath]) delete favoriteItems[cleanPath]; 
-            else favoriteItems[cleanPath] = true; 
-            localStorage.setItem("bms_favorites_map", JSON.stringify(favoriteItems));
-            try { updateFavoriteStarUI(); buildNotesTree(); } catch(e) {}
-        };
-
-        window.updateFavoriteStarUI = function() {
-            const btnFav = document.getElementById("btn-favorite-star");
-            if (!btnFav) return;
-            if (!selectedFileId) {
-                btnFav.innerHTML = `<i data-lucide="star" class="w-5 h-5 text-slate-300"></i>`;
-                try { lucide.createIcons(); } catch(e) {} return;
-            }
-            const cleanPath = selectedFileId.replace(/\/$/, "");
-            if (favoriteItems[cleanPath]) btnFav.innerHTML = `<i data-lucide="star" class="w-5 h-5 text-amber-500" style="fill: currentColor;"></i>`;
-            else btnFav.innerHTML = `<i data-lucide="star" class="w-5 h-5 text-slate-300 hover:text-amber-500 transition-colors"></i>`;
-            try { lucide.createIcons(); } catch(e) {}
-        };
-
         window.clearMainMonitor = function() {
             selectedFileId = null;
             const activeNoteTitleEl = document.getElementById("active-note-title");
-            if (activeNoteTitleEl) activeNoteTitleEl.innerText = "Selecione um arquivo principal";
+            if (activeNoteTitleEl) activeNoteTitleEl.innerText = "Nenhum arquivo";
             
             const dEl = document.getElementById("view-doc-main");
             if (dEl) {
@@ -724,6 +815,10 @@
             if (ctxMenu) ctxMenu.classList.add("hidden");
             const dpUpload = document.getElementById("dropdown-upload");
             if (dpUpload) dpUpload.classList.add("hidden");
+            const dpExport = document.getElementById("dropdown-export");
+            if (dpExport) dpExport.classList.add("hidden");
+            const dpProfile = document.getElementById("dropdown-profile");
+            if (dpProfile) dpProfile.classList.add("hidden");
         }
 
         function toggleFilterDropdown(e) { e.stopPropagation(); closeAllDropdownsMenu(); if (filterDropdown) filterDropdown.classList.remove("hidden"); }
@@ -750,7 +845,7 @@
             let rEl = document.getElementById("view-raw-main"); let btn = document.getElementById("btn-reprocess-main");
             
             if (rEl) { rEl.innerText = "A Inteligência Artificial está transcrevendo a imagem para texto... Isso pode levar alguns segundos."; switchTab(monitor, 'raw'); }
-            if (btn) btn.innerHTML = `<i data-lucide="loader" class="w-3 h-3 inline mr-1 animate-spin"></i>`;
+            if (btn) btn.innerHTML = `<i data-lucide="loader" class="w-3 h-3 inline animate-spin"></i>`;
             try { lucide.createIcons(); } catch(e) {}
 
             try {
@@ -758,8 +853,9 @@
                 const data = await res.json();
                 if (data.success) {
                     if (rEl) rEl.innerText = data.markdown; rawContentBuffer = data.markdown; 
+                    showToast("OCR Visual recriado com sucesso.", "success");
                     try { buildNotesTree(); reloadGlobalGraph(); } catch(e) {}
-                } else { if (rEl) rEl.innerText = "Falha ao refazer o OCR: " + data.error; }
+                } else { if (rEl) rEl.innerText = "Falha ao refazer o OCR: " + data.error; showToast("Erro no OCR.", "error"); }
             } catch (err) { if (rEl) rEl.innerText = "Erro de conexão com o servidor Node."; }
             
             if (btn) btn.innerHTML = `<i data-lucide="refresh-cw" class="w-3 h-3 inline"></i>`;
@@ -827,6 +923,7 @@
                 
             } catch(e) { 
                 const dEl = document.getElementById("view-doc-main"); if (dEl) dEl.innerHTML = `<div class="text-center text-red-500 my-20 font-bold font-sans">Erro ao processar arquivo.<br><span class="text-xs text-red-400 font-normal">${e.message}</span></div>`; 
+                showToast("Erro na leitura do documento.", "error");
             }
         };
 
@@ -844,9 +941,10 @@
         }
 
         function downloadActiveFile() {
-            if (!selectedFileId || !rawContentBuffer) return;
+            if (!selectedFileId || !rawContentBuffer) { showToast("Nenhum arquivo válido aberto para download.", "error"); return; }
             const blob = new Blob([rawContentBuffer], { type: "text/markdown;charset=utf-8" });
             const link = document.createElement("a"); link.href = URL.createObjectURL(blob); link.download = selectedFileId.split('/').pop(); link.click();
+            showToast("Download iniciado.", "success");
         }
 
         function printActiveFile() {
@@ -909,16 +1007,21 @@
                         const isCollapsed = !!collapsedFolders[cleanItemPath]; let chevronIcon = `<div class="w-3.5 shrink-0"></div>`;
                         if (isDir) { if (isCollapsed) chevronIcon = `<i data-lucide="chevron-right" class="w-3.5 h-3.5 shrink-0 text-slate-500"></i>`; else chevronIcon = `<i data-lucide="chevron-down" class="w-3.5 h-3.5 shrink-0 text-slate-500"></i>`; }
                         
-                        btn.innerHTML = `${chevronIcon}<i data-lucide="${icon}" class="w-3.5 h-3.5 ${iconColor} shrink-0"></i> <span class="truncate">${cleanItemPath.split('/').pop()}</span> ${starBadge}`;
+                        btn.innerHTML = `<span class="sidebar-text flex items-center gap-1.5 w-full">${chevronIcon}<i data-lucide="${icon}" class="w-3.5 h-3.5 ${iconColor} shrink-0"></i> <span class="truncate">${cleanItemPath.split('/').pop()}</span> ${starBadge}</span>`;
                         if (!isDir) { btn.onclick = (e) => { e.stopPropagation(); loadNoteContent(item.path); }; } 
                         else { btn.onclick = (e) => { e.stopPropagation(); collapsedFolders[cleanItemPath] = !collapsedFolders[cleanItemPath]; localStorage.setItem("bms_collapsed_folders", JSON.stringify(collapsedFolders)); selectedFileId = item.path; buildNotesTree(); }; }
 
-                        const menuBtn = document.createElement("button"); menuBtn.className = "opacity-0 group-hover:opacity-100 p-1 hover:text-white rounded transition-all focus:outline-none";
+                        const menuBtn = document.createElement("button"); menuBtn.className = "sidebar-text opacity-0 group-hover:opacity-100 p-1 hover:text-white rounded transition-all focus:outline-none";
                         menuBtn.innerHTML = `<i data-lucide="more-horizontal" class="w-3.5 h-3.5"></i>`; menuBtn.onclick = (e) => { triggerInlineContextMenu(e, item.path); };
 
                         row.appendChild(btn); row.appendChild(menuBtn); fileTree.appendChild(row);
                     });
                     try { lucide.createIcons(); } catch(e) {}
+                    
+                    if(isSidebarCollapsed) {
+                        const texts = fileTree.querySelectorAll(".sidebar-text");
+                        texts.forEach(t => t.style.display = "none");
+                    }
                 }
             } catch(e) { console.error(e); }
         }
@@ -996,7 +1099,6 @@
                 
                 ctx.arc(n.x, n.y, radius, 0, 2 * Math.PI);
                 
-                // Cores ajustadas para matchar a imagem solicitada
                 if (n.type === "tag") ctx.fillStyle = "#f59e0b"; // Amber
                 else if (n.type === "concept") ctx.fillStyle = isDark ? "#94a3b8" : "#cbd5e1"; 
                 else if (isAct) ctx.fillStyle = "#2563eb"; // Blue principal
@@ -1047,7 +1149,6 @@
             renderMessageBlock("user", query); 
             chatInput.value = ""; chatInput.style.height = "36px"; chatInput.style.overflowY = "hidden";
             
-            // Oculta os cards fixos iniciais do IA
             const stCards = document.getElementById("ai-static-cards");
             if(stCards) stCards.classList.add("hidden");
 
@@ -1116,7 +1217,7 @@
                     const gate = document.getElementById("auth-gate");
                     if(gate) {
                         gate.classList.remove("opacity-100"); gate.classList.add("opacity-0");
-                        setTimeout(() => { gate.classList.add("hidden"); buildNotesTree(); reloadGlobalGraph(); }, 1000);
+                        setTimeout(() => { gate.classList.add("hidden"); buildNotesTree(); reloadGlobalGraph(); showToast("Autenticado com sucesso", "success"); }, 1000);
                     }
                 } else {
                     if(err) err.classList.remove("hidden");
@@ -1125,6 +1226,64 @@
                 }
             }, 800); 
         };
+
+        // File/Folder UI
+        async function renameItem(oldP, newP) { 
+            try { const res = await fetch("/api/rename-item", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ oldPath: oldP, newPath: newP }) }); 
+                if (res.ok) { if(selectedFileId === oldP || selectedFileId === oldP + "/") selectedFileId = newP; buildNotesTree(); reloadGlobalGraph(); showToast("Arquivo renomeado/movido.", "success");} 
+            } catch(err) { console.error(err); showToast("Falha ao renomear.", "error"); } 
+        }
+
+        async function deleteItem(p) { 
+            try { const res = await fetch("/api/delete-item", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ targetPath: p }) }); 
+                if (res.ok) { if(selectedFileId === p || selectedFileId === p + "/") selectedFileId = null; buildNotesTree(); reloadGlobalGraph(); showToast("Arquivo deletado.", "info");} 
+            } catch(err) { console.error(err); showToast("Erro ao deletar.", "error"); } 
+        }
+        
+        window.createNewFolderManual = function(e) {
+            if (e) e.stopPropagation();
+            let context = ""; if (selectedFileId && selectedFileId.endsWith("/")) context = selectedFileId; else if (selectedFileId && selectedFileId.includes("/")) context = selectedFileId.substring(0, selectedFileId.lastIndexOf("/")) + "/";
+            const modal = document.getElementById("custom-dialog-modal"); if (!modal) return;
+            document.getElementById("modal-title").innerText = "Criar Nova Pasta";
+            document.getElementById("modal-body-content").innerHTML = `<input type="text" id="modal-input-field" placeholder="Nome da subpasta..." class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2 text-xs text-slate-800">`;
+            modal.classList.remove("hidden");
+            document.getElementById("modal-confirm-btn").onclick = async () => {
+                const name = document.getElementById("modal-input-field").value.trim();
+                if (name) {
+                    try { const res = await fetch("/api/create-folder", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ foldername: context + name }) }); 
+                        if (res.ok) { buildNotesTree(); reloadGlobalGraph(); showToast("Pasta criada.", "success"); } } catch(err) {}
+                    closeCustomModal();
+                }
+            };
+        };
+
+        const ctxUpload = document.getElementById("chat-context-upload");
+        if (document.getElementById("btn-chat-attach") && ctxUpload) {
+            document.getElementById("btn-chat-attach").onclick = () => ctxUpload.click();
+            ctxUpload.onchange = async (e) => {
+                const file = e.target.files[0]; if (!file) return;
+                const attArea = document.getElementById("chat-attachment-area"); const attName = document.getElementById("chat-attachment-name");
+                if (attArea) attArea.classList.remove("hidden");
+                if (attName) attName.innerText = "Sincronizando arquivo...";
+                showToast("Fazendo upload e OCR...", "info");
+                const finalPath = "Anexos_Chat/" + file.name;
+                try {
+                    const res = await fetch(`/api/upload-vault?file=${encodeURIComponent(finalPath)}&sync=true`, { method: "POST", body: file });
+                    const data = await res.json();
+                    if (attName) attName.innerText = file.name;
+                    showToast("Anexo carregado com sucesso.", "success");
+                    buildNotesTree(); reloadGlobalGraph();
+                } catch (err) { if (attName) attName.innerText = "Erro ao anexar."; showToast("Erro no upload", "error");}
+            };
+        }
+        if (document.getElementById("btn-remove-attachment")) {
+            document.getElementById("btn-remove-attachment").onclick = () => {
+                const attArea = document.getElementById("chat-attachment-area");
+                if (attArea) attArea.classList.add("hidden");
+                if (ctxUpload) ctxUpload.value = "";
+                showToast("Anexo removido do contexto.", "info");
+            };
+        }
 
     </script>
 </body>
