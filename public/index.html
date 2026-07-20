@@ -33,7 +33,7 @@
         textarea::-webkit-scrollbar { width: 4px; }
         textarea::-webkit-scrollbar-thumb { background-color: #cbd5e1; border-radius: 10px; }
 
-        /* Animações do Fundo de Login (Tema Claro Premium) */
+        /* Animações do Fundo de Login */
         @keyframes blob {
             0% { transform: translate(0px, 0px) scale(1); }
             33% { transform: translate(30px, -50px) scale(1.1); }
@@ -44,6 +44,9 @@
     </style>
 </head>
 <body class="bg-brand-bg text-slate-800 font-sans h-screen flex flex-col overflow-hidden select-none">
+
+    <!-- OVERLAY INVISÍVEL PARA BLINDAR ARRASTE (NOVO) -->
+    <div id="drag-overlay" class="fixed inset-0 z-[9999] hidden cursor-col-resize"></div>
 
     <!-- ========================================== -->
     <!-- TELA DE LOGIN & SPLASH SCREEN (BLINDADA)   -->
@@ -355,9 +358,9 @@
             </div>
         </aside>
 
-        <!-- SPLITTER 1 (VISUAL) -->
-        <div id="resizer-left" class="w-1.5 bg-brand-sidebar hover:bg-blue-600 cursor-col-resize z-10 shrink-0 transition-colors flex items-center justify-center border-l border-white/5 group">
-            <div class="w-0.5 h-12 bg-slate-700 group-hover:bg-white rounded-full transition-colors"></div>
+        <!-- SPLITTER 1 (MAIS LARGO PARA FACILITAR O CLIQUE) -->
+        <div id="resizer-left" class="w-3 bg-brand-sidebar hover:bg-blue-600 cursor-col-resize z-10 shrink-0 transition-colors flex items-center justify-center border-l border-white/5 group">
+            <div class="w-1 h-8 bg-slate-600 group-hover:bg-white rounded-full transition-colors"></div>
         </div>
 
         <!-- ========================================== -->
@@ -410,7 +413,7 @@
                         <button onclick="selectOption('type', 'Análise/Documento', 'Análise Interna', event)" class="w-full text-left px-3 py-2.5 hover:bg-slate-50 truncate">Análise Interna</button>
                         <button onclick="selectOption('type', 'Petição Inicial', 'Petição Inicial', event)" class="w-full text-left px-3 py-2.5 hover:bg-slate-50 truncate">Petição Inicial</button>
                         <button onclick="selectOption('type', 'Contestação', 'Contestação', event)" class="w-full text-left px-3 py-2.5 hover:bg-slate-50 truncate">Contestação</button>
-                        <button onclick="selectOption('type', 'Recurso', 'Recurso (Apelação/RO)', event)" class="w-full text-left px-3 py-2.5 hover:bg-slate-50 truncate">Recurso (Apelação/RO)</button>
+                        <button onclick="selectOption('type', 'Recurso', 'Recurso (Apelação)', event)" class="w-full text-left px-3 py-2.5 hover:bg-slate-50 truncate">Recurso (Apelação)</button>
                         <button onclick="selectOption('type', 'Alegações Finais', 'Alegações Finais', event)" class="w-full text-left px-3 py-2.5 hover:bg-slate-50 truncate">Alegações Finais</button>
                         <button onclick="selectOption('type', 'Contrato/Acordo', 'Contrato / Acordo', event)" class="w-full text-left px-3 py-2.5 hover:bg-slate-50 truncate">Contrato / Acordo</button>
                         <button onclick="selectOption('type', 'Parecer Jurídico', 'Parecer Jurídico', event)" class="w-full text-left px-3 py-2.5 hover:bg-slate-50 truncate">Parecer Jurídico</button>
@@ -527,8 +530,8 @@
                 </div>
 
                 <!-- SPLITTER 2 (VISUAL) -->
-                <div id="resizer-center" class="w-2 bg-transparent hover:bg-blue-500 cursor-col-resize z-10 flex-shrink-0 transition-colors flex items-center justify-center rounded-full group">
-                    <div class="w-0.5 h-12 bg-slate-300 group-hover:bg-white rounded-full transition-colors"></div>
+                <div id="resizer-center" class="w-3 bg-transparent hover:bg-blue-500 cursor-col-resize z-10 flex-shrink-0 transition-colors flex items-center justify-center rounded-full group">
+                    <div class="w-1 h-8 bg-slate-300 group-hover:bg-white rounded-full transition-colors"></div>
                 </div>
 
                 <!-- MONITOR 2 (COMPARAÇÃO E MALHA NEURAL EM CARD BRANCO) -->
@@ -591,6 +594,7 @@
                             <button class="px-4 py-1.5 bg-white border border-slate-200 text-slate-500 text-[10px] font-bold rounded-full whitespace-nowrap hover:bg-slate-50 shadow-sm transition-colors">Órgãos</button>
                             <button class="px-4 py-1.5 bg-white border border-slate-200 text-slate-500 text-[10px] font-bold rounded-full whitespace-nowrap hover:bg-slate-50 shadow-sm transition-colors">Documentos</button>
                             <button class="px-4 py-1.5 bg-white border border-slate-200 text-slate-500 text-[10px] font-bold rounded-full whitespace-nowrap hover:bg-slate-50 shadow-sm transition-colors">Leis</button>
+                            <button class="px-4 py-1.5 bg-white border border-slate-200 text-slate-500 text-[10px] font-bold rounded-full whitespace-nowrap hover:bg-slate-50 shadow-sm transition-colors">Prazos</button>
                         </div>
                         <div class="flex-1 relative w-full h-full overflow-hidden bg-slate-50/50">
                             <canvas id="graph-canvas" class="w-full h-full block cursor-grab active:cursor-grabbing"></canvas>
@@ -601,6 +605,7 @@
                                 <div class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-purple-500"></span> Órgãos</div>
                                 <div class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-amber-500"></span> Leis</div>
                                 <div class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-blue-400"></span> Documentos</div>
+                                <div class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-red-500"></span> Prazos</div>
                             </div>
                         </div>
                     </div>
@@ -609,8 +614,8 @@
         </main>
 
         <!-- SPLITTER 3 (VISUAL) -->
-        <div id="resizer-right" class="w-1.5 bg-transparent hover:bg-blue-500 cursor-col-resize z-10 flex-shrink-0 transition-colors flex items-center justify-center rounded-full group">
-            <div class="w-0.5 h-12 bg-slate-300 group-hover:bg-white rounded-full transition-colors"></div>
+        <div id="resizer-right" class="w-3 bg-transparent hover:bg-blue-500 cursor-col-resize z-10 flex-shrink-0 transition-colors flex items-center justify-center rounded-full group">
+            <div class="w-1 h-8 bg-slate-300 group-hover:bg-white rounded-full transition-colors"></div>
         </div>
 
         <!-- ========================================== -->
@@ -695,12 +700,16 @@
             }
         });
 
+        // ==========================================
+        // VARIÁVEIS GLOBAIS BLINDADAS
+        // ==========================================
         const messagesContainer = document.getElementById("chat-messages");
         const chatInput = document.getElementById("chat-input");
         const btnSend = document.getElementById("btn-send");
         const fileTree = document.getElementById("file-tree");
         const globalSearchBar = document.getElementById("global-search-bar");
         const filterDropdown = document.getElementById("filter-menu-dropdown");
+        
         const canvas = document.getElementById("graph-canvas");
         const ctx = canvas ? canvas.getContext("2d") : null;
 
@@ -720,10 +729,12 @@
         let favoriteItems = {};
         let collapsedFolders = {};
 
+        // Blindagem contra cache corrompido no navegador do usuário
         try {
             favoriteItems = JSON.parse(localStorage.getItem("bms_favorites_map") || "{}");
             collapsedFolders = JSON.parse(localStorage.getItem("bms_collapsed_folders") || "{}");
         } catch (e) {
+            console.warn("Limpando cache corrompido de favoritos e pastas.");
             localStorage.removeItem("bms_favorites_map");
             localStorage.removeItem("bms_collapsed_folders");
             favoriteItems = {};
@@ -739,6 +750,7 @@
         let isMainExpanded = false;
         let isCompExpanded = false;
 
+        // Toggle Sidebar
         let isSidebarHidden = false;
         window.toggleSidebar = function() {
             const sb = document.getElementById("sidebar-left");
@@ -753,14 +765,6 @@
                 if(resizer) resizer.classList.remove("hidden");
             }
             setTimeout(resizeCanvas, 60);
-        };
-
-        window.promptAndSend = function(msg) {
-            const input = document.getElementById('chat-input');
-            if(input) {
-                input.value = msg;
-                sendChatMessage();
-            }
         };
 
         window.toggleAppFullscreen = function() {
@@ -980,22 +984,69 @@
             }
         };
 
-        const sidebarLeft = document.getElementById('sidebar-left'); const sidebarComparison = document.getElementById('sidebar-comparison'); const sidebarRight = document.getElementById('sidebar-right');
-        const resizerLeft = document.getElementById('resizer-left'); const resizerCenter = document.getElementById('resizer-center'); const resizerRight = document.getElementById('resizer-right');
-        let isResizingLeft = false; let isResizingCenter = false; let isResizingRight = false;
+        // =========================================================================
+        // REDIMENSIONADOR (SPLITTER) ENTRE AS 4 COLUNAS BLINDADO
+        // =========================================================================
 
-        if (resizerLeft) resizerLeft.addEventListener('mousedown', (e) => { isResizingLeft = true; document.body.style.cursor = 'col-resize'; e.preventDefault(); });
-        if (resizerCenter) resizerCenter.addEventListener('mousedown', (e) => { isResizingCenter = true; document.body.style.cursor = 'col-resize'; e.preventDefault(); });
-        if (resizerRight) resizerRight.addEventListener('mousedown', (e) => { isResizingRight = true; document.body.style.cursor = 'col-resize'; e.preventDefault(); });
+        const sidebarLeft = document.getElementById('sidebar-left'); 
+        const sidebarComparison = document.getElementById('sidebar-comparison'); 
+        const sidebarRight = document.getElementById('sidebar-right');
+        
+        const resizerLeft = document.getElementById('resizer-left'); 
+        const resizerCenter = document.getElementById('resizer-center'); 
+        const resizerRight = document.getElementById('resizer-right');
+
+        let isResizingLeft = false; 
+        let isResizingCenter = false; 
+        let isResizingRight = false;
+        
+        // Elemento invisível que impede iframes de engolirem o evento do mouse
+        const dragOverlay = document.getElementById('drag-overlay');
+
+        function startResize(type) {
+            if (type === 'left') isResizingLeft = true;
+            if (type === 'center') isResizingCenter = true;
+            if (type === 'right') isResizingRight = true;
+            
+            if (dragOverlay) dragOverlay.classList.remove('hidden');
+            document.body.classList.add('select-none'); 
+        }
+
+        function stopResize() {
+            isResizingLeft = false; 
+            isResizingCenter = false; 
+            isResizingRight = false; 
+            
+            if (dragOverlay) dragOverlay.classList.add('hidden');
+            document.body.classList.remove('select-none');
+            
+            if (canvas) resizeCanvas();
+        }
+
+        if (resizerLeft) resizerLeft.addEventListener('mousedown', (e) => { e.preventDefault(); startResize('left'); });
+        if (resizerCenter) resizerCenter.addEventListener('mousedown', (e) => { e.preventDefault(); startResize('center'); });
+        if (resizerRight) resizerRight.addEventListener('mousedown', (e) => { e.preventDefault(); startResize('right'); });
 
         document.addEventListener('mousemove', (e) => {
-            if (isResizingLeft && sidebarLeft && !isSidebarHidden) { let w = e.clientX; if (w > 150 && w < window.innerWidth * 0.3) sidebarLeft.style.width = w + "px"; }
-            if (isResizingCenter && sidebarComparison) { let calculatedWidth = window.innerWidth - e.clientX - (sidebarRight ? sidebarRight.clientWidth : 320); if (calculatedWidth > 200 && calculatedWidth < window.innerWidth * 0.5) sidebarComparison.style.width = calculatedWidth + "px"; }
-            if (isResizingRight && sidebarRight) { let w = window.innerWidth - e.clientX; if (w > 200 && w < window.innerWidth * 0.3) sidebarRight.style.width = w + "px"; }
-            if (canvas) resizeCanvas();
+            if (!isResizingLeft && !isResizingCenter && !isResizingRight) return;
+            
+            if (isResizingLeft && sidebarLeft && !isSidebarHidden) { 
+                let w = e.clientX; 
+                if (w > 150 && w < window.innerWidth * 0.4) sidebarLeft.style.width = w + "px"; 
+            }
+            if (isResizingCenter && sidebarComparison) { 
+                let calculatedWidth = window.innerWidth - e.clientX - (sidebarRight ? sidebarRight.clientWidth : 300); 
+                if (calculatedWidth > 200 && calculatedWidth < window.innerWidth * 0.6) sidebarComparison.style.width = calculatedWidth + "px"; 
+            }
+            if (isResizingRight && sidebarRight) { 
+                let w = window.innerWidth - e.clientX; 
+                if (w > 200 && w < window.innerWidth * 0.4) sidebarRight.style.width = w + "px"; 
+            }
         });
 
-        document.addEventListener('mouseup', () => { isResizingLeft = false; isResizingCenter = false; isResizingRight = false; document.body.style.cursor = 'default'; });
+        document.addEventListener('mouseup', stopResize);
+        document.addEventListener('mouseleave', stopResize);
+
         function resizeCanvas() { if (canvas && canvas.parentElement) { canvas.width = canvas.parentElement.clientWidth; canvas.height = canvas.parentElement.clientHeight; } }
         window.addEventListener("resize", resizeCanvas); resizeCanvas();
 
@@ -1657,7 +1708,7 @@
             const fullPrompt = `[Área: ${areaVal}, Peça: ${typeVal}, Fase: ${phaseVal}, Foco: ${objVal}]\nInstrução: ${query}`;
             chatHistory.push({ role: "user", content: fullPrompt });
             
-            const tempId = renderMessageBlock("assistant", "Processando...");
+            const tempId = renderMessageBlock("assistant", "Processando o contexto no motor central...");
             
             try {
                 const res = await fetch("/api/chat", { method: "POST", headers: { "Content-Type": "application/json", "x-app-password": pwd }, body: JSON.stringify({ messages: chatHistory }) });
