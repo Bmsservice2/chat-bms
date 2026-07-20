@@ -22,6 +22,7 @@
                 }
             }
         };
+        // Força tema claro sempre (Dark mode removido do código)
         document.documentElement.classList.remove("dark");
     </script>
     
@@ -32,6 +33,7 @@
         textarea::-webkit-scrollbar { width: 4px; }
         textarea::-webkit-scrollbar-thumb { background-color: #cbd5e1; border-radius: 10px; }
 
+        /* Animações do Fundo de Login (Tema Claro Premium) */
         @keyframes blob {
             0% { transform: translate(0px, 0px) scale(1); }
             33% { transform: translate(30px, -50px) scale(1.1); }
@@ -113,12 +115,15 @@
     </div>
 
     <!-- ========================================== -->
-    <!-- ELEMENTOS OCULTOS E MODAIS GERAIS          -->
+    <!-- INPUTS GLOBAIS DE ARQUIVO (OCULTOS)        -->
     <!-- ========================================== -->
     <input type="file" id="global-vault-upload" class="hidden" multiple />
     <input type="file" id="global-folder-upload" class="hidden" webkitdirectory directory multiple />
     <input type="file" id="chat-context-upload" class="hidden" />
 
+    <!-- ========================================== -->
+    <!-- MODAIS E MENUS FLUTUANTES GERAIS           -->
+    <!-- ========================================== -->
     <div id="custom-context-menu" class="hidden absolute bg-white border border-slate-200 rounded-xl shadow-xl py-1.5 w-44 z-50 text-xs font-bold text-slate-700">
         <button onclick="openRenameModal()" class="w-full text-left px-3 py-2 hover:bg-slate-50 flex items-center gap-2"><i data-lucide="edit-2" class="w-3.5 h-3.5 text-blue-500"></i> Renomear / Mover</button>
         <button onclick="openMenuComparison()" class="w-full text-left px-3 py-2 hover:bg-slate-50 flex items-center gap-2 text-blue-600"><i data-lucide="git-compare" class="w-3.5 h-3.5"></i> Abrir na Comparação</button>
@@ -127,7 +132,7 @@
 
     <div id="custom-dialog-modal" class="hidden fixed inset-0 bg-slate-900/40 backdrop-blur-sm flex items-center justify-center z-50">
         <div class="bg-white border border-slate-200 rounded-2xl shadow-2xl p-5 w-80 max-w-full flex flex-col gap-4">
-            <h3 id="modal-title" class="text-sm font-black text-slate-800">Ação</h3>
+            <h3 id="modal-title" class="text-sm font-black text-slate-800">Ação do Cofre</h3>
             <div id="modal-body-content" class="flex flex-col gap-2 text-xs font-semibold text-slate-600"></div>
             <div class="flex justify-end gap-2 text-xs font-bold mt-2">
                 <button onclick="closeCustomModal()" class="px-3 py-2 bg-slate-100 text-slate-600 rounded-xl hover:bg-slate-200 transition-all">Cancelar</button>
@@ -136,28 +141,7 @@
         </div>
     </div>
 
-    <div id="trash-modal" class="hidden fixed inset-0 bg-slate-900/40 backdrop-blur-sm flex items-center justify-center z-50 transition-opacity">
-        <div class="bg-white border border-slate-200 rounded-3xl shadow-2xl p-6 w-[400px] flex flex-col gap-4">
-            <div class="flex items-center gap-3 border-b border-slate-100 pb-3">
-                <div class="w-10 h-10 bg-red-50 text-red-500 rounded-xl flex items-center justify-center shrink-0">
-                    <i data-lucide="trash-2" class="w-5 h-5"></i>
-                </div>
-                <div>
-                    <h3 class="font-black text-slate-800 text-sm">Lixeira do Sistema</h3>
-                    <p class="text-[9px] text-slate-500 uppercase tracking-widest font-bold mt-0.5">Exclusão automática em 30 dias</p>
-                </div>
-            </div>
-            <div class="py-10 flex flex-col items-center justify-center text-slate-400 gap-3">
-                <i data-lucide="inbox" class="w-10 h-10 opacity-30"></i>
-                <span class="text-xs font-bold">Nenhum item na lixeira</span>
-            </div>
-            <div class="flex justify-between items-center pt-3 border-t border-slate-100 mt-2">
-                <button onclick="document.getElementById('trash-modal').classList.add('hidden')" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold text-xs rounded-xl transition-colors">Fechar</button>
-                <button class="px-4 py-2 bg-red-50 text-red-500 font-bold text-xs rounded-xl opacity-50 cursor-not-allowed">Esvaziar Tudo</button>
-            </div>
-        </div>
-    </div>
-
+    <!-- MODAL DE CONTA E PLANO (BOTÃO DE IA OCR)   -->
     <div id="account-settings-modal" class="hidden fixed inset-0 bg-slate-900/40 backdrop-blur-sm flex items-center justify-center z-50">
         <div class="bg-white border border-slate-200 rounded-2xl shadow-2xl p-6 w-[400px] max-w-full flex flex-col gap-4">
             <div class="flex items-center gap-3 border-b border-slate-100 pb-4">
@@ -170,7 +154,7 @@
             <button id="btn-retroactive" onclick="triggerRetroactiveMD()" class="w-full px-4 py-2.5 bg-amber-500 hover:bg-amber-600 text-white font-bold rounded-xl transition-all shadow-sm flex items-center justify-center gap-2 mb-2">
                 <i data-lucide="refresh-cw" class="w-4 h-4"></i> Gerar Markdown de PDFs Antigos
             </button>
-            <p class="text-[9px] text-slate-400 text-center mb-4 leading-tight">O motor de Visão Computacional varrerá o cofre e recriará o texto Markdown com formatação perfeita.</p>
+            <p class="text-[9px] text-slate-400 text-center mb-4 leading-tight">O motor de Visão Computacional da Inteligência Artificial varrerá seu cofre e apagará os arquivos com erro antigo, recriando o texto Markdown com formatação perfeita.</p>
             <div class="flex flex-col gap-2 text-xs font-semibold text-slate-600">
                 <div class="flex justify-between p-2 bg-slate-50 rounded-lg"><span>Plano Habilitado:</span> <span class="text-emerald-600">Profissional (Ilimitado)</span></div>
                 <div class="flex justify-between p-2 bg-slate-50 rounded-lg"><span>Tokens Restantes:</span> <span>Infinitos (Local Mode)</span></div>
@@ -182,8 +166,9 @@
         </div>
     </div>
 
+    <!-- MODAL DO SPEEDTEST NATIVO DA VPS           -->
     <div id="speedtest-modal" class="hidden fixed inset-0 bg-slate-900/40 backdrop-blur-sm flex items-center justify-center z-50 transition-opacity duration-300 opacity-0">
-        <div class="bg-white border border-slate-200 rounded-3xl shadow-2xl p-6 w-[350px] flex flex-col gap-4 transform transition-all duration-300 scale-95" id="speedtest-content">
+        <div class="bg-white border border-slate-200 rounded-3xl shadow-2xl p-6 w-[350px] max-w-full flex flex-col gap-4 transform transition-all duration-300 scale-95" id="speedtest-content">
             <div id="st-state-1" class="flex flex-col items-center pt-2">
                 <div class="w-14 h-14 bg-blue-50 rounded-full flex items-center justify-center text-blue-600 mb-3 relative">
                     <i data-lucide="wifi" class="w-7 h-7"></i>
@@ -232,7 +217,8 @@
     <header class="bg-white border-b border-slate-200 h-[68px] min-h-[68px] flex items-center justify-between px-6 z-20 shadow-sm transition-all duration-300 shrink-0">
         
         <div class="flex items-center gap-2">
-            <button onclick="toggleSidebar()" class="p-2 mr-1 text-slate-400 hover:text-blue-600 hover:bg-slate-50 rounded-lg transition-colors focus:outline-none" title="Esconder/Mostrar Menu">
+            <!-- BOTÃO HAMBÚRGUER (ESCONDER MENU) -->
+            <button onclick="toggleSidebar()" class="p-2 mr-1 text-slate-400 hover:text-blue-600 hover:bg-slate-50 rounded-lg transition-colors focus:outline-none" title="Esconder/Mostrar Menu Lateral">
                 <i data-lucide="menu" class="w-5 h-5"></i>
             </button>
 
@@ -257,11 +243,11 @@
         </div>
 
         <div class="flex items-center gap-4">
-            <button onclick="toggleAppFullscreen()" class="text-slate-400 hover:text-blue-600 transition-colors" title="Tela Cheia">
+            <button onclick="toggleAppFullscreen()" class="text-slate-400 hover:text-blue-600 transition-colors" title="Tela Cheia do Sistema">
                 <i data-lucide="expand" class="w-5 h-5"></i>
             </button>
 
-            <!-- DROPDOWN DE UPLOAD -->
+            <!-- DROPDOWN DE UPLOAD DO COFRE -->
             <div class="relative ml-1">
                 <button onclick="toggleCustomDropdown('dropdown-upload', event)" class="bg-white border border-slate-200 text-slate-600 text-[11px] font-bold px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-slate-50 transition-all active:scale-95 shadow-sm">
                     <i data-lucide="upload-cloud" class="w-4 h-4 text-blue-600"></i> Upload
@@ -316,17 +302,6 @@
             </div>
 
             <div class="mt-4 border-t border-white/5 pt-4 px-1 shrink-0">
-                <div class="flex gap-2 mb-3">
-                    <div onclick="changeFilter('favorites')" class="flex-1 bg-white/5 border border-white/5 rounded-xl p-2.5 flex items-center justify-center gap-2 cursor-pointer hover:bg-white/10 transition-colors group" title="Listar Favoritos">
-                        <i data-lucide="star" class="w-4 h-4 text-amber-500 group-hover:scale-110 transition-transform"></i>
-                        <span class="sidebar-text text-[10px] font-bold text-slate-300 group-hover:text-white transition-colors">Favoritos</span>
-                    </div>
-                    <div onclick="openTrashModal()" class="flex-1 bg-white/5 border border-white/5 rounded-xl p-2.5 flex items-center justify-center gap-2 cursor-pointer hover:bg-red-500/20 hover:border-red-500/30 transition-colors group" title="Lixeira (Auto-limpeza: 30 dias)">
-                        <i data-lucide="trash-2" class="w-4 h-4 text-red-400 group-hover:scale-110 transition-transform"></i>
-                        <span class="sidebar-text text-[10px] font-bold text-slate-300 group-hover:text-white transition-colors">Lixeira</span>
-                    </div>
-                </div>
-
                 <div onclick="openSpeedTestModal()" class="mb-1 bg-white/5 border border-white/5 rounded-xl p-3 cursor-pointer hover:bg-white/10 transition-colors flex items-center justify-between group">
                     <div class="flex items-center gap-3">
                         <div class="text-blue-400 group-hover:scale-110 transition-transform">
@@ -335,6 +310,25 @@
                         <span class="sidebar-text text-[10px] font-bold text-slate-300 group-hover:text-white transition-colors">Teste de Rede</span>
                     </div>
                     <i data-lucide="chevron-right" class="sidebar-text w-3.5 h-3.5 text-slate-500 group-hover:text-white transition-colors"></i>
+                </div>
+
+                <div onclick="document.getElementById('account-settings-modal').classList.remove('hidden')" class="bg-white/5 border border-white/5 rounded-xl p-3.5 cursor-pointer hover:bg-white/10 transition-colors">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="sidebar-text text-[11px] font-bold text-slate-300 group-hover:text-white flex items-center gap-1.5 transition-colors">
+                            <i data-lucide="shield-check" class="w-3.5 h-3.5 text-emerald-400"></i> Profissional
+                        </span>
+                        <span class="sidebar-text text-[9px] bg-emerald-500/20 text-emerald-400 font-extrabold px-1.5 py-0.5 rounded">
+                            BETA
+                        </span>
+                    </div>
+                    <div class="sidebar-text text-[10px] text-slate-500 mb-2 font-medium">Uso da Inteligência BMS</div>
+                    <div class="sidebar-text w-full bg-slate-800 h-1.5 rounded-full overflow-hidden mb-1.5">
+                        <div class="bg-blue-500 h-full w-[10%] rounded-full shadow-[0_0_10px_rgba(59,130,246,0.8)]"></div>
+                    </div>
+                    <div class="sidebar-text flex justify-between text-[9px] font-bold text-slate-500">
+                        <span>120 tokens</span>
+                        <span class="text-blue-400">1%</span>
+                    </div>
                 </div>
 
                 <div onclick="toggleSidebar()" class="mt-2 bg-transparent border border-transparent rounded-xl p-3 cursor-pointer hover:bg-white/5 transition-colors flex items-center gap-3 group">
@@ -379,6 +373,8 @@
                         <button onclick="selectOption('area', 'Direito Penal', 'Direito Penal', event)" class="w-full text-left px-3 py-2.5 hover:bg-slate-50 truncate">Direito Penal</button>
                         <button onclick="selectOption('area', 'Direito Tributário', 'Direito Tributário', event)" class="w-full text-left px-3 py-2.5 hover:bg-slate-50 truncate">Direito Tributário</button>
                         <button onclick="selectOption('area', 'Direito Empresarial', 'Direito Empresarial', event)" class="w-full text-left px-3 py-2.5 hover:bg-slate-50 truncate">Direito Empresarial</button>
+                        <button onclick="selectOption('area', 'Direito de Família', 'Direito de Família', event)" class="w-full text-left px-3 py-2.5 hover:bg-slate-50 truncate">Direito de Família</button>
+                        <button onclick="selectOption('area', 'Direito Administrativo', 'Direito Administrativo', event)" class="w-full text-left px-3 py-2.5 hover:bg-slate-50 truncate">Direito Administrativo</button>
                     </div>
                 </div>
 
@@ -399,8 +395,9 @@
                         <button onclick="selectOption('type', 'Análise/Documento', 'Análise Interna', event)" class="w-full text-left px-3 py-2.5 hover:bg-slate-50 truncate">Análise Interna</button>
                         <button onclick="selectOption('type', 'Petição Inicial', 'Petição Inicial', event)" class="w-full text-left px-3 py-2.5 hover:bg-slate-50 truncate">Petição Inicial</button>
                         <button onclick="selectOption('type', 'Contestação', 'Contestação', event)" class="w-full text-left px-3 py-2.5 hover:bg-slate-50 truncate">Contestação</button>
-                        <button onclick="selectOption('type', 'Recurso', 'Recurso (Apelação)', event)" class="w-full text-left px-3 py-2.5 hover:bg-slate-50 truncate">Recurso (Apelação)</button>
+                        <button onclick="selectOption('type', 'Recurso', 'Recurso (Apelação/RO)', event)" class="w-full text-left px-3 py-2.5 hover:bg-slate-50 truncate">Recurso (Apelação/RO)</button>
                         <button onclick="selectOption('type', 'Alegações Finais', 'Alegações Finais', event)" class="w-full text-left px-3 py-2.5 hover:bg-slate-50 truncate">Alegações Finais</button>
+                        <button onclick="selectOption('type', 'Contrato/Acordo', 'Contrato / Acordo', event)" class="w-full text-left px-3 py-2.5 hover:bg-slate-50 truncate">Contrato / Acordo</button>
                         <button onclick="selectOption('type', 'Parecer Jurídico', 'Parecer Jurídico', event)" class="w-full text-left px-3 py-2.5 hover:bg-slate-50 truncate">Parecer Jurídico</button>
                     </div>
                 </div>
@@ -424,6 +421,7 @@
                         <button onclick="selectOption('phase', 'Fase de Instrução/Provas', 'Fase de Instrução', event)" class="w-full text-left px-3 py-2.5 hover:bg-slate-50 truncate">Fase de Instrução</button>
                         <button onclick="selectOption('phase', 'Fase Recursal', 'Fase Recursal', event)" class="w-full text-left px-3 py-2.5 hover:bg-slate-50 truncate">Fase Recursal</button>
                         <button onclick="selectOption('phase', 'Fase de Execução', 'Fase de Execução', event)" class="w-full text-left px-3 py-2.5 hover:bg-slate-50 truncate">Fase de Execução</button>
+                        <button onclick="selectOption('phase', 'Acordo ou Mediação', 'Acordo/Mediação', event)" class="w-full text-left px-3 py-2.5 hover:bg-slate-50 truncate">Acordo/Mediação</button>
                     </div>
                 </div>
 
@@ -552,14 +550,14 @@
                                     <button id="btn-tab-comp-raw" onclick="switchTab('comp', 'raw')" class="px-2 py-0.5 text-slate-500 hover:text-slate-800 transition-colors">MD</button>
                                 </div>
                                 <div class="relative flex items-center" id="expand-wrapper-comp">
-                                    <button onclick="toggleCustomDropdown('dropdown-expand-comp', event)" class="p-1 hover:text-blue-600 transition-colors mx-0.5" title="Ampliar"><i data-lucide="maximize" class="w-4 h-4 text-slate-400"></i></button>
+                                    <button onclick="toggleCustomDropdown('dropdown-expand-comp', event)" class="p-1.5 text-slate-400 hover:text-blue-600 rounded-lg transition-colors mx-0.5" title="Ampliar"><i data-lucide="maximize" class="w-4 h-4 text-slate-400"></i></button>
                                     <div id="dropdown-expand-comp" class="hidden absolute top-[105%] right-0 mt-1 bg-white border border-slate-200 rounded-xl shadow-xl py-1.5 w-48 z-50 text-xs font-bold text-slate-600 flex flex-col">
                                         <button onclick="fullscreenMonitor('comp'); closeAllDropdownsMenu()" class="w-full text-left px-3 py-2 hover:bg-slate-50 flex items-center gap-2"><i data-lucide="monitor" class="w-4 h-4"></i> Tela Cheia Total</button>
                                         <button onclick="toggleSplitMaximize('comp'); closeAllDropdownsMenu()" class="w-full text-left px-3 py-2 hover:bg-slate-50 flex items-center gap-2"><i data-lucide="layout-template" class="w-4 h-4"></i> Expandir Tela Dividida</button>
                                     </div>
                                 </div>
-                                <button id="btn-restore-comp" onclick="exitExpansion('comp')" class="hidden p-1 text-blue-600 bg-blue-50 rounded-lg transition-colors mx-0.5" title="Restaurar Visão Normal"><i data-lucide="minimize" class="w-4 h-4"></i></button>
-                                <button onclick="clearComparisonDoc()" class="p-1 text-slate-400 hover:text-red-500 transition-colors mx-1"><i data-lucide="x" class="w-4 h-4"></i></button>
+                                <button id="btn-restore-comp" onclick="exitExpansion('comp')" class="hidden p-1.5 text-blue-600 bg-blue-50 rounded-lg transition-colors mx-0.5" title="Restaurar Visão Normal"><i data-lucide="minimize" class="w-4 h-4"></i></button>
+                                <button onclick="clearComparisonDoc()" class="p-1.5 text-slate-400 hover:text-red-500 transition-colors mx-1"><i data-lucide="x" class="w-4 h-4"></i></button>
                             </div>
                         </div>
                         <div class="flex-1 relative overflow-hidden font-serif" id="view-doc-comp-wrapper">
@@ -578,7 +576,6 @@
                             <button class="px-4 py-1.5 bg-white border border-slate-200 text-slate-500 text-[10px] font-bold rounded-full whitespace-nowrap hover:bg-slate-50 shadow-sm transition-colors">Órgãos</button>
                             <button class="px-4 py-1.5 bg-white border border-slate-200 text-slate-500 text-[10px] font-bold rounded-full whitespace-nowrap hover:bg-slate-50 shadow-sm transition-colors">Documentos</button>
                             <button class="px-4 py-1.5 bg-white border border-slate-200 text-slate-500 text-[10px] font-bold rounded-full whitespace-nowrap hover:bg-slate-50 shadow-sm transition-colors">Leis</button>
-                            <button class="px-4 py-1.5 bg-white border border-slate-200 text-slate-500 text-[10px] font-bold rounded-full whitespace-nowrap hover:bg-slate-50 shadow-sm transition-colors">Prazos</button>
                         </div>
                         <div class="flex-1 relative w-full h-full overflow-hidden bg-slate-50/50">
                             <canvas id="graph-canvas" class="w-full h-full block cursor-grab active:cursor-grabbing"></canvas>
@@ -589,7 +586,6 @@
                                 <div class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-purple-500"></span> Órgãos</div>
                                 <div class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-amber-500"></span> Leis</div>
                                 <div class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-blue-400"></span> Documentos</div>
-                                <div class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-red-500"></span> Prazos</div>
                             </div>
                         </div>
                     </div>
@@ -616,6 +612,7 @@
                 <p class="text-[11px] text-slate-500 mt-1 leading-snug">Em que posso ajudar com este processo hoje?</p>
             </div>
 
+            <!-- CONTAINER DO CHAT -->
             <div id="chat-messages" class="flex-1 overflow-y-auto p-5 flex flex-col gap-4 bg-[#f8fafc] select-text no-scrollbar relative scroll-smooth">
                 <div class="w-full flex justify-start shrink-0">
                     <div class="bg-white border border-slate-200 text-slate-700 rounded-2xl rounded-tl-sm px-4 py-3 text-[11px] max-w-[90%] shadow-sm leading-relaxed">
@@ -623,7 +620,7 @@
                     </div>
                 </div>
 
-                <!-- SUGESTÕES INICIAIS DO CHAT (ONBOARDING PEDIDO) -->
+                <!-- SUGESTÕES INICIAIS DO CHAT (ONBOARDING) -->
                 <div id="chat-suggestions" class="flex flex-col gap-2.5 w-full mt-2 shrink-0 animate-fade-in">
                     <span class="text-[9px] font-bold text-slate-400 uppercase tracking-widest pl-1">Sugestões de comandos</span>
                     <div class="flex flex-col gap-2">
@@ -643,6 +640,7 @@
                 </div>
             </div>
 
+            <!-- ÁREA DE ANEXOS DO CHAT -->
             <div id="chat-attachment-area" class="hidden px-4 py-2 bg-slate-100 border-t border-slate-200 flex items-center justify-between text-[10px] font-bold text-slate-700 shrink-0">
                 <div class="flex items-center gap-2 truncate">
                     <i data-lucide="paperclip" class="w-3.5 h-3.5 text-blue-500 shrink-0"></i>
@@ -653,6 +651,7 @@
                 </button>
             </div>
 
+            <!-- INPUT DO CHAT COM O FORMATO PILL -->
             <div class="p-5 border-t border-slate-100 bg-white shrink-0 shadow-[0_-10px_20px_rgba(0,0,0,0.02)]">
                 <div class="relative flex items-center bg-slate-50 rounded-full border border-slate-200 p-1 pr-1.5 shadow-inner transition-all focus-within:border-blue-400 focus-within:ring-2 focus-within:ring-blue-100">
                     <button id="btn-chat-attach" class="p-2 text-slate-400 hover:text-blue-600 transition-colors shrink-0">
@@ -684,16 +683,12 @@
             }
         });
 
-        // ==========================================
-        // VARIÁVEIS GLOBAIS BLINDADAS
-        // ==========================================
         const messagesContainer = document.getElementById("chat-messages");
         const chatInput = document.getElementById("chat-input");
         const btnSend = document.getElementById("btn-send");
         const fileTree = document.getElementById("file-tree");
         const globalSearchBar = document.getElementById("global-search-bar");
         const filterDropdown = document.getElementById("filter-menu-dropdown");
-        
         const canvas = document.getElementById("graph-canvas");
         const ctx = canvas ? canvas.getContext("2d") : null;
 
@@ -713,12 +708,10 @@
         let favoriteItems = {};
         let collapsedFolders = {};
 
-        // Blindagem contra cache corrompido no navegador do usuário
         try {
             favoriteItems = JSON.parse(localStorage.getItem("bms_favorites_map") || "{}");
             collapsedFolders = JSON.parse(localStorage.getItem("bms_collapsed_folders") || "{}");
         } catch (e) {
-            console.warn("Limpando cache corrompido de favoritos e pastas.");
             localStorage.removeItem("bms_favorites_map");
             localStorage.removeItem("bms_collapsed_folders");
             favoriteItems = {};
@@ -734,11 +727,11 @@
         let isMainExpanded = false;
         let isCompExpanded = false;
 
-        // Toggle Sidebar
         let isSidebarHidden = false;
         window.toggleSidebar = function() {
             const sb = document.getElementById("sidebar-left");
             const resizer = document.getElementById("resizer-left");
+            
             isSidebarHidden = !isSidebarHidden;
             
             if (isSidebarHidden) {
@@ -748,7 +741,16 @@
                 if(sb) sb.classList.remove("hidden");
                 if(resizer) resizer.classList.remove("hidden");
             }
+            
             setTimeout(resizeCanvas, 60);
+        };
+
+        window.promptAndSend = function(msg) {
+            const input = document.getElementById('chat-input');
+            if(input) {
+                input.value = msg;
+                sendChatMessage();
+            }
         };
 
         window.toggleAppFullscreen = function() {
@@ -1047,12 +1049,7 @@
         function toggleFilterDropdown(e) { e.stopPropagation(); closeAllDropdownsMenu(); if (filterDropdown) filterDropdown.classList.remove("hidden"); }
         function toggleCustomDropdown(id, e) { e.stopPropagation(); const el = document.getElementById(id); if (el) { const isHidden = el.classList.contains("hidden"); closeAllDropdownsMenu(); if (isHidden) el.classList.remove("hidden"); } }
         function selectOption(category, value, label, e) { e.stopPropagation(); const vi = document.getElementById(`ctx-${category}`); const ls = document.getElementById(`label-ctx-${category}`); const dp = document.getElementById(`dropdown-${category}`); if (vi) vi.value = value; if (ls) ls.innerText = label; if (dp) dp.classList.add("hidden"); }
-        
-        function changeFilter(type) { 
-            currentFilterType = type; 
-            closeAllDropdownsMenu(); 
-            buildNotesTree(); 
-        }
+        function changeFilter(type) { currentFilterType = type; closeAllDropdownsMenu(); buildNotesTree(); }
 
         window.triggerRetroactiveMD = async function() {
             const btn = document.getElementById("btn-retroactive"); if (!btn) return;
@@ -1456,8 +1453,8 @@
                         const cleanCompPath = comparisonFileId ? comparisonFileId.replace(/\/$/, "") : "";
                         const isSelected = (cleanItemPath === cleanMainPath || cleanItemPath === cleanCompPath);
                         
-                        if (isSelected) row.className = "tree-row-container group flex items-center justify-between w-full rounded-lg py-1 px-2 mb-0.5 border-l-2 border-blue-500 bg-blue-600/20 text-blue-400 font-bold transition-all shadow-sm";
-                        else row.className = "tree-row-container group flex items-center justify-between w-full rounded-lg py-1 px-2 mb-0.5 border-l-2 border-transparent text-slate-400 hover:text-white hover:bg-white/5 transition-all font-medium";
+                        if (isSelected) row.className = "tree-row-container group flex items-center justify-between w-full rounded-lg py-1.5 px-3 mb-0.5 border-l-[3px] border-blue-500 bg-blue-600/20 text-blue-400 font-bold transition-all shadow-sm";
+                        else row.className = "tree-row-container group flex items-center justify-between w-full rounded-lg py-1.5 px-3 mb-0.5 border-l-[3px] border-transparent text-slate-400 hover:text-white hover:bg-white/5 transition-all font-medium";
                         row.setAttribute("data-path", item.path);
 
                         const isDir = item.type === "directory"; row.draggable = true;
@@ -1473,10 +1470,10 @@
                         };
 
                         const btn = document.createElement("button"); const depth = currentFilterType === "favorites" ? 0 : (item.path.match(/\//g) || []).length - (isDir ? 1 : 0);
-                        btn.className = "flex-1 text-left flex items-center gap-2 truncate text-xs focus:outline-none"; btn.style.paddingLeft = `${depth * 10}px`;
+                        btn.className = "flex-1 text-left flex items-center gap-2.5 truncate text-[11px] focus:outline-none"; btn.style.paddingLeft = `${depth * 12}px`;
                         
                         let icon = "file"; let iconColor = "text-slate-500";
-                        if (isDir) { icon = "folder"; iconColor = "text-slate-400"; } 
+                        if (isDir) { icon = "folder-open"; iconColor = "text-slate-400"; } 
                         else if (item.path.endsWith('.pdf')) { icon = "file-text"; iconColor = "text-slate-500"; }
                         if (isSelected && !isDir) { iconColor = "text-blue-400"; }
                         
@@ -1485,15 +1482,15 @@
                         
                         const isCollapsed = !!collapsedFolders[cleanItemPath]; let chevronIcon = `<div class="w-3.5 shrink-0"></div>`;
                         if (isDir && currentFilterType !== "favorites") {
-                            if (isCollapsed) chevronIcon = `<i data-lucide="chevron-right" class="w-3 h-3 shrink-0 text-slate-400"></i>`;
-                            else chevronIcon = `<i data-lucide="chevron-down" class="w-3 h-3 shrink-0 text-slate-400"></i>`;
+                            if (isCollapsed) chevronIcon = `<i data-lucide="chevron-right" class="w-3.5 h-3.5 shrink-0 text-slate-500"></i>`;
+                            else chevronIcon = `<i data-lucide="chevron-down" class="w-3.5 h-3.5 shrink-0 text-slate-500"></i>`;
                         }
                         
-                        btn.innerHTML = `${chevronIcon}<i data-lucide="${icon}" class="w-3.5 h-3.5 ${iconColor} shrink-0"></i> <span class="truncate">${cleanItemPath.split('/').pop()}</span> ${starBadge}`;
+                        btn.innerHTML = `<span class="sidebar-text flex items-center gap-1.5 w-full">${chevronIcon}<i data-lucide="${icon}" class="w-3.5 h-3.5 ${iconColor} shrink-0"></i> <span class="truncate">${cleanItemPath.split('/').pop()}</span> ${starBadge}</span>`;
                         if (!isDir) { btn.onclick = (e) => { e.stopPropagation(); loadNoteContent(item.path); }; } 
                         else { btn.onclick = (e) => { e.stopPropagation(); collapsedFolders[cleanItemPath] = !collapsedFolders[cleanItemPath]; localStorage.setItem("bms_collapsed_folders", JSON.stringify(collapsedFolders)); selectedFileId = item.path; buildNotesTree(); }; }
 
-                        const menuBtn = document.createElement("button"); menuBtn.className = "opacity-0 group-hover:opacity-100 p-1 hover:text-white rounded transition-all focus:outline-none";
+                        const menuBtn = document.createElement("button"); menuBtn.className = "sidebar-text opacity-0 group-hover:opacity-100 p-1 hover:text-white rounded transition-all focus:outline-none";
                         menuBtn.innerHTML = `<i data-lucide="more-horizontal" class="w-3.5 h-3.5"></i>`; menuBtn.onclick = (e) => { triggerInlineContextMenu(e, item.path); };
 
                         row.appendChild(btn); row.appendChild(menuBtn); fileTree.appendChild(row);
@@ -1501,8 +1498,8 @@
                     try { lucide.createIcons(); } catch(e) {}
                     
                     if(isSidebarHidden) {
-                        const sbLeft = document.getElementById("sidebar-left");
-                        if(sbLeft) sbLeft.classList.add("hidden");
+                        const texts = fileTree.querySelectorAll(".sidebar-text");
+                        texts.forEach(t => t.classList.add("hidden"));
                     }
                 }
             } catch(e) { console.error(e); }
@@ -1645,7 +1642,7 @@
             const fullPrompt = `[Área: ${areaVal}, Peça: ${typeVal}, Fase: ${phaseVal}, Foco: ${objVal}]\nInstrução: ${query}`;
             chatHistory.push({ role: "user", content: fullPrompt });
             
-            const tempId = renderMessageBlock("assistant", "Processando...");
+            const tempId = renderMessageBlock("assistant", "Processando o contexto no motor central...");
             
             try {
                 const res = await fetch("/api/chat", { method: "POST", headers: { "Content-Type": "application/json", "x-app-password": pwd }, body: JSON.stringify({ messages: chatHistory }) });
@@ -1674,17 +1671,15 @@
         if (chatInput) chatInput.onkeydown = (e) => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); sendChatMessage(); } };
 
         // =========================================================================
-        // INITIALIZATION IIFE (Blindagem de Inicialização)
+        // INITIALIZATION AUTO-EXECUTÁVEL (Blindagem Máxima)
         // =========================================================================
-        (function initAuth() {
+        (function bootApplication() {
             try {
                 const savedToken = sessionStorage.getItem("bms_auth_token");
                 const gate = document.getElementById("auth-gate");
 
                 if (savedToken === "Ym1zOmx1aXph") {
-                    if (gate) {
-                        gate.style.display = "none";
-                    }
+                    if (gate) gate.style.display = "none";
                     buildNotesTree();
                     reloadGlobalGraph();
                     return;
@@ -1694,7 +1689,6 @@
                     const splash = document.getElementById("auth-splash");
                     const box = document.getElementById("auth-box");
                     if (splash) {
-                        splash.classList.remove("opacity-100", "scale-100");
                         splash.classList.add("opacity-0", "scale-95");
                         setTimeout(() => {
                             splash.classList.add("hidden");
@@ -1704,14 +1698,14 @@
                                     box.classList.remove("opacity-0", "translate-y-12");
                                     box.classList.add("opacity-100", "translate-y-0");
                                     const u = document.getElementById("auth-user");
-                                    if(u) u.focus();
+                                    if (u) u.focus();
                                 }, 50);
                             }
                         }, 700);
                     }
                 }, 2000);
-            } catch(err) {
-                console.error("Falha no boot da aplicação:", err);
+            } catch (err) {
+                console.error("Erro no boot:", err);
                 const gate = document.getElementById("auth-gate");
                 if (gate) gate.classList.add("hidden");
             }
