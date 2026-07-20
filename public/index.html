@@ -33,7 +33,7 @@
         textarea::-webkit-scrollbar { width: 4px; }
         textarea::-webkit-scrollbar-thumb { background-color: #cbd5e1; border-radius: 10px; }
 
-        /* Animações do Fundo de Login */
+        /* Animações do Fundo de Login (Tema Claro Premium) */
         @keyframes blob {
             0% { transform: translate(0px, 0px) scale(1); }
             33% { transform: translate(30px, -50px) scale(1.1); }
@@ -44,9 +44,6 @@
     </style>
 </head>
 <body class="bg-brand-bg text-slate-800 font-sans h-screen flex flex-col overflow-hidden select-none">
-
-    <!-- OVERLAY INVISÍVEL PARA BLINDAR ARRASTE (NOVO) -->
-    <div id="drag-overlay" class="fixed inset-0 z-[9999] hidden cursor-col-resize"></div>
 
     <!-- ========================================== -->
     <!-- TELA DE LOGIN & SPLASH SCREEN (BLINDADA)   -->
@@ -329,10 +326,13 @@
 
             <div class="mt-4 border-t border-white/5 pt-4 px-1 shrink-0">
                 <div class="flex gap-2 mb-3">
-                    <div onclick="changeFilter('favorites')" class="flex-1 bg-white/5 border border-white/5 rounded-xl p-2.5 flex items-center justify-center gap-2 cursor-pointer hover:bg-white/10 transition-colors group" title="Listar Favoritos">
+                    
+                    <!-- BOTÃO DINÂMICO DE FAVORITOS (LIGA/DESLIGA O FILTRO) -->
+                    <div id="btn-filter-favorites" onclick="toggleFavoritesFilter()" class="flex-1 bg-white/5 border border-white/5 rounded-xl p-2.5 flex items-center justify-center gap-2 cursor-pointer hover:bg-white/10 transition-colors group" title="Filtrar Favoritos">
                         <i data-lucide="star" class="w-4 h-4 text-amber-500 group-hover:scale-110 transition-transform"></i>
-                        <span class="sidebar-text text-[10px] font-bold text-slate-300 group-hover:text-white transition-colors">Favoritos</span>
+                        <span id="text-filter-favorites" class="sidebar-text text-[10px] font-bold text-slate-300 group-hover:text-white transition-colors">Favoritos</span>
                     </div>
+
                     <div onclick="openTrashModal()" class="flex-1 bg-white/5 border border-white/5 rounded-xl p-2.5 flex items-center justify-center gap-2 cursor-pointer hover:bg-red-500/20 hover:border-red-500/30 transition-colors group" title="Lixeira (Auto-limpeza: 30 dias)">
                         <i data-lucide="trash-2" class="w-4 h-4 text-red-400 group-hover:scale-110 transition-transform"></i>
                         <span class="sidebar-text text-[10px] font-bold text-slate-300 group-hover:text-white transition-colors">Lixeira</span>
@@ -358,9 +358,9 @@
             </div>
         </aside>
 
-        <!-- SPLITTER 1 (MAIS LARGO PARA FACILITAR O CLIQUE) -->
-        <div id="resizer-left" class="w-3 bg-brand-sidebar hover:bg-blue-600 cursor-col-resize z-10 shrink-0 transition-colors flex items-center justify-center border-l border-white/5 group">
-            <div class="w-1 h-8 bg-slate-600 group-hover:bg-white rounded-full transition-colors"></div>
+        <!-- SPLITTER 1 (VISUAL) -->
+        <div id="resizer-left" class="w-1.5 bg-brand-sidebar hover:bg-blue-600 cursor-col-resize z-10 shrink-0 transition-colors flex items-center justify-center border-l border-white/5 group">
+            <div class="w-0.5 h-12 bg-slate-700 group-hover:bg-white rounded-full transition-colors"></div>
         </div>
 
         <!-- ========================================== -->
@@ -530,8 +530,8 @@
                 </div>
 
                 <!-- SPLITTER 2 (VISUAL) -->
-                <div id="resizer-center" class="w-3 bg-transparent hover:bg-blue-500 cursor-col-resize z-10 flex-shrink-0 transition-colors flex items-center justify-center rounded-full group">
-                    <div class="w-1 h-8 bg-slate-300 group-hover:bg-white rounded-full transition-colors"></div>
+                <div id="resizer-center" class="w-2 bg-transparent hover:bg-blue-500 cursor-col-resize z-10 flex-shrink-0 transition-colors flex items-center justify-center rounded-full group">
+                    <div class="w-0.5 h-12 bg-slate-300 group-hover:bg-white rounded-full transition-colors"></div>
                 </div>
 
                 <!-- MONITOR 2 (COMPARAÇÃO E MALHA NEURAL EM CARD BRANCO) -->
@@ -614,8 +614,8 @@
         </main>
 
         <!-- SPLITTER 3 (VISUAL) -->
-        <div id="resizer-right" class="w-3 bg-transparent hover:bg-blue-500 cursor-col-resize z-10 flex-shrink-0 transition-colors flex items-center justify-center rounded-full group">
-            <div class="w-1 h-8 bg-slate-300 group-hover:bg-white rounded-full transition-colors"></div>
+        <div id="resizer-right" class="w-1.5 bg-transparent hover:bg-blue-500 cursor-col-resize z-10 flex-shrink-0 transition-colors flex items-center justify-center rounded-full group">
+            <div class="w-0.5 h-12 bg-slate-300 group-hover:bg-white rounded-full transition-colors"></div>
         </div>
 
         <!-- ========================================== -->
@@ -639,7 +639,7 @@
                     </div>
                 </div>
 
-                <!-- SUGESTÕES INICIAIS DO CHAT (ONBOARDING) -->
+                <!-- SUGESTÕES INICIAIS DO CHAT (ONBOARDING PEDIDO) -->
                 <div id="chat-suggestions" class="flex flex-col gap-2.5 w-full mt-2 shrink-0 animate-fade-in">
                     <span class="text-[9px] font-bold text-slate-400 uppercase tracking-widest pl-1">Sugestões de comandos</span>
                     <div class="flex flex-col gap-2">
@@ -783,6 +783,38 @@
         window.clearTreeSelection = function(e) {
             if (e.target.id === "file-tree" || e.target.tagName === "ASIDE") clearMainMonitor();
         };
+
+        // =========================================================================
+        // TOGGLE DE FAVORITOS (ALTERA O VISUAL DO BOTÃO E FILTRA A ÁRVORE)
+        // =========================================================================
+        window.toggleFavoritesFilter = function() {
+            if (currentFilterType === 'favorites') {
+                changeFilter('all');
+            } else {
+                changeFilter('favorites');
+            }
+        };
+
+        function changeFilter(type) { 
+            currentFilterType = type; 
+            closeAllDropdownsMenu(); 
+            buildNotesTree(); 
+            
+            const btnFav = document.getElementById("btn-filter-favorites");
+            const textFav = document.getElementById("text-filter-favorites");
+            
+            if (btnFav && textFav) {
+                if (type === 'favorites') {
+                    btnFav.className = "flex-1 bg-amber-500/20 border border-amber-500/30 rounded-xl p-2.5 flex items-center justify-center gap-2 cursor-pointer hover:bg-amber-500/30 transition-colors group";
+                    textFav.innerText = "Ver Todos";
+                    textFav.className = "sidebar-text text-[10px] font-bold text-amber-400 group-hover:text-amber-300 transition-colors";
+                } else {
+                    btnFav.className = "flex-1 bg-white/5 border border-white/5 rounded-xl p-2.5 flex items-center justify-center gap-2 cursor-pointer hover:bg-white/10 transition-colors group";
+                    textFav.innerText = "Favoritos";
+                    textFav.className = "sidebar-text text-[10px] font-bold text-slate-300 group-hover:text-white transition-colors";
+                }
+            }
+        }
 
         window.toggleActiveFileFavorite = function() {
             if (!selectedFileId) return;
@@ -984,42 +1016,23 @@
             }
         };
 
-        // =========================================================================
-        // REDIMENSIONADOR (SPLITTER) ENTRE AS 4 COLUNAS BLINDADO
-        // =========================================================================
-
-        const sidebarLeft = document.getElementById('sidebar-left'); 
-        const sidebarComparison = document.getElementById('sidebar-comparison'); 
-        const sidebarRight = document.getElementById('sidebar-right');
-        
-        const resizerLeft = document.getElementById('resizer-left'); 
-        const resizerCenter = document.getElementById('resizer-center'); 
-        const resizerRight = document.getElementById('resizer-right');
-
-        let isResizingLeft = false; 
-        let isResizingCenter = false; 
-        let isResizingRight = false;
-        
-        // Elemento invisível que impede iframes de engolirem o evento do mouse
+        const sidebarLeft = document.getElementById('sidebar-left'); const sidebarComparison = document.getElementById('sidebar-comparison'); const sidebarRight = document.getElementById('sidebar-right');
+        const resizerLeft = document.getElementById('resizer-left'); const resizerCenter = document.getElementById('resizer-center'); const resizerRight = document.getElementById('resizer-right');
+        let isResizingLeft = false; let isResizingCenter = false; let isResizingRight = false;
         const dragOverlay = document.getElementById('drag-overlay');
 
         function startResize(type) {
             if (type === 'left') isResizingLeft = true;
             if (type === 'center') isResizingCenter = true;
             if (type === 'right') isResizingRight = true;
-            
             if (dragOverlay) dragOverlay.classList.remove('hidden');
             document.body.classList.add('select-none'); 
         }
 
         function stopResize() {
-            isResizingLeft = false; 
-            isResizingCenter = false; 
-            isResizingRight = false; 
-            
+            isResizingLeft = false; isResizingCenter = false; isResizingRight = false; 
             if (dragOverlay) dragOverlay.classList.add('hidden');
             document.body.classList.remove('select-none');
-            
             if (canvas) resizeCanvas();
         }
 
@@ -1029,19 +1042,9 @@
 
         document.addEventListener('mousemove', (e) => {
             if (!isResizingLeft && !isResizingCenter && !isResizingRight) return;
-            
-            if (isResizingLeft && sidebarLeft && !isSidebarHidden) { 
-                let w = e.clientX; 
-                if (w > 150 && w < window.innerWidth * 0.4) sidebarLeft.style.width = w + "px"; 
-            }
-            if (isResizingCenter && sidebarComparison) { 
-                let calculatedWidth = window.innerWidth - e.clientX - (sidebarRight ? sidebarRight.clientWidth : 300); 
-                if (calculatedWidth > 200 && calculatedWidth < window.innerWidth * 0.6) sidebarComparison.style.width = calculatedWidth + "px"; 
-            }
-            if (isResizingRight && sidebarRight) { 
-                let w = window.innerWidth - e.clientX; 
-                if (w > 200 && w < window.innerWidth * 0.4) sidebarRight.style.width = w + "px"; 
-            }
+            if (isResizingLeft && sidebarLeft && !isSidebarHidden) { let w = e.clientX; if (w > 150 && w < window.innerWidth * 0.4) sidebarLeft.style.width = w + "px"; }
+            if (isResizingCenter && sidebarComparison) { let calculatedWidth = window.innerWidth - e.clientX - (sidebarRight ? sidebarRight.clientWidth : 300); if (calculatedWidth > 200 && calculatedWidth < window.innerWidth * 0.6) sidebarComparison.style.width = calculatedWidth + "px"; }
+            if (isResizingRight && sidebarRight) { let w = window.innerWidth - e.clientX; if (w > 200 && w < window.innerWidth * 0.4) sidebarRight.style.width = w + "px"; }
         });
 
         document.addEventListener('mouseup', stopResize);
@@ -1092,7 +1095,7 @@
                     const s2_final = document.getElementById("st-state-2"); const s3 = document.getElementById("st-state-3"); const finVal = document.getElementById("st-final-value"); 
                     if (s2_final) s2_final.classList.add("hidden"); if (s3) s3.classList.remove("hidden"); if (finVal) finVal.innerText = finalMbps.toFixed(1);
                 }, 800);
-            } catch (e) { alert("Erro ao testar velocidade."); closeSpeedTest(); }
+            } catch (e) { alert("Erro ao testar velocidade. Verifique sua conexão local."); closeSpeedTest(); }
         }
 
         function closeAllDropdownsMenu() {
@@ -1107,15 +1110,7 @@
             const dpExpComp = document.getElementById("dropdown-expand-comp"); if (dpExpComp) dpExpComp.classList.add("hidden");
         }
 
-        function toggleFilterDropdown(e) { e.stopPropagation(); closeAllDropdownsMenu(); if (filterDropdown) filterDropdown.classList.remove("hidden"); }
         function toggleCustomDropdown(id, e) { e.stopPropagation(); const el = document.getElementById(id); if (el) { const isHidden = el.classList.contains("hidden"); closeAllDropdownsMenu(); if (isHidden) el.classList.remove("hidden"); } }
-        function selectOption(category, value, label, e) { e.stopPropagation(); const vi = document.getElementById(`ctx-${category}`); const ls = document.getElementById(`label-ctx-${category}`); const dp = document.getElementById(`dropdown-${category}`); if (vi) vi.value = value; if (ls) ls.innerText = label; if (dp) dp.classList.add("hidden"); }
-        
-        function changeFilter(type) { 
-            currentFilterType = type; 
-            closeAllDropdownsMenu(); 
-            buildNotesTree(); 
-        }
 
         window.triggerRetroactiveMD = async function() {
             const btn = document.getElementById("btn-retroactive"); if (!btn) return;
@@ -1396,7 +1391,7 @@
 
         function triggerInlineContextMenu(e, path) {
             e.stopPropagation(); contextMenuSelectedPath = path; const menu = document.getElementById("custom-context-menu"); closeAllDropdownsMenu();
-            if (menu) { menu.classList.remove("hidden"); menu.style.left = `${e.clientX - 100}px`; menu.style.top = `${e.clientY}px`; }
+            if (menu) { menu.classList.remove("hidden"); menu.style.left = `${e.clientX - 160}px`; menu.style.top = `${e.clientY + 10}px`; }
         }
 
         function closeCustomModal() { const modal = document.getElementById("custom-dialog-modal"); if (modal) modal.classList.add("hidden"); }
@@ -1735,88 +1730,6 @@
 
         if (btnSend) btnSend.onclick = sendChatMessage;
         if (chatInput) chatInput.onkeydown = (e) => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); sendChatMessage(); } };
-
-        // =========================================================================
-        // INITIALIZATION AUTO-EXECUTÁVEL (Blindagem Direta no Frontend)
-        // =========================================================================
-        window.onload = function() {
-            try {
-                const savedToken = sessionStorage.getItem("bms_auth_token");
-                const gate = document.getElementById("auth-gate");
-
-                if (savedToken === "Ym1zOmx1aXph" || savedToken === "Ym1zOmx1aXph") {
-                    if (gate) gate.style.display = "none";
-                    buildNotesTree();
-                    reloadGlobalGraph();
-                } else {
-                    setTimeout(() => {
-                        const splash = document.getElementById("auth-splash");
-                        const box = document.getElementById("auth-box");
-                        if (splash) {
-                            splash.classList.add("opacity-0", "scale-95");
-                            setTimeout(() => {
-                                splash.classList.add("hidden");
-                                if (box) {
-                                    box.classList.remove("hidden");
-                                    setTimeout(() => {
-                                        box.classList.remove("opacity-0", "translate-y-12");
-                                        box.classList.add("opacity-100", "translate-y-0");
-                                        const u = document.getElementById("auth-user");
-                                        if (u) u.focus();
-                                    }, 50);
-                                }
-                            }, 700);
-                        }
-                    }, 2000);
-                }
-            } catch (err) {
-                console.error("Erro no carregamento visual:", err);
-                const gate = document.getElementById("auth-gate");
-                if (gate) gate.classList.add("hidden");
-            }
-        };
-
-        window.executeLogin = function() {
-            const u = document.getElementById("auth-user"); 
-            const p = document.getElementById("auth-pass"); 
-            const err = document.getElementById("auth-error"); 
-            const btn = document.getElementById("btn-login");
-
-            if(!u || !p) return;
-
-            // Transforma o usuário em minúsculo, mas mantém a senha exatamente como foi digitada
-            const userVal = u.value.trim().toLowerCase();
-            const passVal = p.value.trim();
-            const isValid = (userVal === "bms" && passVal === "luiza");
-
-            btn.innerHTML = `<i data-lucide="loader" class="w-4 h-4 animate-spin"></i> Autenticando...`; 
-            try { lucide.createIcons(); } catch(e) {}
-
-            setTimeout(() => {
-                if (isValid) {
-                    sessionStorage.setItem("bms_auth_token", "Ym1zOmx1aXph"); 
-                    if(err) err.classList.add("hidden");
-                    const gate = document.getElementById("auth-gate");
-                    if(gate) {
-                        gate.classList.remove("opacity-100"); 
-                        gate.classList.add("opacity-0");
-                        setTimeout(() => { 
-                            gate.classList.add("hidden"); 
-                            gate.style.display = "none";
-                            buildNotesTree(); 
-                            reloadGlobalGraph(); 
-                        }, 1000);
-                    }
-                } else {
-                    if(err) err.classList.remove("hidden");
-                    btn.innerHTML = `Autenticar <i data-lucide="arrow-right" class="w-4 h-4"></i>`; 
-                    try { lucide.createIcons(); } catch(e) {}
-                    const box = document.getElementById("auth-box"); 
-                    box.classList.add("animate-pulse"); 
-                    setTimeout(() => box.classList.remove("animate-pulse"), 500);
-                }
-            }, 800); 
-        };
 
     </script>
 </body>
