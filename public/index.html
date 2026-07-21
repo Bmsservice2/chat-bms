@@ -22,16 +22,16 @@
                 }
             }
         };
+        // Força tema claro sempre
         document.documentElement.classList.remove("dark");
     </script>
     
     <style>
-        /* Fonte global normalizada para melhor leitura */
-        html { font-size: 14px; }
+        html { font-size: 11.5px; }
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-        textarea::-webkit-scrollbar { width: 5px; }
-        textarea::-webkit-scrollbar-thumb { background-color: #94a3b8; border-radius: 10px; }
+        textarea::-webkit-scrollbar { width: 4px; }
+        textarea::-webkit-scrollbar-thumb { background-color: #cbd5e1; border-radius: 10px; }
 
         @keyframes blob {
             0% { transform: translate(0px, 0px) scale(1); }
@@ -58,58 +58,58 @@
         </div>
 
         <div id="auth-splash" class="absolute inset-0 flex flex-col items-center justify-center transition-all duration-700 opacity-100 scale-100 z-20">
-            <svg viewBox="0 0 100 100" class="w-24 h-24 drop-shadow-xl mb-4 animate-pulse">
+            <svg viewBox="0 0 100 100" class="w-20 h-20 drop-shadow-xl mb-4 animate-pulse">
                 <path d="M 35 10 V 70 A 25 25 0 0 0 85 70 A 25 25 0 0 0 35 45" fill="none" stroke="#eab308" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"/>
                 <path d="M 47 10 V 70 A 13 13 0 0 0 73 70 A 13 13 0 0 0 47 57" fill="none" stroke="#3b82f6" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
-            <span class="font-black text-4xl tracking-tight text-slate-800 drop-shadow-sm">
+            <span class="font-black text-3xl tracking-tight text-slate-800 drop-shadow-sm">
                 BMS <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-emerald-500 font-bold">Knowledge</span>
             </span>
-            <div class="mt-6 w-32 h-1.5 bg-slate-200 rounded-full overflow-hidden relative">
+            <div class="mt-6 w-24 h-1 bg-slate-200 rounded-full overflow-hidden relative">
                 <div class="absolute top-0 left-0 h-full bg-gradient-to-r from-blue-500 to-emerald-400 w-full animate-[pulse_1.5s_ease-in-out_infinite]"></div>
             </div>
-            <p class="text-xs text-slate-500 font-bold uppercase tracking-[0.3em] mt-4">Iniciando Ambiente</p>
+            <p class="text-[8px] text-slate-500 font-bold uppercase tracking-[0.3em] mt-4">Iniciando Ambiente</p>
         </div>
 
-        <div id="auth-box" class="hidden absolute flex-col items-center justify-center transition-all duration-700 opacity-0 translate-y-12 w-full max-w-md px-4 z-20">
-            <div class="bg-white/70 backdrop-blur-2xl border border-white/40 p-8 rounded-[2rem] shadow-[0_20px_60px_-15px_rgba(0,0,0,0.1)] w-full flex flex-col gap-6 relative overflow-hidden ring-1 ring-slate-900/5">
+        <div id="auth-box" class="hidden absolute flex-col items-center justify-center transition-all duration-700 opacity-0 translate-y-12 w-full max-w-sm px-4 z-20">
+            <div class="bg-white/70 backdrop-blur-2xl border border-white/40 p-8 rounded-[2rem] shadow-[0_20px_60px_-15px_rgba(0,0,0,0.1)] w-full flex flex-col gap-5 relative overflow-hidden ring-1 ring-slate-900/5">
                 <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-600 via-emerald-400 to-blue-600"></div>
                 <div class="text-center relative z-10">
-                    <div class="w-14 h-14 mx-auto bg-white border border-slate-200 rounded-2xl flex items-center justify-center mb-4 shadow-sm">
-                        <i data-lucide="shield-check" class="w-7 h-7 text-emerald-500"></i>
+                    <div class="w-12 h-12 mx-auto bg-white border border-slate-100 rounded-2xl flex items-center justify-center mb-4 shadow-sm">
+                        <i data-lucide="shield-check" class="w-6 h-6 text-emerald-500"></i>
                     </div>
-                    <h2 class="text-3xl font-black text-slate-800 mb-1 tracking-tight">Acesso Restrito</h2>
-                    <p class="text-[11px] text-slate-500 font-bold uppercase tracking-widest">Centro Operacional BMS</p>
+                    <h2 class="text-2xl font-black text-slate-800 mb-1 tracking-tight">Acesso Restrito</h2>
+                    <p class="text-[8px] text-slate-500 font-bold uppercase tracking-widest">Centro Operacional BMS</p>
                 </div>
 
-                <div class="flex flex-col gap-4 mt-2 relative z-10">
+                <div class="flex flex-col gap-3 mt-1 relative z-10">
                     <div class="group">
-                        <label class="text-xs font-bold text-slate-600 uppercase tracking-widest mb-2 block ml-1 group-focus-within:text-blue-600 transition-colors">Identificação</label>
+                        <label class="text-[8px] font-bold text-slate-500 uppercase tracking-widest mb-1.5 block ml-1 group-focus-within:text-blue-600 transition-colors">Identificação</label>
                         <div class="relative">
-                            <i data-lucide="user" class="w-4 h-4 text-slate-400 absolute left-4 top-1/2 -translate-y-1/2 group-focus-within:text-blue-600 transition-colors"></i>
-                            <input type="text" id="auth-user" placeholder="Usuário" class="w-full bg-white/50 border border-slate-300 rounded-xl py-3.5 pl-11 pr-4 text-sm font-bold text-slate-800 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 focus:bg-white transition-all placeholder:font-normal placeholder:text-slate-400 shadow-inner">
+                            <i data-lucide="user" class="w-3.5 h-3.5 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 group-focus-within:text-blue-600 transition-colors"></i>
+                            <input type="text" id="auth-user" placeholder="Usuário" class="w-full bg-white/50 border border-slate-200 rounded-xl py-3 pl-10 pr-3 text-xs font-bold text-slate-800 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 focus:bg-white transition-all placeholder:font-normal placeholder:text-slate-400 shadow-inner">
                         </div>
                     </div>
                     <div class="group">
-                        <label class="text-xs font-bold text-slate-600 uppercase tracking-widest mb-2 block ml-1 group-focus-within:text-blue-600 transition-colors">Credencial</label>
+                        <label class="text-[8px] font-bold text-slate-500 uppercase tracking-widest mb-1.5 block ml-1 group-focus-within:text-blue-600 transition-colors">Credencial</label>
                         <div class="relative">
-                            <i data-lucide="lock" class="w-4 h-4 text-slate-400 absolute left-4 top-1/2 -translate-y-1/2 group-focus-within:text-blue-600 transition-colors"></i>
-                            <input type="password" id="auth-pass" placeholder="••••••••" class="w-full bg-white/50 border border-slate-300 rounded-xl py-3.5 pl-11 pr-4 text-sm font-mono text-slate-800 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 focus:bg-white transition-all placeholder:text-slate-400 shadow-inner" onkeydown="if(event.key==='Enter') executeLogin()">
+                            <i data-lucide="lock" class="w-3.5 h-3.5 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 group-focus-within:text-blue-600 transition-colors"></i>
+                            <input type="password" id="auth-pass" placeholder="••••••••" class="w-full bg-white/50 border border-slate-200 rounded-xl py-3 pl-10 pr-3 text-xs font-mono text-slate-800 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 focus:bg-white transition-all placeholder:text-slate-400 shadow-inner" onkeydown="if(event.key==='Enter') executeLogin()">
                         </div>
                     </div>
                 </div>
 
                 <div class="mt-2 relative z-10">
-                    <button onclick="executeLogin()" id="btn-login" class="w-full py-4 bg-brand-sidebar hover:bg-slate-800 active:scale-[0.98] text-white font-black text-sm uppercase tracking-[0.2em] rounded-xl shadow-lg shadow-slate-900/20 transition-all flex items-center justify-center gap-2">
-                        Autenticar <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                    <button onclick="executeLogin()" id="btn-login" class="w-full py-3.5 bg-brand-sidebar hover:bg-slate-800 active:scale-[0.98] text-white font-black text-[11px] uppercase tracking-[0.2em] rounded-xl shadow-lg shadow-slate-900/20 transition-all flex items-center justify-center gap-2">
+                        Autenticar <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
                     </button>
-                    <div id="auth-error" class="hidden text-center text-xs font-black uppercase text-red-500 mt-4 bg-red-50 py-2.5 rounded-lg border border-red-200">
+                    <div id="auth-error" class="hidden text-center text-[9px] font-black uppercase text-red-500 mt-4 bg-red-50 py-2 rounded-lg border border-red-200">
                         Credenciais Recusadas.
                     </div>
                 </div>
             </div>
-            <div class="mt-6 flex items-center gap-2 text-xs text-slate-500 font-bold uppercase tracking-widest opacity-80">
-                <i data-lucide="lock" class="w-3.5 h-3.5"></i> Conexão AES-256 Segura
+            <div class="mt-6 flex items-center gap-1.5 text-[8px] text-slate-500 font-bold uppercase tracking-widest opacity-80">
+                <i data-lucide="lock" class="w-2.5 h-2.5"></i> Conexão AES-256
             </div>
         </div>
     </div>
@@ -121,105 +121,104 @@
     <input type="file" id="global-folder-upload" class="hidden" webkitdirectory directory multiple />
     <input type="file" id="chat-context-upload" class="hidden" />
 
-    <div id="custom-context-menu" class="hidden absolute bg-white border border-slate-200 rounded-xl shadow-xl py-2 w-48 z-50 text-sm font-bold text-slate-700">
-        <button onclick="openRenameModal()" class="w-full text-left px-4 py-2 hover:bg-slate-50 flex items-center gap-3"><i data-lucide="edit-2" class="w-4 h-4 text-blue-500"></i> Renomear</button>
-        <button onclick="openMenuComparison()" class="w-full text-left px-4 py-2 hover:bg-slate-50 flex items-center gap-3 text-blue-600"><i data-lucide="git-compare" class="w-4 h-4"></i> Comparar</button>
-        <button onclick="openDeleteModal()" class="w-full text-left px-4 py-2 hover:bg-slate-50 text-red-600 flex items-center gap-3"><i data-lucide="trash-2" class="w-4 h-4"></i> Apagar</button>
+    <div id="custom-context-menu" class="hidden absolute bg-white border border-slate-200 rounded-xl shadow-xl py-1 w-36 z-50 text-[10px] font-bold text-slate-700">
+        <button onclick="openRenameModal()" class="w-full text-left px-3 py-1.5 hover:bg-slate-50 flex items-center gap-2"><i data-lucide="edit-2" class="w-3 h-3 text-blue-500"></i> Renomear</button>
+        <button onclick="openMenuComparison()" class="w-full text-left px-3 py-1.5 hover:bg-slate-50 flex items-center gap-2 text-blue-600"><i data-lucide="git-compare" class="w-3 h-3"></i> Comparar</button>
+        <button onclick="openDeleteModal()" class="w-full text-left px-3 py-1.5 hover:bg-slate-50 text-red-600 flex items-center gap-2"><i data-lucide="trash-2" class="w-3 h-3"></i> Apagar</button>
     </div>
 
     <div id="custom-dialog-modal" class="hidden fixed inset-0 bg-slate-900/40 backdrop-blur-sm flex items-center justify-center z-50">
-        <div class="bg-white border border-slate-200 rounded-2xl shadow-2xl p-6 w-96 flex flex-col gap-4">
-            <h3 id="modal-title" class="text-base font-black text-slate-800">Ação</h3>
-            <div id="modal-body-content" class="flex flex-col gap-3 text-sm font-semibold text-slate-600"></div>
-            <div class="flex justify-end gap-3 text-sm font-bold mt-2">
-                <button onclick="closeCustomModal()" class="px-4 py-2 bg-slate-100 text-slate-600 rounded-lg hover:bg-slate-200 transition-all">Cancelar</button>
-                <button id="modal-confirm-btn" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-all">Confirmar</button>
+        <div class="bg-white border border-slate-200 rounded-xl shadow-2xl p-4 w-72 flex flex-col gap-3">
+            <h3 id="modal-title" class="text-[11px] font-black text-slate-800">Ação</h3>
+            <div id="modal-body-content" class="flex flex-col gap-2 text-[10px] font-semibold text-slate-600"></div>
+            <div class="flex justify-end gap-2 text-[10px] font-bold mt-1">
+                <button onclick="closeCustomModal()" class="px-3 py-1.5 bg-slate-100 text-slate-600 rounded-lg hover:bg-slate-200 transition-all">Cancelar</button>
+                <button id="modal-confirm-btn" class="px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-all">Confirmar</button>
             </div>
         </div>
     </div>
 
     <!-- MODAL DA LIXEIRA -->
     <div id="trash-modal" class="hidden fixed inset-0 bg-slate-900/40 backdrop-blur-sm flex items-center justify-center z-50 transition-opacity">
-        <div class="bg-white border border-slate-200 rounded-2xl shadow-2xl p-6 w-[450px] flex flex-col gap-4">
-            <div class="flex items-center gap-4 border-b border-slate-100 pb-3">
-                <div class="w-12 h-12 bg-red-50 text-red-500 rounded-xl flex items-center justify-center shrink-0"><i data-lucide="trash-2" class="w-6 h-6"></i></div>
+        <div class="bg-white border border-slate-200 rounded-2xl shadow-2xl p-4 w-[350px] flex flex-col gap-3">
+            <div class="flex items-center gap-3 border-b border-slate-100 pb-2">
+                <div class="w-8 h-8 bg-red-50 text-red-500 rounded-lg flex items-center justify-center shrink-0"><i data-lucide="trash-2" class="w-4 h-4"></i></div>
                 <div>
-                    <h3 class="font-black text-slate-800 text-base">Lixeira do Sistema</h3>
-                    <p class="text-xs text-slate-500 uppercase tracking-widest font-bold">Limpeza auto em 30 dias</p>
+                    <h3 class="font-black text-slate-800 text-[11px]">Lixeira do Sistema</h3>
+                    <p class="text-[8px] text-slate-500 uppercase tracking-widest font-bold">Limpeza auto em 30 dias</p>
                 </div>
             </div>
             
-            <div id="trash-items-container" class="py-2 flex flex-col gap-3 overflow-y-auto max-h-[300px] min-h-[120px] no-scrollbar">
-                <!-- Preenchido via JS -->
+            <div id="trash-items-container" class="py-1 flex flex-col gap-1.5 overflow-y-auto max-h-[200px] min-h-[80px] no-scrollbar">
+                <!-- Javascript preenche a lixeira aqui -->
             </div>
             
-            <div class="flex justify-between items-center pt-3 border-t border-slate-100 mt-2">
-                <button onclick="document.getElementById('trash-modal').classList.add('hidden')" class="px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold text-sm rounded-lg transition-colors">Fechar</button>
-                <button id="btn-empty-trash" onclick="emptyTrash()" class="px-4 py-2.5 bg-red-50 text-red-500 hover:bg-red-100 font-bold text-sm rounded-lg transition-colors shadow-sm">Esvaziar Lixeira</button>
+            <div class="flex justify-between items-center pt-2 border-t border-slate-100 mt-1">
+                <button onclick="document.getElementById('trash-modal').classList.add('hidden')" class="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold text-[10px] rounded-lg transition-colors">Fechar</button>
+                <button id="btn-empty-trash" onclick="emptyTrash()" class="px-3 py-1.5 bg-red-50 text-red-500 hover:bg-red-100 font-bold text-[10px] rounded-lg transition-colors shadow-sm">Esvaziar</button>
             </div>
         </div>
     </div>
 
     <!-- MODAL DE CONTA E PLANO -->
     <div id="account-settings-modal" class="hidden fixed inset-0 bg-slate-900/40 backdrop-blur-sm flex items-center justify-center z-50">
-        <div class="bg-white border border-slate-200 rounded-2xl shadow-2xl p-6 w-[400px] flex flex-col gap-5">
-            <div class="flex items-center gap-4 border-b border-slate-100 pb-4">
-                <div class="w-14 h-14 bg-blue-50 rounded-full flex items-center justify-center text-blue-600 font-black text-xl">TS</div>
+        <div class="bg-white border border-slate-200 rounded-2xl shadow-2xl p-4 w-[320px] flex flex-col gap-3">
+            <div class="flex items-center gap-3 border-b border-slate-100 pb-2">
+                <div class="w-8 h-8 bg-blue-50 rounded-full flex items-center justify-center text-blue-600 font-bold text-sm">TS</div>
                 <div>
-                    <h3 class="font-black text-slate-800 text-base">Ambiente de Testes</h3>
-                    <p class="text-xs text-slate-500 font-semibold mt-0.5">BETA V1.0</p>
+                    <h3 class="font-bold text-slate-800 text-[11px]">Ambiente de Testes</h3>
+                    <p class="text-[9px] text-slate-500 font-medium">BETA V1.0</p>
                 </div>
             </div>
-            <button id="btn-retroactive" onclick="triggerRetroactiveMD()" class="w-full px-4 py-3 bg-amber-500 hover:bg-amber-600 text-white font-bold rounded-xl transition-all shadow-sm flex items-center justify-center gap-2 text-sm">
-                <i data-lucide="refresh-cw" class="w-4 h-4"></i> Gerar MD Antigos
+            <button id="btn-retroactive" onclick="triggerRetroactiveMD()" class="w-full px-3 py-1.5 bg-amber-500 hover:bg-amber-600 text-white font-bold rounded-lg transition-all shadow-sm flex items-center justify-center gap-1.5 text-[10px]">
+                <i data-lucide="refresh-cw" class="w-3 h-3"></i> Gerar MD Antigos
             </button>
-            <p class="text-[11px] text-slate-500 text-center leading-relaxed">O motor de Visão Computacional varrerá o cofre para recriar Markdown.</p>
-            <div class="flex flex-col gap-2 text-sm font-semibold text-slate-700">
-                <div class="flex justify-between p-2.5 bg-slate-50 border border-slate-100 rounded-lg"><span>Plano:</span> <span class="text-emerald-600 font-bold">Profissional (Ilimitado)</span></div>
-                <div class="flex justify-between p-2.5 bg-slate-50 border border-slate-100 rounded-lg"><span>Tokens:</span> <span class="font-bold">Infinitos</span></div>
+            <div class="flex flex-col gap-1 text-[9px] font-semibold text-slate-600 mt-1">
+                <div class="flex justify-between p-1.5 bg-slate-50 rounded"><span>Plano:</span> <span class="text-emerald-600">Profissional (Ilimitado)</span></div>
+                <div class="flex justify-between p-1.5 bg-slate-50 rounded"><span>Tokens:</span> <span>Infinitos</span></div>
             </div>
-            <div class="flex justify-end pt-3 border-t border-slate-100 mt-2">
-                <button onclick="document.getElementById('account-settings-modal').classList.add('hidden')" class="px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl transition-all w-full text-sm font-bold shadow-sm">Fechar Painel</button>
+            <div class="flex justify-end pt-2 border-t border-slate-100">
+                <button onclick="document.getElementById('account-settings-modal').classList.add('hidden')" class="px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-all w-full text-[10px] font-bold">Fechar</button>
             </div>
         </div>
     </div>
 
     <!-- MODAL DE SPEEDTEST -->
     <div id="speedtest-modal" class="hidden fixed inset-0 bg-slate-900/40 backdrop-blur-sm flex items-center justify-center z-50 transition-opacity duration-300 opacity-0">
-        <div class="bg-white border border-slate-200 rounded-2xl shadow-2xl p-6 w-[350px] flex flex-col gap-4 transform transition-all duration-300 scale-95" id="speedtest-content">
-            <div id="st-state-1" class="flex flex-col items-center pt-2">
-                <div class="w-14 h-14 bg-blue-50 rounded-full flex items-center justify-center text-blue-600 mb-3 relative">
-                    <i data-lucide="wifi" class="w-6 h-6"></i>
+        <div class="bg-white border border-slate-200 rounded-2xl shadow-2xl p-4 w-[280px] flex flex-col gap-3 transform transition-all duration-300 scale-95" id="speedtest-content">
+            <div id="st-state-1" class="flex flex-col items-center pt-1">
+                <div class="w-10 h-10 bg-blue-50 rounded-full flex items-center justify-center text-blue-600 mb-2 relative">
+                    <i data-lucide="wifi" class="w-4 h-4"></i>
                     <div class="absolute inset-0 border-2 border-blue-400 rounded-full animate-ping opacity-30"></div>
                 </div>
-                <h3 class="font-black text-slate-800 text-base">Teste de Rede</h3>
-                <div class="flex w-full gap-3 text-sm font-bold mt-5">
-                    <button onclick="closeSpeedTest()" class="flex-1 py-2.5 bg-slate-100 text-slate-600 hover:bg-slate-200 rounded-xl transition-all">Cancelar</button>
-                    <button onclick="startSpeedTest()" class="flex-1 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl transition-all shadow-sm">Iniciar Teste</button>
+                <h3 class="font-black text-slate-800 text-[11px]">Teste de Rede</h3>
+                <div class="flex w-full gap-2 text-[9px] font-bold mt-3">
+                    <button onclick="closeSpeedTest()" class="flex-1 py-1.5 bg-slate-100 text-slate-600 hover:bg-slate-200 rounded-lg transition-all">Cancelar</button>
+                    <button onclick="startSpeedTest()" class="flex-1 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-all shadow-sm">Iniciar</button>
                 </div>
             </div>
             
-            <div id="st-state-2" class="hidden flex flex-col items-center py-4">
-                <h3 class="font-black text-slate-800 text-xs mb-5 uppercase tracking-widest text-slate-400">Medindo Banda...</h3>
-                <div class="relative w-56 h-28 overflow-hidden mb-2">
+            <div id="st-state-2" class="hidden flex flex-col items-center py-2">
+                <h3 class="font-black text-slate-800 text-[9px] mb-3 uppercase tracking-widest text-slate-400">Medindo...</h3>
+                <div class="relative w-40 h-20 overflow-hidden mb-1">
                     <svg viewBox="0 0 100 50" class="w-full h-full">
                         <path d="M 10 50 A 40 40 0 0 1 90 50" fill="none" stroke="currentColor" stroke-width="8" class="text-slate-100" stroke-linecap="round"></path>
                         <path d="M 10 50 A 40 40 0 0 1 90 50" fill="none" stroke="url(#gradient)" stroke-width="8" class="text-blue-500" stroke-dasharray="125" stroke-dashoffset="125" id="st-progress" stroke-linecap="round" style="transition: stroke-dashoffset 0.2s ease-out;"></path>
                         <defs><linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#3b82f6" /><stop offset="100%" stop-color="#10b981" /></linearGradient></defs>
                     </svg>
-                    <div id="st-needle" class="absolute bottom-0 left-1/2 w-[3px] h-[85px] bg-slate-800 origin-bottom -translate-x-1/2 transform -rotate-90 transition-transform duration-200 ease-out rounded-full shadow-sm z-10"></div>
+                    <div id="st-needle" class="absolute bottom-0 left-1/2 w-[2px] h-[65px] bg-slate-800 origin-bottom -translate-x-1/2 transform -rotate-90 transition-transform duration-200 ease-out rounded-full shadow-sm z-10"></div>
                 </div>
-                <div class="text-4xl font-black text-slate-800 font-mono"><span id="st-value">0.0</span></div>
+                <div class="text-2xl font-black text-slate-800 font-mono"><span id="st-value">0.0</span></div>
             </div>
             
-            <div id="st-state-3" class="hidden flex flex-col items-center pt-2">
-                <div class="w-14 h-14 bg-emerald-50 rounded-full flex items-center justify-center text-emerald-600 mb-3"><i data-lucide="check-circle-2" class="w-7 h-7"></i></div>
-                <h3 class="font-black text-slate-800 text-base">Concluído!</h3>
-                <div class="bg-slate-50 rounded-xl p-4 w-full mt-3 border border-slate-200 text-center">
-                    <p class="text-xs uppercase font-bold text-slate-500 mb-1">Sua Velocidade</p>
-                    <p class="text-3xl font-black text-slate-800 font-mono"><span id="st-final-value">0.0</span> <span class="text-sm font-sans text-slate-500">Mbps</span></p>
+            <div id="st-state-3" class="hidden flex flex-col items-center pt-1">
+                <div class="w-10 h-10 bg-emerald-50 rounded-full flex items-center justify-center text-emerald-600 mb-2"><i data-lucide="check-circle-2" class="w-5 h-5"></i></div>
+                <h3 class="font-black text-slate-800 text-[11px]">Concluído!</h3>
+                <div class="bg-slate-50 rounded-lg p-2 w-full mt-2 border border-slate-100 text-center">
+                    <p class="text-[8px] uppercase font-bold text-slate-400">Sua Velocidade</p>
+                    <p class="text-xl font-black text-slate-800 font-mono"><span id="st-final-value">0.0</span> <span class="text-[9px] font-sans text-slate-400">Mbps</span></p>
                 </div>
-                <button onclick="closeSpeedTest()" class="w-full mt-4 py-2.5 bg-slate-100 text-slate-700 hover:bg-slate-200 rounded-xl transition-all font-bold text-sm">Fechar</button>
+                <button onclick="closeSpeedTest()" class="w-full mt-2 py-1.5 bg-slate-100 text-slate-700 hover:bg-slate-200 rounded-lg transition-all font-bold text-[9px]">Fechar</button>
             </div>
         </div>
     </div>
@@ -227,69 +226,68 @@
     <!-- ========================================== -->
     <!-- CABEÇALHO SUPERIOR DO SISTEMA (HEADER)     -->
     <!-- ========================================== -->
-    <header class="bg-white border-b border-slate-200 h-[64px] min-h-[64px] flex items-center justify-between px-6 z-20 shadow-sm shrink-0">
+    <header class="bg-white border-b border-slate-200 h-[48px] min-h-[48px] flex items-center justify-between px-3 z-20 shadow-sm shrink-0">
         
-        <div class="flex items-center gap-3">
-            <button onclick="toggleSidebar()" class="p-2 mr-1 text-slate-500 hover:text-blue-600 hover:bg-slate-50 rounded-lg transition-colors focus:outline-none" title="Esconder/Mostrar Menu Lateral">
-                <i data-lucide="menu" class="w-5 h-5"></i>
+        <div class="flex items-center gap-2">
+            <button onclick="toggleSidebar()" class="p-1.5 text-slate-400 hover:text-blue-600 rounded-md hover:bg-slate-50 transition-colors focus:outline-none">
+                <i data-lucide="menu" class="w-4 h-4"></i>
             </button>
 
-            <div class="w-9 h-9 flex items-center justify-center">
+            <div class="w-6 h-6 flex items-center justify-center">
                 <svg viewBox="0 0 100 100" class="w-full h-full drop-shadow-sm">
                     <path d="M 35 10 V 70 A 25 25 0 0 0 85 70 A 25 25 0 0 0 35 45" fill="none" stroke="#eab308" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"/>
                     <path d="M 47 10 V 70 A 13 13 0 0 0 73 70 A 13 13 0 0 0 47 57" fill="none" stroke="#3b82f6" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
             </div>
-            <span class="font-black text-xl tracking-tight text-slate-800 hidden sm:block">BMS <span class="text-amber-500 font-medium">Knowledge</span></span>
+            <span class="font-black text-sm tracking-tight text-slate-800 hidden sm:block">BMS <span class="text-amber-500 font-medium">Knowledge</span></span>
         </div>
         
-        <div class="flex-1 max-w-2xl mx-8 relative">
-            <i data-lucide="search" class="w-4 h-4 text-slate-400 absolute left-4 top-1/2 -translate-y-1/2"></i>
-            <input type="text" id="global-search-bar" oninput="searchFileTree()" placeholder="Buscar processos..." class="w-full bg-slate-50 border border-slate-200 rounded-full py-2.5 pl-11 pr-12 text-sm focus:outline-none focus:bg-white focus:ring-2 focus:ring-blue-500/20 transition-all font-semibold text-slate-700 shadow-inner placeholder:font-medium">
-            <div class="absolute right-4 top-1/2 -translate-y-1/2 flex items-center opacity-50">
-                <kbd class="font-sans text-[11px] bg-white px-1.5 py-0.5 rounded border border-slate-300 font-bold shadow-sm">Ctrl+K</kbd>
+        <div class="flex-1 max-w-xl mx-4 relative">
+            <i data-lucide="search" class="w-3 h-3 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2"></i>
+            <input type="text" id="global-search-bar" oninput="searchFileTree()" placeholder="Buscar processos..." class="w-full bg-slate-50 border border-slate-200 rounded-full py-1.5 pl-8 pr-10 text-[10px] focus:outline-none focus:bg-white focus:ring-2 focus:ring-blue-500/20 transition-all font-medium text-slate-700 shadow-inner">
+            <div class="absolute right-3 top-1/2 -translate-y-1/2 flex items-center opacity-50">
+                <kbd class="font-sans text-[8px] bg-white px-1 py-0.5 rounded border border-slate-200 font-bold">Ctrl+K</kbd>
             </div>
         </div>
 
-        <div class="flex items-center gap-4">
-            <button onclick="toggleAppFullscreen()" class="p-1.5 text-slate-500 hover:text-blue-600 transition-colors"><i data-lucide="expand" class="w-5 h-5"></i></button>
+        <div class="flex items-center gap-2">
+            <button onclick="toggleAppFullscreen()" class="p-1.5 text-slate-400 hover:text-blue-600 transition-colors"><i data-lucide="expand" class="w-3.5 h-3.5"></i></button>
 
             <!-- UPLOAD -->
-            <div class="relative ml-2">
-                <button onclick="toggleCustomDropdown('dropdown-upload', event)" class="bg-white border border-slate-200 text-slate-700 text-sm font-bold px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-slate-50 transition-all shadow-sm active:scale-95">
-                    <i data-lucide="upload-cloud" class="w-4 h-4 text-blue-600"></i> Upload
+            <div class="relative">
+                <button onclick="toggleCustomDropdown('dropdown-upload', event)" class="bg-white border border-slate-200 text-slate-600 text-[9px] font-bold px-2 py-1 rounded-md flex items-center gap-1 hover:bg-slate-50 transition-all shadow-sm">
+                    <i data-lucide="upload-cloud" class="w-3 h-3 text-blue-600"></i> Upload
                 </button>
-                <div id="dropdown-upload" class="hidden absolute top-[115%] right-0 mt-1 bg-white border border-slate-200 rounded-xl shadow-xl py-2 w-48 z-50 flex flex-col text-sm font-bold text-slate-700">
-                    <button onclick="document.getElementById('global-vault-upload').click(); document.getElementById('dropdown-upload').classList.add('hidden')" class="w-full text-left px-4 py-2 hover:bg-slate-50 flex items-center gap-3"><i data-lucide="file-plus" class="w-4 h-4 text-blue-500"></i> Arquivos</button>
-                    <button onclick="document.getElementById('global-folder-upload').click(); document.getElementById('dropdown-upload').classList.add('hidden')" class="w-full text-left px-4 py-2 hover:bg-slate-50 flex items-center gap-3"><i data-lucide="folder-plus" class="w-4 h-4 text-amber-500"></i> Pastas</button>
+                <div id="dropdown-upload" class="hidden absolute top-[115%] right-0 mt-1 bg-white border border-slate-200 rounded-lg shadow-xl py-1 w-32 z-50 flex flex-col text-[10px] font-bold text-slate-600">
+                    <button onclick="document.getElementById('global-vault-upload').click(); document.getElementById('dropdown-upload').classList.add('hidden')" class="w-full text-left px-3 py-1.5 hover:bg-slate-50 flex items-center gap-1.5"><i data-lucide="file-plus" class="w-3 h-3 text-blue-500"></i> Arquivos</button>
+                    <button onclick="document.getElementById('global-folder-upload').click(); document.getElementById('dropdown-upload').classList.add('hidden')" class="w-full text-left px-3 py-1.5 hover:bg-slate-50 flex items-center gap-1.5"><i data-lucide="folder-plus" class="w-3 h-3 text-amber-500"></i> Pastas</button>
                 </div>
             </div>
             
-            <div class="w-px h-7 bg-slate-200 mx-1"></div>
+            <div class="w-px h-4 bg-slate-200 mx-0.5"></div>
             
-            <div id="server-status-badge" class="flex items-center gap-2 bg-slate-50 px-3 py-2 rounded-lg border border-slate-200 shadow-sm transition-all duration-300">
-                <div id="server-status-dot" class="w-2 h-2 bg-slate-400 rounded-full"></div>
-                <span id="server-status-text" class="text-xs font-black tracking-wide uppercase text-slate-500 hidden sm:block">Checando...</span>
+            <div id="server-status-badge" class="flex items-center gap-1 bg-slate-50 px-1.5 py-1 rounded border border-slate-200 shadow-sm transition-all duration-300">
+                <div id="server-status-dot" class="w-1.5 h-1.5 bg-slate-400 rounded-full"></div>
+                <span id="server-status-text" class="text-[8px] font-black tracking-wide uppercase text-slate-500 hidden sm:block">Checando...</span>
             </div>
 
-            <div class="w-px h-7 bg-slate-200 mx-1"></div>
+            <div class="w-px h-4 bg-slate-200 mx-0.5"></div>
             
-            <!-- MENU DO PERFIL (CONTA E LOGOUT) -->
+            <!-- MENU DO PERFIL -->
             <div class="relative">
-                <div onclick="toggleCustomDropdown('dropdown-profile', event)" class="flex items-center gap-3 pl-1 cursor-pointer hover:opacity-80 transition-opacity">
-                    <div class="w-9 h-9 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center font-black text-sm shadow-sm">AC</div>
+                <div onclick="toggleCustomDropdown('dropdown-profile', event)" class="flex items-center gap-1.5 cursor-pointer hover:opacity-80 transition-opacity">
+                    <div class="w-6 h-6 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center font-black text-[9px] shadow-sm">AC</div>
                     <div class="flex flex-col hidden md:flex">
-                        <span class="text-sm font-bold text-slate-800 leading-tight">Ana Carolina</span>
-                        <span class="text-xs text-slate-500 font-semibold leading-tight">Advogada</span>
+                        <span class="text-[9px] font-bold text-slate-800 leading-none">Ana Carolina</span>
+                        <span class="text-[8px] text-slate-500 font-semibold leading-none">Advogada</span>
                     </div>
-                    <i data-lucide="chevron-down" class="w-4 h-4 text-slate-400"></i>
+                    <i data-lucide="chevron-down" class="w-3 h-3 text-slate-400"></i>
                 </div>
                 
-                <div id="dropdown-profile" class="hidden absolute top-[120%] right-0 mt-2 bg-white border border-slate-200 rounded-xl shadow-xl py-2 w-56 z-50 flex flex-col text-sm font-bold text-slate-700">
-                    <button onclick="document.getElementById('account-settings-modal').classList.remove('hidden'); closeAllDropdownsMenu()" class="w-full text-left px-4 py-2.5 hover:bg-slate-50 flex items-center gap-3 transition-colors"><i data-lucide="user" class="w-4 h-4 text-slate-400"></i> Minha Conta</button>
-                    <button class="w-full text-left px-4 py-2.5 hover:bg-slate-50 flex items-center gap-3 transition-colors"><i data-lucide="users" class="w-4 h-4 text-slate-400"></i> Gestão de Equipe</button>
-                    <div class="h-px bg-slate-100 my-1 w-full"></div>
-                    <button onclick="logoutSystem()" class="w-full text-left px-4 py-2.5 hover:bg-red-50 text-red-600 flex items-center gap-3 transition-colors"><i data-lucide="log-out" class="w-4 h-4"></i> Sair do Sistema</button>
+                <div id="dropdown-profile" class="hidden absolute top-[120%] right-0 mt-1 bg-white border border-slate-200 rounded-lg shadow-xl py-1 w-40 z-50 flex flex-col text-[10px] font-bold text-slate-600">
+                    <button onclick="document.getElementById('account-settings-modal').classList.remove('hidden'); closeAllDropdownsMenu()" class="w-full text-left px-3 py-1.5 hover:bg-slate-50 flex items-center gap-2"><i data-lucide="user" class="w-3 h-3 text-slate-400"></i> Conta</button>
+                    <div class="h-px bg-slate-100 my-0.5 w-full"></div>
+                    <button onclick="logoutSystem()" class="w-full text-left px-3 py-1.5 hover:bg-red-50 text-red-600 flex items-center gap-2"><i data-lucide="log-out" class="w-3 h-3"></i> Sair</button>
                 </div>
             </div>
         </div>
@@ -300,268 +298,241 @@
     <!-- ========================================== -->
     <div class="flex flex-1 overflow-hidden relative" onclick="closeAllDropdownsMenu()">
         
-        <!-- COLUNA 1: GAVETA ESQUERDA -->
-        <aside id="sidebar-left" class="w-[280px] bg-brand-sidebar flex flex-col overflow-hidden py-4 px-3 relative shrink-0 transition-all duration-300 ease-in-out text-slate-300" onclick="clearTreeSelection(event)">
+        <!-- COLUNA 1: GAVETA ESQUERDA (COMPACTADA) -->
+        <aside id="sidebar-left" class="w-[220px] bg-brand-sidebar flex flex-col overflow-hidden py-2 px-1.5 relative shrink-0 transition-all duration-300 ease-in-out text-slate-300" onclick="clearTreeSelection(event)">
             
-            <div class="flex items-center justify-between mb-3 px-2">
-                <span class="sidebar-text text-xs font-bold text-slate-500 uppercase tracking-widest truncate">Cofre Local</span>
-                <div class="sidebar-text flex gap-1 relative shrink-0" onclick="e => e.stopPropagation()">
-                    <button id="btn-filter-tree" onclick="toggleFilterDropdown(event)" class="text-slate-400 hover:text-white p-1.5 rounded hover:bg-slate-800 transition-colors"><i data-lucide="filter" class="w-4 h-4"></i></button>
-                    <button onclick="createNewFolderManual(event)" class="text-slate-400 hover:text-white p-1.5 rounded hover:bg-slate-800 transition-colors"><i data-lucide="folder-plus" class="w-4 h-4"></i></button>
-                    <div id="filter-menu-dropdown" class="hidden absolute top-8 right-0 bg-slate-800 border border-slate-700 rounded-lg shadow-xl py-1.5 w-44 z-30 text-sm font-bold text-slate-300">
-                        <button onclick="changeFilter('all')" class="w-full text-left px-4 py-2 hover:bg-slate-700">Mostrar Todos</button>
-                        <button onclick="changeFilter('md')" class="w-full text-left px-4 py-2 hover:bg-slate-700">Apenas Textos (.md)</button>
-                        <button onclick="changeFilter('pdf')" class="w-full text-left px-4 py-2 hover:bg-slate-700">Apenas PDFs (.pdf)</button>
+            <div class="flex items-center justify-between mb-2 px-1.5">
+                <span class="sidebar-text text-[9px] font-bold text-slate-500 uppercase tracking-widest truncate">Cofre</span>
+                <div class="sidebar-text flex gap-0.5 relative shrink-0" onclick="e => e.stopPropagation()">
+                    <button id="btn-filter-tree" onclick="toggleFilterDropdown(event)" class="text-slate-400 hover:text-white p-1 rounded hover:bg-slate-800 transition-colors"><i data-lucide="filter" class="w-3 h-3"></i></button>
+                    <button onclick="createNewFolderManual(event)" class="text-slate-400 hover:text-white p-1 rounded hover:bg-slate-800 transition-colors"><i data-lucide="folder-plus" class="w-3 h-3"></i></button>
+                    <div id="filter-menu-dropdown" class="hidden absolute top-6 right-0 bg-slate-800 border border-slate-700 rounded-lg shadow-xl py-1 w-32 z-30 text-[10px] font-bold text-slate-300">
+                        <button onclick="changeFilter('all')" class="w-full text-left px-2.5 py-1.5 hover:bg-slate-700">Todos</button>
+                        <button onclick="changeFilter('md')" class="w-full text-left px-2.5 py-1.5 hover:bg-slate-700">Textos (.md)</button>
+                        <button onclick="changeFilter('pdf')" class="w-full text-left px-2.5 py-1.5 hover:bg-slate-700">PDFs (.pdf)</button>
                     </div>
                 </div>
             </div>
 
-            <!-- ÁRVORE DE ARQUIVOS (TEXTO MAIOR) -->
-            <div id="file-tree" class="flex-1 overflow-y-auto space-y-1 text-sm font-semibold text-slate-300 no-scrollbar relative px-1">
+            <!-- ÁRVORE DE ARQUIVOS -->
+            <div id="file-tree" class="flex-1 overflow-y-auto space-y-0.5 text-[11px] font-semibold text-slate-300 no-scrollbar relative px-1">
                 <!-- Arquivos gerados via JS -->
             </div>
 
-            <div class="mt-3 border-t border-slate-700/50 pt-4 px-1 shrink-0">
-                <div class="flex gap-2 mb-3">
-                    <div id="btn-filter-favorites" onclick="toggleFavoritesFilter()" class="flex-1 bg-white/5 border border-white/5 rounded-xl p-3 flex items-center justify-center gap-2 cursor-pointer hover:bg-white/10 group transition-colors" title="Favoritos">
-                        <i data-lucide="star" class="w-4 h-4 text-amber-500 group-hover:scale-110 transition-transform"></i>
-                        <span id="text-filter-favorites" class="sidebar-text text-xs font-bold text-slate-300 group-hover:text-white transition-colors">Favoritos</span>
+            <div class="mt-2 border-t border-slate-700/50 pt-2 px-1 shrink-0">
+                <div class="flex gap-1.5 mb-1.5">
+                    <div id="btn-filter-favorites" onclick="toggleFavoritesFilter()" class="flex-1 bg-white/5 border border-white/5 rounded-lg p-2 flex items-center justify-center gap-1.5 cursor-pointer hover:bg-white/10 group transition-colors" title="Favoritos">
+                        <i data-lucide="star" class="w-3 h-3 text-amber-500 group-hover:scale-110 transition-transform"></i>
+                        <span id="text-filter-favorites" class="sidebar-text text-[9px] font-bold text-slate-300 group-hover:text-white transition-colors">Favoritos</span>
                     </div>
-                    <div onclick="openTrashModal()" class="flex-1 bg-white/5 border border-white/5 rounded-xl p-3 flex items-center justify-center gap-2 cursor-pointer hover:bg-red-500/20 hover:border-red-500/30 group transition-colors" title="Lixeira">
-                        <i data-lucide="trash-2" class="w-4 h-4 text-red-400 group-hover:scale-110 transition-transform"></i>
-                        <span class="sidebar-text text-xs font-bold text-slate-300 group-hover:text-white transition-colors">Lixeira</span>
-                    </div>
-                </div>
-
-                <div onclick="openSpeedTestModal()" class="mb-2 bg-white/5 rounded-xl p-3 cursor-pointer hover:bg-white/10 flex items-center justify-between group transition-colors">
-                    <div class="flex items-center gap-3">
-                        <div class="text-blue-400"><i data-lucide="wifi" class="w-4 h-4"></i></div>
-                        <span class="sidebar-text text-xs font-bold text-slate-300 group-hover:text-white">Teste de Rede</span>
+                    <div onclick="openTrashModal()" class="flex-1 bg-white/5 border border-white/5 rounded-lg p-2 flex items-center justify-center gap-1.5 cursor-pointer hover:bg-red-500/20 hover:border-red-500/30 group transition-colors" title="Lixeira">
+                        <i data-lucide="trash-2" class="w-3 h-3 text-red-400 group-hover:scale-110 transition-transform"></i>
+                        <span class="sidebar-text text-[9px] font-bold text-slate-300 group-hover:text-white transition-colors">Lixeira</span>
                     </div>
                 </div>
 
-                <div onclick="toggleSidebar()" class="mt-1 bg-transparent rounded-xl p-3 cursor-pointer hover:bg-white/5 flex items-center gap-3 group transition-colors">
-                    <i data-lucide="panel-left-close" id="sidebar-icon-toggle" class="w-4 h-4 text-slate-500 group-hover:text-white transition-colors"></i>
-                    <span class="sidebar-text text-xs font-bold text-slate-400 group-hover:text-white">Esconder menu</span>
+                <div onclick="openSpeedTestModal()" class="mb-1 bg-transparent rounded-lg p-2 cursor-pointer hover:bg-white/5 flex items-center gap-2 group transition-colors">
+                    <div class="text-slate-400 group-hover:text-blue-400 transition-colors"><i data-lucide="wifi" class="w-3 h-3"></i></div>
+                    <span class="sidebar-text text-[9px] font-bold text-slate-400 group-hover:text-white transition-colors">Teste de Rede</span>
+                </div>
+
+                <div onclick="toggleSidebar()" class="bg-transparent rounded-lg p-2 cursor-pointer hover:bg-white/5 flex items-center gap-2 group transition-colors">
+                    <i data-lucide="panel-left-close" id="sidebar-icon-toggle" class="w-3 h-3 text-slate-500 group-hover:text-white transition-colors"></i>
+                    <span class="sidebar-text text-[9px] font-bold text-slate-400 group-hover:text-white transition-colors">Esconder menu</span>
                 </div>
             </div>
         </aside>
 
         <!-- SPLITTER 1 -->
-        <div id="resizer-left" class="w-2.5 bg-brand-sidebar hover:bg-blue-600 cursor-col-resize z-10 shrink-0 border-l border-white/5 flex items-center justify-center group transition-colors">
-            <div class="w-1 h-12 bg-slate-600 group-hover:bg-white rounded-full"></div>
+        <div id="resizer-left" class="w-2 bg-brand-sidebar hover:bg-blue-600 cursor-col-resize z-10 shrink-0 border-l border-white/5 flex items-center justify-center group transition-colors">
+            <div class="w-0.5 h-8 bg-slate-600 group-hover:bg-white rounded-full"></div>
         </div>
 
         <!-- ========================================== -->
-        <!-- COLUNAS CENTRAIS: WORKSPACE                -->
+        <!-- COLUNAS CENTRAIS: WORKSPACE (MÁXIMO ESPAÇO)-->
         <!-- ========================================== -->
-        <main id="center-panel" class="flex-1 flex flex-col min-w-[300px] overflow-hidden p-4 gap-4 bg-brand-light transition-all duration-300">
+        <main id="center-panel" class="flex-1 flex flex-col min-w-[300px] overflow-hidden p-2 gap-2 bg-brand-light transition-all duration-300">
             
-            <!-- MENUS DE PERSONALIZAÇÃO (FONTES MAIORES) -->
-            <div class="grid grid-cols-4 gap-3 w-full shrink-0">
+            <!-- MENUS DE PERSONALIZAÇÃO (REDUZIDOS AO MÁXIMO) -->
+            <div class="grid grid-cols-4 gap-2 w-full shrink-0">
                 
-                <div class="bg-white border border-slate-200 rounded-xl p-3 flex items-center shadow-sm relative cursor-pointer hover:border-blue-300 hover:shadow-md transition-all" onclick="toggleCustomDropdown('dropdown-area', event)">
-                    <div class="w-10 h-10 bg-blue-50 text-blue-600 rounded-lg flex items-center justify-center mr-3 shrink-0"><i data-lucide="scale" class="w-5 h-5"></i></div>
+                <div class="bg-white border border-slate-200 rounded-lg p-2 flex items-center shadow-sm relative cursor-pointer hover:border-blue-300 transition-colors" onclick="toggleCustomDropdown('dropdown-area', event)">
+                    <div class="w-6 h-6 bg-blue-50 text-blue-600 rounded mr-2 flex items-center justify-center shrink-0"><i data-lucide="scale" class="w-3 h-3"></i></div>
                     <div class="flex-1 min-w-0">
-                        <p class="text-[10px] text-slate-500 font-bold uppercase tracking-wider mb-0.5">Área Jurídica</p>
-                        <div class="flex items-center justify-between">
-                            <span id="label-ctx-area" class="text-sm font-bold text-slate-800 truncate">Geral (Misto)</span>
-                            <i data-lucide="chevron-down" class="w-4 h-4 text-slate-400 shrink-0"></i>
-                        </div>
+                        <p class="text-[7px] text-slate-400 font-bold uppercase tracking-wider mb-0.5">Área Jurídica</p>
+                        <div class="flex items-center justify-between"><span id="label-ctx-area" class="text-[10px] font-bold text-slate-800 truncate">Geral (Misto)</span><i data-lucide="chevron-down" class="w-3 h-3 text-slate-400 shrink-0"></i></div>
                     </div>
                     <input type="hidden" id="ctx-area" value="Geral/Nenhuma">
-                    <div id="dropdown-area" class="hidden absolute top-[105%] left-0 mt-1 bg-white border border-slate-200 rounded-xl shadow-xl py-1.5 w-full z-50 flex flex-col max-h-48 overflow-y-auto no-scrollbar text-sm font-bold text-slate-700">
-                        <button onclick="selectOption('area', 'Geral/Nenhuma', 'Geral (Misto)', event)" class="text-left px-4 py-2 hover:bg-slate-50">Geral (Misto)</button>
-                        <button onclick="selectOption('area', 'Trabalhista', 'Trabalhista', event)" class="text-left px-4 py-2 hover:bg-slate-50">Direito Trabalhista</button>
-                        <button onclick="selectOption('area', 'Cível', 'Cível', event)" class="text-left px-4 py-2 hover:bg-slate-50">Direito Cível</button>
+                    <div id="dropdown-area" class="hidden absolute top-[105%] left-0 mt-1 bg-white border border-slate-200 rounded-lg shadow-lg py-1 w-full z-50 flex flex-col text-[10px] font-bold text-slate-600">
+                        <button onclick="selectOption('area', 'Geral', 'Geral (Misto)', event)" class="text-left px-2 py-1.5 hover:bg-slate-50">Geral (Misto)</button>
+                        <button onclick="selectOption('area', 'Trabalhista', 'Trabalhista', event)" class="text-left px-2 py-1.5 hover:bg-slate-50">Direito Trabalhista</button>
                     </div>
                 </div>
 
-                <div class="bg-white border border-slate-200 rounded-xl p-3 flex items-center shadow-sm relative cursor-pointer hover:border-purple-300 hover:shadow-md transition-all" onclick="toggleCustomDropdown('dropdown-type', event)">
-                    <div class="w-10 h-10 bg-purple-50 text-purple-600 rounded-lg flex items-center justify-center mr-3 shrink-0"><i data-lucide="file-text" class="w-5 h-5"></i></div>
+                <div class="bg-white border border-slate-200 rounded-lg p-2 flex items-center shadow-sm relative cursor-pointer hover:border-purple-300 transition-colors" onclick="toggleCustomDropdown('dropdown-type', event)">
+                    <div class="w-6 h-6 bg-purple-50 text-purple-600 rounded mr-2 flex items-center justify-center shrink-0"><i data-lucide="file-text" class="w-3 h-3"></i></div>
                     <div class="flex-1 min-w-0">
-                        <p class="text-[10px] text-slate-500 font-bold uppercase tracking-wider mb-0.5">Tipo de Peça</p>
-                        <div class="flex items-center justify-between">
-                            <span id="label-ctx-type" class="text-sm font-bold text-slate-800 truncate">Análise Interna</span>
-                            <i data-lucide="chevron-down" class="w-4 h-4 text-slate-400 shrink-0"></i>
-                        </div>
+                        <p class="text-[7px] text-slate-400 font-bold uppercase tracking-wider mb-0.5">Peça</p>
+                        <div class="flex items-center justify-between"><span id="label-ctx-type" class="text-[10px] font-bold text-slate-800 truncate">Análise Interna</span><i data-lucide="chevron-down" class="w-3 h-3 text-slate-400 shrink-0"></i></div>
                     </div>
-                    <input type="hidden" id="ctx-type" value="Análise/Documento">
-                    <div id="dropdown-type" class="hidden absolute top-[105%] left-0 mt-1 bg-white border border-slate-200 rounded-xl shadow-xl py-1.5 w-full z-50 flex flex-col max-h-48 overflow-y-auto no-scrollbar text-sm font-bold text-slate-700">
-                        <button onclick="selectOption('type', 'Análise', 'Análise Interna', event)" class="text-left px-4 py-2 hover:bg-slate-50">Análise Interna</button>
-                        <button onclick="selectOption('type', 'Petição Inicial', 'Petição Inicial', event)" class="text-left px-4 py-2 hover:bg-slate-50">Petição Inicial</button>
-                        <button onclick="selectOption('type', 'Contestação', 'Contestação', event)" class="text-left px-4 py-2 hover:bg-slate-50">Contestação</button>
+                    <input type="hidden" id="ctx-type" value="Análise">
+                    <div id="dropdown-type" class="hidden absolute top-[105%] left-0 mt-1 bg-white border border-slate-200 rounded-lg shadow-lg py-1 w-full z-50 flex flex-col text-[10px] font-bold text-slate-600">
+                        <button onclick="selectOption('type', 'Análise', 'Análise Interna', event)" class="text-left px-2 py-1.5 hover:bg-slate-50">Análise</button>
+                        <button onclick="selectOption('type', 'Petição', 'Petição Inicial', event)" class="text-left px-2 py-1.5 hover:bg-slate-50">Petição</button>
                     </div>
                 </div>
 
-                <div class="bg-white border border-slate-200 rounded-xl p-3 flex items-center shadow-sm relative cursor-pointer hover:border-amber-300 hover:shadow-md transition-all" onclick="toggleCustomDropdown('dropdown-phase', event)">
-                    <div class="w-10 h-10 bg-amber-50 text-amber-600 rounded-lg flex items-center justify-center mr-3 shrink-0"><i data-lucide="folder-git" class="w-5 h-5"></i></div>
+                <div class="bg-white border border-slate-200 rounded-lg p-2 flex items-center shadow-sm relative cursor-pointer hover:border-amber-300 transition-colors" onclick="toggleCustomDropdown('dropdown-phase', event)">
+                    <div class="w-6 h-6 bg-amber-50 text-amber-600 rounded mr-2 flex items-center justify-center shrink-0"><i data-lucide="folder-git" class="w-3 h-3"></i></div>
                     <div class="flex-1 min-w-0">
-                        <p class="text-[10px] text-slate-500 font-bold uppercase tracking-wider mb-0.5">Fase Atual</p>
-                        <div class="flex items-center justify-between">
-                            <span id="label-ctx-phase" class="text-sm font-bold text-slate-800 truncate">Fase de Estudo</span>
-                            <i data-lucide="chevron-down" class="w-4 h-4 text-slate-400 shrink-0"></i>
-                        </div>
+                        <p class="text-[7px] text-slate-400 font-bold uppercase tracking-wider mb-0.5">Fase</p>
+                        <div class="flex items-center justify-between"><span id="label-ctx-phase" class="text-[10px] font-bold text-slate-800 truncate">Estudo</span><i data-lucide="chevron-down" class="w-3 h-3 text-slate-400 shrink-0"></i></div>
                     </div>
-                    <input type="hidden" id="ctx-phase" value="Fase de Estudo">
-                    <div id="dropdown-phase" class="hidden absolute top-[105%] left-0 mt-1 bg-white border border-slate-200 rounded-xl shadow-xl py-1.5 w-full z-50 flex flex-col max-h-48 overflow-y-auto no-scrollbar text-sm font-bold text-slate-700">
-                        <button onclick="selectOption('phase', 'Fase de Estudo', 'Fase de Estudo', event)" class="text-left px-4 py-2 hover:bg-slate-50">Fase de Estudo</button>
-                        <button onclick="selectOption('phase', 'Fase de Conhecimento', 'Fase de Conhecimento', event)" class="text-left px-4 py-2 hover:bg-slate-50">Fase de Conhecimento</button>
-                        <button onclick="selectOption('phase', 'Fase de Instrução', 'Fase de Instrução', event)" class="text-left px-4 py-2 hover:bg-slate-50">Fase de Instrução</button>
+                    <input type="hidden" id="ctx-phase" value="Estudo">
+                    <div id="dropdown-phase" class="hidden absolute top-[105%] left-0 mt-1 bg-white border border-slate-200 rounded-lg shadow-lg py-1 w-full z-50 flex flex-col text-[10px] font-bold text-slate-600">
+                        <button onclick="selectOption('phase', 'Estudo', 'Estudo', event)" class="text-left px-2 py-1.5 hover:bg-slate-50">Estudo</button>
+                        <button onclick="selectOption('phase', 'Conhecimento', 'Conhecimento', event)" class="text-left px-2 py-1.5 hover:bg-slate-50">Conhecimento</button>
                     </div>
                 </div>
 
-                <div class="bg-white border border-slate-200 rounded-xl p-3 flex items-center shadow-sm relative cursor-pointer hover:border-emerald-300 hover:shadow-md transition-all" onclick="toggleCustomDropdown('dropdown-obj', event)">
-                    <div class="w-10 h-10 bg-emerald-50 text-emerald-600 rounded-lg flex items-center justify-center mr-3 shrink-0"><i data-lucide="target" class="w-5 h-5"></i></div>
+                <div class="bg-white border border-slate-200 rounded-lg p-2 flex items-center shadow-sm relative cursor-pointer hover:border-emerald-300 transition-colors" onclick="toggleCustomDropdown('dropdown-obj', event)">
+                    <div class="w-6 h-6 bg-emerald-50 text-emerald-600 rounded mr-2 flex items-center justify-center shrink-0"><i data-lucide="target" class="w-3 h-3"></i></div>
                     <div class="flex-1 min-w-0">
-                        <p class="text-[10px] text-slate-500 font-bold uppercase tracking-wider mb-0.5">Objetivo Direto</p>
-                        <div class="flex items-center justify-between">
-                            <span id="label-ctx-obj" class="text-sm font-bold text-slate-800 truncate">Auditar/Resumir</span>
-                            <i data-lucide="chevron-down" class="w-4 h-4 text-slate-400 shrink-0"></i>
-                        </div>
+                        <p class="text-[7px] text-slate-400 font-bold uppercase tracking-wider mb-0.5">Foco</p>
+                        <div class="flex items-center justify-between"><span id="label-ctx-obj" class="text-[10px] font-bold text-slate-800 truncate">Auditoria</span><i data-lucide="chevron-down" class="w-3 h-3 text-slate-400 shrink-0"></i></div>
                     </div>
-                    <input type="hidden" id="ctx-obj" value="Auditar/Resumir">
-                    <div id="dropdown-obj" class="hidden absolute top-[105%] left-0 mt-1 bg-white border border-slate-200 rounded-xl shadow-xl py-1.5 w-full z-50 flex flex-col max-h-48 overflow-y-auto no-scrollbar text-sm font-bold text-slate-700">
-                        <button onclick="selectOption('obj', 'Auditar/Resumir', 'Auditar/Resumir', event)" class="text-left px-4 py-2 hover:bg-slate-50">Auditar/Resumir</button>
-                        <button onclick="selectOption('obj', 'Encontrar Contradições', 'Achar Contradições', event)" class="text-left px-4 py-2 hover:bg-slate-50">Achar Contradições</button>
-                        <button onclick="selectOption('obj', 'Elaborar Minuta', 'Elaborar Minuta', event)" class="text-left px-4 py-2 hover:bg-slate-50">Elaborar Minuta</button>
+                    <input type="hidden" id="ctx-obj" value="Auditar">
+                    <div id="dropdown-obj" class="hidden absolute top-[105%] left-0 mt-1 bg-white border border-slate-200 rounded-lg shadow-lg py-1 w-full z-50 flex flex-col text-[10px] font-bold text-slate-600">
+                        <button onclick="selectOption('obj', 'Auditoria', 'Auditoria', event)" class="text-left px-2 py-1.5 hover:bg-slate-50">Auditoria</button>
+                        <button onclick="selectOption('obj', 'Contradições', 'Contradições', event)" class="text-left px-2 py-1.5 hover:bg-slate-50">Contradições</button>
                     </div>
                 </div>
             </div>
 
-            <!-- TELA DIVIDIDA DOS DOIS MONITORES -->
-            <div class="flex flex-1 gap-4 overflow-hidden relative h-full">
+            <!-- TELA DIVIDIDA DOS DOIS MONITORES (SEM CORTES) -->
+            <div class="flex flex-1 gap-2 overflow-hidden relative h-full">
                 
                 <!-- MONITOR 1 (PRINCIPAL) -->
-                <div id="center-preview-container" onclick="selectMonitor('main')" class="flex-1 bg-white border border-slate-200 rounded-2xl shadow-sm flex flex-col overflow-hidden h-full ring-2 ring-transparent relative transition-all duration-300 min-w-[320px]">
-                    <div class="absolute top-0 left-1/2 -translate-x-1/2 px-4 py-1 bg-blue-600 text-white text-[10px] font-black uppercase rounded-b shadow-sm z-10 hidden" id="dot-active-main">Foco</div>
+                <div id="center-preview-container" onclick="selectMonitor('main')" class="flex-1 bg-white border border-slate-200 rounded-xl shadow-sm flex flex-col overflow-hidden h-full ring-2 ring-transparent relative transition-all duration-300 min-w-[280px]">
+                    <div class="absolute top-0 left-1/2 -translate-x-1/2 px-2 py-0.5 bg-blue-600 text-white text-[8px] font-black uppercase rounded-b shadow-sm z-10 hidden" id="dot-active-main">Foco</div>
 
-                    <!-- Header Monitor 1 (Com Flex-Wrap e Gap para garantir espaço) -->
-                    <div class="flex flex-wrap items-center justify-between px-5 py-3 border-b border-slate-100 bg-white shrink-0 gap-3">
-                        <div class="flex items-center gap-3 shrink-0">
-                            <div class="flex items-center bg-slate-50 border border-slate-200 rounded-lg">
-                                <button onclick="goBack('main')" id="btn-back-main" class="p-2 text-slate-400 hover:text-blue-600 disabled:opacity-30 disabled:cursor-not-allowed transition-colors" disabled>
-                                    <i data-lucide="chevron-left" class="w-4 h-4"></i>
-                                </button>
-                                <button onclick="goForward('main')" id="btn-forward-main" class="p-2 text-slate-400 hover:text-blue-600 disabled:opacity-30 disabled:cursor-not-allowed transition-colors" disabled>
-                                    <i data-lucide="chevron-right" class="w-4 h-4"></i>
-                                </button>
+                    <!-- Header Monitor 1 (Sem Flex-Wrap, com Truncate severo para não quebrar) -->
+                    <div class="flex items-center justify-between px-3 py-1.5 border-b border-slate-100 bg-white shrink-0 gap-2">
+                        
+                        <div class="flex items-center gap-1.5 min-w-0 flex-1">
+                            <div class="flex items-center bg-slate-50 border border-slate-200 rounded shrink-0">
+                                <button onclick="goBack('main')" id="btn-back-main" class="p-1 text-slate-400 hover:text-blue-600 disabled:opacity-30 disabled:cursor-not-allowed" disabled><i data-lucide="chevron-left" class="w-3.5 h-3.5"></i></button>
+                                <button onclick="goForward('main')" id="btn-forward-main" class="p-1 text-slate-400 hover:text-blue-600 disabled:opacity-30 disabled:cursor-not-allowed" disabled><i data-lucide="chevron-right" class="w-3.5 h-3.5"></i></button>
                             </div>
-                            
-                            <h2 id="active-note-title" class="text-base font-bold text-slate-800 truncate max-w-[200px] ml-1">Selecione um arquivo</h2>
-                            <button id="btn-favorite-star" onclick="toggleActiveFileFavorite()" class="text-slate-300 hover:text-amber-500 transition-colors focus:outline-none ml-1">
-                                <i data-lucide="star" class="w-5 h-5"></i>
-                            </button>
+                            <h2 id="active-note-title" class="text-[11px] font-bold text-slate-800 truncate">Selecione o arquivo</h2>
+                            <button id="btn-favorite-star" onclick="toggleActiveFileFavorite()" class="shrink-0 text-slate-300 hover:text-amber-500 focus:outline-none"><i data-lucide="star" class="w-3.5 h-3.5"></i></button>
                         </div>
                         
-                        <div class="flex flex-wrap items-center gap-3 shrink-0">
-                            <button id="btn-reprocess-main" onclick="reprocessMD('main')" class="hidden px-4 py-2 bg-amber-500 hover:bg-amber-600 text-white rounded-lg transition-all text-xs font-bold shadow-sm flex items-center gap-2" title="Forçar a IA a reler este PDF">
-                                <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i> Reler PDF
+                        <div class="flex items-center gap-1.5 shrink-0">
+                            <button id="btn-reprocess-main" onclick="reprocessMD('main')" class="hidden px-2 py-1 bg-amber-500 hover:bg-amber-600 text-white rounded text-[9px] font-bold shadow-sm flex items-center gap-1" title="Reler PDF">
+                                <i data-lucide="refresh-cw" class="w-3 h-3"></i> <span class="hidden sm:inline">Reler PDF</span>
                             </button>
                             
-                            <div class="flex bg-slate-50 border border-slate-200 p-1 rounded-lg text-sm font-bold">
-                                <button id="btn-tab-main-formatted" onclick="switchTab('main', 'doc')" class="px-4 py-1.5 bg-white text-slate-800 rounded shadow-sm transition-colors">Visual</button>
-                                <button id="btn-tab-main-raw" onclick="switchTab('main', 'raw')" class="px-4 py-1.5 text-slate-500 hover:text-slate-800 transition-colors">Markdown</button>
+                            <div class="flex bg-slate-50 border border-slate-200 p-0.5 rounded text-[9px] font-bold">
+                                <button id="btn-tab-main-formatted" onclick="switchTab('main', 'doc')" class="px-2 py-0.5 bg-white text-slate-800 rounded shadow-sm">Visual</button>
+                                <button id="btn-tab-main-raw" onclick="switchTab('main', 'raw')" class="px-2 py-0.5 text-slate-500 hover:text-slate-800">MD</button>
                             </div>
                             
-                            <div class="flex items-center gap-2 border-l border-slate-200 pl-3 ml-1">
-                                <button onclick="downloadActiveFile()" class="p-2 text-slate-500 hover:text-blue-600 rounded-lg transition-colors" title="Download"><i data-lucide="download" class="w-5 h-5"></i></button>
-                                <button onclick="printActiveFile()" class="p-2 text-slate-500 hover:text-blue-600 rounded-lg transition-colors" title="Imprimir"><i data-lucide="printer" class="w-5 h-5"></i></button>
+                            <div class="flex items-center gap-0.5 border-l border-slate-200 pl-1">
+                                <button onclick="downloadActiveFile()" class="p-1 text-slate-500 hover:text-blue-600 rounded"><i data-lucide="download" class="w-3.5 h-3.5"></i></button>
+                                <button onclick="printActiveFile()" class="p-1 text-slate-500 hover:text-blue-600 rounded"><i data-lucide="printer" class="w-3.5 h-3.5"></i></button>
                                 
                                 <div class="relative flex items-center" id="expand-wrapper-main">
-                                    <button onclick="toggleCustomDropdown('dropdown-expand-main', event)" class="p-2 text-slate-500 hover:text-blue-600 rounded-lg transition-colors" title="Ampliar"><i data-lucide="maximize" class="w-5 h-5"></i></button>
-                                    <div id="dropdown-expand-main" class="hidden absolute top-[105%] right-0 mt-1 bg-white border border-slate-200 rounded-xl shadow-xl py-2 w-56 z-50 text-sm font-bold text-slate-700 flex flex-col">
-                                        <button onclick="fullscreenMonitor('main'); closeAllDropdownsMenu()" class="w-full text-left px-4 py-2 hover:bg-slate-50 flex items-center gap-3"><i data-lucide="monitor" class="w-4 h-4"></i> Tela Cheia Total</button>
-                                        <button onclick="toggleSplitMaximize('main'); closeAllDropdownsMenu()" class="w-full text-left px-4 py-2 hover:bg-slate-50 flex items-center gap-3"><i data-lucide="layout-template" class="w-4 h-4"></i> Expandir Monitor</button>
+                                    <button onclick="toggleCustomDropdown('dropdown-expand-main', event)" class="p-1 text-slate-500 hover:text-blue-600 rounded"><i data-lucide="maximize" class="w-3.5 h-3.5"></i></button>
+                                    <div id="dropdown-expand-main" class="hidden absolute top-[105%] right-0 mt-1 bg-white border border-slate-200 rounded-lg shadow-xl py-1 w-40 z-50 text-[10px] font-bold text-slate-700 flex flex-col">
+                                        <button onclick="fullscreenMonitor('main'); closeAllDropdownsMenu()" class="w-full text-left px-3 py-1.5 hover:bg-slate-50 flex items-center gap-2"><i data-lucide="monitor" class="w-3 h-3"></i> Tela Cheia Total</button>
+                                        <button onclick="toggleSplitMaximize('main'); closeAllDropdownsMenu()" class="w-full text-left px-3 py-1.5 hover:bg-slate-50 flex items-center gap-2"><i data-lucide="layout-template" class="w-3 h-3"></i> Expandir Monitor</button>
                                     </div>
                                 </div>
-                                <button id="btn-restore-main" onclick="exitExpansion('main')" class="hidden p-2 text-blue-600 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors" title="Restaurar Visão Normal"><i data-lucide="minimize" class="w-5 h-5"></i></button>
+                                <button id="btn-restore-main" onclick="exitExpansion('main')" class="hidden p-1 text-blue-600 bg-blue-50 rounded"><i data-lucide="minimize" class="w-3.5 h-3.5"></i></button>
                             </div>
                         </div>
                     </div>
 
-                    <!-- VIEWER GRANDE -->
-                    <div class="flex-1 flex overflow-hidden relative bg-[#fafafa] p-4" id="view-doc-main-container">
-                        <div id="view-doc-main" class="w-full h-full bg-white border border-slate-200 rounded-xl overflow-y-auto p-8 font-serif text-[15px] text-slate-800 shadow-sm leading-relaxed">
-                            <div class="text-center text-slate-500 my-20 font-sans text-base">Selecione um documento na árvore à esquerda para exibir o conteúdo.</div>
+                    <div class="flex-1 flex overflow-hidden relative bg-[#fafafa]" id="view-doc-main-container">
+                        <!-- FONTES MAIORES NO LEITOR -->
+                        <div id="view-doc-main" class="w-full h-full bg-white border-none overflow-y-auto p-5 font-serif text-[14px] text-slate-800 leading-relaxed">
+                            <div class="text-center text-slate-400 my-10 font-sans text-sm">Selecione na árvore à esquerda.</div>
                         </div>
-                        <div id="view-raw-main" class="hidden w-full h-full bg-white border border-slate-200 rounded-xl text-slate-800 overflow-y-auto p-6 font-mono text-sm whitespace-pre-wrap shadow-sm leading-relaxed"></div>
+                        <div id="view-raw-main" class="hidden w-full h-full bg-white border-none overflow-y-auto p-4 font-mono text-xs whitespace-pre-wrap leading-relaxed text-slate-700"></div>
                     </div>
                 </div>
 
                 <!-- SPLITTER 2 -->
-                <div id="resizer-center" class="w-3 bg-transparent hover:bg-blue-500 cursor-col-resize z-10 flex-shrink-0 flex items-center justify-center rounded-full group transition-colors">
-                    <div class="w-1 h-12 bg-slate-300 group-hover:bg-white rounded-full transition-colors"></div>
+                <div id="resizer-center" class="w-2 bg-transparent hover:bg-blue-500 cursor-col-resize z-10 flex-shrink-0 flex items-center justify-center rounded-full group transition-colors">
+                    <div class="w-0.5 h-8 bg-slate-300 group-hover:bg-white rounded-full transition-colors"></div>
                 </div>
 
                 <!-- MONITOR 2 (COMPARAÇÃO / MALHA) -->
-                <section id="sidebar-comparison" onclick="selectMonitor('comp')" class="w-[45%] bg-white border border-slate-200 rounded-2xl shadow-sm flex flex-col overflow-hidden h-full shrink-0 relative min-w-[320px]">
-                    <div class="absolute top-0 left-1/2 -translate-x-1/2 px-4 py-1 bg-blue-600 text-white text-[10px] font-black uppercase rounded-b shadow-sm z-10 hidden" id="dot-active-comp">Foco</div>
+                <section id="sidebar-comparison" onclick="selectMonitor('comp')" class="w-[45%] bg-white border border-slate-200 rounded-xl shadow-sm flex flex-col overflow-hidden h-full shrink-0 relative min-w-[280px]">
+                    <div class="absolute top-0 left-1/2 -translate-x-1/2 px-2 py-0.5 bg-blue-600 text-white text-[8px] font-black uppercase rounded-b shadow-sm z-10 hidden" id="dot-active-comp">Foco</div>
 
-                    <div class="px-5 py-3 border-b border-slate-100 bg-white flex flex-wrap items-center justify-between shrink-0 gap-3">
-                        <div class="flex items-center gap-3 shrink-0">
-                            <div class="flex items-center bg-slate-50 border border-slate-200 rounded-lg mr-1">
-                                <button onclick="goBack('comp')" id="btn-back-comp" class="p-2 text-slate-400 hover:text-blue-600 disabled:opacity-30 disabled:cursor-not-allowed transition-colors" disabled><i data-lucide="chevron-left" class="w-4 h-4"></i></button>
-                                <button onclick="goForward('comp')" id="btn-forward-comp" class="p-2 text-slate-400 hover:text-blue-600 disabled:opacity-30 disabled:cursor-not-allowed transition-colors" disabled><i data-lucide="chevron-right" class="w-4 h-4"></i></button>
+                    <div class="px-3 py-1.5 border-b border-slate-100 bg-white flex items-center justify-between shrink-0 gap-2">
+                        <div class="flex items-center gap-2 min-w-0 flex-1">
+                            <div class="flex items-center bg-slate-50 border border-slate-200 rounded shrink-0">
+                                <button onclick="goBack('comp')" id="btn-back-comp" class="p-1 text-slate-400 hover:text-blue-600 disabled:opacity-30 disabled:cursor-not-allowed" disabled><i data-lucide="chevron-left" class="w-3.5 h-3.5"></i></button>
+                                <button onclick="goForward('comp')" id="btn-forward-comp" class="p-1 text-slate-400 hover:text-blue-600 disabled:opacity-30 disabled:cursor-not-allowed" disabled><i data-lucide="chevron-right" class="w-3.5 h-3.5"></i></button>
                             </div>
-                            <div class="w-8 h-8 bg-blue-600 text-white rounded-lg flex items-center justify-center shadow-sm"><i data-lucide="git-compare" class="w-4 h-4"></i></div>
-                            <span class="font-black text-sm uppercase tracking-wider text-slate-800 hidden sm:block truncate max-w-[120px]">Módulo Lógico</span>
+                            <div class="w-5 h-5 bg-blue-600 text-white rounded flex items-center justify-center shrink-0"><i data-lucide="git-compare" class="w-3 h-3"></i></div>
+                            <span class="font-black text-[10px] uppercase tracking-wider text-slate-800 truncate">Lógica</span>
                         </div>
                         
-                        <div class="flex flex-wrap items-center gap-2 shrink-0">
-                            <div class="flex bg-slate-50 border border-slate-200 p-1 rounded-lg text-xs font-bold">
-                                <button id="btn-tab-comp" onclick="setComparisonMode('compare')" class="px-4 py-1.5 bg-white text-slate-800 rounded shadow-sm transition-colors">Comparação</button>
-                                <button id="btn-tab-graph" onclick="setComparisonMode('graph')" class="px-4 py-1.5 text-slate-500 hover:text-slate-800 transition-colors">Malha Neural</button>
-                            </div>
+                        <div class="flex bg-slate-50 border border-slate-200 p-0.5 rounded text-[9px] font-bold shrink-0">
+                            <button id="btn-tab-comp" onclick="setComparisonMode('compare')" class="px-2 py-0.5 bg-white text-slate-800 rounded shadow-sm transition-colors">Doc</button>
+                            <button id="btn-tab-graph" onclick="setComparisonMode('graph')" class="px-2 py-0.5 text-slate-500 hover:text-slate-800 transition-colors">Malha</button>
                         </div>
                     </div>
 
-                    <div id="pane-comparison-doc" class="flex-1 flex flex-col overflow-hidden bg-[#fafafa] h-full p-4">
+                    <div id="pane-comparison-doc" class="flex-1 flex flex-col overflow-hidden bg-[#fafafa] h-full p-2">
                         
-                        <div class="bg-white border border-slate-200 rounded-xl p-2.5 mb-3 flex flex-wrap items-center justify-between shadow-sm gap-2">
-                            <span id="comp-note-title" class="text-sm font-bold text-slate-600 truncate max-w-[200px] px-2">Monitor de Comparação</span>
-                            <div class="flex flex-wrap items-center gap-2 flex-shrink-0">
-                                <button id="btn-reprocess-comp" onclick="reprocessMD('comp')" class="hidden px-3 py-1.5 bg-amber-500 hover:bg-amber-600 text-white rounded-lg transition-all text-[10px] font-bold uppercase shadow-sm flex items-center gap-1.5" title="Forçar a IA a reler este PDF"><i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i> Reler PDF</button>
+                        <div class="bg-white border border-slate-200 rounded-lg p-1.5 mb-2 flex items-center justify-between shadow-sm gap-1">
+                            <span id="comp-note-title" class="text-[10px] font-bold text-slate-500 truncate min-w-0 flex-1 px-1">Comparação</span>
+                            <div class="flex items-center gap-1 shrink-0">
+                                <button id="btn-reprocess-comp" onclick="reprocessMD('comp')" class="hidden px-2 py-0.5 bg-amber-500 text-white rounded text-[8px] font-bold flex items-center"><i data-lucide="refresh-cw" class="w-3 h-3"></i></button>
                                 
-                                <div class="flex bg-slate-50 border border-slate-200 p-1 rounded-lg text-[10px] font-bold mr-1">
-                                    <button id="btn-tab-comp-formatted" onclick="switchTab('comp', 'doc')" class="px-3 py-1 bg-white text-slate-800 rounded shadow-sm transition-colors">Visual</button>
-                                    <button id="btn-tab-comp-raw" onclick="switchTab('comp', 'raw')" class="px-3 py-1 text-slate-500 hover:text-slate-800 transition-colors">MD</button>
+                                <div class="flex bg-slate-50 border border-slate-200 p-0.5 rounded text-[8px] font-bold">
+                                    <button id="btn-tab-comp-formatted" onclick="switchTab('comp', 'doc')" class="px-1.5 py-0.5 bg-white text-slate-800 rounded shadow-sm">Visual</button>
+                                    <button id="btn-tab-comp-raw" onclick="switchTab('comp', 'raw')" class="px-1.5 py-0.5 text-slate-500 hover:text-slate-800">MD</button>
                                 </div>
                                 
-                                <div class="relative flex items-center border-l border-slate-200 pl-2" id="expand-wrapper-comp">
-                                    <button onclick="toggleCustomDropdown('dropdown-expand-comp', event)" class="p-1.5 text-slate-500 hover:text-blue-600 rounded-lg transition-colors" title="Ampliar"><i data-lucide="maximize" class="w-4 h-4"></i></button>
-                                    <div id="dropdown-expand-comp" class="hidden absolute top-[105%] right-0 mt-1 bg-white border border-slate-200 rounded-xl shadow-xl py-2 w-56 z-50 text-sm font-bold text-slate-700 flex flex-col">
-                                        <button onclick="fullscreenMonitor('comp'); closeAllDropdownsMenu()" class="w-full text-left px-4 py-2 hover:bg-slate-50 flex items-center gap-3"><i data-lucide="monitor" class="w-4 h-4"></i> Tela Cheia Total</button>
-                                        <button onclick="toggleSplitMaximize('comp'); closeAllDropdownsMenu()" class="w-full text-left px-4 py-2 hover:bg-slate-50 flex items-center gap-3"><i data-lucide="layout-template" class="w-4 h-4"></i> Expandir Monitor</button>
+                                <div class="relative flex items-center border-l border-slate-200 pl-1" id="expand-wrapper-comp">
+                                    <button onclick="toggleCustomDropdown('dropdown-expand-comp', event)" class="p-1 text-slate-500 hover:text-blue-600 rounded"><i data-lucide="maximize" class="w-3.5 h-3.5"></i></button>
+                                    <div id="dropdown-expand-comp" class="hidden absolute top-[105%] right-0 mt-1 bg-white border border-slate-200 rounded-lg shadow-xl py-1 w-40 z-50 text-[10px] font-bold text-slate-700 flex flex-col">
+                                        <button onclick="fullscreenMonitor('comp'); closeAllDropdownsMenu()" class="w-full text-left px-3 py-1.5 hover:bg-slate-50 flex items-center gap-2"><i data-lucide="monitor" class="w-3 h-3"></i> Tela Cheia</button>
+                                        <button onclick="toggleSplitMaximize('comp'); closeAllDropdownsMenu()" class="w-full text-left px-3 py-1.5 hover:bg-slate-50 flex items-center gap-2"><i data-lucide="layout-template" class="w-3 h-3"></i> Expandir</button>
                                     </div>
                                 </div>
-                                <button id="btn-restore-comp" onclick="exitExpansion('comp')" class="hidden p-1.5 text-blue-600 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors"><i data-lucide="minimize" class="w-4 h-4"></i></button>
-                                <button onclick="clearComparisonDoc()" class="p-1.5 text-slate-500 hover:text-red-500 transition-colors ml-1"><i data-lucide="x" class="w-4 h-4"></i></button>
+                                <button id="btn-restore-comp" onclick="exitExpansion('comp')" class="hidden p-1 text-blue-600 bg-blue-50 rounded"><i data-lucide="minimize" class="w-3.5 h-3.5"></i></button>
+                                <button onclick="clearComparisonDoc()" class="p-1 text-slate-400 hover:text-red-500"><i data-lucide="x" class="w-3.5 h-3.5"></i></button>
                             </div>
                         </div>
 
                         <div id="view-doc-comp-wrapper" class="flex-1 relative overflow-hidden font-serif">
-                            <div id="view-doc-comp" class="w-full h-full bg-white border border-slate-200 rounded-xl overflow-y-auto p-6 text-[15px] text-slate-800 leading-relaxed shadow-sm">
-                                <div class="text-center text-slate-500 my-20 font-sans text-base">Painel secundário inativo.</div>
+                            <div id="view-doc-comp" class="w-full h-full bg-white border-none overflow-y-auto p-4 text-[14px] text-slate-800 leading-relaxed shadow-sm">
+                                <div class="text-center text-slate-400 my-10 font-sans text-xs">Painel inativo.</div>
                             </div>
-                            <div id="view-raw-comp" class="hidden w-full h-full bg-white border border-slate-200 rounded-xl text-slate-800 overflow-y-auto p-6 font-mono text-sm whitespace-pre-wrap shadow-sm leading-relaxed"></div>
+                            <div id="view-raw-comp" class="hidden w-full h-full bg-white border-none overflow-y-auto p-4 font-mono text-xs whitespace-pre-wrap leading-relaxed shadow-sm text-slate-700"></div>
                         </div>
                     </div>
 
                     <div id="pane-comparison-graph" class="hidden flex-1 flex flex-col overflow-hidden relative bg-white w-full h-full">
-                        <div class="px-5 py-3 border-b border-slate-100 bg-white flex gap-2 overflow-x-auto no-scrollbar shrink-0 z-10 shadow-sm">
-                            <button class="px-4 py-2 bg-slate-800 text-white text-xs font-bold rounded-full whitespace-nowrap shadow-sm">Todos</button>
-                            <button class="px-4 py-2 bg-white border border-slate-200 text-slate-600 text-xs font-bold rounded-full hover:bg-slate-50 shadow-sm transition-colors">Pessoas</button>
-                            <button class="px-4 py-2 bg-white border border-slate-200 text-slate-600 text-xs font-bold rounded-full hover:bg-slate-50 shadow-sm transition-colors">Órgãos</button>
-                            <button class="px-4 py-2 bg-white border border-slate-200 text-slate-600 text-xs font-bold rounded-full hover:bg-slate-50 shadow-sm transition-colors">Leis</button>
+                        <div class="px-3 py-1.5 border-b border-slate-100 bg-white flex gap-1 overflow-x-auto no-scrollbar shrink-0 z-10">
+                            <button class="px-2 py-1 bg-slate-800 text-white text-[9px] font-bold rounded-full whitespace-nowrap shadow-sm">Todos</button>
+                            <button class="px-2 py-1 bg-white border border-slate-200 text-slate-600 text-[9px] font-bold rounded-full hover:bg-slate-50 shadow-sm transition-colors">Pessoas</button>
+                            <button class="px-2 py-1 bg-white border border-slate-200 text-slate-600 text-[9px] font-bold rounded-full hover:bg-slate-50 shadow-sm transition-colors">Órgãos</button>
+                            <button class="px-2 py-1 bg-white border border-slate-200 text-slate-600 text-[9px] font-bold rounded-full hover:bg-slate-50 shadow-sm transition-colors">Leis</button>
                         </div>
                         <div class="flex-1 relative w-full h-full overflow-hidden bg-slate-50/50">
                             <canvas id="graph-canvas" class="w-full h-full block cursor-grab active:cursor-grabbing"></canvas>
-                            <div class="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center justify-center gap-4 text-[11px] font-bold text-slate-600 bg-white/90 backdrop-blur px-5 py-2.5 rounded-full border border-slate-200 shadow-md z-20 pointer-events-none">
-                                <div class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-blue-600"></span> Processo</div>
-                                <div class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-emerald-500"></span> Pessoas</div>
-                                <div class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-purple-500"></span> Órgãos</div>
-                                <div class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-amber-500"></span> Leis</div>
+                            <div class="absolute bottom-2 left-1/2 -translate-x-1/2 flex items-center justify-center gap-2 text-[8px] font-bold text-slate-600 bg-white/90 backdrop-blur px-3 py-1.5 rounded-full border border-slate-200 shadow-sm z-20 pointer-events-none">
+                                <div class="flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-blue-600"></span> Processo</div>
+                                <div class="flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Pessoas</div>
+                                <div class="flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span> Leis</div>
                             </div>
                         </div>
                     </div>
@@ -570,67 +541,67 @@
         </main>
 
         <!-- SPLITTER 3 -->
-        <div id="resizer-right" class="w-3 bg-transparent hover:bg-blue-500 cursor-col-resize z-10 flex-shrink-0 flex items-center justify-center rounded-full group transition-colors">
-            <div class="w-1 h-12 bg-slate-300 group-hover:bg-white rounded-full transition-colors"></div>
+        <div id="resizer-right" class="w-2 bg-transparent hover:bg-blue-500 cursor-col-resize z-10 flex-shrink-0 flex items-center justify-center rounded-full group transition-colors">
+            <div class="w-0.5 h-8 bg-slate-300 group-hover:bg-white rounded-full transition-colors"></div>
         </div>
 
-        <!-- COLUNA 4: CHAT IA (FONTES MAIORES) -->
-        <aside id="sidebar-right" class="w-[320px] bg-white border-l border-slate-200 flex flex-col overflow-hidden shadow-sm shrink-0 z-10 transition-all duration-300">
+        <!-- COLUNA 4: CHAT IA (SUPER COMPACTO) -->
+        <aside id="sidebar-right" class="w-[260px] bg-white border-l border-slate-200 flex flex-col overflow-hidden shadow-sm shrink-0 z-10 transition-all duration-300">
             
-            <div class="p-6 border-b border-slate-100 bg-white flex flex-col justify-center shrink-0">
-                <div class="flex items-center gap-2 mb-2">
-                    <i data-lucide="sparkles" class="w-5 h-5 text-amber-500"></i>
-                    <h2 class="text-base font-bold text-slate-800">Assistente IA</h2>
+            <div class="p-3 border-b border-slate-100 bg-white flex flex-col justify-center shrink-0">
+                <div class="flex items-center gap-1.5 mb-1">
+                    <i data-lucide="sparkles" class="w-3.5 h-3.5 text-amber-500"></i>
+                    <h2 class="text-xs font-bold text-slate-800">Assistente IA</h2>
                 </div>
-                <h3 class="font-black text-lg text-slate-800">Olá, Ana! 👋</h3>
+                <h3 class="font-black text-sm text-slate-800">Olá, Ana! 👋</h3>
             </div>
 
-            <div id="chat-messages" class="flex-1 overflow-y-auto p-5 flex flex-col gap-4 bg-[#f8fafc] select-text no-scrollbar relative scroll-smooth">
+            <div id="chat-messages" class="flex-1 overflow-y-auto p-3 flex flex-col gap-3 bg-[#f8fafc] select-text no-scrollbar relative scroll-smooth">
                 <div class="w-full flex justify-start shrink-0">
-                    <div class="bg-white border border-slate-200 text-slate-700 rounded-2xl rounded-tl-sm px-4 py-3 text-sm max-w-[90%] shadow-sm leading-relaxed">
+                    <div class="bg-white border border-slate-200 text-slate-800 rounded-xl rounded-tl-sm px-3 py-2 text-[11px] max-w-[95%] shadow-sm leading-relaxed font-medium">
                         Inteligência operacional pronta. O que deseja analisar?
                     </div>
                 </div>
 
-                <div id="chat-suggestions" class="flex flex-col gap-3 w-full mt-2 shrink-0 animate-fade-in">
-                    <span class="text-[10px] font-bold text-slate-500 uppercase tracking-widest pl-1 mb-1">Ações Rápidas</span>
+                <div id="chat-suggestions" class="flex flex-col gap-2 w-full mt-1 shrink-0 animate-fade-in">
+                    <span class="text-[8px] font-bold text-slate-400 uppercase tracking-widest pl-1">Sugestões Rápidas</span>
                     
-                    <button onclick="promptAndSend('Faça um resumo executivo da peça em foco')" class="bg-white border border-slate-200 p-3 rounded-xl text-left hover:border-blue-300 hover:bg-blue-50 transition-colors shadow-sm group">
-                        <div class="flex items-center gap-3 mb-1">
-                            <div class="w-7 h-7 bg-blue-50 text-blue-600 rounded flex items-center justify-center"><i data-lucide="file-text" class="w-4 h-4"></i></div>
-                            <span class="text-xs font-bold text-slate-700 group-hover:text-blue-700">Resumo da Peça</span>
+                    <button onclick="promptAndSend('Faça um resumo executivo da peça em foco')" class="bg-white border border-slate-200 p-2 rounded-lg text-left hover:border-blue-300 hover:bg-blue-50 transition-colors shadow-sm group">
+                        <div class="flex items-center gap-2">
+                            <div class="w-5 h-5 bg-blue-50 text-blue-600 rounded flex items-center justify-center"><i data-lucide="file-text" class="w-3 h-3"></i></div>
+                            <span class="text-[10px] font-bold text-slate-700 group-hover:text-blue-700">Resumo da Peça</span>
                         </div>
                     </button>
 
-                    <button onclick="promptAndSend('Extrair prazos do documento')" class="bg-white border border-slate-200 p-3 rounded-xl text-left hover:border-emerald-300 hover:bg-emerald-50 transition-colors shadow-sm group">
-                        <div class="flex items-center gap-3 mb-1">
-                            <div class="w-7 h-7 bg-emerald-50 text-emerald-600 rounded flex items-center justify-center"><i data-lucide="calendar" class="w-4 h-4"></i></div>
-                            <span class="text-xs font-bold text-slate-700 group-hover:text-emerald-700">Mapear Prazos</span>
+                    <button onclick="promptAndSend('Extrair prazos do documento')" class="bg-white border border-slate-200 p-2 rounded-lg text-left hover:border-emerald-300 hover:bg-emerald-50 transition-colors shadow-sm group">
+                        <div class="flex items-center gap-2">
+                            <div class="w-5 h-5 bg-emerald-50 text-emerald-600 rounded flex items-center justify-center"><i data-lucide="calendar" class="w-3 h-3"></i></div>
+                            <span class="text-[10px] font-bold text-slate-700 group-hover:text-emerald-700">Mapear Prazos</span>
                         </div>
                     </button>
 
-                    <button onclick="promptAndSend('Aponte riscos e vulnerabilidades no documento')" class="bg-white border border-slate-200 p-3 rounded-xl text-left hover:border-amber-300 hover:bg-amber-50 transition-colors shadow-sm group">
-                        <div class="flex items-center gap-3 mb-1">
-                            <div class="w-7 h-7 bg-amber-50 text-amber-600 rounded flex items-center justify-center"><i data-lucide="alert-triangle" class="w-4 h-4"></i></div>
-                            <span class="text-xs font-bold text-slate-700 group-hover:text-amber-700">Analisar Riscos</span>
+                    <button onclick="promptAndSend('Aponte riscos e vulnerabilidades no documento')" class="bg-white border border-slate-200 p-2 rounded-lg text-left hover:border-amber-300 hover:bg-amber-50 transition-colors shadow-sm group">
+                        <div class="flex items-center gap-2">
+                            <div class="w-5 h-5 bg-amber-50 text-amber-600 rounded flex items-center justify-center"><i data-lucide="alert-triangle" class="w-3 h-3"></i></div>
+                            <span class="text-[10px] font-bold text-slate-700 group-hover:text-amber-700">Analisar Riscos</span>
                         </div>
                     </button>
                 </div>
             </div>
 
-            <div id="chat-attachment-area" class="hidden px-5 py-2.5 bg-slate-100 border-t border-slate-200 flex items-center justify-between text-xs font-bold text-slate-700 shrink-0">
-                <div class="flex items-center gap-2 truncate">
-                    <i data-lucide="paperclip" class="w-4 h-4 text-blue-500"></i>
+            <div id="chat-attachment-area" class="hidden px-3 py-1.5 bg-slate-100 border-t border-slate-200 flex items-center justify-between text-[9px] font-bold text-slate-700 shrink-0">
+                <div class="flex items-center gap-1.5 truncate">
+                    <i data-lucide="paperclip" class="w-3 h-3 text-blue-500"></i>
                     <span id="chat-attachment-name" class="truncate">anexo</span>
                 </div>
-                <button id="btn-remove-attachment" class="text-red-500 hover:text-red-700"><i data-lucide="x" class="w-4 h-4"></i></button>
+                <button id="btn-remove-attachment" class="text-red-500 hover:text-red-700"><i data-lucide="x" class="w-3 h-3"></i></button>
             </div>
 
-            <div class="p-5 border-t border-slate-100 bg-white shrink-0 shadow-[0_-10px_20px_rgba(0,0,0,0.02)]">
-                <div class="relative flex items-center bg-slate-50 rounded-full border border-slate-200 p-1.5 shadow-inner focus-within:border-blue-400 focus-within:ring-2 focus-within:ring-blue-100 transition-all">
-                    <button id="btn-chat-attach" class="p-2 text-slate-500 hover:text-blue-600"><i data-lucide="paperclip" class="w-5 h-5"></i></button>
-                    <textarea id="chat-input" rows="1" placeholder="Pergunte..." class="flex-1 bg-transparent py-2 px-2 text-sm font-semibold focus:outline-none text-slate-800 resize-none h-9 leading-tight placeholder:text-slate-400"></textarea>
-                    <button id="btn-send" class="w-9 h-9 flex items-center justify-center bg-slate-800 text-white rounded-full hover:bg-slate-700 shrink-0 shadow-sm"><i data-lucide="send" class="w-4 h-4 ml-[-2px]"></i></button>
+            <div class="p-3 border-t border-slate-100 bg-white shrink-0">
+                <div class="relative flex items-center bg-slate-50 rounded-full border border-slate-200 p-0.5 shadow-inner focus-within:border-blue-400 focus-within:ring-1 focus-within:ring-blue-100 transition-all">
+                    <button id="btn-chat-attach" class="p-1.5 text-slate-400 hover:text-blue-600"><i data-lucide="paperclip" class="w-3.5 h-3.5"></i></button>
+                    <textarea id="chat-input" rows="1" placeholder="Pergunte..." class="flex-1 bg-transparent py-1.5 px-1 text-[11px] font-semibold focus:outline-none text-slate-800 resize-none h-6 leading-tight placeholder:text-slate-400"></textarea>
+                    <button id="btn-send" class="w-6 h-6 flex items-center justify-center bg-slate-800 text-white rounded-full hover:bg-slate-700 shrink-0"><i data-lucide="send" class="w-3 h-3 ml-[-1px]"></i></button>
                 </div>
             </div>
         </aside>
@@ -648,14 +619,17 @@
             }
         });
 
+        // ==========================================
+        // MICRO-SISTEMA DE TOASTS
+        // ==========================================
         window.showToast = function(msg, type="info") {
             const t = document.createElement("div");
             let bg = "bg-slate-800 text-white";
             if(type === 'success') bg = "bg-emerald-600 text-white";
             if(type === 'error') bg = "bg-red-600 text-white";
             
-            t.className = `fixed bottom-6 right-6 ${bg} px-5 py-3 rounded-xl text-sm font-bold shadow-2xl z-[9999] opacity-0 transition-opacity flex items-center gap-3`;
-            t.innerHTML = `<i data-lucide="info" class="w-5 h-5 shrink-0"></i> <span>${msg}</span>`;
+            t.className = `fixed bottom-5 right-5 ${bg} px-4 py-2.5 rounded-lg text-[11px] font-bold shadow-2xl z-[9999] opacity-0 transition-opacity flex items-center gap-2`;
+            t.innerHTML = `<i data-lucide="info" class="w-4 h-4 shrink-0"></i> <span>${msg}</span>`;
             document.body.appendChild(t);
             try{ lucide.createIcons(); }catch(e){}
             
@@ -738,14 +712,14 @@
 
         window.emptyTrash = async function() {
             const btn = document.getElementById("btn-empty-trash");
-            if(btn) btn.innerHTML = `<i data-lucide="loader" class="w-4 h-4 inline animate-spin"></i> Excluindo...`;
+            if(btn) btn.innerHTML = `<i data-lucide="loader" class="w-3 h-3 inline animate-spin"></i> Excluindo...`;
             try { lucide.createIcons(); } catch(e) {}
             for (let p in trashItems) {
                 try { await fetch("/api/delete-item", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ targetPath: p }) }); } catch(e) {}
             }
             trashItems = {}; localStorage.setItem("bms_trash_map", JSON.stringify(trashItems));
             updateTrashModalUI(); buildNotesTree(); reloadGlobalGraph();
-            if(btn) btn.innerHTML = `Esvaziar Lixeira`;
+            if(btn) btn.innerHTML = `Esvaziar`;
             if(window.showToast) window.showToast("Lixeira Esvaziada.", "error");
         };
 
@@ -754,7 +728,7 @@
             if (!container) return;
             const keys = Object.keys(trashItems);
             if (keys.length === 0) {
-                container.innerHTML = `<div class="py-10 flex flex-col items-center justify-center text-slate-400 gap-3"><i data-lucide="inbox" class="w-10 h-10 opacity-30"></i><span class="text-sm font-bold">Lixeira vazia</span></div>`;
+                container.innerHTML = `<div class="py-4 flex flex-col items-center justify-center text-slate-400 gap-2"><i data-lucide="inbox" class="w-6 h-6 opacity-30"></i><span class="text-[10px] font-bold">Lixeira vazia</span></div>`;
                 if (btnEmpty) { btnEmpty.classList.add("opacity-50", "cursor-not-allowed"); btnEmpty.disabled = true; }
             } else {
                 if (btnEmpty) { btnEmpty.classList.remove("opacity-50", "cursor-not-allowed"); btnEmpty.disabled = false; }
@@ -762,14 +736,14 @@
                 keys.forEach(p => {
                     const name = p.split('/').pop(); const date = new Date(trashItems[p]).toLocaleDateString('pt-BR');
                     html += `
-                        <div class="flex items-center justify-between p-3 bg-slate-50 border border-slate-200 rounded-xl group hover:bg-slate-100 transition-colors">
-                            <div class="flex items-center gap-3 overflow-hidden">
-                                <i data-lucide="file-minus" class="w-4 h-4 text-slate-400 shrink-0"></i>
-                                <div class="flex flex-col overflow-hidden"><span class="text-xs font-bold text-slate-700 truncate">${name}</span><span class="text-[10px] font-bold text-slate-500">Excluído em ${date}</span></div>
+                        <div class="flex items-center justify-between p-2 bg-slate-50 border border-slate-200 rounded-lg group hover:bg-slate-100 transition-colors">
+                            <div class="flex items-center gap-2 overflow-hidden">
+                                <i data-lucide="file-minus" class="w-3.5 h-3.5 text-slate-400 shrink-0"></i>
+                                <div class="flex flex-col overflow-hidden"><span class="text-[10px] font-bold text-slate-700 truncate">${name}</span><span class="text-[8px] font-bold text-slate-400">Excluído em ${date}</span></div>
                             </div>
                             <div class="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity shrink-0">
-                                <button onclick="restoreFromTrash('${p}')" class="p-2 text-blue-600 hover:bg-blue-100 rounded-lg transition-colors" title="Restaurar"><i data-lucide="rotate-ccw" class="w-4 h-4"></i></button>
-                                <button onclick="hardDeleteFromTrash('${p}')" class="p-2 text-red-600 hover:bg-red-100 rounded-lg transition-colors" title="Excluir Definitivo"><i data-lucide="x" class="w-4 h-4"></i></button>
+                                <button onclick="restoreFromTrash('${p}')" class="p-1.5 text-blue-500 hover:bg-blue-100 rounded transition-colors" title="Restaurar"><i data-lucide="rotate-ccw" class="w-3 h-3"></i></button>
+                                <button onclick="hardDeleteFromTrash('${p}')" class="p-1.5 text-red-500 hover:bg-red-100 rounded transition-colors" title="Excluir Definitivo"><i data-lucide="x" class="w-3 h-3"></i></button>
                             </div>
                         </div>`;
                 });
@@ -814,29 +788,28 @@
             else if (document.exitFullscreen) document.exitFullscreen();
         };
 
-        window.toggleFavoritesFilter = function() {
-            if (currentFilterType === 'favorites') changeFilter('all'); else changeFilter('favorites');
-        };
-
         function changeFilter(type) { 
             currentFilterType = type; closeAllDropdownsMenu(); buildNotesTree(); 
             const btnFav = document.getElementById("btn-filter-favorites"); const textFav = document.getElementById("text-filter-favorites");
             if (btnFav && textFav) {
                 if (type === 'favorites') {
-                    btnFav.className = "flex-1 bg-amber-500/20 border border-amber-500/30 rounded-xl p-3 flex items-center justify-center gap-2 cursor-pointer hover:bg-amber-500/30 transition-colors group";
-                    textFav.innerText = "Ver Todos"; textFav.className = "sidebar-text text-xs font-bold text-amber-400 group-hover:text-amber-300 transition-colors";
+                    btnFav.className = "flex-1 bg-amber-500/20 border border-amber-500/30 rounded-lg p-2 flex items-center justify-center gap-1.5 cursor-pointer hover:bg-amber-500/30 transition-colors group";
+                    textFav.innerText = "Ver Todos"; textFav.className = "sidebar-text text-[9px] font-bold text-amber-500 group-hover:text-amber-400 transition-colors";
                 } else {
-                    btnFav.className = "flex-1 bg-white/5 border border-white/5 rounded-xl p-3 flex items-center justify-center gap-2 cursor-pointer hover:bg-white/10 transition-colors group";
-                    textFav.innerText = "Favoritos"; textFav.className = "sidebar-text text-xs font-bold text-slate-300 group-hover:text-white transition-colors";
+                    btnFav.className = "flex-1 bg-white/5 border border-white/5 rounded-lg p-2 flex items-center justify-center gap-1.5 cursor-pointer hover:bg-white/10 transition-colors group";
+                    textFav.innerText = "Favoritos"; textFav.className = "sidebar-text text-[9px] font-bold text-slate-300 group-hover:text-white transition-colors";
                 }
             }
         }
+        window.toggleFavoritesFilter = function() {
+            if (currentFilterType === 'favorites') changeFilter('all'); else changeFilter('favorites');
+        };
 
         window.openDeleteModal = function() {
             const ctxMenu = document.getElementById("custom-context-menu"); if (ctxMenu) ctxMenu.classList.add("hidden");
             const modal = document.getElementById("custom-dialog-modal"); if (!modal) return;
             document.getElementById("modal-title").innerText = "Mover para Lixeira";
-            document.getElementById("modal-body-content").innerHTML = `<p class="text-sm">Mover <strong class="text-slate-800">${contextMenuSelectedPath.replace(/\/$/, "")}</strong> para a lixeira?</p>`;
+            document.getElementById("modal-body-content").innerHTML = `<p class="text-[11px]">Mover <strong class="text-slate-800">${contextMenuSelectedPath.replace(/\/$/, "")}</strong> para a lixeira?</p>`;
             modal.classList.remove("hidden");
             document.getElementById("modal-confirm-btn").onclick = () => { moveToTrash(contextMenuSelectedPath); closeCustomModal(); };
         };
@@ -864,14 +837,14 @@
             const header = document.querySelector('header'); const centerPanel = document.getElementById('center-panel');
             const topMenus = centerPanel ? centerPanel.querySelector('.grid') : null;
             const sidebarRight = document.getElementById('sidebar-right'); const resizerRight = document.getElementById('resizer-right');
-            const mainBox = document.getElementById('center-preview-container'); const compBox = document.getElementById('sidebar-comparison');
+            const compBox = document.getElementById('sidebar-comparison');
 
             if (isMainExpanded || isCompExpanded) {
                 if (header) header.classList.add('hidden'); if (topMenus) topMenus.classList.add('hidden');
                 if (centerPanel) centerPanel.className = "flex-1 flex flex-col min-w-[300px] overflow-hidden p-0 gap-0 transition-all duration-300";
             } else {
                 if (header) header.classList.remove('hidden'); if (topMenus) topMenus.classList.remove('hidden');
-                if (centerPanel) centerPanel.className = "flex-1 flex flex-col min-w-[300px] overflow-hidden p-4 gap-4 bg-brand-light transition-all duration-300";
+                if (centerPanel) centerPanel.className = "flex-1 flex flex-col min-w-[300px] overflow-hidden p-2 gap-2 bg-brand-light transition-all duration-300";
             }
 
             const sbLeft = document.getElementById("sidebar-left"); const rsLeft = document.getElementById("resizer-left");
@@ -957,14 +930,14 @@
         window.clearMainMonitor = function(fromHistory = false) {
             selectedFileId = null;
             const activeNoteTitleEl = document.getElementById("active-note-title");
-            if (activeNoteTitleEl) activeNoteTitleEl.innerText = "Selecione um arquivo";
+            if (activeNoteTitleEl) activeNoteTitleEl.innerText = "Selecione o arquivo";
             
             const viewDocMainEl = document.getElementById("view-doc-main");
             if (viewDocMainEl) {
                 const parentContainer = document.getElementById("view-doc-main-container");
-                if (parentContainer) { parentContainer.classList.add("p-4"); parentContainer.classList.remove("p-0"); }
-                viewDocMainEl.className = "w-full h-full bg-white border border-slate-200 rounded-xl overflow-y-auto p-8 font-serif text-[15px] text-slate-800 shadow-sm leading-relaxed";
-                viewDocMainEl.innerHTML = `<div class="text-center text-slate-500 my-20 font-sans text-base">Selecione um documento na árvore à esquerda.</div>`;
+                if (parentContainer) { parentContainer.classList.add("p-3"); parentContainer.classList.remove("p-0"); }
+                viewDocMainEl.className = "w-full h-full bg-white border-none overflow-y-auto p-5 font-serif text-[14px] text-slate-800 leading-relaxed";
+                viewDocMainEl.innerHTML = `<div class="text-center text-slate-400 my-10 font-sans text-sm">Selecione na árvore à esquerda.</div>`;
             }
             try { updateFavoriteStarUI(); } catch(e) {} try { buildNotesTree(); } catch(e) {}
             if (!fromHistory && !isNavigatingHistory) {
@@ -997,9 +970,9 @@
 
         document.addEventListener('mousemove', (e) => {
             if (!isResizingLeft && !isResizingCenter && !isResizingRight) return;
-            if (isResizingLeft && sidebarLeft && !isSidebarHidden) { let w = e.clientX; if (w > 180 && w < window.innerWidth * 0.4) sidebarLeft.style.width = w + "px"; }
-            if (isResizingCenter && sidebarComparison) { let calculatedWidth = window.innerWidth - e.clientX - (sidebarRight ? sidebarRight.clientWidth : 320); if (calculatedWidth > 250 && calculatedWidth < window.innerWidth * 0.6) sidebarComparison.style.width = calculatedWidth + "px"; }
-            if (isResizingRight && sidebarRight) { let w = window.innerWidth - e.clientX; if (w > 250 && w < window.innerWidth * 0.4) sidebarRight.style.width = w + "px"; }
+            if (isResizingLeft && sidebarLeft && !isSidebarHidden) { let w = e.clientX; if (w > 150 && w < window.innerWidth * 0.4) sidebarLeft.style.width = w + "px"; }
+            if (isResizingCenter && sidebarComparison) { let calculatedWidth = window.innerWidth - e.clientX - (sidebarRight ? sidebarRight.clientWidth : 280); if (calculatedWidth > 200 && calculatedWidth < window.innerWidth * 0.6) sidebarComparison.style.width = calculatedWidth + "px"; }
+            if (isResizingRight && sidebarRight) { let w = window.innerWidth - e.clientX; if (w > 200 && w < window.innerWidth * 0.4) sidebarRight.style.width = w + "px"; }
         });
 
         document.addEventListener('mouseup', stopResize); document.addEventListener('mouseleave', stopResize);
@@ -1069,9 +1042,9 @@
 
         window.triggerRetroactiveMD = async function() {
             const btn = document.getElementById("btn-retroactive"); if (!btn) return;
-            btn.innerHTML = `<i data-lucide="loader" class="w-4 h-4 inline-block mr-2 animate-spin"></i> Processando...`; btn.classList.add("opacity-50", "pointer-events-none");
+            btn.innerHTML = `<i data-lucide="loader" class="w-3.5 h-3.5 inline-block mr-1.5 animate-spin"></i> Processando...`; btn.classList.add("opacity-50", "pointer-events-none");
             try { await fetch("/api/sync-retroactive", { method: "POST" }); alert("Processo iniciado!"); } catch(e) { alert("Erro ao iniciar."); }
-            btn.innerHTML = `<i data-lucide="check" class="w-4 h-4 inline-block mr-2"></i> Iniciado`; try { lucide.createIcons(); } catch(e) {}
+            btn.innerHTML = `<i data-lucide="check" class="w-3.5 h-3.5 inline-block mr-1.5"></i> Iniciado`; try { lucide.createIcons(); } catch(e) {}
         };
 
         window.selectMonitor = function(monitor) {
@@ -1092,12 +1065,12 @@
             const paneC = document.getElementById("pane-comparison-doc"); const paneG = document.getElementById("pane-comparison-graph");
             if (mode === 'compare') {
                 if (paneC) paneC.classList.remove("hidden"); if (paneG) paneG.classList.add("hidden");
-                if (btnC) btnC.className = "px-4 py-1.5 bg-white shadow-sm rounded transition-colors";
-                if (btnG) btnG.className = "px-4 py-1.5 text-slate-500 hover:text-slate-800 transition-colors";
+                if (btnC) btnC.className = "px-3 py-1 bg-white shadow-sm rounded text-slate-800 transition-colors";
+                if (btnG) btnG.className = "px-3 py-1 text-slate-500 hover:text-slate-800 transition-colors";
             } else {
                 if (paneC) paneC.classList.add("hidden"); if (paneG) paneG.classList.remove("hidden");
-                if (btnG) btnG.className = "px-4 py-1.5 bg-white shadow-sm rounded transition-colors";
-                if (btnC) btnC.className = "px-4 py-1.5 text-slate-500 hover:text-slate-800 transition-colors";
+                if (btnG) btnG.className = "px-3 py-1 bg-white shadow-sm rounded text-slate-800 transition-colors";
+                if (btnC) btnC.className = "px-3 py-1 text-slate-500 hover:text-slate-800 transition-colors";
                 if (!isNavigatingHistory) {
                     const lastState = compHistory[compHistoryIndex];
                     if (!lastState || lastState.type !== 'graph') {
@@ -1114,24 +1087,24 @@
                 const vDoc = document.getElementById("view-doc-main"); const vRaw = document.getElementById("view-raw-main");
                 if (type === 'doc') {
                     if (vDoc) vDoc.classList.remove("hidden"); if (vRaw) vRaw.classList.add("hidden");
-                    if (tDoc) tDoc.className = "px-4 py-1.5 bg-white text-slate-800 rounded shadow-sm transition-colors";
-                    if (tRaw) tRaw.className = "px-4 py-1.5 text-slate-500 hover:text-slate-800 transition-colors";
+                    if (tDoc) tDoc.className = "px-2 py-0.5 bg-white text-slate-800 rounded shadow-sm transition-colors";
+                    if (tRaw) tRaw.className = "px-2 py-0.5 text-slate-500 hover:text-slate-800 transition-colors";
                 } else {
                     if (vDoc) vDoc.classList.add("hidden"); if (vRaw) vRaw.classList.remove("hidden");
-                    if (tRaw) tRaw.className = "px-4 py-1.5 bg-white text-slate-800 rounded shadow-sm transition-colors";
-                    if (tDoc) tDoc.className = "px-4 py-1.5 text-slate-500 hover:text-slate-800 transition-colors";
+                    if (tRaw) tRaw.className = "px-2 py-0.5 bg-white text-slate-800 rounded shadow-sm transition-colors";
+                    if (tDoc) tDoc.className = "px-2 py-0.5 text-slate-500 hover:text-slate-800 transition-colors";
                 }
             } else {
                 const tDoc = document.getElementById("btn-tab-comp-formatted"); const tRaw = document.getElementById("btn-tab-comp-raw");
                 const vDoc = document.getElementById("view-doc-comp"); const vRaw = document.getElementById("view-raw-comp");
                 if (type === 'doc') {
                     if (vDoc) vDoc.classList.remove("hidden"); if (vRaw) vRaw.classList.add("hidden");
-                    if (tDoc) tDoc.className = "px-3 py-1 bg-white text-slate-800 rounded shadow-sm transition-colors";
-                    if (tRaw) tRaw.className = "px-3 py-1 text-slate-500 hover:text-slate-800 transition-colors";
+                    if (tDoc) tDoc.className = "px-1.5 py-0.5 bg-white text-slate-800 rounded shadow-sm transition-colors";
+                    if (tRaw) tRaw.className = "px-1.5 py-0.5 text-slate-500 hover:text-slate-800 transition-colors";
                 } else {
                     if (vDoc) vDoc.classList.add("hidden"); if (vRaw) vRaw.classList.remove("hidden");
-                    if (tRaw) tRaw.className = "px-3 py-1 bg-white text-slate-800 rounded shadow-sm transition-colors";
-                    if (tDoc) tDoc.className = "px-3 py-1 text-slate-500 hover:text-slate-800 transition-colors";
+                    if (tRaw) tRaw.className = "px-1.5 py-0.5 bg-white text-slate-800 rounded shadow-sm transition-colors";
+                    if (tDoc) tDoc.className = "px-1.5 py-0.5 text-slate-500 hover:text-slate-800 transition-colors";
                 }
             }
         };
@@ -1146,10 +1119,10 @@
             const tEl = document.getElementById("comp-note-title"); if (tEl) tEl.innerText = "Monitor de Comparação";
             const dEl = document.getElementById("view-doc-comp");
             if (dEl) {
-                dEl.className = "w-full h-full bg-white border border-slate-200 rounded-xl overflow-y-auto p-6 text-[15px] text-slate-800 select-text leading-relaxed shadow-sm";
+                dEl.className = "w-full h-full bg-white border-none overflow-y-auto p-4 text-[14px] text-slate-800 leading-relaxed shadow-sm";
                 const parentContainer = document.getElementById("view-doc-comp-wrapper");
-                if (parentContainer) { parentContainer.classList.add("p-4"); parentContainer.classList.remove("p-0"); }
-                dEl.innerHTML = `<div class="text-center text-slate-500 my-20 font-sans text-base">Painel secundário inativo. Selecione um arquivo.</div>`;
+                if (parentContainer) { parentContainer.classList.add("p-2"); parentContainer.classList.remove("p-0"); }
+                dEl.innerHTML = `<div class="text-center text-slate-400 my-10 font-sans text-xs">Painel inativo.</div>`;
             }
             const rEl = document.getElementById("view-raw-comp"); if (rEl) rEl.innerText = "";
             try { buildNotesTree(); } catch(e) {}
@@ -1167,8 +1140,8 @@
             let rEl; let btn;
             if (isMain) { rEl = document.getElementById("view-raw-main"); btn = document.getElementById("btn-reprocess-main"); } 
             else { rEl = document.getElementById("view-raw-comp"); btn = document.getElementById("btn-reprocess-comp"); }
-            if (rEl) { rEl.innerText = "A Inteligência Artificial está transcrevendo a imagem para texto... Aguarde."; switchTab(monitor, 'raw'); }
-            if (btn) btn.innerHTML = `<i data-lucide="loader" class="w-3.5 h-3.5 inline mr-1.5 animate-spin"></i> Relendo...`;
+            if (rEl) { rEl.innerText = "Transcrevendo imagem para texto... Aguarde."; switchTab(monitor, 'raw'); }
+            if (btn) btn.innerHTML = `<i data-lucide="loader" class="w-3 h-3 inline animate-spin"></i>`;
             try { lucide.createIcons(); } catch(e) {}
             try {
                 const res = await fetch("/api/reprocess-md", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ filename: targetFile }) });
@@ -1177,25 +1150,25 @@
                     if (rEl) rEl.innerText = data.markdown;
                     if (isMain) rawContentBuffer = data.markdown; else compContentBuffer = data.markdown;
                     try { buildNotesTree(); reloadGlobalGraph(); window.showToast("Leitura OCR concluída.", "success"); } catch(e) {}
-                } else { if (rEl) rEl.innerText = "Falha ao refazer o OCR: " + data.error; }
+                } else { if (rEl) rEl.innerText = "Falha OCR: " + data.error; }
             } catch (err) { if (rEl) rEl.innerText = "Erro Servidor."; }
-            if (btn) btn.innerHTML = `<i data-lucide="refresh-cw" class="w-3.5 h-3.5 inline mr-1.5"></i> Reler PDF`;
+            if (btn) btn.innerHTML = `<i data-lucide="refresh-cw" class="w-3 h-3 inline"></i> <span class="hidden sm:inline">Reler PDF</span>`;
             try { lucide.createIcons(); } catch(e) {}
         };
 
         function renderMarkdownHTML(mdText, filename) {
-            if (!mdText) return `<div class="text-center text-slate-500">Documento sem registros textuais válidos.</div>`;
+            if (!mdText) return `<div class="text-center text-slate-500 text-sm">Sem registros válidos.</div>`;
             const tagRegex = /#([a-zA-Z0-9À-ÿ_-]+)/g; let rawTags = []; let m;
             while ((m = tagRegex.exec(mdText)) !== null) rawTags.push(`#${m[1]}`); 
             const uniqueTags = [...new Set(rawTags)]; 
-            let cleanText = mdText.replace(/\[\[(.*?)\]\]/g, '<span class="text-blue-600 font-bold cursor-pointer hover:underline" onclick="loadNoteContent(\'$1\')">$1</span>');
+            let cleanText = mdText.replace(/\[\[(.*?)\]\]/g, '<span class="text-blue-500 font-bold cursor-pointer hover:underline" onclick="loadNoteContent(\'$1\')">$1</span>');
             let tagHeader = "";
             if (uniqueTags.length > 0) {
                 tagHeader = `<div class="flex flex-wrap gap-2 mb-4 border-b border-slate-100 pb-3">`;
-                const spans = uniqueTags.map(t => `<span class="bg-emerald-50 text-emerald-600 border border-emerald-100 text-xs font-black px-2.5 py-1 rounded-md">${t}</span>`);
+                const spans = uniqueTags.map(t => `<span class="bg-emerald-50 text-emerald-600 border border-emerald-100 text-[10px] font-black px-2 py-0.5 rounded">${t}</span>`);
                 tagHeader += spans.join(''); tagHeader += `</div>`;
             }
-            return `<div class="text-center border-b border-slate-200 pb-3 mb-5 font-sans"><h3 class="font-bold text-base uppercase text-slate-800">BMS REGISTRO</h3><p class="text-xs text-slate-500 mt-1">Cofre/${filename}</p></div>${tagHeader}<div class="whitespace-pre-wrap text-slate-800">${cleanText}</div>`;
+            return `<div class="text-center border-b border-slate-200 pb-3 mb-4 font-sans"><h3 class="font-bold text-xs uppercase text-slate-800">BMS REGISTRO</h3><p class="text-[9px] text-slate-500 mt-0.5">Cofre/${filename}</p></div>${tagHeader}<div class="whitespace-pre-wrap text-slate-800">${cleanText}</div>`;
         }
 
         window.loadNoteContent = async function(filename) {
@@ -1229,8 +1202,8 @@
                 const tEl = document.getElementById(targetTitleId); if (tEl) tEl.innerText = filename.split('/').pop().replace(/\.(md|pdf|txt)$/i, "");
                 const dEl = document.getElementById(targetDocId); const rEl = document.getElementById(targetRawId);
                 dEl_Safe = dEl; rEl_Safe = rEl;
-                if (dEl) dEl.innerHTML = `<div class="text-center text-slate-500 text-base my-20 animate-pulse font-sans">Indexando...</div>`;
-                if (rEl) rEl.innerText = "Carregando o texto fonte bruto...";
+                if (dEl) dEl.innerHTML = `<div class="text-center text-slate-500 text-sm my-10 animate-pulse font-sans">Indexando...</div>`;
+                if (rEl) rEl.innerText = "Carregando bruto...";
                 try { highlightSelectedRow(); } catch(e) {}
                 if (isMain) { try { updateFavoriteStarUI(); } catch(e) {} }
                 try { buildNotesTree(); } catch(e) {}
@@ -1238,8 +1211,8 @@
                 if (filename.toLowerCase().endsWith('.pdf')) {
                     if (dEl) {
                         dEl.className = "w-full h-full border-0 bg-white";
-                        if (dEl.parentElement) { dEl.parentElement.classList.remove('p-4'); dEl.parentElement.classList.add('p-0'); }
-                        dEl.innerHTML = `<iframe src="/api/note-raw?file=${encodeURIComponent(filename)}" class="w-full h-full border-0 bg-slate-100" style="display: block; min-height: 100%;"></iframe>`;
+                        if (dEl.parentElement) { dEl.parentElement.classList.remove('p-2'); dEl.parentElement.classList.remove('p-3'); dEl.parentElement.classList.add('p-0'); }
+                        dEl.innerHTML = `<iframe src="/api/note-raw?file=${encodeURIComponent(filename)}" class="w-full h-full border-0 bg-slate-50" style="display: block; min-height: 100%;"></iframe>`;
                     }
                     let btnReprocess;
                     if (isMain) btnReprocess = document.getElementById("btn-reprocess-main"); else btnReprocess = document.getElementById("btn-reprocess-comp");
@@ -1271,15 +1244,15 @@
                 if (isMain) rawContentBuffer = content; else compContentBuffer = content;
 
                 if (dEl) {
-                    dEl.className = "w-full h-full bg-white border border-slate-200 rounded-xl overflow-y-auto p-8 font-serif text-[15px] text-slate-800 select-text shadow-sm leading-relaxed";
-                    if (dEl.parentElement) { dEl.parentElement.classList.add('p-4'); dEl.parentElement.classList.remove('p-0'); }
+                    dEl.className = "w-full h-full bg-white border-none overflow-y-auto p-5 font-serif text-[14px] text-slate-800 leading-relaxed shadow-sm";
+                    if (dEl.parentElement) { dEl.parentElement.classList.add('p-3'); dEl.parentElement.classList.remove('p-0'); }
                     dEl.innerHTML = renderMarkdownHTML(content, filename);
                 }
                 if (rEl) rEl.innerText = content;
                 try { lucide.createIcons(); } catch(e) {}
                 
             } catch(e) { 
-                if (dEl_Safe) dEl_Safe.innerHTML = `<div class="text-center text-red-500 my-20 font-bold font-sans">Erro ao ler arquivo.<br><span class="text-xs text-red-400 font-normal">${e.message}</span></div>`; 
+                if (dEl_Safe) dEl_Safe.innerHTML = `<div class="text-center text-red-500 my-10 font-bold font-sans">Erro ao ler arquivo.<br><span class="text-[10px] text-red-400 font-normal">${e.message}</span></div>`; 
                 if (rEl_Safe) rEl_Safe.innerText = `Erro: ${e.message}`;
             }
         };
@@ -1291,9 +1264,9 @@
                 const cleanMain = selectedFileId ? selectedFileId.replace(/\/$/, "") : "";
                 const cleanComp = comparisonFileId ? comparisonFileId.replace(/\/$/, "") : "";
                 if (rowPath === cleanMain || rowPath === cleanComp) {
-                    row.className = "tree-row-container group flex items-center justify-between w-full rounded-lg py-1.5 px-3 mb-0.5 border-l-[3px] border-blue-500 bg-blue-600/20 text-blue-400 font-bold transition-all shadow-sm";
+                    row.className = "tree-row-container group flex items-center justify-between w-full rounded-lg py-2 px-3 mb-1 border-l-[3px] border-blue-500 bg-blue-600/20 text-blue-400 font-bold transition-all shadow-sm";
                 } else {
-                    row.className = "tree-row-container group flex items-center justify-between w-full rounded-lg py-1.5 px-3 mb-0.5 border-l-[3px] border-transparent text-slate-400 hover:text-white hover:bg-white/5 transition-all font-medium";
+                    row.className = "tree-row-container group flex items-center justify-between w-full rounded-lg py-2 px-3 mb-1 border-l-[3px] border-transparent text-slate-400 hover:text-white hover:bg-white/5 transition-all font-semibold";
                 }
             });
         }
@@ -1322,16 +1295,16 @@
             try {
                 const res = await fetch("/api/status");
                 if (res.ok) {
-                    serverStatusBadge.className = "flex items-center gap-2 bg-emerald-50 px-3 py-2 rounded-lg border border-emerald-100 shadow-sm transition-all";
-                    serverStatusDot.className = "w-2 h-2 bg-emerald-500 rounded-full animate-pulse";
+                    serverStatusBadge.className = "flex items-center gap-1.5 bg-emerald-50 px-2 py-1.5 rounded-md border border-emerald-100 shadow-sm transition-all";
+                    serverStatusDot.className = "w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse";
                     serverStatusText.innerText = "SERVIDOR ATIVO";
-                    serverStatusText.className = "text-xs font-black tracking-wide uppercase text-emerald-700 hidden sm:block";
+                    serverStatusText.className = "text-[9px] font-black tracking-wide uppercase text-emerald-700 hidden sm:block";
                 } else throw new Error(); 
             } catch (err) {
-                serverStatusBadge.className = "flex items-center gap-2 bg-red-50 px-3 py-2 rounded-lg border border-red-100 shadow-sm transition-all";
-                serverStatusDot.className = "w-2 h-2 bg-red-500 rounded-full";
+                serverStatusBadge.className = "flex items-center gap-1.5 bg-red-50 px-2 py-1.5 rounded-md border border-red-100 shadow-sm transition-all";
+                serverStatusDot.className = "w-1.5 h-1.5 bg-red-500 rounded-full";
                 serverStatusText.innerText = "OFFLINE";
-                serverStatusText.className = "text-xs font-black tracking-wide uppercase text-red-700 hidden sm:block";
+                serverStatusText.className = "text-[9px] font-black tracking-wide uppercase text-red-700 hidden sm:block";
             }
         }
         setInterval(checkRealServerStatus, 4000); checkRealServerStatus();
@@ -1344,7 +1317,7 @@
 
         function triggerInlineContextMenu(e, path) {
             e.stopPropagation(); contextMenuSelectedPath = path; const menu = document.getElementById("custom-context-menu"); closeAllDropdownsMenu();
-            if (menu) { menu.classList.remove("hidden"); menu.style.left = `${e.clientX - 160}px`; menu.style.top = `${e.clientY + 10}px`; }
+            if (menu) { menu.classList.remove("hidden"); menu.style.left = `${e.clientX - 100}px`; menu.style.top = `${e.clientY}px`; }
         }
 
         function closeCustomModal() { const modal = document.getElementById("custom-dialog-modal"); if (modal) modal.classList.add("hidden"); }
@@ -1353,7 +1326,7 @@
             const ctxMenu = document.getElementById("custom-context-menu"); if (ctxMenu) ctxMenu.classList.add("hidden");
             const modal = document.getElementById("custom-dialog-modal"); if (!modal) return;
             document.getElementById("modal-title").innerText = "Renomear / Mover Item";
-            document.getElementById("modal-body-content").innerHTML = `<input type="text" id="modal-input-field" value="${contextMenuSelectedPath.replace(/\/$/, "")}" class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-sm font-semibold text-slate-800">`;
+            document.getElementById("modal-body-content").innerHTML = `<input type="text" id="modal-input-field" value="${contextMenuSelectedPath.replace(/\/$/, "")}" class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2 text-xs font-semibold text-slate-800">`;
             modal.classList.remove("hidden");
             document.getElementById("modal-confirm-btn").onclick = async () => { const newPath = document.getElementById("modal-input-field").value.trim(); if (newPath) { await renameItem(contextMenuSelectedPath, newPath); closeCustomModal(); } };
         }
@@ -1363,7 +1336,7 @@
             let context = ""; if (selectedFileId && selectedFileId.endsWith("/")) context = selectedFileId; else if (selectedFileId && selectedFileId.includes("/")) context = selectedFileId.substring(0, selectedFileId.lastIndexOf("/")) + "/";
             const modal = document.getElementById("custom-dialog-modal"); if (!modal) return;
             document.getElementById("modal-title").innerText = "Nova Pasta";
-            document.getElementById("modal-body-content").innerHTML = `<input type="text" id="modal-input-field" placeholder="Nome..." class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-sm text-slate-800">`;
+            document.getElementById("modal-body-content").innerHTML = `<input type="text" id="modal-input-field" placeholder="Nome..." class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2 text-xs text-slate-800">`;
             modal.classList.remove("hidden");
             document.getElementById("modal-confirm-btn").onclick = async () => {
                 const name = document.getElementById("modal-input-field").value.trim();
@@ -1400,7 +1373,7 @@
             ctxUpload.onchange = async (e) => {
                 const file = e.target.files[0]; if (!file) return;
                 const attArea = document.getElementById("chat-attachment-area"); const attName = document.getElementById("chat-attachment-name");
-                if (attArea) attArea.classList.remove("hidden"); if (attName) attName.innerText = "Sincronizando arquivo (aguarde OCR)...";
+                if (attArea) attArea.classList.remove("hidden"); if (attName) attName.innerText = "Sincronizando arquivo (aguarde OCR visual)...";
                 const finalPath = "Anexos_Chat/" + file.name;
                 try {
                     const res = await fetch(`/api/upload-vault?file=${encodeURIComponent(finalPath)}&sync=true`, { method: "POST", body: file });
@@ -1408,7 +1381,7 @@
                     pendingChatAttachment = { name: file.name, content: data.markdown || "Falha na Extração Visual." };
                     if (attName) attName.innerText = file.name;
                     buildNotesTree(); reloadGlobalGraph();
-                } catch (err) { if (attName) attName.innerText = "Erro ao enviar anexo."; }
+                } catch (err) { if (attName) attName.innerText = "Erro ao enviar o anexo para o OCR."; }
             };
         }
 
@@ -1478,7 +1451,7 @@
                         };
 
                         const btn = document.createElement("button"); const depth = currentFilterType === "favorites" ? 0 : (item.path.match(/\//g) || []).length - (isDir ? 1 : 0);
-                        btn.className = "flex-1 text-left flex items-center gap-3 truncate text-sm focus:outline-none"; btn.style.paddingLeft = `${depth * 14}px`;
+                        btn.className = "flex-1 text-left flex items-center gap-3 truncate text-[13px] focus:outline-none"; btn.style.paddingLeft = `${depth * 14}px`;
                         
                         let icon = "file"; let iconColor = "text-slate-500";
                         if (isDir) { icon = "folder-open"; iconColor = "text-slate-400"; } 
@@ -1579,13 +1552,13 @@
             graphData.edges.forEach(e => { ctx.beginPath(); ctx.moveTo(e.sourceNode.x, e.sourceNode.y); ctx.lineTo(e.targetNode.x, e.targetNode.y); ctx.stroke(); });
             
             graphData.nodes.forEach(n => {
-                ctx.beginPath(); let radius = 5;
-                if (n.type === "tag") radius = 6.5;
+                ctx.beginPath(); let radius = 5.5;
+                if (n.type === "tag") radius = 7.0;
                 const cleanMain = selectedFileId ? selectedFileId.replace(/\/$/, "") : "";
                 const cleanComp = comparisonFileId ? comparisonFileId.replace(/\/$/, "") : "";
                 const isAct = (cleanMain === n.id || cleanComp === n.id);
 
-                if (isAct) radius = 8.0;
+                if (isAct) radius = 8.5;
                 ctx.arc(n.x, n.y, radius, 0, 2 * Math.PI);
                 
                 if (n.type === "tag") ctx.fillStyle = "#f59e0b"; 
@@ -1669,8 +1642,8 @@
             
             let htmlText = text.replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" download class="text-blue-600 underline font-bold hover:text-blue-800 transition-colors">$1</a>').replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br>');
 
-            if (role === "user") bubble.className = "bg-brand-sidebar text-white rounded-2xl rounded-br-sm px-4 py-3 text-sm max-w-[90%] font-semibold leading-relaxed whitespace-pre-wrap shadow-sm select-text text-left break-words";
-            else bubble.className = "bg-white border border-slate-200 text-slate-800 rounded-2xl rounded-tl-sm px-4 py-3 text-sm max-w-[90%] shadow-sm leading-relaxed whitespace-pre-wrap select-text text-left break-words";
+            if (role === "user") bubble.className = "bg-brand-sidebar text-white rounded-2xl rounded-br-sm px-4 py-3 text-xs max-w-[90%] font-semibold leading-relaxed whitespace-pre-wrap shadow-sm select-text text-left break-words";
+            else bubble.className = "bg-white border border-slate-200 text-slate-800 rounded-2xl rounded-tl-sm px-4 py-3 text-xs max-w-[90%] shadow-sm leading-relaxed whitespace-pre-wrap select-text text-left break-words";
             
             bubble.innerHTML = htmlText; wrapper.appendChild(bubble); messagesContainer.appendChild(wrapper); messagesContainer.scrollTop = messagesContainer.scrollHeight; return id;
         }
