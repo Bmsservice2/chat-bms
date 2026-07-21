@@ -27,7 +27,7 @@
     </script>
     
     <style>
-        /* Aumentado o tamanho base da fonte da raiz para engordar todos os REMs do Tailwind */
+        /* Fonte base otimizada para leitura densa e legível */
         html { font-size: 13px; }
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
@@ -109,9 +109,6 @@
                     </div>
                 </div>
             </div>
-            <div class="mt-8 flex items-center gap-2 text-[10px] text-slate-600 font-extrabold uppercase tracking-widest opacity-90">
-                <i data-lucide="lock" class="w-3.5 h-3.5"></i> Conexão AES-256
-            </div>
         </div>
     </div>
 
@@ -122,7 +119,7 @@
     <input type="file" id="global-folder-upload" class="hidden" webkitdirectory directory multiple />
     <input type="file" id="chat-context-upload" class="hidden" />
 
-    <div id="custom-context-menu" class="hidden absolute bg-white border border-slate-300 rounded-xl shadow-2xl py-2 w-48 z-50 text-xs font-extrabold text-slate-800">
+    <div id="custom-context-menu" class="hidden absolute bg-white border border-slate-300 rounded-xl shadow-2xl py-2 w-48 z-50 text-sm font-extrabold text-slate-800">
         <button onclick="openRenameModal()" class="w-full text-left px-4 py-2 hover:bg-slate-100 flex items-center gap-3"><i data-lucide="edit-2" class="w-4 h-4 text-blue-600"></i> Renomear</button>
         <button onclick="openMenuComparison()" class="w-full text-left px-4 py-2 hover:bg-slate-100 flex items-center gap-3 text-blue-700"><i data-lucide="git-compare" class="w-4 h-4"></i> Comparar</button>
         <button onclick="openDeleteModal()" class="w-full text-left px-4 py-2 hover:bg-red-50 text-red-700 flex items-center gap-3"><i data-lucide="trash-2" class="w-4 h-4"></i> Mover p/ Lixeira</button>
@@ -149,11 +146,9 @@
                     <p class="text-[10px] text-slate-600 uppercase tracking-widest font-extrabold mt-1">Limpeza auto em 30 dias</p>
                 </div>
             </div>
-            
             <div id="trash-items-container" class="py-2 flex flex-col gap-3 overflow-y-auto max-h-[300px] min-h-[120px] no-scrollbar">
                 <!-- Javascript preenche a lixeira aqui -->
             </div>
-            
             <div class="flex justify-between items-center pt-4 border-t border-slate-200 mt-2">
                 <button onclick="document.getElementById('trash-modal').classList.add('hidden')" class="px-5 py-2.5 bg-slate-200 hover:bg-slate-300 text-slate-800 font-extrabold text-sm rounded-xl transition-colors">Fechar</button>
                 <button id="btn-empty-trash" onclick="emptyTrash()" class="px-5 py-2.5 bg-red-100 text-red-700 hover:bg-red-200 font-extrabold text-sm rounded-xl transition-colors shadow-sm">Esvaziar Tudo</button>
@@ -168,7 +163,7 @@
                 <div class="w-14 h-14 bg-blue-100 rounded-full flex items-center justify-center text-blue-700 font-black text-2xl shadow-sm">TS</div>
                 <div>
                     <h3 class="font-black text-slate-900 text-lg">Ambiente de Testes</h3>
-                    <p class="text-xs text-slate-600 font-extrabold mt-1">BETA V1.0 - BMS Service</p>
+                    <p class="text-xs text-slate-600 font-extrabold mt-0.5">BETA V1.0 - BMS Service</p>
                 </div>
             </div>
             <button id="btn-retroactive" onclick="triggerRetroactiveMD()" class="w-full px-4 py-3 bg-amber-500 hover:bg-amber-600 text-white font-black rounded-xl transition-all shadow-md flex items-center justify-center gap-3 text-sm">
@@ -231,7 +226,7 @@
     <header class="bg-white border-b border-slate-200 h-[64px] min-h-[64px] flex items-center justify-between px-5 z-20 shadow-sm shrink-0">
         
         <div class="flex items-center gap-3">
-            <button onclick="toggleSidebar()" class="p-2 text-slate-500 hover:text-blue-600 hover:bg-slate-100 rounded-lg transition-colors focus:outline-none" title="Esconder/Mostrar Menu">
+            <button onclick="toggleSidebar()" class="p-2 text-slate-500 hover:text-blue-600 hover:bg-slate-100 rounded-lg transition-colors focus:outline-none" title="Esconder/Mostrar Menu Lateral">
                 <i data-lucide="menu" class="w-6 h-6"></i>
             </button>
 
@@ -256,8 +251,8 @@
             <button onclick="toggleAppFullscreen()" class="p-2 text-slate-500 hover:text-blue-600 transition-colors bg-slate-50 hover:bg-slate-100 rounded-lg"><i data-lucide="expand" class="w-5 h-5"></i></button>
 
             <!-- UPLOAD -->
-            <div class="relative">
-                <button onclick="toggleCustomDropdown('dropdown-upload', event)" class="bg-white border border-slate-300 text-slate-800 text-xs font-black px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-slate-50 transition-all shadow-sm">
+            <div class="relative ml-1">
+                <button onclick="toggleCustomDropdown('dropdown-upload', event)" class="bg-white border border-slate-300 text-slate-800 text-xs font-black px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-slate-50 transition-all shadow-sm active:scale-95">
                     <i data-lucide="upload-cloud" class="w-4 h-4 text-blue-600"></i> Upload
                 </button>
                 <div id="dropdown-upload" class="hidden absolute top-[115%] right-0 mt-2 bg-white border border-slate-200 rounded-xl shadow-xl py-2 w-48 z-50 flex flex-col text-sm font-extrabold text-slate-700">
@@ -300,7 +295,7 @@
     <!-- ========================================== -->
     <div class="flex flex-1 overflow-hidden relative" onclick="closeAllDropdownsMenu()">
         
-        <!-- COLUNA 1: GAVETA ESQUERDA (MAIOR PARA LER MELHOR) -->
+        <!-- COLUNA 1: GAVETA ESQUERDA -->
         <aside id="sidebar-left" class="w-[280px] bg-brand-sidebar flex flex-col overflow-hidden py-4 px-3 relative shrink-0 transition-all duration-300 ease-in-out text-slate-300" onclick="clearTreeSelection(event)">
             
             <div class="flex items-center justify-between mb-4 px-2">
@@ -338,7 +333,7 @@
                     <span class="sidebar-text text-xs font-extrabold text-slate-400 group-hover:text-white transition-colors">Teste de Rede</span>
                 </div>
 
-                <div onclick="toggleSidebar()" class="bg-transparent rounded-xl p-3 cursor-pointer hover:bg-white/10 flex items-center gap-3 group transition-colors border border-transparent hover:border-white/5">
+                <div onclick="toggleSidebar()" class="mt-1 bg-transparent rounded-xl p-3 cursor-pointer hover:bg-white/10 flex items-center gap-3 group transition-colors border border-transparent hover:border-white/5">
                     <i data-lucide="panel-left-close" id="sidebar-icon-toggle" class="w-4 h-4 text-slate-500 group-hover:text-white transition-colors"></i>
                     <span class="sidebar-text text-xs font-extrabold text-slate-400 group-hover:text-white transition-colors">Esconder menu</span>
                 </div>
@@ -351,118 +346,127 @@
         </div>
 
         <!-- ========================================== -->
-        <!-- COLUNAS CENTRAIS: WORKSPACE (SEM ESPAÇOS VAZIOS) -->
+        <!-- COLUNAS CENTRAIS: WORKSPACE (PADDINGS MENORES) -->
         <!-- ========================================== -->
         <main id="center-panel" class="flex-1 flex flex-col min-w-[300px] overflow-hidden p-3 gap-3 bg-brand-light transition-all duration-300">
             
-            <!-- MENUS DE PERSONALIZAÇÃO (MAIS GROSSOS MAS AINDA COMPACTOS) -->
+            <!-- MENUS DE PERSONALIZAÇÃO (MAIS FINOS, MENOS ESPAÇO) -->
             <div class="grid grid-cols-4 gap-3 w-full shrink-0">
                 
-                <div class="bg-white border border-slate-300 rounded-xl p-2.5 flex items-center shadow-sm relative cursor-pointer hover:border-blue-400 transition-colors" onclick="toggleCustomDropdown('dropdown-area', event)">
-                    <div class="w-8 h-8 bg-blue-50 text-blue-600 rounded-lg flex items-center justify-center mr-3 shrink-0"><i data-lucide="scale" class="w-4 h-4"></i></div>
+                <div class="bg-white border border-slate-300 rounded-xl px-3 py-2 flex items-center shadow-sm relative cursor-pointer hover:border-blue-400 transition-colors" onclick="toggleCustomDropdown('dropdown-area', event)">
+                    <div class="w-7 h-7 bg-blue-50 text-blue-600 rounded-lg flex items-center justify-center mr-2.5 shrink-0"><i data-lucide="scale" class="w-3.5 h-3.5"></i></div>
                     <div class="flex-1 min-w-0">
                         <p class="text-[9px] text-slate-500 font-black uppercase tracking-widest mb-0.5">Área Jurídica</p>
-                        <div class="flex items-center justify-between"><span id="label-ctx-area" class="text-sm font-extrabold text-slate-900 truncate">Geral (Misto)</span><i data-lucide="chevron-down" class="w-4 h-4 text-slate-500 shrink-0"></i></div>
+                        <div class="flex items-center justify-between"><span id="label-ctx-area" class="text-xs font-extrabold text-slate-900 truncate">Geral (Misto)</span><i data-lucide="chevron-down" class="w-3.5 h-3.5 text-slate-500 shrink-0"></i></div>
                     </div>
                     <input type="hidden" id="ctx-area" value="Geral/Nenhuma">
-                    <div id="dropdown-area" class="hidden absolute top-[105%] left-0 mt-1 bg-white border border-slate-200 rounded-xl shadow-2xl py-1.5 w-full z-50 flex flex-col text-xs font-extrabold text-slate-700">
-                        <button onclick="selectOption('area', 'Geral', 'Geral (Misto)', event)" class="text-left px-4 py-2.5 hover:bg-slate-100">Geral (Misto)</button>
-                        <button onclick="selectOption('area', 'Trabalhista', 'Trabalhista', event)" class="text-left px-4 py-2.5 hover:bg-slate-100">Direito Trabalhista</button>
-                        <button onclick="selectOption('area', 'Cível', 'Cível', event)" class="text-left px-4 py-2.5 hover:bg-slate-100">Direito Cível</button>
+                    <div id="dropdown-area" class="hidden absolute top-[105%] left-0 mt-1 bg-white border border-slate-200 rounded-xl shadow-2xl py-1.5 w-full z-50 flex flex-col text-[11px] font-extrabold text-slate-700">
+                        <button onclick="selectOption('area', 'Geral', 'Geral (Misto)', event)" class="text-left px-4 py-2 hover:bg-slate-100">Geral (Misto)</button>
+                        <button onclick="selectOption('area', 'Trabalhista', 'Trabalhista', event)" class="text-left px-4 py-2 hover:bg-slate-100">Direito Trabalhista</button>
+                        <button onclick="selectOption('area', 'Cível', 'Cível', event)" class="text-left px-4 py-2 hover:bg-slate-100">Direito Cível</button>
                     </div>
                 </div>
 
-                <div class="bg-white border border-slate-300 rounded-xl p-2.5 flex items-center shadow-sm relative cursor-pointer hover:border-purple-400 transition-colors" onclick="toggleCustomDropdown('dropdown-type', event)">
-                    <div class="w-8 h-8 bg-purple-50 text-purple-600 rounded-lg flex items-center justify-center mr-3 shrink-0"><i data-lucide="file-text" class="w-4 h-4"></i></div>
+                <div class="bg-white border border-slate-300 rounded-xl px-3 py-2 flex items-center shadow-sm relative cursor-pointer hover:border-purple-400 transition-colors" onclick="toggleCustomDropdown('dropdown-type', event)">
+                    <div class="w-7 h-7 bg-purple-50 text-purple-600 rounded-lg flex items-center justify-center mr-2.5 shrink-0"><i data-lucide="file-text" class="w-3.5 h-3.5"></i></div>
                     <div class="flex-1 min-w-0">
-                        <p class="text-[9px] text-slate-500 font-black uppercase tracking-widest mb-0.5">Peça</p>
-                        <div class="flex items-center justify-between"><span id="label-ctx-type" class="text-sm font-extrabold text-slate-900 truncate">Análise Interna</span><i data-lucide="chevron-down" class="w-4 h-4 text-slate-500 shrink-0"></i></div>
+                        <p class="text-[9px] text-slate-500 font-black uppercase tracking-widest mb-0.5">Tipo de Peça</p>
+                        <div class="flex items-center justify-between"><span id="label-ctx-type" class="text-xs font-extrabold text-slate-900 truncate">Análise Interna</span><i data-lucide="chevron-down" class="w-3.5 h-3.5 text-slate-500 shrink-0"></i></div>
                     </div>
                     <input type="hidden" id="ctx-type" value="Análise">
-                    <div id="dropdown-type" class="hidden absolute top-[105%] left-0 mt-1 bg-white border border-slate-200 rounded-xl shadow-2xl py-1.5 w-full z-50 flex flex-col text-xs font-extrabold text-slate-700">
-                        <button onclick="selectOption('type', 'Análise', 'Análise Interna', event)" class="text-left px-4 py-2.5 hover:bg-slate-100">Análise</button>
-                        <button onclick="selectOption('type', 'Petição', 'Petição Inicial', event)" class="text-left px-4 py-2.5 hover:bg-slate-100">Petição</button>
-                        <button onclick="selectOption('type', 'Contestação', 'Contestação', event)" class="text-left px-4 py-2.5 hover:bg-slate-100">Contestação</button>
+                    <div id="dropdown-type" class="hidden absolute top-[105%] left-0 mt-1 bg-white border border-slate-200 rounded-xl shadow-2xl py-1.5 w-full z-50 flex flex-col text-[11px] font-extrabold text-slate-700">
+                        <button onclick="selectOption('type', 'Análise', 'Análise Interna', event)" class="text-left px-4 py-2 hover:bg-slate-100">Análise Interna</button>
+                        <button onclick="selectOption('type', 'Petição', 'Petição Inicial', event)" class="text-left px-4 py-2 hover:bg-slate-100">Petição Inicial</button>
+                        <button onclick="selectOption('type', 'Contestação', 'Contestação', event)" class="text-left px-4 py-2 hover:bg-slate-100">Contestação</button>
                     </div>
                 </div>
 
-                <div class="bg-white border border-slate-300 rounded-xl p-2.5 flex items-center shadow-sm relative cursor-pointer hover:border-amber-400 transition-colors" onclick="toggleCustomDropdown('dropdown-phase', event)">
-                    <div class="w-8 h-8 bg-amber-50 text-amber-600 rounded-lg flex items-center justify-center mr-3 shrink-0"><i data-lucide="folder-git" class="w-4 h-4"></i></div>
+                <div class="bg-white border border-slate-300 rounded-xl px-3 py-2 flex items-center shadow-sm relative cursor-pointer hover:border-amber-400 transition-colors" onclick="toggleCustomDropdown('dropdown-phase', event)">
+                    <div class="w-7 h-7 bg-amber-50 text-amber-600 rounded-lg flex items-center justify-center mr-2.5 shrink-0"><i data-lucide="folder-git" class="w-3.5 h-3.5"></i></div>
                     <div class="flex-1 min-w-0">
-                        <p class="text-[9px] text-slate-500 font-black uppercase tracking-widest mb-0.5">Fase</p>
-                        <div class="flex items-center justify-between"><span id="label-ctx-phase" class="text-sm font-extrabold text-slate-900 truncate">Estudo</span><i data-lucide="chevron-down" class="w-4 h-4 text-slate-500 shrink-0"></i></div>
+                        <p class="text-[9px] text-slate-500 font-black uppercase tracking-widest mb-0.5">Fase Atual</p>
+                        <div class="flex items-center justify-between"><span id="label-ctx-phase" class="text-xs font-extrabold text-slate-900 truncate">Fase de Estudo</span><i data-lucide="chevron-down" class="w-3.5 h-3.5 text-slate-500 shrink-0"></i></div>
                     </div>
                     <input type="hidden" id="ctx-phase" value="Estudo">
-                    <div id="dropdown-phase" class="hidden absolute top-[105%] left-0 mt-1 bg-white border border-slate-200 rounded-xl shadow-2xl py-1.5 w-full z-50 flex flex-col text-xs font-extrabold text-slate-700">
-                        <button onclick="selectOption('phase', 'Estudo', 'Estudo', event)" class="text-left px-4 py-2.5 hover:bg-slate-100">Estudo</button>
-                        <button onclick="selectOption('phase', 'Conhecimento', 'Conhecimento', event)" class="text-left px-4 py-2.5 hover:bg-slate-100">Conhecimento</button>
+                    <div id="dropdown-phase" class="hidden absolute top-[105%] left-0 mt-1 bg-white border border-slate-200 rounded-xl shadow-2xl py-1.5 w-full z-50 flex flex-col text-[11px] font-extrabold text-slate-700">
+                        <button onclick="selectOption('phase', 'Estudo', 'Fase de Estudo', event)" class="text-left px-4 py-2 hover:bg-slate-100">Fase de Estudo</button>
+                        <button onclick="selectOption('phase', 'Conhecimento', 'Conhecimento', event)" class="text-left px-4 py-2 hover:bg-slate-100">Conhecimento</button>
                     </div>
                 </div>
 
-                <div class="bg-white border border-slate-300 rounded-xl p-2.5 flex items-center shadow-sm relative cursor-pointer hover:border-emerald-400 transition-colors" onclick="toggleCustomDropdown('dropdown-obj', event)">
-                    <div class="w-8 h-8 bg-emerald-50 text-emerald-600 rounded-lg flex items-center justify-center mr-3 shrink-0"><i data-lucide="target" class="w-4 h-4"></i></div>
+                <div class="bg-white border border-slate-300 rounded-xl px-3 py-2 flex items-center shadow-sm relative cursor-pointer hover:border-emerald-400 transition-colors" onclick="toggleCustomDropdown('dropdown-obj', event)">
+                    <div class="w-7 h-7 bg-emerald-50 text-emerald-600 rounded-lg flex items-center justify-center mr-2.5 shrink-0"><i data-lucide="target" class="w-3.5 h-3.5"></i></div>
                     <div class="flex-1 min-w-0">
-                        <p class="text-[9px] text-slate-500 font-black uppercase tracking-widest mb-0.5">Foco</p>
-                        <div class="flex items-center justify-between"><span id="label-ctx-obj" class="text-sm font-extrabold text-slate-900 truncate">Auditoria</span><i data-lucide="chevron-down" class="w-4 h-4 text-slate-500 shrink-0"></i></div>
+                        <p class="text-[9px] text-slate-500 font-black uppercase tracking-widest mb-0.5">Objetivo Direto</p>
+                        <div class="flex items-center justify-between"><span id="label-ctx-obj" class="text-xs font-extrabold text-slate-900 truncate">Auditar/Resumir</span><i data-lucide="chevron-down" class="w-3.5 h-3.5 text-slate-500 shrink-0"></i></div>
                     </div>
                     <input type="hidden" id="ctx-obj" value="Auditar">
-                    <div id="dropdown-obj" class="hidden absolute top-[105%] left-0 mt-1 bg-white border border-slate-200 rounded-xl shadow-2xl py-1.5 w-full z-50 flex flex-col text-xs font-extrabold text-slate-700">
-                        <button onclick="selectOption('obj', 'Auditoria', 'Auditoria', event)" class="text-left px-4 py-2.5 hover:bg-slate-100">Auditoria</button>
-                        <button onclick="selectOption('obj', 'Contradições', 'Contradições', event)" class="text-left px-4 py-2.5 hover:bg-slate-100">Contradições</button>
+                    <div id="dropdown-obj" class="hidden absolute top-[105%] left-0 mt-1 bg-white border border-slate-200 rounded-xl shadow-2xl py-1.5 w-full z-50 flex flex-col text-[11px] font-extrabold text-slate-700">
+                        <button onclick="selectOption('obj', 'Auditar', 'Auditar/Resumir', event)" class="text-left px-4 py-2 hover:bg-slate-100">Auditar/Resumir</button>
+                        <button onclick="selectOption('obj', 'Contradições', 'Achar Contradições', event)" class="text-left px-4 py-2 hover:bg-slate-100">Achar Contradições</button>
+                        <button onclick="selectOption('obj', 'Minuta', 'Elaborar Minuta', event)" class="text-left px-4 py-2 hover:bg-slate-100">Elaborar Minuta</button>
                     </div>
                 </div>
             </div>
 
-            <!-- TELA DIVIDIDA DOS DOIS MONITORES COM FLEX-WRAP ATIVO E RESPIRO REDUZIDO -->
+            <!-- TELA DIVIDIDA DOS DOIS MONITORES (SEM CORTE DE HEADER) -->
             <div class="flex flex-1 gap-3 overflow-hidden relative h-full">
                 
-                <!-- MONITOR 1 (PRINCIPAL) -->
-                <div id="center-preview-container" onclick="selectMonitor('main')" class="flex-1 bg-white border border-slate-200 rounded-2xl shadow-md flex flex-col overflow-hidden h-full ring-2 ring-transparent relative transition-all duration-300 min-w-[320px]">
-                    <div class="absolute top-0 left-1/2 -translate-x-1/2 px-4 py-1 bg-blue-600 text-white text-[10px] font-black uppercase rounded-b-lg shadow-md z-10 hidden" id="dot-active-main">Foco Ativo</div>
+                <!-- MONITOR 1 -->
+                <div id="center-preview-container" onclick="selectMonitor('main')" class="flex-1 bg-white border border-slate-200 rounded-2xl shadow-sm flex flex-col overflow-hidden h-full ring-2 ring-transparent relative transition-all duration-300 min-w-[280px]">
+                    <div class="absolute top-0 left-1/2 -translate-x-1/2 px-4 py-1 bg-blue-600 text-white text-[9px] font-black uppercase rounded-b-lg shadow-md z-10 hidden" id="dot-active-main">Foco Ativo</div>
 
-                    <!-- Header Monitor 1 com Flex-Wrap -->
-                    <div class="flex flex-wrap items-center justify-between px-5 py-3.5 border-b border-slate-200 bg-white shrink-0 gap-3">
+                    <!-- Header Monitor 1 (BLINDADO CONTRA CORTES) -->
+                    <div class="flex flex-wrap items-center justify-between px-4 py-3 border-b border-slate-200 bg-white shrink-0 gap-3">
                         
-                        <div class="flex items-center gap-3 min-w-0 flex-1">
+                        <!-- Lado Esquerdo (com min-w para forçar quebra de linha se necessário) -->
+                        <div class="flex items-center gap-3 flex-1 min-w-[200px]">
                             <div class="flex items-center bg-slate-50 border border-slate-300 rounded-lg shrink-0 shadow-sm">
-                                <button onclick="goBack('main')" id="btn-back-main" class="p-1.5 text-slate-500 hover:text-blue-600 disabled:opacity-30 disabled:cursor-not-allowed" disabled><i data-lucide="chevron-left" class="w-4 h-4"></i></button>
-                                <button onclick="goForward('main')" id="btn-forward-main" class="p-1.5 text-slate-500 hover:text-blue-600 disabled:opacity-30 disabled:cursor-not-allowed" disabled><i data-lucide="chevron-right" class="w-4 h-4"></i></button>
+                                <button onclick="goBack('main')" id="btn-back-main" class="p-1.5 text-slate-500 hover:text-blue-600 disabled:opacity-30 disabled:cursor-not-allowed transition-colors" disabled>
+                                    <i data-lucide="chevron-left" class="w-4 h-4"></i>
+                                </button>
+                                <button onclick="goForward('main')" id="btn-forward-main" class="p-1.5 text-slate-400 hover:text-blue-600 disabled:opacity-30 disabled:cursor-not-allowed transition-colors" disabled>
+                                    <i data-lucide="chevron-right" class="w-4 h-4"></i>
+                                </button>
                             </div>
-                            <!-- O TRUNCATE AQUI GARANTE QUE SE A TELA DIMINUIR O TÍTULO ENCOLHE, MAS OS BOTÕES NÃO -->
-                            <h2 id="active-note-title" class="text-base font-black text-slate-900 truncate">Selecione o arquivo</h2>
-                            <button id="btn-favorite-star" onclick="toggleActiveFileFavorite()" class="shrink-0 text-slate-300 hover:text-amber-500 focus:outline-none"><i data-lucide="star" class="w-5 h-5"></i></button>
+                            
+                            <h2 id="active-note-title" class="text-sm font-black text-slate-900 truncate">Selecione o arquivo</h2>
+                            <button id="btn-favorite-star" onclick="toggleActiveFileFavorite()" class="shrink-0 text-slate-300 hover:text-amber-500 focus:outline-none">
+                                <i data-lucide="star" class="w-5 h-5"></i>
+                            </button>
                         </div>
                         
-                        <div class="flex flex-wrap items-center gap-2.5 shrink-0">
-                            <button id="btn-reprocess-main" onclick="reprocessMD('main')" class="hidden px-4 py-2 bg-amber-500 hover:bg-amber-600 text-white rounded-lg shadow-md flex items-center gap-2 text-xs font-black transition-all" title="Reler PDF">
-                                <i data-lucide="refresh-cw" class="w-4 h-4"></i> <span class="hidden sm:inline">Reler PDF</span>
+                        <!-- Lado Direito (Botões fixos que nunca encolhem) -->
+                        <div class="flex items-center gap-2 shrink-0">
+                            <button id="btn-reprocess-main" onclick="reprocessMD('main')" class="hidden px-4 py-2 bg-amber-500 hover:bg-amber-600 text-white rounded-lg shadow-md flex items-center gap-2 text-[11px] font-black transition-all" title="Reler PDF">
+                                <i data-lucide="refresh-cw" class="w-4 h-4"></i> Reler PDF
                             </button>
                             
-                            <div class="flex bg-slate-50 border border-slate-300 p-1 rounded-lg text-xs font-black shadow-sm">
+                            <div class="flex bg-slate-50 border border-slate-300 p-1 rounded-lg text-[11px] font-black shadow-sm">
                                 <button id="btn-tab-main-formatted" onclick="switchTab('main', 'doc')" class="px-4 py-1.5 bg-white text-slate-900 rounded-md shadow-sm">Visual</button>
                                 <button id="btn-tab-main-raw" onclick="switchTab('main', 'raw')" class="px-4 py-1.5 text-slate-500 hover:text-slate-800">MD</button>
                             </div>
                             
-                            <div class="flex items-center gap-1 border-l border-slate-300 pl-2">
-                                <button onclick="downloadActiveFile()" class="p-2 text-slate-500 hover:bg-slate-100 hover:text-blue-600 rounded-lg transition-colors"><i data-lucide="download" class="w-5 h-5"></i></button>
-                                <button onclick="printActiveFile()" class="p-2 text-slate-500 hover:bg-slate-100 hover:text-blue-600 rounded-lg transition-colors"><i data-lucide="printer" class="w-5 h-5"></i></button>
+                            <div class="flex items-center gap-1 border-l border-slate-300 pl-2 ml-1">
+                                <button onclick="downloadActiveFile()" class="p-2 text-slate-500 hover:bg-slate-100 hover:text-blue-600 rounded-lg transition-colors" title="Download"><i data-lucide="download" class="w-4 h-4"></i></button>
+                                <button onclick="printActiveFile()" class="p-2 text-slate-500 hover:bg-slate-100 hover:text-blue-600 rounded-lg transition-colors" title="Imprimir"><i data-lucide="printer" class="w-4 h-4"></i></button>
                                 
                                 <div class="relative flex items-center" id="expand-wrapper-main">
-                                    <button onclick="toggleCustomDropdown('dropdown-expand-main', event)" class="p-2 text-slate-500 hover:bg-slate-100 hover:text-blue-600 rounded-lg transition-colors"><i data-lucide="maximize" class="w-5 h-5"></i></button>
-                                    <div id="dropdown-expand-main" class="hidden absolute top-[105%] right-0 mt-2 bg-white border border-slate-200 rounded-xl shadow-2xl py-2 w-48 z-50 text-xs font-extrabold text-slate-800 flex flex-col">
+                                    <button onclick="toggleCustomDropdown('dropdown-expand-main', event)" class="p-2 text-slate-500 hover:bg-slate-100 hover:text-blue-600 rounded-lg transition-colors" title="Ampliar"><i data-lucide="maximize" class="w-4 h-4"></i></button>
+                                    <div id="dropdown-expand-main" class="hidden absolute top-[105%] right-0 mt-2 bg-white border border-slate-200 rounded-xl shadow-2xl py-2 w-48 z-50 text-[11px] font-extrabold text-slate-800 flex flex-col">
                                         <button onclick="fullscreenMonitor('main'); closeAllDropdownsMenu()" class="w-full text-left px-4 py-2.5 hover:bg-slate-100 flex items-center gap-3"><i data-lucide="monitor" class="w-4 h-4 text-slate-500"></i> Tela Cheia Total</button>
                                         <button onclick="toggleSplitMaximize('main'); closeAllDropdownsMenu()" class="w-full text-left px-4 py-2.5 hover:bg-slate-100 flex items-center gap-3"><i data-lucide="layout-template" class="w-4 h-4 text-slate-500"></i> Expandir Monitor</button>
                                     </div>
                                 </div>
-                                <button id="btn-restore-main" onclick="exitExpansion('main')" class="hidden p-2 text-blue-600 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors"><i data-lucide="minimize" class="w-5 h-5"></i></button>
+                                <button id="btn-restore-main" onclick="exitExpansion('main')" class="hidden p-2 text-blue-600 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors" title="Restaurar Visão Normal"><i data-lucide="minimize" class="w-4 h-4"></i></button>
                             </div>
                         </div>
                     </div>
 
-                    <!-- VIEWER COM LETRAS GIGANTES -->
+                    <!-- VIEWER COM LETRAS GRANDES -->
                     <div class="flex-1 flex overflow-hidden bg-slate-50 relative" id="view-doc-main-container">
                         <div id="view-doc-main" class="w-full h-full bg-white border-none overflow-y-auto p-8 font-serif text-[16px] text-slate-800 leading-relaxed">
-                            <div class="text-center text-slate-500 font-bold my-20 font-sans text-base">Selecione na árvore à esquerda.</div>
+                            <div class="text-center text-slate-500 font-bold my-20 font-sans text-base">Selecione na árvore à esquerda para exibir o documento.</div>
                         </div>
                         <div id="view-raw-main" class="hidden w-full h-full bg-white border-none overflow-y-auto p-6 font-mono text-sm whitespace-pre-wrap leading-relaxed text-slate-700 font-medium"></div>
                     </div>
@@ -470,46 +474,48 @@
 
                 <!-- SPLITTER 2 -->
                 <div id="resizer-center" class="w-3 bg-transparent hover:bg-blue-500 cursor-col-resize z-10 flex-shrink-0 flex items-center justify-center rounded-full group transition-colors">
-                    <div class="w-1.5 h-12 bg-slate-300 group-hover:bg-white rounded-full transition-colors"></div>
+                    <div class="w-1 h-12 bg-slate-300 group-hover:bg-white rounded-full transition-colors"></div>
                 </div>
 
                 <!-- MONITOR 2 (COMPARAÇÃO / MALHA) -->
-                <section id="sidebar-comparison" onclick="selectMonitor('comp')" class="w-[45%] bg-white border border-slate-200 rounded-2xl shadow-md flex flex-col overflow-hidden h-full shrink-0 relative min-w-[320px]">
-                    <div class="absolute top-0 left-1/2 -translate-x-1/2 px-4 py-1 bg-blue-600 text-white text-[10px] font-black uppercase rounded-b-lg shadow-md z-10 hidden" id="dot-active-comp">Foco Ativo</div>
+                <section id="sidebar-comparison" onclick="selectMonitor('comp')" class="w-[45%] bg-white border border-slate-200 rounded-2xl shadow-sm flex flex-col overflow-hidden h-full shrink-0 relative min-w-[280px]">
+                    <div class="absolute top-0 left-1/2 -translate-x-1/2 px-4 py-1 bg-blue-600 text-white text-[9px] font-black uppercase rounded-b-lg shadow-md z-10 hidden" id="dot-active-comp">Foco Ativo</div>
 
-                    <div class="px-5 py-3.5 border-b border-slate-200 bg-white flex flex-wrap items-center justify-between shrink-0 gap-3">
-                        <div class="flex items-center gap-3 min-w-0 flex-1">
+                    <div class="flex flex-wrap items-center justify-between px-4 py-3 border-b border-slate-200 bg-white shrink-0 gap-3">
+                        <div class="flex items-center gap-3 flex-1 min-w-[150px]">
                             <div class="flex items-center bg-slate-50 border border-slate-300 rounded-lg shrink-0 shadow-sm">
-                                <button onclick="goBack('comp')" id="btn-back-comp" class="p-1.5 text-slate-400 hover:text-blue-600 disabled:opacity-30 disabled:cursor-not-allowed"><i data-lucide="chevron-left" class="w-4 h-4"></i></button>
-                                <button onclick="goForward('comp')" id="btn-forward-comp" class="p-1.5 text-slate-400 hover:text-blue-600 disabled:opacity-30 disabled:cursor-not-allowed"><i data-lucide="chevron-right" class="w-4 h-4"></i></button>
+                                <button onclick="goBack('comp')" id="btn-back-comp" class="p-1.5 text-slate-400 hover:text-blue-600 disabled:opacity-30 disabled:cursor-not-allowed transition-colors" disabled><i data-lucide="chevron-left" class="w-4 h-4"></i></button>
+                                <button onclick="goForward('comp')" id="btn-forward-comp" class="p-1.5 text-slate-400 hover:text-blue-600 disabled:opacity-30 disabled:cursor-not-allowed transition-colors" disabled><i data-lucide="chevron-right" class="w-4 h-4"></i></button>
                             </div>
                             <div class="w-7 h-7 bg-blue-600 text-white rounded-lg flex items-center justify-center shrink-0 shadow-md"><i data-lucide="git-compare" class="w-4 h-4"></i></div>
-                            <span class="font-black text-sm uppercase tracking-widest text-slate-900 truncate">Lógica</span>
+                            <span class="font-black text-xs uppercase tracking-widest text-slate-900 truncate">Lógica</span>
                         </div>
                         
-                        <div class="flex bg-slate-50 border border-slate-300 p-1 rounded-lg text-xs font-black shrink-0 shadow-sm">
-                            <button id="btn-tab-comp" onclick="setComparisonMode('compare')" class="px-4 py-1.5 bg-white text-slate-900 rounded-md shadow-sm transition-colors">Doc</button>
-                            <button id="btn-tab-graph" onclick="setComparisonMode('graph')" class="px-4 py-1.5 text-slate-500 hover:text-slate-800 transition-colors">Malha</button>
+                        <div class="flex items-center gap-2 shrink-0">
+                            <div class="flex bg-slate-50 border border-slate-300 p-1 rounded-lg text-[11px] font-black shadow-sm">
+                                <button id="btn-tab-comp" onclick="setComparisonMode('compare')" class="px-4 py-1.5 bg-white text-slate-900 rounded-md shadow-sm transition-colors">Doc</button>
+                                <button id="btn-tab-graph" onclick="setComparisonMode('graph')" class="px-4 py-1.5 text-slate-500 hover:text-slate-800 transition-colors">Malha</button>
+                            </div>
                         </div>
                     </div>
 
-                    <div id="pane-comparison-doc" class="flex-1 flex flex-col overflow-hidden bg-[#fafafa] h-full p-3">
+                    <div id="pane-comparison-doc" class="flex-1 flex flex-col overflow-hidden bg-slate-50 h-full p-3">
                         
-                        <div class="bg-white border border-slate-200 rounded-xl p-2.5 mb-3 flex flex-wrap items-center justify-between shadow-sm gap-2">
-                            <span id="comp-note-title" class="text-xs font-black text-slate-600 truncate px-2 min-w-[50px] flex-1">Comparação</span>
-                            <div class="flex flex-wrap items-center gap-1.5 shrink-0">
+                        <div class="bg-white border border-slate-200 rounded-xl p-2.5 mb-3 flex items-center justify-between shadow-sm gap-2">
+                            <span id="comp-note-title" class="text-xs font-black text-slate-600 truncate flex-1 px-2">Comparação</span>
+                            <div class="flex items-center gap-1.5 shrink-0">
                                 <button id="btn-reprocess-comp" onclick="reprocessMD('comp')" class="hidden px-3 py-1.5 bg-amber-500 hover:bg-amber-600 text-white rounded-lg text-[10px] font-bold shadow-sm flex items-center gap-1.5"><i data-lucide="refresh-cw" class="w-4 h-4"></i></button>
                                 
                                 <div class="flex bg-slate-50 border border-slate-200 p-1 rounded-lg text-[10px] font-bold mr-1">
-                                    <button id="btn-tab-comp-formatted" onclick="switchTab('comp', 'doc')" class="px-3 py-1 bg-white text-slate-800 rounded shadow-sm">Visual</button>
-                                    <button id="btn-tab-comp-raw" onclick="switchTab('comp', 'raw')" class="px-3 py-1 text-slate-500 hover:text-slate-800">MD</button>
+                                    <button id="btn-tab-comp-formatted" onclick="switchTab('comp', 'doc')" class="px-3 py-1 bg-white text-slate-800 rounded shadow-sm transition-colors">Visual</button>
+                                    <button id="btn-tab-comp-raw" onclick="switchTab('comp', 'raw')" class="px-3 py-1 text-slate-500 hover:text-slate-800 transition-colors">MD</button>
                                 </div>
                                 
                                 <div class="relative flex items-center border-l border-slate-200 pl-1.5" id="expand-wrapper-comp">
                                     <button onclick="toggleCustomDropdown('dropdown-expand-comp', event)" class="p-1.5 text-slate-500 hover:text-blue-600 hover:bg-slate-100 rounded-lg transition-colors"><i data-lucide="maximize" class="w-4 h-4"></i></button>
-                                    <div id="dropdown-expand-comp" class="hidden absolute top-[105%] right-0 mt-2 bg-white border border-slate-200 rounded-xl shadow-2xl py-2 w-48 z-50 text-xs font-extrabold text-slate-800 flex flex-col">
-                                        <button onclick="fullscreenMonitor('comp'); closeAllDropdownsMenu()" class="w-full text-left px-4 py-2 hover:bg-slate-100 flex items-center gap-3"><i data-lucide="monitor" class="w-4 h-4 text-slate-500"></i> Tela Cheia</button>
-                                        <button onclick="toggleSplitMaximize('comp'); closeAllDropdownsMenu()" class="w-full text-left px-4 py-2 hover:bg-slate-100 flex items-center gap-3"><i data-lucide="layout-template" class="w-4 h-4 text-slate-500"></i> Expandir</button>
+                                    <div id="dropdown-expand-comp" class="hidden absolute top-[105%] right-0 mt-2 bg-white border border-slate-200 rounded-xl shadow-2xl py-2 w-48 z-50 text-[11px] font-extrabold text-slate-800 flex flex-col">
+                                        <button onclick="fullscreenMonitor('comp'); closeAllDropdownsMenu()" class="w-full text-left px-4 py-2.5 hover:bg-slate-100 flex items-center gap-3"><i data-lucide="monitor" class="w-4 h-4 text-slate-500"></i> Tela Cheia</button>
+                                        <button onclick="toggleSplitMaximize('comp'); closeAllDropdownsMenu()" class="w-full text-left px-4 py-2.5 hover:bg-slate-100 flex items-center gap-3"><i data-lucide="layout-template" class="w-4 h-4 text-slate-500"></i> Expandir Monitor</button>
                                     </div>
                                 </div>
                                 <button id="btn-restore-comp" onclick="exitExpansion('comp')" class="hidden p-1.5 text-blue-600 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors"><i data-lucide="minimize" class="w-4 h-4"></i></button>
@@ -519,9 +525,9 @@
 
                         <div id="view-doc-comp-wrapper" class="flex-1 relative overflow-hidden font-serif">
                             <div id="view-doc-comp" class="w-full h-full bg-white border-none overflow-y-auto p-6 text-[15px] text-slate-800 leading-relaxed shadow-sm">
-                                <div class="text-center text-slate-400 font-bold my-20 font-sans text-sm">Painel inativo.</div>
+                                <div class="text-center text-slate-400 font-bold my-20 font-sans text-sm">Painel secundário inativo.</div>
                             </div>
-                            <div id="view-raw-comp" class="hidden w-full h-full bg-white border-none overflow-y-auto p-5 font-mono text-[13px] font-medium whitespace-pre-wrap leading-relaxed shadow-sm text-slate-700"></div>
+                            <div id="view-raw-comp" class="hidden w-full h-full bg-white border-none overflow-y-auto p-6 font-mono text-sm whitespace-pre-wrap leading-relaxed shadow-sm text-slate-700 font-medium"></div>
                         </div>
                     </div>
 
@@ -551,51 +557,51 @@
             <div class="w-1 h-12 bg-slate-300 group-hover:bg-white rounded-full transition-colors"></div>
         </div>
 
-        <!-- COLUNA 4: CHAT IA (FONTES MAIORES E MAIS GROSSAS) -->
-        <aside id="sidebar-right" class="w-[320px] bg-white border-l border-slate-200 flex flex-col overflow-hidden shadow-sm shrink-0 z-10 transition-all duration-300">
+        <!-- COLUNA 4: CHAT IA (MENOR E COMPACTA) -->
+        <aside id="sidebar-right" class="w-[280px] bg-white border-l border-slate-200 flex flex-col overflow-hidden shadow-sm shrink-0 z-10 transition-all duration-300">
             
-            <div class="p-6 border-b border-slate-100 bg-white flex flex-col justify-center shrink-0">
-                <div class="flex items-center gap-2 mb-1.5">
+            <div class="p-5 border-b border-slate-100 bg-white flex flex-col justify-center shrink-0">
+                <div class="flex items-center gap-2 mb-1">
                     <i data-lucide="sparkles" class="w-4 h-4 text-amber-500"></i>
-                    <h2 class="text-sm font-black text-slate-600 uppercase tracking-widest">Assistente IA</h2>
+                    <h2 class="text-xs font-black text-slate-600 uppercase tracking-widest">Assistente IA</h2>
                 </div>
-                <h3 class="font-black text-2xl text-slate-900 tracking-tight">Olá, Ana! 👋</h3>
+                <h3 class="font-black text-xl text-slate-900 tracking-tight">Olá, Ana! 👋</h3>
             </div>
 
-            <div id="chat-messages" class="flex-1 overflow-y-auto p-5 flex flex-col gap-4 bg-[#f8fafc] select-text no-scrollbar relative scroll-smooth">
+            <div id="chat-messages" class="flex-1 overflow-y-auto p-4 flex flex-col gap-4 bg-[#f8fafc] select-text no-scrollbar relative scroll-smooth">
                 <div class="w-full flex justify-start shrink-0">
-                    <div class="bg-white border border-slate-200 text-slate-800 rounded-2xl rounded-tl-sm px-4 py-3.5 text-[13px] max-w-[95%] shadow-sm leading-relaxed font-bold">
+                    <div class="bg-white border border-slate-200 text-slate-800 rounded-2xl rounded-tl-sm px-4 py-3 text-xs max-w-[95%] shadow-sm leading-relaxed font-bold">
                         Inteligência operacional pronta. O que deseja analisar?
                     </div>
                 </div>
 
                 <div id="chat-suggestions" class="flex flex-col gap-2.5 w-full mt-2 shrink-0 animate-fade-in">
-                    <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest pl-1 mb-1">Ações Rápidas</span>
+                    <span class="text-[9px] font-black text-slate-400 uppercase tracking-widest pl-1 mb-1">Ações Rápidas</span>
                     
-                    <button onclick="promptAndSend('Faça um resumo executivo da peça em foco')" class="bg-white border border-slate-200 p-3.5 rounded-xl text-left hover:border-blue-400 hover:bg-blue-50 transition-colors shadow-sm group">
+                    <button onclick="promptAndSend('Faça um resumo executivo da peça em foco')" class="bg-white border border-slate-200 p-3 rounded-xl text-left hover:border-blue-400 hover:bg-blue-50 transition-colors shadow-sm group">
                         <div class="flex items-center gap-3">
-                            <div class="w-8 h-8 bg-blue-50 text-blue-600 rounded-lg flex items-center justify-center shrink-0"><i data-lucide="file-text" class="w-4 h-4"></i></div>
-                            <span class="text-xs font-extrabold text-slate-700 group-hover:text-blue-700">Resumo da Peça</span>
+                            <div class="w-7 h-7 bg-blue-50 text-blue-600 rounded-lg flex items-center justify-center shrink-0"><i data-lucide="file-text" class="w-4 h-4"></i></div>
+                            <span class="text-[11px] font-extrabold text-slate-700 group-hover:text-blue-700">Resumo da Peça</span>
                         </div>
                     </button>
 
-                    <button onclick="promptAndSend('Extrair prazos do documento')" class="bg-white border border-slate-200 p-3.5 rounded-xl text-left hover:border-emerald-400 hover:bg-emerald-50 transition-colors shadow-sm group">
+                    <button onclick="promptAndSend('Extrair prazos do documento')" class="bg-white border border-slate-200 p-3 rounded-xl text-left hover:border-emerald-400 hover:bg-emerald-50 transition-colors shadow-sm group">
                         <div class="flex items-center gap-3">
-                            <div class="w-8 h-8 bg-emerald-50 text-emerald-600 rounded-lg flex items-center justify-center shrink-0"><i data-lucide="calendar" class="w-4 h-4"></i></div>
-                            <span class="text-xs font-extrabold text-slate-700 group-hover:text-emerald-700">Mapear Prazos</span>
+                            <div class="w-7 h-7 bg-emerald-50 text-emerald-600 rounded-lg flex items-center justify-center shrink-0"><i data-lucide="calendar" class="w-4 h-4"></i></div>
+                            <span class="text-[11px] font-extrabold text-slate-700 group-hover:text-emerald-700">Mapear Prazos</span>
                         </div>
                     </button>
 
-                    <button onclick="promptAndSend('Aponte riscos e vulnerabilidades no documento')" class="bg-white border border-slate-200 p-3.5 rounded-xl text-left hover:border-amber-400 hover:bg-amber-50 transition-colors shadow-sm group">
+                    <button onclick="promptAndSend('Aponte riscos e vulnerabilidades no documento')" class="bg-white border border-slate-200 p-3 rounded-xl text-left hover:border-amber-400 hover:bg-amber-50 transition-colors shadow-sm group">
                         <div class="flex items-center gap-3">
-                            <div class="w-8 h-8 bg-amber-50 text-amber-600 rounded-lg flex items-center justify-center shrink-0"><i data-lucide="alert-triangle" class="w-4 h-4"></i></div>
-                            <span class="text-xs font-extrabold text-slate-700 group-hover:text-amber-700">Analisar Riscos</span>
+                            <div class="w-7 h-7 bg-amber-50 text-amber-600 rounded-lg flex items-center justify-center shrink-0"><i data-lucide="alert-triangle" class="w-4 h-4"></i></div>
+                            <span class="text-[11px] font-extrabold text-slate-700 group-hover:text-amber-700">Analisar Riscos</span>
                         </div>
                     </button>
                 </div>
             </div>
 
-            <div id="chat-attachment-area" class="hidden px-5 py-2.5 bg-slate-100 border-t border-slate-200 flex items-center justify-between text-xs font-bold text-slate-700 shrink-0">
+            <div id="chat-attachment-area" class="hidden px-4 py-2 bg-slate-100 border-t border-slate-200 flex items-center justify-between text-[11px] font-bold text-slate-700 shrink-0">
                 <div class="flex items-center gap-2 truncate">
                     <i data-lucide="paperclip" class="w-4 h-4 text-blue-500"></i>
                     <span id="chat-attachment-name" class="truncate">anexo</span>
@@ -603,11 +609,12 @@
                 <button id="btn-remove-attachment" class="text-red-500 hover:text-red-700"><i data-lucide="x" class="w-4 h-4"></i></button>
             </div>
 
-            <div class="p-5 border-t border-slate-100 bg-white shrink-0 shadow-[0_-10px_20px_rgba(0,0,0,0.02)]">
+            <!-- CHAT INPUT COMPACTO E CENTRALIZADO SEM CORTAR BORDAS -->
+            <div class="p-4 border-t border-slate-100 bg-white shrink-0 shadow-[0_-10px_20px_rgba(0,0,0,0.02)]">
                 <div class="relative flex items-center bg-slate-50 rounded-full border border-slate-300 p-1 shadow-inner focus-within:border-blue-500 focus-within:ring-2 focus-within:ring-blue-100 transition-all">
-                    <button id="btn-chat-attach" class="p-2 text-slate-400 hover:text-blue-600 pl-3"><i data-lucide="paperclip" class="w-5 h-5"></i></button>
-                    <textarea id="chat-input" rows="1" placeholder="Pergunte..." class="flex-1 bg-transparent py-2.5 px-2 text-[13px] font-bold focus:outline-none text-slate-900 resize-none h-9 leading-tight placeholder:text-slate-400 placeholder:font-semibold"></textarea>
-                    <button id="btn-send" class="w-10 h-10 flex items-center justify-center bg-slate-900 text-white rounded-full hover:bg-slate-800 shrink-0 shadow-md"><i data-lucide="send" class="w-4 h-4 ml-[-2px]"></i></button>
+                    <button id="btn-chat-attach" class="w-8 h-8 flex items-center justify-center text-slate-400 hover:text-blue-600 shrink-0"><i data-lucide="paperclip" class="w-4 h-4"></i></button>
+                    <textarea id="chat-input" rows="1" placeholder="Pergunte..." class="flex-1 bg-transparent py-2 px-1 text-[12px] font-bold focus:outline-none text-slate-900 resize-none h-8 leading-tight placeholder:text-slate-400 placeholder:font-semibold"></textarea>
+                    <button id="btn-send" class="w-8 h-8 flex items-center justify-center bg-slate-900 text-white rounded-full hover:bg-slate-800 shrink-0 shadow-md"><i data-lucide="send" class="w-3.5 h-3.5 ml-[-1px]"></i></button>
                 </div>
             </div>
         </aside>
@@ -625,9 +632,6 @@
             }
         });
 
-        // ==========================================
-        // MICRO-SISTEMA DE TOASTS
-        // ==========================================
         window.showToast = function(msg, type="info") {
             const t = document.createElement("div");
             let bg = "bg-slate-800 text-white";
@@ -648,7 +652,6 @@
         const btnSend = document.getElementById("btn-send");
         const fileTree = document.getElementById("file-tree");
         const globalSearchBar = document.getElementById("global-search-bar");
-        const filterDropdown = document.getElementById("filter-menu-dropdown");
         
         const canvas = document.getElementById("graph-canvas");
         const ctx = canvas ? canvas.getContext("2d") : null;
@@ -851,7 +854,7 @@
                 if (centerPanel) centerPanel.className = "flex-1 flex flex-col min-w-[300px] overflow-hidden p-0 gap-0 transition-all duration-300";
             } else {
                 if (header) header.classList.remove('hidden'); if (topMenus) topMenus.classList.remove('hidden');
-                if (centerPanel) centerPanel.className = "flex-1 flex flex-col min-w-[300px] overflow-hidden p-4 gap-4 bg-brand-light transition-all duration-300";
+                if (centerPanel) centerPanel.className = "flex-1 flex flex-col min-w-[300px] overflow-hidden p-3 gap-3 bg-brand-light transition-all duration-300";
             }
 
             const sbLeft = document.getElementById("sidebar-left"); const rsLeft = document.getElementById("resizer-left");
@@ -942,9 +945,9 @@
             const viewDocMainEl = document.getElementById("view-doc-main");
             if (viewDocMainEl) {
                 const parentContainer = document.getElementById("view-doc-main-container");
-                if (parentContainer) { parentContainer.classList.add("p-3"); parentContainer.classList.remove("p-0"); }
+                if (parentContainer) { parentContainer.classList.add("p-4"); parentContainer.classList.remove("p-0"); }
                 viewDocMainEl.className = "w-full h-full bg-white border-none overflow-y-auto p-8 font-serif text-[16px] text-slate-800 leading-relaxed shadow-sm";
-                viewDocMainEl.innerHTML = `<div class="text-center text-slate-500 font-bold my-20 font-sans text-base">Selecione na árvore à esquerda.</div>`;
+                viewDocMainEl.innerHTML = `<div class="text-center text-slate-500 font-bold my-20 font-sans text-sm">Selecione na árvore à esquerda.</div>`;
             }
             try { updateFavoriteStarUI(); } catch(e) {} try { buildNotesTree(); } catch(e) {}
             if (!fromHistory && !isNavigatingHistory) {
@@ -977,8 +980,8 @@
 
         document.addEventListener('mousemove', (e) => {
             if (!isResizingLeft && !isResizingCenter && !isResizingRight) return;
-            if (isResizingLeft && sidebarLeft && !isSidebarHidden) { let w = e.clientX; if (w > 150 && w < window.innerWidth * 0.4) sidebarLeft.style.width = w + "px"; }
-            if (isResizingCenter && sidebarComparison) { let calculatedWidth = window.innerWidth - e.clientX - (sidebarRight ? sidebarRight.clientWidth : 320); if (calculatedWidth > 200 && calculatedWidth < window.innerWidth * 0.6) sidebarComparison.style.width = calculatedWidth + "px"; }
+            if (isResizingLeft && sidebarLeft && !isSidebarHidden) { let w = e.clientX; if (w > 180 && w < window.innerWidth * 0.4) sidebarLeft.style.width = w + "px"; }
+            if (isResizingCenter && sidebarComparison) { let calculatedWidth = window.innerWidth - e.clientX - (sidebarRight ? sidebarRight.clientWidth : 280); if (calculatedWidth > 200 && calculatedWidth < window.innerWidth * 0.6) sidebarComparison.style.width = calculatedWidth + "px"; }
             if (isResizingRight && sidebarRight) { let w = window.innerWidth - e.clientX; if (w > 200 && w < window.innerWidth * 0.4) sidebarRight.style.width = w + "px"; }
         });
 
@@ -1032,16 +1035,8 @@
         }
 
         function closeAllDropdownsMenu() {
-            if (filterDropdown) filterDropdown.classList.add("hidden");
-            const ctxMenu = document.getElementById("custom-context-menu"); if (ctxMenu) ctxMenu.classList.add("hidden");
-            const dpArea = document.getElementById("dropdown-area"); if (dpArea) dpArea.classList.add("hidden");
-            const dpType = document.getElementById("dropdown-type"); if (dpType) dpType.classList.add("hidden");
-            const dpPhase = document.getElementById("dropdown-phase"); if (dpPhase) dpPhase.classList.add("hidden");
-            const dpObj = document.getElementById("dropdown-obj"); if (dpObj) dpObj.classList.add("hidden");
-            const dpUpload = document.getElementById("dropdown-upload"); if (dpUpload) dpUpload.classList.add("hidden");
-            const dpExpMain = document.getElementById("dropdown-expand-main"); if (dpExpMain) dpExpMain.classList.add("hidden");
-            const dpExpComp = document.getElementById("dropdown-expand-comp"); if (dpExpComp) dpExpComp.classList.add("hidden");
-            const dpProfile = document.getElementById("dropdown-profile"); if (dpProfile) dpProfile.classList.add("hidden");
+            const menus = ['dropdown-profile', 'filter-menu-dropdown', 'custom-context-menu', 'dropdown-area', 'dropdown-type', 'dropdown-phase', 'dropdown-obj', 'dropdown-upload', 'dropdown-expand-main', 'dropdown-expand-comp'];
+            menus.forEach(id => { const el = document.getElementById(id); if (el) el.classList.add("hidden"); });
         }
 
         function toggleCustomDropdown(id, e) { e.stopPropagation(); const el = document.getElementById(id); if (el) { const isHidden = el.classList.contains("hidden"); closeAllDropdownsMenu(); if (isHidden) el.classList.remove("hidden"); } }
@@ -1049,9 +1044,9 @@
 
         window.triggerRetroactiveMD = async function() {
             const btn = document.getElementById("btn-retroactive"); if (!btn) return;
-            btn.innerHTML = `<i data-lucide="loader" class="w-5 h-5 inline-block mr-2 animate-spin"></i> Processando...`; btn.classList.add("opacity-50", "pointer-events-none");
+            btn.innerHTML = `<i data-lucide="loader" class="w-4 h-4 inline-block mr-2 animate-spin"></i> Processando...`; btn.classList.add("opacity-50", "pointer-events-none");
             try { await fetch("/api/sync-retroactive", { method: "POST" }); alert("Processo iniciado!"); } catch(e) { alert("Erro ao iniciar."); }
-            btn.innerHTML = `<i data-lucide="check" class="w-5 h-5 inline-block mr-2"></i> Iniciado`; try { lucide.createIcons(); } catch(e) {}
+            btn.innerHTML = `<i data-lucide="check" class="w-4 h-4 inline-block mr-2"></i> Iniciado`; try { lucide.createIcons(); } catch(e) {}
         };
 
         window.selectMonitor = function(monitor) {
@@ -1129,7 +1124,7 @@
                 dEl.className = "w-full h-full bg-white border-none overflow-y-auto p-6 text-[15px] text-slate-800 leading-relaxed shadow-sm";
                 const parentContainer = document.getElementById("view-doc-comp-wrapper");
                 if (parentContainer) { parentContainer.classList.add("p-2"); parentContainer.classList.remove("p-0"); }
-                dEl.innerHTML = `<div class="text-center text-slate-400 font-bold my-20 font-sans text-sm">Painel inativo.</div>`;
+                dEl.innerHTML = `<div class="text-center text-slate-500 font-bold my-20 font-sans text-sm">Painel inativo. Selecione um arquivo.</div>`;
             }
             const rEl = document.getElementById("view-raw-comp"); if (rEl) rEl.innerText = "";
             try { buildNotesTree(); } catch(e) {}
@@ -1157,7 +1152,7 @@
                     if (rEl) rEl.innerText = data.markdown;
                     if (isMain) rawContentBuffer = data.markdown; else compContentBuffer = data.markdown;
                     try { buildNotesTree(); reloadGlobalGraph(); window.showToast("Leitura OCR concluída.", "success"); } catch(e) {}
-                } else { if (rEl) rEl.innerText = "Falha OCR: " + data.error; }
+                } else { if (rEl) rEl.innerText = "Falha ao refazer o OCR: " + data.error; }
             } catch (err) { if (rEl) rEl.innerText = "Erro Servidor."; }
             if (btn) btn.innerHTML = `<i data-lucide="refresh-cw" class="w-4 h-4 inline"></i> <span class="hidden sm:inline ml-1.5">Reler PDF</span>`;
             try { lucide.createIcons(); } catch(e) {}
@@ -1218,8 +1213,8 @@
                 if (filename.toLowerCase().endsWith('.pdf')) {
                     if (dEl) {
                         dEl.className = "w-full h-full border-0 bg-white shadow-sm rounded-xl";
-                        if (dEl.parentElement) { dEl.parentElement.classList.remove('p-2'); dEl.parentElement.classList.remove('p-3'); dEl.parentElement.classList.add('p-0'); }
-                        dEl.innerHTML = `<iframe src="/api/note-raw?file=${encodeURIComponent(filename)}" class="w-full h-full border-0 bg-slate-50" style="display: block; min-height: 100%;"></iframe>`;
+                        if (dEl.parentElement) { dEl.parentElement.classList.remove('p-2'); dEl.parentElement.classList.remove('p-3'); dEl.parentElement.classList.remove('p-4'); dEl.parentElement.classList.add('p-0'); }
+                        dEl.innerHTML = `<iframe src="/api/note-raw?file=${encodeURIComponent(filename)}" class="w-full h-full border-0 bg-slate-50 rounded-xl" style="display: block; min-height: 100%;"></iframe>`;
                     }
                     let btnReprocess;
                     if (isMain) btnReprocess = document.getElementById("btn-reprocess-main"); else btnReprocess = document.getElementById("btn-reprocess-comp");
@@ -1380,7 +1375,7 @@
             ctxUpload.onchange = async (e) => {
                 const file = e.target.files[0]; if (!file) return;
                 const attArea = document.getElementById("chat-attachment-area"); const attName = document.getElementById("chat-attachment-name");
-                if (attArea) attArea.classList.remove("hidden"); if (attName) attName.innerText = "Sincronizando (Aguarde OCR)...";
+                if (attArea) attArea.classList.remove("hidden"); if (attName) attName.innerText = "Sincronizando arquivo (aguarde OCR visual)...";
                 const finalPath = "Anexos_Chat/" + file.name;
                 try {
                     const res = await fetch(`/api/upload-vault?file=${encodeURIComponent(finalPath)}&sync=true`, { method: "POST", body: file });
@@ -1388,7 +1383,7 @@
                     pendingChatAttachment = { name: file.name, content: data.markdown || "Falha na Extração Visual." };
                     if (attName) attName.innerText = file.name;
                     buildNotesTree(); reloadGlobalGraph();
-                } catch (err) { if (attName) attName.innerText = "Erro ao enviar o anexo."; }
+                } catch (err) { if (attName) attName.innerText = "Erro ao enviar o anexo para o OCR."; }
             };
         }
 
@@ -1462,7 +1457,7 @@
                         
                         let icon = "file"; let iconColor = "text-slate-500";
                         if (isDir) { icon = "folder-open"; iconColor = "text-slate-400"; } 
-                        else if (item.path.endsWith('.pdf')) { icon = "file-text"; iconColor = "text-slate-400"; }
+                        else if (item.path.endsWith('.pdf')) { icon = "file-text"; iconColor = "text-slate-500"; }
                         if (isSelected && !isDir) { iconColor = "text-blue-400"; }
                         
                         const hasStar = !!favoriteItems[cleanItemPath]; let starBadge = "";
@@ -1511,6 +1506,7 @@
         function updatePhysics() {
             if(!canvas || graphData.nodes.length === 0) return;
             const cx = canvas.width / 2; const cy = canvas.height / 2;
+            
             for (let i = 0; i < graphData.nodes.length; i++) {
                 let n1 = graphData.nodes[i];
                 for (let j = i + 1; j < graphData.nodes.length; j++) {
@@ -1525,6 +1521,7 @@
                     }
                 }
             }
+            
             graphData.edges.forEach(e => {
                 let dx = e.targetNode.x - e.sourceNode.x; let dy = e.targetNode.y - e.sourceNode.y;
                 let dist = Math.sqrt(dx * dx + dy * dy); let safeDist = Math.max(dist, 1);
@@ -1535,6 +1532,7 @@
                     if (e.targetNode !== draggedNode) { e.targetNode.vx -= fx; e.targetNode.vy -= fy; }
                 }
             });
+            
             graphData.nodes.forEach(n => {
                 if (n === draggedNode) return;
                 n.vx += (cx - n.x) * 0.0018; n.vy += (cy - n.y) * 0.0018;
