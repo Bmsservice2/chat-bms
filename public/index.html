@@ -109,6 +109,9 @@
                     </div>
                 </div>
             </div>
+            <div class="mt-8 flex items-center gap-2 text-[10px] text-slate-600 font-extrabold uppercase tracking-widest opacity-90">
+                <i data-lucide="lock" class="w-3.5 h-3.5"></i> Conexão AES-256
+            </div>
         </div>
     </div>
 
@@ -119,7 +122,9 @@
     <input type="file" id="global-folder-upload" class="hidden" webkitdirectory directory multiple />
     <input type="file" id="chat-context-upload" class="hidden" />
 
-    <div id="custom-context-menu" class="hidden absolute bg-white border border-slate-300 rounded-xl shadow-2xl py-2 w-48 z-50 text-sm font-extrabold text-slate-800">
+    <!-- NOVO MENU COM OPÇÃO DE FAVORITAR -->
+    <div id="custom-context-menu" class="hidden absolute bg-white border border-slate-300 rounded-xl shadow-2xl py-2 w-48 z-50 text-xs font-extrabold text-slate-800">
+        <button onclick="toggleFavoriteFromMenu()" class="w-full text-left px-4 py-2 hover:bg-slate-100 flex items-center gap-3 text-amber-500"><i data-lucide="star" class="w-4 h-4"></i> Favoritar</button>
         <button onclick="openRenameModal()" class="w-full text-left px-4 py-2 hover:bg-slate-100 flex items-center gap-3"><i data-lucide="edit-2" class="w-4 h-4 text-blue-600"></i> Renomear</button>
         <button onclick="openMenuComparison()" class="w-full text-left px-4 py-2 hover:bg-slate-100 flex items-center gap-3 text-blue-700"><i data-lucide="git-compare" class="w-4 h-4"></i> Comparar</button>
         <button onclick="openDeleteModal()" class="w-full text-left px-4 py-2 hover:bg-red-50 text-red-700 flex items-center gap-3"><i data-lucide="trash-2" class="w-4 h-4"></i> Mover p/ Lixeira</button>
@@ -138,20 +143,22 @@
 
     <!-- MODAL DA LIXEIRA -->
     <div id="trash-modal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center z-50 transition-opacity">
-        <div class="bg-white border border-slate-200 rounded-2xl shadow-2xl p-6 w-[450px] flex flex-col gap-5">
-            <div class="flex items-center gap-4 border-b border-slate-200 pb-4">
+        <div class="bg-white border border-slate-200 rounded-2xl shadow-2xl p-6 w-[450px] flex flex-col gap-4">
+            <div class="flex items-center gap-4 border-b border-slate-100 pb-3">
                 <div class="w-12 h-12 bg-red-100 text-red-600 rounded-xl flex items-center justify-center shrink-0"><i data-lucide="trash-2" class="w-6 h-6"></i></div>
                 <div>
-                    <h3 class="font-black text-slate-900 text-lg">Lixeira do Sistema</h3>
-                    <p class="text-[10px] text-slate-600 uppercase tracking-widest font-extrabold mt-1">Limpeza auto em 30 dias</p>
+                    <h3 class="font-black text-slate-800 text-base">Lixeira do Sistema</h3>
+                    <p class="text-xs text-slate-500 uppercase tracking-widest font-bold">Limpeza auto em 30 dias</p>
                 </div>
             </div>
+            
             <div id="trash-items-container" class="py-2 flex flex-col gap-3 overflow-y-auto max-h-[300px] min-h-[120px] no-scrollbar">
                 <!-- Javascript preenche a lixeira aqui -->
             </div>
-            <div class="flex justify-between items-center pt-4 border-t border-slate-200 mt-2">
-                <button onclick="document.getElementById('trash-modal').classList.add('hidden')" class="px-5 py-2.5 bg-slate-200 hover:bg-slate-300 text-slate-800 font-extrabold text-sm rounded-xl transition-colors">Fechar</button>
-                <button id="btn-empty-trash" onclick="emptyTrash()" class="px-5 py-2.5 bg-red-100 text-red-700 hover:bg-red-200 font-extrabold text-sm rounded-xl transition-colors shadow-sm">Esvaziar Tudo</button>
+            
+            <div class="flex justify-between items-center pt-3 border-t border-slate-100 mt-2">
+                <button onclick="document.getElementById('trash-modal').classList.add('hidden')" class="px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold text-sm rounded-lg transition-colors">Fechar</button>
+                <button id="btn-empty-trash" onclick="emptyTrash()" class="px-4 py-2.5 bg-red-50 text-red-500 hover:bg-red-100 font-bold text-sm rounded-lg transition-colors shadow-sm">Esvaziar Lixeira</button>
             </div>
         </div>
     </div>
@@ -159,14 +166,14 @@
     <!-- MODAL DE CONTA E PLANO -->
     <div id="account-settings-modal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center z-50">
         <div class="bg-white border border-slate-200 rounded-2xl shadow-2xl p-7 w-[420px] flex flex-col gap-5">
-            <div class="flex items-center gap-4 border-b border-slate-200 pb-4">
+            <div class="flex items-center gap-4 border-b border-slate-100 pb-4">
                 <div class="w-14 h-14 bg-blue-100 rounded-full flex items-center justify-center text-blue-700 font-black text-2xl shadow-sm">TS</div>
                 <div>
                     <h3 class="font-black text-slate-900 text-lg">Ambiente de Testes</h3>
                     <p class="text-xs text-slate-600 font-extrabold mt-0.5">BETA V1.0 - BMS Service</p>
                 </div>
             </div>
-            <button id="btn-retroactive" onclick="triggerRetroactiveMD()" class="w-full px-4 py-3 bg-amber-500 hover:bg-amber-600 text-white font-black rounded-xl transition-all shadow-md flex items-center justify-center gap-3 text-sm">
+            <button id="btn-retroactive" onclick="triggerRetroactiveMD()" class="w-full px-4 py-3 bg-amber-500 hover:bg-amber-600 text-white font-bold rounded-xl transition-all shadow-md flex items-center justify-center gap-3 text-sm">
                 <i data-lucide="refresh-cw" class="w-5 h-5"></i> Gerar Markdown de PDFs Antigos
             </button>
             <p class="text-xs text-slate-600 text-center leading-relaxed font-bold">O motor de Visão Computacional varrerá o cofre para recriar Markdown em alta resolução.</p>
@@ -196,7 +203,7 @@
             </div>
             
             <div id="st-state-2" class="hidden flex flex-col items-center py-4">
-                <h3 class="font-black text-slate-800 text-sm mb-5 uppercase tracking-widest text-slate-500">Medindo...</h3>
+                <h3 class="font-black text-slate-800 text-xs mb-5 uppercase tracking-widest text-slate-500">Medindo...</h3>
                 <div class="relative w-56 h-28 overflow-hidden mb-2">
                     <svg viewBox="0 0 100 50" class="w-full h-full">
                         <path d="M 10 50 A 40 40 0 0 1 90 50" fill="none" stroke="currentColor" stroke-width="8" class="text-slate-200" stroke-linecap="round"></path>
@@ -264,8 +271,8 @@
             <div class="w-px h-8 bg-slate-300 mx-1"></div>
             
             <div id="server-status-badge" class="flex items-center gap-2 bg-slate-100 px-3 py-2 rounded-lg border border-slate-200 shadow-sm transition-all duration-300">
-                <div id="server-status-dot" class="w-2 h-2 bg-slate-500 rounded-full"></div>
-                <span id="server-status-text" class="text-[10px] font-black tracking-widest uppercase text-slate-600 hidden sm:block">Checando...</span>
+                <div id="server-status-dot" class="w-2 h-2 bg-slate-400 rounded-full"></div>
+                <span id="server-status-text" class="text-xs font-black tracking-wide uppercase text-slate-500 hidden sm:block">Checando...</span>
             </div>
 
             <div class="w-px h-8 bg-slate-300 mx-1"></div>
@@ -295,7 +302,7 @@
     <!-- ========================================== -->
     <div class="flex flex-1 overflow-hidden relative" onclick="closeAllDropdownsMenu()">
         
-        <!-- COLUNA 1: GAVETA ESQUERDA -->
+        <!-- COLUNA 1: GAVETA ESQUERDA (COMPACTADA E OTIMIZADA) -->
         <aside id="sidebar-left" class="w-[280px] bg-brand-sidebar flex flex-col overflow-hidden py-4 px-3 relative shrink-0 transition-all duration-300 ease-in-out text-slate-300" onclick="clearTreeSelection(event)">
             
             <div class="flex items-center justify-between mb-4 px-2">
@@ -311,7 +318,7 @@
                 </div>
             </div>
 
-            <!-- ÁRVORE DE ARQUIVOS (LETRAS MAIORES E MAIS GROSSAS) -->
+            <!-- ÁRVORE DE ARQUIVOS -->
             <div id="file-tree" class="flex-1 overflow-y-auto space-y-1 text-[13px] font-bold text-slate-300 no-scrollbar relative px-1">
                 <!-- Arquivos gerados via JS -->
             </div>
@@ -333,7 +340,7 @@
                     <span class="sidebar-text text-xs font-extrabold text-slate-400 group-hover:text-white transition-colors">Teste de Rede</span>
                 </div>
 
-                <div onclick="toggleSidebar()" class="mt-1 bg-transparent rounded-xl p-3 cursor-pointer hover:bg-white/10 flex items-center gap-3 group transition-colors border border-transparent hover:border-white/5">
+                <div onclick="toggleSidebar()" class="bg-transparent rounded-xl p-3 cursor-pointer hover:bg-white/10 flex items-center gap-3 group transition-colors border border-transparent hover:border-white/5">
                     <i data-lucide="panel-left-close" id="sidebar-icon-toggle" class="w-4 h-4 text-slate-500 group-hover:text-white transition-colors"></i>
                     <span class="sidebar-text text-xs font-extrabold text-slate-400 group-hover:text-white transition-colors">Esconder menu</span>
                 </div>
@@ -346,119 +353,110 @@
         </div>
 
         <!-- ========================================== -->
-        <!-- COLUNAS CENTRAIS: WORKSPACE (PADDINGS MENORES) -->
+        <!-- COLUNAS CENTRAIS: WORKSPACE (MÁXIMO ESPAÇO)-->
         <!-- ========================================== -->
         <main id="center-panel" class="flex-1 flex flex-col min-w-[300px] overflow-hidden p-3 gap-3 bg-brand-light transition-all duration-300">
             
-            <!-- MENUS DE PERSONALIZAÇÃO (MAIS FINOS, MENOS ESPAÇO) -->
+            <!-- MENUS DE PERSONALIZAÇÃO (PÍLULAS COMPACTAS) -->
             <div class="grid grid-cols-4 gap-3 w-full shrink-0">
                 
-                <div class="bg-white border border-slate-300 rounded-xl px-3 py-2 flex items-center shadow-sm relative cursor-pointer hover:border-blue-400 transition-colors" onclick="toggleCustomDropdown('dropdown-area', event)">
-                    <div class="w-7 h-7 bg-blue-50 text-blue-600 rounded-lg flex items-center justify-center mr-2.5 shrink-0"><i data-lucide="scale" class="w-3.5 h-3.5"></i></div>
+                <div class="bg-white border border-slate-300 rounded-xl p-2.5 flex items-center shadow-sm relative cursor-pointer hover:border-blue-400 transition-colors" onclick="toggleCustomDropdown('dropdown-area', event)">
+                    <div class="w-8 h-8 bg-blue-50 text-blue-600 rounded-lg flex items-center justify-center mr-3 shrink-0"><i data-lucide="scale" class="w-4 h-4"></i></div>
                     <div class="flex-1 min-w-0">
                         <p class="text-[9px] text-slate-500 font-black uppercase tracking-widest mb-0.5">Área Jurídica</p>
-                        <div class="flex items-center justify-between"><span id="label-ctx-area" class="text-xs font-extrabold text-slate-900 truncate">Geral (Misto)</span><i data-lucide="chevron-down" class="w-3.5 h-3.5 text-slate-500 shrink-0"></i></div>
+                        <div class="flex items-center justify-between"><span id="label-ctx-area" class="text-xs font-extrabold text-slate-900 truncate">Geral (Misto)</span><i data-lucide="chevron-down" class="w-4 h-4 text-slate-500 shrink-0"></i></div>
                     </div>
                     <input type="hidden" id="ctx-area" value="Geral/Nenhuma">
-                    <div id="dropdown-area" class="hidden absolute top-[105%] left-0 mt-1 bg-white border border-slate-200 rounded-xl shadow-2xl py-1.5 w-full z-50 flex flex-col text-[11px] font-extrabold text-slate-700">
-                        <button onclick="selectOption('area', 'Geral', 'Geral (Misto)', event)" class="text-left px-4 py-2 hover:bg-slate-100">Geral (Misto)</button>
-                        <button onclick="selectOption('area', 'Trabalhista', 'Trabalhista', event)" class="text-left px-4 py-2 hover:bg-slate-100">Direito Trabalhista</button>
-                        <button onclick="selectOption('area', 'Cível', 'Cível', event)" class="text-left px-4 py-2 hover:bg-slate-100">Direito Cível</button>
+                    <div id="dropdown-area" class="hidden absolute top-[105%] left-0 mt-1 bg-white border border-slate-200 rounded-xl shadow-2xl py-1.5 w-full z-50 flex flex-col text-xs font-extrabold text-slate-700">
+                        <button onclick="selectOption('area', 'Geral', 'Geral (Misto)', event)" class="text-left px-4 py-2.5 hover:bg-slate-100">Geral (Misto)</button>
+                        <button onclick="selectOption('area', 'Trabalhista', 'Trabalhista', event)" class="text-left px-4 py-2.5 hover:bg-slate-100">Direito Trabalhista</button>
+                        <button onclick="selectOption('area', 'Cível', 'Cível', event)" class="text-left px-4 py-2.5 hover:bg-slate-100">Direito Cível</button>
                     </div>
                 </div>
 
-                <div class="bg-white border border-slate-300 rounded-xl px-3 py-2 flex items-center shadow-sm relative cursor-pointer hover:border-purple-400 transition-colors" onclick="toggleCustomDropdown('dropdown-type', event)">
-                    <div class="w-7 h-7 bg-purple-50 text-purple-600 rounded-lg flex items-center justify-center mr-2.5 shrink-0"><i data-lucide="file-text" class="w-3.5 h-3.5"></i></div>
+                <div class="bg-white border border-slate-300 rounded-xl p-2.5 flex items-center shadow-sm relative cursor-pointer hover:border-purple-400 transition-colors" onclick="toggleCustomDropdown('dropdown-type', event)">
+                    <div class="w-8 h-8 bg-purple-50 text-purple-600 rounded-lg flex items-center justify-center mr-3 shrink-0"><i data-lucide="file-text" class="w-4 h-4"></i></div>
                     <div class="flex-1 min-w-0">
-                        <p class="text-[9px] text-slate-500 font-black uppercase tracking-widest mb-0.5">Tipo de Peça</p>
-                        <div class="flex items-center justify-between"><span id="label-ctx-type" class="text-xs font-extrabold text-slate-900 truncate">Análise Interna</span><i data-lucide="chevron-down" class="w-3.5 h-3.5 text-slate-500 shrink-0"></i></div>
+                        <p class="text-[9px] text-slate-500 font-black uppercase tracking-widest mb-0.5">Peça</p>
+                        <div class="flex items-center justify-between"><span id="label-ctx-type" class="text-xs font-extrabold text-slate-900 truncate">Análise Interna</span><i data-lucide="chevron-down" class="w-4 h-4 text-slate-500 shrink-0"></i></div>
                     </div>
                     <input type="hidden" id="ctx-type" value="Análise">
-                    <div id="dropdown-type" class="hidden absolute top-[105%] left-0 mt-1 bg-white border border-slate-200 rounded-xl shadow-2xl py-1.5 w-full z-50 flex flex-col text-[11px] font-extrabold text-slate-700">
-                        <button onclick="selectOption('type', 'Análise', 'Análise Interna', event)" class="text-left px-4 py-2 hover:bg-slate-100">Análise Interna</button>
-                        <button onclick="selectOption('type', 'Petição', 'Petição Inicial', event)" class="text-left px-4 py-2 hover:bg-slate-100">Petição Inicial</button>
-                        <button onclick="selectOption('type', 'Contestação', 'Contestação', event)" class="text-left px-4 py-2 hover:bg-slate-100">Contestação</button>
+                    <div id="dropdown-type" class="hidden absolute top-[105%] left-0 mt-1 bg-white border border-slate-200 rounded-xl shadow-2xl py-1.5 w-full z-50 flex flex-col text-xs font-extrabold text-slate-700">
+                        <button onclick="selectOption('type', 'Análise', 'Análise Interna', event)" class="text-left px-4 py-2.5 hover:bg-slate-100">Análise</button>
+                        <button onclick="selectOption('type', 'Petição', 'Petição Inicial', event)" class="text-left px-4 py-2.5 hover:bg-slate-100">Petição</button>
+                        <button onclick="selectOption('type', 'Contestação', 'Contestação', event)" class="text-left px-4 py-2.5 hover:bg-slate-100">Contestação</button>
                     </div>
                 </div>
 
-                <div class="bg-white border border-slate-300 rounded-xl px-3 py-2 flex items-center shadow-sm relative cursor-pointer hover:border-amber-400 transition-colors" onclick="toggleCustomDropdown('dropdown-phase', event)">
-                    <div class="w-7 h-7 bg-amber-50 text-amber-600 rounded-lg flex items-center justify-center mr-2.5 shrink-0"><i data-lucide="folder-git" class="w-3.5 h-3.5"></i></div>
+                <div class="bg-white border border-slate-300 rounded-xl p-2.5 flex items-center shadow-sm relative cursor-pointer hover:border-amber-400 transition-colors" onclick="toggleCustomDropdown('dropdown-phase', event)">
+                    <div class="w-8 h-8 bg-amber-50 text-amber-600 rounded-lg flex items-center justify-center mr-3 shrink-0"><i data-lucide="folder-git" class="w-4 h-4"></i></div>
                     <div class="flex-1 min-w-0">
-                        <p class="text-[9px] text-slate-500 font-black uppercase tracking-widest mb-0.5">Fase Atual</p>
-                        <div class="flex items-center justify-between"><span id="label-ctx-phase" class="text-xs font-extrabold text-slate-900 truncate">Fase de Estudo</span><i data-lucide="chevron-down" class="w-3.5 h-3.5 text-slate-500 shrink-0"></i></div>
+                        <p class="text-[9px] text-slate-500 font-black uppercase tracking-widest mb-0.5">Fase</p>
+                        <div class="flex items-center justify-between"><span id="label-ctx-phase" class="text-xs font-extrabold text-slate-900 truncate">Estudo</span><i data-lucide="chevron-down" class="w-4 h-4 text-slate-500 shrink-0"></i></div>
                     </div>
                     <input type="hidden" id="ctx-phase" value="Estudo">
-                    <div id="dropdown-phase" class="hidden absolute top-[105%] left-0 mt-1 bg-white border border-slate-200 rounded-xl shadow-2xl py-1.5 w-full z-50 flex flex-col text-[11px] font-extrabold text-slate-700">
-                        <button onclick="selectOption('phase', 'Estudo', 'Fase de Estudo', event)" class="text-left px-4 py-2 hover:bg-slate-100">Fase de Estudo</button>
-                        <button onclick="selectOption('phase', 'Conhecimento', 'Conhecimento', event)" class="text-left px-4 py-2 hover:bg-slate-100">Conhecimento</button>
+                    <div id="dropdown-phase" class="hidden absolute top-[105%] left-0 mt-1 bg-white border border-slate-200 rounded-xl shadow-2xl py-1.5 w-full z-50 flex flex-col text-xs font-extrabold text-slate-700">
+                        <button onclick="selectOption('phase', 'Estudo', 'Estudo', event)" class="text-left px-4 py-2.5 hover:bg-slate-100">Estudo</button>
+                        <button onclick="selectOption('phase', 'Conhecimento', 'Conhecimento', event)" class="text-left px-4 py-2.5 hover:bg-slate-100">Conhecimento</button>
                     </div>
                 </div>
 
-                <div class="bg-white border border-slate-300 rounded-xl px-3 py-2 flex items-center shadow-sm relative cursor-pointer hover:border-emerald-400 transition-colors" onclick="toggleCustomDropdown('dropdown-obj', event)">
-                    <div class="w-7 h-7 bg-emerald-50 text-emerald-600 rounded-lg flex items-center justify-center mr-2.5 shrink-0"><i data-lucide="target" class="w-3.5 h-3.5"></i></div>
+                <div class="bg-white border border-slate-300 rounded-xl p-2.5 flex items-center shadow-sm relative cursor-pointer hover:border-emerald-400 transition-colors" onclick="toggleCustomDropdown('dropdown-obj', event)">
+                    <div class="w-8 h-8 bg-emerald-50 text-emerald-600 rounded-lg flex items-center justify-center mr-3 shrink-0"><i data-lucide="target" class="w-4 h-4"></i></div>
                     <div class="flex-1 min-w-0">
-                        <p class="text-[9px] text-slate-500 font-black uppercase tracking-widest mb-0.5">Objetivo Direto</p>
-                        <div class="flex items-center justify-between"><span id="label-ctx-obj" class="text-xs font-extrabold text-slate-900 truncate">Auditar/Resumir</span><i data-lucide="chevron-down" class="w-3.5 h-3.5 text-slate-500 shrink-0"></i></div>
+                        <p class="text-[9px] text-slate-500 font-black uppercase tracking-widest mb-0.5">Foco</p>
+                        <div class="flex items-center justify-between"><span id="label-ctx-obj" class="text-xs font-extrabold text-slate-900 truncate">Auditoria</span><i data-lucide="chevron-down" class="w-4 h-4 text-slate-500 shrink-0"></i></div>
                     </div>
                     <input type="hidden" id="ctx-obj" value="Auditar">
-                    <div id="dropdown-obj" class="hidden absolute top-[105%] left-0 mt-1 bg-white border border-slate-200 rounded-xl shadow-2xl py-1.5 w-full z-50 flex flex-col text-[11px] font-extrabold text-slate-700">
-                        <button onclick="selectOption('obj', 'Auditar', 'Auditar/Resumir', event)" class="text-left px-4 py-2 hover:bg-slate-100">Auditar/Resumir</button>
-                        <button onclick="selectOption('obj', 'Contradições', 'Achar Contradições', event)" class="text-left px-4 py-2 hover:bg-slate-100">Achar Contradições</button>
-                        <button onclick="selectOption('obj', 'Minuta', 'Elaborar Minuta', event)" class="text-left px-4 py-2 hover:bg-slate-100">Elaborar Minuta</button>
+                    <div id="dropdown-obj" class="hidden absolute top-[105%] left-0 mt-1 bg-white border border-slate-200 rounded-xl shadow-2xl py-1.5 w-full z-50 flex flex-col text-xs font-extrabold text-slate-700">
+                        <button onclick="selectOption('obj', 'Auditoria', 'Auditoria', event)" class="text-left px-4 py-2.5 hover:bg-slate-100">Auditoria</button>
+                        <button onclick="selectOption('obj', 'Contradições', 'Contradições', event)" class="text-left px-4 py-2.5 hover:bg-slate-100">Contradições</button>
                     </div>
                 </div>
             </div>
 
-            <!-- TELA DIVIDIDA DOS DOIS MONITORES (SEM CORTE DE HEADER) -->
+            <!-- TELA DIVIDIDA DOS DOIS MONITORES -->
             <div class="flex flex-1 gap-3 overflow-hidden relative h-full">
                 
-                <!-- MONITOR 1 -->
-                <div id="center-preview-container" onclick="selectMonitor('main')" class="flex-1 bg-white border border-slate-200 rounded-2xl shadow-sm flex flex-col overflow-hidden h-full ring-2 ring-transparent relative transition-all duration-300 min-w-[280px]">
-                    <div class="absolute top-0 left-1/2 -translate-x-1/2 px-4 py-1 bg-blue-600 text-white text-[9px] font-black uppercase rounded-b-lg shadow-md z-10 hidden" id="dot-active-main">Foco Ativo</div>
+                <!-- MONITOR 1 (PRINCIPAL) -->
+                <div id="center-preview-container" onclick="selectMonitor('main')" class="flex-1 bg-white border border-slate-200 rounded-2xl shadow-md flex flex-col overflow-hidden h-full ring-2 ring-transparent relative transition-all duration-300 min-w-[320px]">
+                    <div class="absolute top-0 left-1/2 -translate-x-1/2 px-4 py-1 bg-blue-600 text-white text-[10px] font-black uppercase rounded-b-lg shadow-md z-10 hidden" id="dot-active-main">Foco Ativo</div>
 
                     <!-- Header Monitor 1 (BLINDADO CONTRA CORTES) -->
-                    <div class="flex flex-wrap items-center justify-between px-4 py-3 border-b border-slate-200 bg-white shrink-0 gap-3">
+                    <div class="flex flex-wrap items-center justify-between px-5 py-3.5 border-b border-slate-200 bg-white shrink-0 gap-3">
                         
-                        <!-- Lado Esquerdo (com min-w para forçar quebra de linha se necessário) -->
                         <div class="flex items-center gap-3 flex-1 min-w-[200px]">
                             <div class="flex items-center bg-slate-50 border border-slate-300 rounded-lg shrink-0 shadow-sm">
-                                <button onclick="goBack('main')" id="btn-back-main" class="p-1.5 text-slate-500 hover:text-blue-600 disabled:opacity-30 disabled:cursor-not-allowed transition-colors" disabled>
-                                    <i data-lucide="chevron-left" class="w-4 h-4"></i>
-                                </button>
-                                <button onclick="goForward('main')" id="btn-forward-main" class="p-1.5 text-slate-400 hover:text-blue-600 disabled:opacity-30 disabled:cursor-not-allowed transition-colors" disabled>
-                                    <i data-lucide="chevron-right" class="w-4 h-4"></i>
-                                </button>
+                                <button onclick="goBack('main')" id="btn-back-main" class="p-1.5 text-slate-500 hover:text-blue-600 disabled:opacity-30 disabled:cursor-not-allowed" disabled><i data-lucide="chevron-left" class="w-4 h-4"></i></button>
+                                <button onclick="goForward('main')" id="btn-forward-main" class="p-1.5 text-slate-500 hover:text-blue-600 disabled:opacity-30 disabled:cursor-not-allowed" disabled><i data-lucide="chevron-right" class="w-4 h-4"></i></button>
                             </div>
-                            
+                            <!-- O TRUNCATE AQUI GARANTE QUE O TÍTULO ENCOLHE SE A TELA FOR PEQUENA -->
                             <h2 id="active-note-title" class="text-sm font-black text-slate-900 truncate">Selecione o arquivo</h2>
-                            <button id="btn-favorite-star" onclick="toggleActiveFileFavorite()" class="shrink-0 text-slate-300 hover:text-amber-500 focus:outline-none">
-                                <i data-lucide="star" class="w-5 h-5"></i>
-                            </button>
+                            <button id="btn-favorite-star" onclick="toggleActiveFileFavorite()" class="shrink-0 focus:outline-none transition-colors"><i data-lucide="star" class="w-5 h-5 text-slate-300 hover:text-amber-500"></i></button>
                         </div>
                         
-                        <!-- Lado Direito (Botões fixos que nunca encolhem) -->
-                        <div class="flex items-center gap-2 shrink-0">
-                            <button id="btn-reprocess-main" onclick="reprocessMD('main')" class="hidden px-4 py-2 bg-amber-500 hover:bg-amber-600 text-white rounded-lg shadow-md flex items-center gap-2 text-[11px] font-black transition-all" title="Reler PDF">
-                                <i data-lucide="refresh-cw" class="w-4 h-4"></i> Reler PDF
+                        <div class="flex flex-wrap items-center gap-2.5 shrink-0">
+                            <button id="btn-reprocess-main" onclick="reprocessMD('main')" class="hidden px-4 py-2 bg-amber-500 hover:bg-amber-600 text-white rounded-lg shadow-md flex items-center gap-2 text-xs font-black transition-all" title="Reler PDF">
+                                <i data-lucide="refresh-cw" class="w-4 h-4"></i> <span class="hidden sm:inline">Reler PDF</span>
                             </button>
                             
-                            <div class="flex bg-slate-50 border border-slate-300 p-1 rounded-lg text-[11px] font-black shadow-sm">
-                                <button id="btn-tab-main-formatted" onclick="switchTab('main', 'doc')" class="px-4 py-1.5 bg-white text-slate-900 rounded-md shadow-sm">Visual</button>
-                                <button id="btn-tab-main-raw" onclick="switchTab('main', 'raw')" class="px-4 py-1.5 text-slate-500 hover:text-slate-800">MD</button>
+                            <div class="flex bg-slate-50 border border-slate-300 p-1 rounded-lg text-xs font-black shadow-sm">
+                                <button id="btn-tab-main-formatted" onclick="switchTab('main', 'doc')" class="px-4 py-1.5 bg-white text-slate-900 rounded-md shadow-sm transition-colors">Visual</button>
+                                <button id="btn-tab-main-raw" onclick="switchTab('main', 'raw')" class="px-4 py-1.5 text-slate-500 hover:text-slate-800 transition-colors">MD</button>
                             </div>
                             
-                            <div class="flex items-center gap-1 border-l border-slate-300 pl-2 ml-1">
-                                <button onclick="downloadActiveFile()" class="p-2 text-slate-500 hover:bg-slate-100 hover:text-blue-600 rounded-lg transition-colors" title="Download"><i data-lucide="download" class="w-4 h-4"></i></button>
-                                <button onclick="printActiveFile()" class="p-2 text-slate-500 hover:bg-slate-100 hover:text-blue-600 rounded-lg transition-colors" title="Imprimir"><i data-lucide="printer" class="w-4 h-4"></i></button>
+                            <div class="flex items-center gap-1 border-l border-slate-300 pl-2">
+                                <button onclick="downloadActiveFile()" class="p-2 text-slate-500 hover:bg-slate-100 hover:text-blue-600 rounded-lg transition-colors" title="Download"><i data-lucide="download" class="w-5 h-5"></i></button>
+                                <button onclick="printActiveFile()" class="p-2 text-slate-500 hover:bg-slate-100 hover:text-blue-600 rounded-lg transition-colors" title="Imprimir"><i data-lucide="printer" class="w-5 h-5"></i></button>
                                 
                                 <div class="relative flex items-center" id="expand-wrapper-main">
-                                    <button onclick="toggleCustomDropdown('dropdown-expand-main', event)" class="p-2 text-slate-500 hover:bg-slate-100 hover:text-blue-600 rounded-lg transition-colors" title="Ampliar"><i data-lucide="maximize" class="w-4 h-4"></i></button>
-                                    <div id="dropdown-expand-main" class="hidden absolute top-[105%] right-0 mt-2 bg-white border border-slate-200 rounded-xl shadow-2xl py-2 w-48 z-50 text-[11px] font-extrabold text-slate-800 flex flex-col">
+                                    <button onclick="toggleCustomDropdown('dropdown-expand-main', event)" class="p-2 text-slate-500 hover:bg-slate-100 hover:text-blue-600 rounded-lg transition-colors" title="Ampliar"><i data-lucide="maximize" class="w-5 h-5"></i></button>
+                                    <div id="dropdown-expand-main" class="hidden absolute top-[105%] right-0 mt-2 bg-white border border-slate-200 rounded-xl shadow-2xl py-2 w-48 z-50 text-xs font-extrabold text-slate-800 flex flex-col">
                                         <button onclick="fullscreenMonitor('main'); closeAllDropdownsMenu()" class="w-full text-left px-4 py-2.5 hover:bg-slate-100 flex items-center gap-3"><i data-lucide="monitor" class="w-4 h-4 text-slate-500"></i> Tela Cheia Total</button>
                                         <button onclick="toggleSplitMaximize('main'); closeAllDropdownsMenu()" class="w-full text-left px-4 py-2.5 hover:bg-slate-100 flex items-center gap-3"><i data-lucide="layout-template" class="w-4 h-4 text-slate-500"></i> Expandir Monitor</button>
                                     </div>
                                 </div>
-                                <button id="btn-restore-main" onclick="exitExpansion('main')" class="hidden p-2 text-blue-600 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors" title="Restaurar Visão Normal"><i data-lucide="minimize" class="w-4 h-4"></i></button>
+                                <button id="btn-restore-main" onclick="exitExpansion('main')" class="hidden p-2 text-blue-600 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors" title="Restaurar Visão Normal"><i data-lucide="minimize" class="w-5 h-5"></i></button>
                             </div>
                         </div>
                     </div>
@@ -474,36 +472,36 @@
 
                 <!-- SPLITTER 2 -->
                 <div id="resizer-center" class="w-3 bg-transparent hover:bg-blue-500 cursor-col-resize z-10 flex-shrink-0 flex items-center justify-center rounded-full group transition-colors">
-                    <div class="w-1 h-12 bg-slate-300 group-hover:bg-white rounded-full transition-colors"></div>
+                    <div class="w-1.5 h-12 bg-slate-300 group-hover:bg-white rounded-full transition-colors"></div>
                 </div>
 
-                <!-- MONITOR 2 (COMPARAÇÃO / MALHA) -->
-                <section id="sidebar-comparison" onclick="selectMonitor('comp')" class="w-[45%] bg-white border border-slate-200 rounded-2xl shadow-sm flex flex-col overflow-hidden h-full shrink-0 relative min-w-[280px]">
-                    <div class="absolute top-0 left-1/2 -translate-x-1/2 px-4 py-1 bg-blue-600 text-white text-[9px] font-black uppercase rounded-b-lg shadow-md z-10 hidden" id="dot-active-comp">Foco Ativo</div>
+                <!-- MONITOR 2 (COMPARAÇÃO E MALHA) -->
+                <section id="sidebar-comparison" onclick="selectMonitor('comp')" class="w-[45%] bg-white border border-slate-200 rounded-2xl shadow-md flex flex-col overflow-hidden h-full shrink-0 relative min-w-[320px]">
+                    <div class="absolute top-0 left-1/2 -translate-x-1/2 px-4 py-1 bg-blue-600 text-white text-[10px] font-black uppercase rounded-b-lg shadow-md z-10 hidden" id="dot-active-comp">Foco Ativo</div>
 
-                    <div class="flex flex-wrap items-center justify-between px-4 py-3 border-b border-slate-200 bg-white shrink-0 gap-3">
-                        <div class="flex items-center gap-3 flex-1 min-w-[150px]">
+                    <div class="px-5 py-3.5 border-b border-slate-200 bg-white flex flex-wrap items-center justify-between shrink-0 gap-3">
+                        <div class="flex items-center gap-3 min-w-0 flex-1">
                             <div class="flex items-center bg-slate-50 border border-slate-300 rounded-lg shrink-0 shadow-sm">
                                 <button onclick="goBack('comp')" id="btn-back-comp" class="p-1.5 text-slate-400 hover:text-blue-600 disabled:opacity-30 disabled:cursor-not-allowed transition-colors" disabled><i data-lucide="chevron-left" class="w-4 h-4"></i></button>
                                 <button onclick="goForward('comp')" id="btn-forward-comp" class="p-1.5 text-slate-400 hover:text-blue-600 disabled:opacity-30 disabled:cursor-not-allowed transition-colors" disabled><i data-lucide="chevron-right" class="w-4 h-4"></i></button>
                             </div>
                             <div class="w-7 h-7 bg-blue-600 text-white rounded-lg flex items-center justify-center shrink-0 shadow-md"><i data-lucide="git-compare" class="w-4 h-4"></i></div>
-                            <span class="font-black text-xs uppercase tracking-widest text-slate-900 truncate">Lógica</span>
+                            <span class="font-black text-sm uppercase tracking-widest text-slate-900 truncate">Lógica</span>
                         </div>
                         
                         <div class="flex items-center gap-2 shrink-0">
-                            <div class="flex bg-slate-50 border border-slate-300 p-1 rounded-lg text-[11px] font-black shadow-sm">
+                            <div class="flex bg-slate-50 border border-slate-300 p-1 rounded-lg text-xs font-black shadow-sm">
                                 <button id="btn-tab-comp" onclick="setComparisonMode('compare')" class="px-4 py-1.5 bg-white text-slate-900 rounded-md shadow-sm transition-colors">Doc</button>
                                 <button id="btn-tab-graph" onclick="setComparisonMode('graph')" class="px-4 py-1.5 text-slate-500 hover:text-slate-800 transition-colors">Malha</button>
                             </div>
                         </div>
                     </div>
 
-                    <div id="pane-comparison-doc" class="flex-1 flex flex-col overflow-hidden bg-slate-50 h-full p-3">
+                    <div id="pane-comparison-doc" class="flex-1 flex flex-col overflow-hidden bg-[#fafafa] h-full p-4">
                         
-                        <div class="bg-white border border-slate-200 rounded-xl p-2.5 mb-3 flex items-center justify-between shadow-sm gap-2">
+                        <div class="bg-white border border-slate-200 rounded-xl p-2.5 mb-3 flex flex-wrap items-center justify-between shadow-sm gap-2">
                             <span id="comp-note-title" class="text-xs font-black text-slate-600 truncate flex-1 px-2">Comparação</span>
-                            <div class="flex items-center gap-1.5 shrink-0">
+                            <div class="flex flex-wrap items-center gap-1.5 shrink-0">
                                 <button id="btn-reprocess-comp" onclick="reprocessMD('comp')" class="hidden px-3 py-1.5 bg-amber-500 hover:bg-amber-600 text-white rounded-lg text-[10px] font-bold shadow-sm flex items-center gap-1.5"><i data-lucide="refresh-cw" class="w-4 h-4"></i></button>
                                 
                                 <div class="flex bg-slate-50 border border-slate-200 p-1 rounded-lg text-[10px] font-bold mr-1">
@@ -515,7 +513,7 @@
                                     <button onclick="toggleCustomDropdown('dropdown-expand-comp', event)" class="p-1.5 text-slate-500 hover:text-blue-600 hover:bg-slate-100 rounded-lg transition-colors"><i data-lucide="maximize" class="w-4 h-4"></i></button>
                                     <div id="dropdown-expand-comp" class="hidden absolute top-[105%] right-0 mt-2 bg-white border border-slate-200 rounded-xl shadow-2xl py-2 w-48 z-50 text-[11px] font-extrabold text-slate-800 flex flex-col">
                                         <button onclick="fullscreenMonitor('comp'); closeAllDropdownsMenu()" class="w-full text-left px-4 py-2.5 hover:bg-slate-100 flex items-center gap-3"><i data-lucide="monitor" class="w-4 h-4 text-slate-500"></i> Tela Cheia</button>
-                                        <button onclick="toggleSplitMaximize('comp'); closeAllDropdownsMenu()" class="w-full text-left px-4 py-2.5 hover:bg-slate-100 flex items-center gap-3"><i data-lucide="layout-template" class="w-4 h-4 text-slate-500"></i> Expandir Monitor</button>
+                                        <button onclick="toggleSplitMaximize('comp'); closeAllDropdownsMenu()" class="w-full text-left px-4 py-2.5 hover:bg-slate-100 flex items-center gap-3"><i data-lucide="layout-template" class="w-4 h-4 text-slate-500"></i> Expandir</button>
                                     </div>
                                 </div>
                                 <button id="btn-restore-comp" onclick="exitExpansion('comp')" class="hidden p-1.5 text-blue-600 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors"><i data-lucide="minimize" class="w-4 h-4"></i></button>
@@ -533,10 +531,10 @@
 
                     <div id="pane-comparison-graph" class="hidden flex-1 flex flex-col overflow-hidden relative bg-white w-full h-full">
                         <div class="px-5 py-3 border-b border-slate-100 bg-white flex gap-2 overflow-x-auto no-scrollbar shrink-0 z-10 shadow-sm">
-                            <button class="px-4 py-1.5 bg-slate-800 text-white text-xs font-black rounded-full whitespace-nowrap shadow-md">Todos</button>
-                            <button class="px-4 py-1.5 bg-white border border-slate-300 text-slate-700 text-xs font-extrabold rounded-full hover:bg-slate-100 shadow-sm transition-colors">Pessoas</button>
-                            <button class="px-4 py-1.5 bg-white border border-slate-300 text-slate-700 text-xs font-extrabold rounded-full hover:bg-slate-100 shadow-sm transition-colors">Órgãos</button>
-                            <button class="px-4 py-1.5 bg-white border border-slate-300 text-slate-700 text-xs font-extrabold rounded-full hover:bg-slate-100 shadow-sm transition-colors">Leis</button>
+                            <button class="px-4 py-1.5 bg-slate-800 text-white text-[10px] font-black rounded-full whitespace-nowrap shadow-md">Todos</button>
+                            <button class="px-4 py-1.5 bg-white border border-slate-300 text-slate-700 text-[10px] font-extrabold rounded-full hover:bg-slate-100 shadow-sm transition-colors">Pessoas</button>
+                            <button class="px-4 py-1.5 bg-white border border-slate-300 text-slate-700 text-[10px] font-extrabold rounded-full hover:bg-slate-100 shadow-sm transition-colors">Órgãos</button>
+                            <button class="px-4 py-1.5 bg-white border border-slate-300 text-slate-700 text-[10px] font-extrabold rounded-full hover:bg-slate-100 shadow-sm transition-colors">Leis</button>
                         </div>
                         <div class="flex-1 relative w-full h-full overflow-hidden bg-slate-50/50">
                             <canvas id="graph-canvas" class="w-full h-full block cursor-grab active:cursor-grabbing"></canvas>
@@ -557,51 +555,51 @@
             <div class="w-1 h-12 bg-slate-300 group-hover:bg-white rounded-full transition-colors"></div>
         </div>
 
-        <!-- COLUNA 4: CHAT IA (MENOR E COMPACTA) -->
-        <aside id="sidebar-right" class="w-[280px] bg-white border-l border-slate-200 flex flex-col overflow-hidden shadow-sm shrink-0 z-10 transition-all duration-300">
+        <!-- COLUNA 4: CHAT IA (FONTES MAIORES E MAIS GROSSAS) -->
+        <aside id="sidebar-right" class="w-[320px] bg-white border-l border-slate-200 flex flex-col overflow-hidden shadow-sm shrink-0 z-10 transition-all duration-300">
             
-            <div class="p-5 border-b border-slate-100 bg-white flex flex-col justify-center shrink-0">
-                <div class="flex items-center gap-2 mb-1">
+            <div class="p-6 border-b border-slate-100 bg-white flex flex-col justify-center shrink-0">
+                <div class="flex items-center gap-2 mb-1.5">
                     <i data-lucide="sparkles" class="w-4 h-4 text-amber-500"></i>
-                    <h2 class="text-xs font-black text-slate-600 uppercase tracking-widest">Assistente IA</h2>
+                    <h2 class="text-sm font-black text-slate-600 uppercase tracking-widest">Assistente IA</h2>
                 </div>
-                <h3 class="font-black text-xl text-slate-900 tracking-tight">Olá, Ana! 👋</h3>
+                <h3 class="font-black text-2xl text-slate-900 tracking-tight">Olá, Ana! 👋</h3>
             </div>
 
-            <div id="chat-messages" class="flex-1 overflow-y-auto p-4 flex flex-col gap-4 bg-[#f8fafc] select-text no-scrollbar relative scroll-smooth">
+            <div id="chat-messages" class="flex-1 overflow-y-auto p-5 flex flex-col gap-4 bg-[#f8fafc] select-text no-scrollbar relative scroll-smooth">
                 <div class="w-full flex justify-start shrink-0">
-                    <div class="bg-white border border-slate-200 text-slate-800 rounded-2xl rounded-tl-sm px-4 py-3 text-xs max-w-[95%] shadow-sm leading-relaxed font-bold">
+                    <div class="bg-white border border-slate-200 text-slate-800 rounded-2xl rounded-tl-sm px-4 py-3.5 text-[13px] max-w-[95%] shadow-sm leading-relaxed font-bold">
                         Inteligência operacional pronta. O que deseja analisar?
                     </div>
                 </div>
 
                 <div id="chat-suggestions" class="flex flex-col gap-2.5 w-full mt-2 shrink-0 animate-fade-in">
-                    <span class="text-[9px] font-black text-slate-400 uppercase tracking-widest pl-1 mb-1">Ações Rápidas</span>
+                    <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest pl-1 mb-1">Ações Rápidas</span>
                     
-                    <button onclick="promptAndSend('Faça um resumo executivo da peça em foco')" class="bg-white border border-slate-200 p-3 rounded-xl text-left hover:border-blue-400 hover:bg-blue-50 transition-colors shadow-sm group">
+                    <button onclick="promptAndSend('Faça um resumo executivo da peça em foco')" class="bg-white border border-slate-200 p-3.5 rounded-xl text-left hover:border-blue-400 hover:bg-blue-50 transition-colors shadow-sm group">
                         <div class="flex items-center gap-3">
-                            <div class="w-7 h-7 bg-blue-50 text-blue-600 rounded-lg flex items-center justify-center shrink-0"><i data-lucide="file-text" class="w-4 h-4"></i></div>
-                            <span class="text-[11px] font-extrabold text-slate-700 group-hover:text-blue-700">Resumo da Peça</span>
+                            <div class="w-8 h-8 bg-blue-50 text-blue-600 rounded-lg flex items-center justify-center shrink-0"><i data-lucide="file-text" class="w-4 h-4"></i></div>
+                            <span class="text-xs font-extrabold text-slate-700 group-hover:text-blue-700">Resumo da Peça</span>
                         </div>
                     </button>
 
-                    <button onclick="promptAndSend('Extrair prazos do documento')" class="bg-white border border-slate-200 p-3 rounded-xl text-left hover:border-emerald-400 hover:bg-emerald-50 transition-colors shadow-sm group">
+                    <button onclick="promptAndSend('Extrair prazos do documento')" class="bg-white border border-slate-200 p-3.5 rounded-xl text-left hover:border-emerald-400 hover:bg-emerald-50 transition-colors shadow-sm group">
                         <div class="flex items-center gap-3">
-                            <div class="w-7 h-7 bg-emerald-50 text-emerald-600 rounded-lg flex items-center justify-center shrink-0"><i data-lucide="calendar" class="w-4 h-4"></i></div>
-                            <span class="text-[11px] font-extrabold text-slate-700 group-hover:text-emerald-700">Mapear Prazos</span>
+                            <div class="w-8 h-8 bg-emerald-50 text-emerald-600 rounded-lg flex items-center justify-center shrink-0"><i data-lucide="calendar" class="w-4 h-4"></i></div>
+                            <span class="text-xs font-extrabold text-slate-700 group-hover:text-emerald-700">Mapear Prazos</span>
                         </div>
                     </button>
 
-                    <button onclick="promptAndSend('Aponte riscos e vulnerabilidades no documento')" class="bg-white border border-slate-200 p-3 rounded-xl text-left hover:border-amber-400 hover:bg-amber-50 transition-colors shadow-sm group">
+                    <button onclick="promptAndSend('Aponte riscos e vulnerabilidades no documento')" class="bg-white border border-slate-200 p-3.5 rounded-xl text-left hover:border-amber-400 hover:bg-amber-50 transition-colors shadow-sm group">
                         <div class="flex items-center gap-3">
-                            <div class="w-7 h-7 bg-amber-50 text-amber-600 rounded-lg flex items-center justify-center shrink-0"><i data-lucide="alert-triangle" class="w-4 h-4"></i></div>
-                            <span class="text-[11px] font-extrabold text-slate-700 group-hover:text-amber-700">Analisar Riscos</span>
+                            <div class="w-8 h-8 bg-amber-50 text-amber-600 rounded-lg flex items-center justify-center shrink-0"><i data-lucide="alert-triangle" class="w-4 h-4"></i></div>
+                            <span class="text-xs font-extrabold text-slate-700 group-hover:text-amber-700">Analisar Riscos</span>
                         </div>
                     </button>
                 </div>
             </div>
 
-            <div id="chat-attachment-area" class="hidden px-4 py-2 bg-slate-100 border-t border-slate-200 flex items-center justify-between text-[11px] font-bold text-slate-700 shrink-0">
+            <div id="chat-attachment-area" class="hidden px-5 py-2.5 bg-slate-100 border-t border-slate-200 flex items-center justify-between text-xs font-bold text-slate-700 shrink-0">
                 <div class="flex items-center gap-2 truncate">
                     <i data-lucide="paperclip" class="w-4 h-4 text-blue-500"></i>
                     <span id="chat-attachment-name" class="truncate">anexo</span>
@@ -609,12 +607,12 @@
                 <button id="btn-remove-attachment" class="text-red-500 hover:text-red-700"><i data-lucide="x" class="w-4 h-4"></i></button>
             </div>
 
-            <!-- CHAT INPUT COMPACTO E CENTRALIZADO SEM CORTAR BORDAS -->
-            <div class="p-4 border-t border-slate-100 bg-white shrink-0 shadow-[0_-10px_20px_rgba(0,0,0,0.02)]">
-                <div class="relative flex items-center bg-slate-50 rounded-full border border-slate-300 p-1 shadow-inner focus-within:border-blue-500 focus-within:ring-2 focus-within:ring-blue-100 transition-all">
-                    <button id="btn-chat-attach" class="w-8 h-8 flex items-center justify-center text-slate-400 hover:text-blue-600 shrink-0"><i data-lucide="paperclip" class="w-4 h-4"></i></button>
-                    <textarea id="chat-input" rows="1" placeholder="Pergunte..." class="flex-1 bg-transparent py-2 px-1 text-[12px] font-bold focus:outline-none text-slate-900 resize-none h-8 leading-tight placeholder:text-slate-400 placeholder:font-semibold"></textarea>
-                    <button id="btn-send" class="w-8 h-8 flex items-center justify-center bg-slate-900 text-white rounded-full hover:bg-slate-800 shrink-0 shadow-md"><i data-lucide="send" class="w-3.5 h-3.5 ml-[-1px]"></i></button>
+            <!-- CHAT INPUT: MARGEM DIREITA APLICADA PARA NÃO ENCOSTAR -->
+            <div class="p-5 border-t border-slate-100 bg-white shrink-0 shadow-[0_-10px_20px_rgba(0,0,0,0.02)]">
+                <div class="relative flex items-center bg-slate-50 rounded-full border border-slate-300 p-1.5 pr-2 shadow-inner focus-within:border-blue-500 focus-within:ring-2 focus-within:ring-blue-100 transition-all">
+                    <button id="btn-chat-attach" class="p-2 text-slate-400 hover:text-blue-600 pl-3"><i data-lucide="paperclip" class="w-5 h-5"></i></button>
+                    <textarea id="chat-input" rows="1" placeholder="Pergunte..." class="flex-1 bg-transparent py-2.5 px-2 text-[13px] font-bold focus:outline-none text-slate-900 resize-none h-9 leading-tight placeholder:text-slate-400 placeholder:font-semibold"></textarea>
+                    <button id="btn-send" class="w-10 h-10 flex items-center justify-center bg-slate-900 text-white rounded-full hover:bg-slate-800 shrink-0 shadow-md"><i data-lucide="send" class="w-4 h-4 ml-[-2px]"></i></button>
                 </div>
             </div>
         </aside>
@@ -632,6 +630,9 @@
             }
         });
 
+        // ==========================================
+        // MICRO-SISTEMA DE TOASTS
+        // ==========================================
         window.showToast = function(msg, type="info") {
             const t = document.createElement("div");
             let bg = "bg-slate-800 text-white";
@@ -652,6 +653,7 @@
         const btnSend = document.getElementById("btn-send");
         const fileTree = document.getElementById("file-tree");
         const globalSearchBar = document.getElementById("global-search-bar");
+        const filterDropdown = document.getElementById("filter-menu-dropdown");
         
         const canvas = document.getElementById("graph-canvas");
         const ctx = canvas ? canvas.getContext("2d") : null;
@@ -797,23 +799,80 @@
             else if (document.exitFullscreen) document.exitFullscreen();
         };
 
-        window.toggleFavoritesFilter = function() {
-            if (currentFilterType === 'favorites') changeFilter('all'); else changeFilter('favorites');
-        };
-
         function changeFilter(type) { 
             currentFilterType = type; closeAllDropdownsMenu(); buildNotesTree(); 
             const btnFav = document.getElementById("btn-filter-favorites"); const textFav = document.getElementById("text-filter-favorites");
             if (btnFav && textFav) {
                 if (type === 'favorites') {
                     btnFav.className = "flex-1 bg-amber-500/20 border border-amber-500/30 rounded-xl p-3 flex items-center justify-center gap-2 cursor-pointer hover:bg-amber-500/30 transition-colors group";
-                    textFav.innerText = "Ver Todos"; textFav.className = "sidebar-text text-[11px] font-extrabold text-amber-400 group-hover:text-amber-300 transition-colors";
+                    textFav.innerText = "Ver Todos"; textFav.className = "sidebar-text text-xs font-extrabold text-amber-400 group-hover:text-amber-300 transition-colors";
                 } else {
                     btnFav.className = "flex-1 bg-white/5 border border-white/10 rounded-xl p-3 flex items-center justify-center gap-2 cursor-pointer hover:bg-white/10 transition-colors group";
-                    textFav.innerText = "Favoritos"; textFav.className = "sidebar-text text-[11px] font-extrabold text-slate-300 group-hover:text-white transition-colors";
+                    textFav.innerText = "Favoritos"; textFav.className = "sidebar-text text-xs font-extrabold text-slate-300 group-hover:text-white transition-colors";
                 }
             }
         }
+        
+        window.toggleFavoritesFilter = function() {
+            if (currentFilterType === 'favorites') changeFilter('all'); else changeFilter('favorites');
+        };
+
+        // =========================================================================
+        // ATUALIZAÇÃO DA LÓGICA DE FAVORITAR 
+        // =========================================================================
+        window.updateFavoriteStarUI = function() {
+            const btnFav = document.getElementById("btn-favorite-star");
+            if (!btnFav) return;
+            
+            if (!selectedFileId) {
+                btnFav.innerHTML = `<i data-lucide="star" class="w-5 h-5 text-slate-300 hover:text-amber-500 transition-colors"></i>`;
+                try { lucide.createIcons(); } catch(e) {} 
+                return;
+            }
+
+            const cleanPath = selectedFileId.replace(/\/$/, "");
+            const isFav = !!favoriteItems[cleanPath];
+
+            if (isFav) {
+                btnFav.innerHTML = `<i data-lucide="star" class="w-5 h-5 text-amber-500 transition-colors" style="fill: currentColor;"></i>`;
+            } else {
+                btnFav.innerHTML = `<i data-lucide="star" class="w-5 h-5 text-slate-300 hover:text-amber-500 transition-colors"></i>`;
+            }
+            try { lucide.createIcons(); } catch(e) {}
+        };
+
+        window.toggleActiveFileFavorite = function() {
+            if (!selectedFileId) {
+                if(window.showToast) window.showToast("Selecione um arquivo para favoritar.", "error");
+                return;
+            }
+            const cleanPath = selectedFileId.replace(/\/$/, "");
+            const isFav = favoriteItems[cleanPath];
+            if (isFav) delete favoriteItems[cleanPath]; 
+            else favoriteItems[cleanPath] = true; 
+            
+            localStorage.setItem("bms_favorites_map", JSON.stringify(favoriteItems));
+            try { updateFavoriteStarUI(); } catch(e) {}
+            try { buildNotesTree(); } catch(e) {}
+            if(window.showToast) window.showToast(isFav ? "Removido dos favoritos" : "Adicionado aos favoritos", "success");
+        };
+
+        window.toggleFavoriteFromMenu = function() {
+            if (!contextMenuSelectedPath) return;
+            const cleanPath = contextMenuSelectedPath.replace(/\/$/, "");
+            const isFav = favoriteItems[cleanPath];
+            if (isFav) delete favoriteItems[cleanPath]; 
+            else favoriteItems[cleanPath] = true; 
+            
+            localStorage.setItem("bms_favorites_map", JSON.stringify(favoriteItems));
+            
+            if (selectedFileId && cleanPath === selectedFileId.replace(/\/$/, "")) {
+                try { updateFavoriteStarUI(); } catch(e) {}
+            }
+            try { buildNotesTree(); } catch(e) {}
+            closeAllDropdownsMenu();
+            if(window.showToast) window.showToast(isFav ? "Removido dos favoritos" : "Adicionado aos favoritos", "success");
+        };
 
         window.openDeleteModal = function() {
             const ctxMenu = document.getElementById("custom-context-menu"); if (ctxMenu) ctxMenu.classList.add("hidden");
@@ -854,7 +913,7 @@
                 if (centerPanel) centerPanel.className = "flex-1 flex flex-col min-w-[300px] overflow-hidden p-0 gap-0 transition-all duration-300";
             } else {
                 if (header) header.classList.remove('hidden'); if (topMenus) topMenus.classList.remove('hidden');
-                if (centerPanel) centerPanel.className = "flex-1 flex flex-col min-w-[300px] overflow-hidden p-3 gap-3 bg-brand-light transition-all duration-300";
+                if (centerPanel) centerPanel.className = "flex-1 flex flex-col min-w-[300px] overflow-hidden p-4 gap-4 bg-brand-light transition-all duration-300";
             }
 
             const sbLeft = document.getElementById("sidebar-left"); const rsLeft = document.getElementById("resizer-left");
@@ -947,7 +1006,7 @@
                 const parentContainer = document.getElementById("view-doc-main-container");
                 if (parentContainer) { parentContainer.classList.add("p-4"); parentContainer.classList.remove("p-0"); }
                 viewDocMainEl.className = "w-full h-full bg-white border-none overflow-y-auto p-8 font-serif text-[16px] text-slate-800 leading-relaxed shadow-sm";
-                viewDocMainEl.innerHTML = `<div class="text-center text-slate-500 font-bold my-20 font-sans text-sm">Selecione na árvore à esquerda.</div>`;
+                viewDocMainEl.innerHTML = `<div class="text-center text-slate-500 font-bold my-20 font-sans text-base">Selecione na árvore à esquerda para exibir o documento.</div>`;
             }
             try { updateFavoriteStarUI(); } catch(e) {} try { buildNotesTree(); } catch(e) {}
             if (!fromHistory && !isNavigatingHistory) {
@@ -981,8 +1040,8 @@
         document.addEventListener('mousemove', (e) => {
             if (!isResizingLeft && !isResizingCenter && !isResizingRight) return;
             if (isResizingLeft && sidebarLeft && !isSidebarHidden) { let w = e.clientX; if (w > 180 && w < window.innerWidth * 0.4) sidebarLeft.style.width = w + "px"; }
-            if (isResizingCenter && sidebarComparison) { let calculatedWidth = window.innerWidth - e.clientX - (sidebarRight ? sidebarRight.clientWidth : 280); if (calculatedWidth > 200 && calculatedWidth < window.innerWidth * 0.6) sidebarComparison.style.width = calculatedWidth + "px"; }
-            if (isResizingRight && sidebarRight) { let w = window.innerWidth - e.clientX; if (w > 200 && w < window.innerWidth * 0.4) sidebarRight.style.width = w + "px"; }
+            if (isResizingCenter && sidebarComparison) { let calculatedWidth = window.innerWidth - e.clientX - (sidebarRight ? sidebarRight.clientWidth : 320); if (calculatedWidth > 250 && calculatedWidth < window.innerWidth * 0.6) sidebarComparison.style.width = calculatedWidth + "px"; }
+            if (isResizingRight && sidebarRight) { let w = window.innerWidth - e.clientX; if (w > 250 && w < window.innerWidth * 0.4) sidebarRight.style.width = w + "px"; }
         });
 
         document.addEventListener('mouseup', stopResize); document.addEventListener('mouseleave', stopResize);
@@ -1035,8 +1094,16 @@
         }
 
         function closeAllDropdownsMenu() {
-            const menus = ['dropdown-profile', 'filter-menu-dropdown', 'custom-context-menu', 'dropdown-area', 'dropdown-type', 'dropdown-phase', 'dropdown-obj', 'dropdown-upload', 'dropdown-expand-main', 'dropdown-expand-comp'];
-            menus.forEach(id => { const el = document.getElementById(id); if (el) el.classList.add("hidden"); });
+            if (filterDropdown) filterDropdown.classList.add("hidden");
+            const ctxMenu = document.getElementById("custom-context-menu"); if (ctxMenu) ctxMenu.classList.add("hidden");
+            const dpArea = document.getElementById("dropdown-area"); if (dpArea) dpArea.classList.add("hidden");
+            const dpType = document.getElementById("dropdown-type"); if (dpType) dpType.classList.add("hidden");
+            const dpPhase = document.getElementById("dropdown-phase"); if (dpPhase) dpPhase.classList.add("hidden");
+            const dpObj = document.getElementById("dropdown-obj"); if (dpObj) dpObj.classList.add("hidden");
+            const dpUpload = document.getElementById("dropdown-upload"); if (dpUpload) dpUpload.classList.add("hidden");
+            const dpExpMain = document.getElementById("dropdown-expand-main"); if (dpExpMain) dpExpMain.classList.add("hidden");
+            const dpExpComp = document.getElementById("dropdown-expand-comp"); if (dpExpComp) dpExpComp.classList.add("hidden");
+            const dpProfile = document.getElementById("dropdown-profile"); if (dpProfile) dpProfile.classList.add("hidden");
         }
 
         function toggleCustomDropdown(id, e) { e.stopPropagation(); const el = document.getElementById(id); if (el) { const isHidden = el.classList.contains("hidden"); closeAllDropdownsMenu(); if (isHidden) el.classList.remove("hidden"); } }
@@ -1044,9 +1111,9 @@
 
         window.triggerRetroactiveMD = async function() {
             const btn = document.getElementById("btn-retroactive"); if (!btn) return;
-            btn.innerHTML = `<i data-lucide="loader" class="w-4 h-4 inline-block mr-2 animate-spin"></i> Processando...`; btn.classList.add("opacity-50", "pointer-events-none");
-            try { await fetch("/api/sync-retroactive", { method: "POST" }); alert("Processo iniciado!"); } catch(e) { alert("Erro ao iniciar."); }
-            btn.innerHTML = `<i data-lucide="check" class="w-4 h-4 inline-block mr-2"></i> Iniciado`; try { lucide.createIcons(); } catch(e) {}
+            btn.innerHTML = `<i data-lucide="loader" class="w-5 h-5 inline-block mr-2 animate-spin"></i> Processando...`; btn.classList.add("opacity-50", "pointer-events-none");
+            try { await fetch("/api/sync-retroactive", { method: "POST" }); window.showToast("Processo de conversão iniciado no Servidor!", "success"); } catch(e) { window.showToast("Erro ao iniciar sincronização.", "error"); }
+            btn.innerHTML = `<i data-lucide="check" class="w-5 h-5 inline-block mr-2"></i> Iniciado`; try { lucide.createIcons(); } catch(e) {}
         };
 
         window.selectMonitor = function(monitor) {
@@ -1395,214 +1462,6 @@
                 if (ctxUpload) ctxUpload.value = "";
             };
         }
-
-        // =========================================================================
-        // MOTOR DE ÁRVORE - LISTAGEM DOS ARQUIVOS
-        // =========================================================================
-
-        async function buildNotesTree() {
-            try {
-                const res = await fetch("/api/notes"); const data = await res.json();
-                if (data.items && fileTree) {
-                    fileTree.innerHTML = ""; let items = data.items; items.sort((a, b) => a.path.localeCompare(b.path));
-                    if (currentFilterType === "md") items = items.filter(i => i.type === "directory" || i.path.endsWith(".md"));
-                    if (currentFilterType === "pdf") items = items.filter(i => i.type === "directory" || i.path.endsWith(".pdf"));
-                    if (currentFilterType === "favorites") items = items.filter(i => favoriteItems[i.path.replace(/\/$/, "")]);
-
-                    fileTree.ondragover = (e) => { e.preventDefault(); };
-                    fileTree.ondrop = async (e) => {
-                        e.preventDefault();
-                        if (e.target === fileTree) {
-                            const draggedPath = e.dataTransfer.getData("text/plain");
-                            if (draggedPath) { const cleanDragged = draggedPath.replace(/\/$/, ""); const itemName = cleanDragged.split('/').pop(); if (cleanDragged !== itemName) { await renameItem(cleanDragged, itemName); } } 
-                            else if (e.dataTransfer.items) { await handleOSDrop(e, ""); }
-                        }
-                    };
-
-                    items.forEach(item => {
-                        const cleanItemPath = item.path.replace(/\/$/, "");
-                        
-                        // IGNORAR SE ESTIVER NA LIXEIRA
-                        if (isPathTrashed(cleanItemPath)) return; 
-
-                        let pathParts = cleanItemPath.split('/'); let isHidden = false; let currentPathCheck = "";
-                        if (currentFilterType !== "favorites") {
-                            for (let i = 0; i < pathParts.length - 1; i++) { currentPathCheck += (i === 0 ? "" : "/") + pathParts[i]; if (collapsedFolders[currentPathCheck]) { isHidden = true; break; } }
-                        }
-                        if (isHidden) return;
-
-                        const row = document.createElement("div");
-                        const cleanMainPath = selectedFileId ? selectedFileId.replace(/\/$/, "") : "";
-                        const cleanCompPath = comparisonFileId ? comparisonFileId.replace(/\/$/, "") : "";
-                        const isSelected = (cleanItemPath === cleanMainPath || cleanItemPath === cleanCompPath);
-                        
-                        if (isSelected) row.className = "tree-row-container group flex items-center justify-between w-full rounded-lg py-2 px-3 mb-1 border-l-[4px] border-blue-500 bg-blue-600/20 text-blue-400 font-black transition-all shadow-sm";
-                        else row.className = "tree-row-container group flex items-center justify-between w-full rounded-lg py-2 px-3 mb-1 border-l-[4px] border-transparent text-slate-400 hover:text-white hover:bg-white/5 transition-all font-bold";
-                        row.setAttribute("data-path", item.path);
-
-                        const isDir = item.type === "directory"; row.draggable = true;
-                        row.ondragstart = (e) => { e.dataTransfer.setData("text/plain", item.path); };
-                        row.ondragover = (e) => { e.preventDefault(); if(isDir) e.currentTarget.classList.add('bg-white/5'); };
-                        row.ondragleave = (e) => { e.currentTarget.classList.remove('bg-white/5'); };
-                        row.ondrop = async (e) => {
-                            e.preventDefault(); e.currentTarget.classList.remove('bg-white/5');
-                            let targetFolder = isDir ? item.path : ""; if (!isDir) { const parts = item.path.split('/'); parts.pop(); targetFolder = parts.length > 0 ? parts.join('/') + '/' : ''; }
-                            const draggedPath = e.dataTransfer.getData("text/plain");
-                            if (draggedPath && draggedPath !== item.path) { await renameItem(draggedPath.replace(/\/$/, ""), targetFolder + draggedPath.replace(/\/$/, "").split('/').pop()); } 
-                            else if (e.dataTransfer.items) { await handleOSDrop(e, targetFolder); }
-                        };
-
-                        const btn = document.createElement("button"); const depth = currentFilterType === "favorites" ? 0 : (item.path.match(/\//g) || []).length - (isDir ? 1 : 0);
-                        btn.className = "flex-1 text-left flex items-center gap-3 truncate text-[13px] focus:outline-none"; btn.style.paddingLeft = `${depth * 14}px`;
-                        
-                        let icon = "file"; let iconColor = "text-slate-500";
-                        if (isDir) { icon = "folder-open"; iconColor = "text-slate-400"; } 
-                        else if (item.path.endsWith('.pdf')) { icon = "file-text"; iconColor = "text-slate-500"; }
-                        if (isSelected && !isDir) { iconColor = "text-blue-400"; }
-                        
-                        const hasStar = !!favoriteItems[cleanItemPath]; let starBadge = "";
-                        if (hasStar) { starBadge = `<i data-lucide="star" class="w-4 h-4 text-amber-500 inline shrink-0 ml-1.5" style="fill: currentColor;"></i>`; }
-                        
-                        const isCollapsed = !!collapsedFolders[cleanItemPath]; let chevronIcon = `<div class="w-4 shrink-0"></div>`;
-                        if (isDir && currentFilterType !== "favorites") {
-                            if (isCollapsed) chevronIcon = `<i data-lucide="chevron-right" class="w-4 h-4 shrink-0 text-slate-500"></i>`;
-                            else chevronIcon = `<i data-lucide="chevron-down" class="w-4 h-4 shrink-0 text-slate-500"></i>`;
-                        }
-                        
-                        btn.innerHTML = `<span class="sidebar-text flex items-center gap-2 w-full">${chevronIcon}<i data-lucide="${icon}" class="w-4 h-4 ${iconColor} shrink-0"></i> <span class="truncate">${cleanItemPath.split('/').pop()}</span> ${starBadge}</span>`;
-                        if (!isDir) { btn.onclick = (e) => { e.stopPropagation(); loadNoteContent(item.path); }; } 
-                        else { btn.onclick = (e) => { e.stopPropagation(); collapsedFolders[cleanItemPath] = !collapsedFolders[cleanItemPath]; localStorage.setItem("bms_collapsed_folders", JSON.stringify(collapsedFolders)); selectedFileId = item.path; buildNotesTree(); }; }
-
-                        const menuBtn = document.createElement("button"); menuBtn.className = "sidebar-text opacity-0 group-hover:opacity-100 p-1 hover:text-white rounded transition-all focus:outline-none";
-                        menuBtn.innerHTML = `<i data-lucide="more-horizontal" class="w-4 h-4"></i>`; menuBtn.onclick = (e) => { triggerInlineContextMenu(e, item.path); };
-
-                        row.appendChild(btn); row.appendChild(menuBtn); fileTree.appendChild(row);
-                    });
-                    try { lucide.createIcons(); } catch(e) {}
-                    
-                    if(isSidebarHidden) {
-                        const texts = fileTree.querySelectorAll(".sidebar-text");
-                        texts.forEach(t => t.classList.add("hidden"));
-                    }
-                }
-            } catch(e) { console.error(e); }
-        }
-
-        function initPhysicsNodes(data) {
-            if(!canvas || !canvas.parentElement) return;
-            const w = canvas.parentElement.clientWidth > 10 ? canvas.parentElement.clientWidth : 500; 
-            const h = canvas.parentElement.clientHeight > 10 ? canvas.parentElement.clientHeight : 230;
-            canvas.width = w; canvas.height = h;
-
-            const existingNodesMap = new Map();
-            graphData.nodes.forEach(n => { existingNodesMap.set(n.id, n); });
-            graphData.nodes = data.nodes.filter(n => !isPathTrashed(n.id)).map(n => {
-                const old = existingNodesMap.get(n.id);
-                return { id: n.id, label: n.label, type: n.type, x: old ? old.x : w / 2 + (Math.random() - 0.5) * 160, y: old ? old.y : h / 2 + (Math.random() - 0.5) * 160, vx: 0, vy: 0 };
-            });
-            graphData.edges = data.edges.map(e => { return { sourceNode: graphData.nodes.find(n => n.id === e.source), targetNode: graphData.nodes.find(n => n.id === e.target) }; }).filter(e => { return e.sourceNode && e.targetNode; });
-        }
-
-        function updatePhysics() {
-            if(!canvas || graphData.nodes.length === 0) return;
-            const cx = canvas.width / 2; const cy = canvas.height / 2;
-            
-            for (let i = 0; i < graphData.nodes.length; i++) {
-                let n1 = graphData.nodes[i];
-                for (let j = i + 1; j < graphData.nodes.length; j++) {
-                    let n2 = graphData.nodes[j];
-                    let dx = n2.x - n1.x; let dy = n2.y - n1.y; 
-                    if (dx === 0 && dy === 0) { dx = 0.1; dy = 0.1; }
-                    let dist = Math.sqrt(dx * dx + dy * dy); let safeDist = Math.max(dist, 25);
-                    if (dist < 220) {
-                        let force = 900 / (safeDist * safeDist); let fx = (dx / safeDist) * force; let fy = (dy / safeDist) * force;
-                        if (n1 !== draggedNode) { n1.vx -= fx; n1.vy -= fy; }
-                        if (n2 !== draggedNode) { n2.vx += fx; n2.vy += fy; }
-                    }
-                }
-            }
-            
-            graphData.edges.forEach(e => {
-                let dx = e.targetNode.x - e.sourceNode.x; let dy = e.targetNode.y - e.sourceNode.y;
-                let dist = Math.sqrt(dx * dx + dy * dy); let safeDist = Math.max(dist, 1);
-                if (dist > 0) {
-                    let restingDistance = 65; let diff = safeDist - restingDistance; let force = 0.025 * diff;
-                    let fx = (dx / safeDist) * force; let fy = (dy / safeDist) * force;
-                    if (e.sourceNode !== draggedNode) { e.sourceNode.vx += fx; e.sourceNode.vy += fy; }
-                    if (e.targetNode !== draggedNode) { e.targetNode.vx -= fx; e.targetNode.vy -= fy; }
-                }
-            });
-            
-            graphData.nodes.forEach(n => {
-                if (n === draggedNode) return;
-                n.vx += (cx - n.x) * 0.0018; n.vy += (cy - n.y) * 0.0018;
-                n.vx += (Math.random() - 0.5) * 0.1; n.vy += (Math.random() - 0.5) * 0.1;
-                let maxVel = 6.5; n.vx = Math.max(-maxVel, Math.min(maxVel, n.vx)); n.vy = Math.max(-maxVel, Math.min(maxVel, n.vy));
-                n.x += n.vx; n.y += n.vy;
-                const p = 20;
-                if (n.x < p) { n.x = p; n.vx *= -0.2; } if (n.y < p) { n.y = p; n.vy *= -0.2; }
-                if (n.x > canvas.width - p) { n.x = canvas.width - p; n.vx *= -0.2; } if (n.y > canvas.height - p) { n.y = canvas.height - p; n.vy *= -0.2; }
-                n.vx *= 0.84; n.vy *= 0.84;
-            });
-        }
-
-        function drawGraph() {
-            if (!ctx || !canvas) return; 
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            ctx.lineWidth = 1.5; ctx.strokeStyle = "#cbd5e1"; 
-            
-            graphData.edges.forEach(e => { ctx.beginPath(); ctx.moveTo(e.sourceNode.x, e.sourceNode.y); ctx.lineTo(e.targetNode.x, e.targetNode.y); ctx.stroke(); });
-            
-            graphData.nodes.forEach(n => {
-                ctx.beginPath(); let radius = 6.0;
-                if (n.type === "tag") radius = 8.0;
-                const cleanMain = selectedFileId ? selectedFileId.replace(/\/$/, "") : "";
-                const cleanComp = comparisonFileId ? comparisonFileId.replace(/\/$/, "") : "";
-                const isAct = (cleanMain === n.id || cleanComp === n.id);
-
-                if (isAct) radius = 9.0;
-                ctx.arc(n.x, n.y, radius, 0, 2 * Math.PI);
-                
-                if (n.type === "tag") ctx.fillStyle = "#f59e0b"; 
-                else if (n.type === "concept") ctx.fillStyle = "#94a3b8"; 
-                else if (isAct) ctx.fillStyle = "#2563eb"; 
-                else ctx.fillStyle = "#64748b"; 
-                
-                ctx.fill(); ctx.fillStyle = "#1e293b"; ctx.font = "bold 12px sans-serif"; ctx.textAlign = "center"; ctx.fillText(n.label, n.x, n.y + 18);
-            });
-        }
-
-        function anim() { updatePhysics(); drawGraph(); requestAnimationFrame(anim); }
-        if (canvas) {
-            requestAnimationFrame(anim);
-            let clickStartX = 0; let clickStartY = 0;
-            canvas.addEventListener("mousedown", (e) => {
-                const rect = canvas.getBoundingClientRect(); const mx = e.clientX - rect.left; const my = e.clientY - rect.top;
-                isDraggingNode = false; clickStartX = mx; clickStartY = my;
-                for (let n of graphData.nodes) { if (Math.sqrt((n.x - mx)**2 + (n.y - my)**2) < 22) { draggedNode = n; canvas.style.cursor = 'grabbing'; break; } }
-            });
-            canvas.addEventListener("mousemove", (e) => { 
-                const rect = canvas.getBoundingClientRect(); const mx = e.clientX - rect.left; const my = e.clientY - rect.top;
-                if (draggedNode) { 
-                    if (Math.abs(mx - clickStartX) > 3 || Math.abs(my - clickStartY) > 3) isDraggingNode = true;
-                    draggedNode.x = mx; draggedNode.y = my; canvas.style.cursor = 'grabbing';
-                } else {
-                    let isHovering = false;
-                    for (let n of graphData.nodes) { if (Math.sqrt((n.x - mx)**2 + (n.y - my)**2) < 22) { isHovering = true; break; } }
-                    canvas.style.cursor = isHovering ? 'pointer' : 'default';
-                }
-            });
-            canvas.addEventListener("mouseup", () => { 
-                if (draggedNode && !isDraggingNode) {
-                    if (draggedNode.type === "file") loadNoteContent(draggedNode.id);
-                    else { const sb = document.getElementById("global-search-bar"); if (sb) { sb.value = draggedNode.label; searchFileTree(); } }
-                }
-                draggedNode = null; isDraggingNode = false; if (canvas) canvas.style.cursor = 'default';
-            });
-        }
-
-        async function reloadGlobalGraph() { try { const res = await fetch("/api/graph-data"); const data = await res.json(); initPhysicsNodes(data); } catch(e) {} }
-        setInterval(reloadGlobalGraph, 10000); 
 
         // =========================================================================
         // MOTOR DE CHAT DE INTELIGÊNCIA ARTIFICIAL
