@@ -122,7 +122,6 @@
     <input type="file" id="global-folder-upload" class="hidden" webkitdirectory directory multiple />
     <input type="file" id="chat-context-upload" class="hidden" />
 
-    <!-- NOVO MENU COM OPÇÃO DE FAVORITAR -->
     <div id="custom-context-menu" class="hidden absolute bg-white border border-slate-300 rounded-xl shadow-2xl py-2 w-48 z-50 text-xs font-extrabold text-slate-800">
         <button onclick="toggleFavoriteFromMenu()" class="w-full text-left px-4 py-2 hover:bg-slate-100 flex items-center gap-3 text-amber-500"><i data-lucide="star" class="w-4 h-4"></i> Favoritar</button>
         <button onclick="openRenameModal()" class="w-full text-left px-4 py-2 hover:bg-slate-100 flex items-center gap-3"><i data-lucide="edit-2" class="w-4 h-4 text-blue-600"></i> Renomear</button>
@@ -143,12 +142,12 @@
 
     <!-- MODAL DA LIXEIRA -->
     <div id="trash-modal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center z-50 transition-opacity">
-        <div class="bg-white border border-slate-200 rounded-2xl shadow-2xl p-6 w-[450px] flex flex-col gap-4">
-            <div class="flex items-center gap-4 border-b border-slate-100 pb-3">
+        <div class="bg-white border border-slate-200 rounded-2xl shadow-2xl p-6 w-[450px] flex flex-col gap-5">
+            <div class="flex items-center gap-4 border-b border-slate-200 pb-4">
                 <div class="w-12 h-12 bg-red-100 text-red-600 rounded-xl flex items-center justify-center shrink-0"><i data-lucide="trash-2" class="w-6 h-6"></i></div>
                 <div>
-                    <h3 class="font-black text-slate-800 text-base">Lixeira do Sistema</h3>
-                    <p class="text-xs text-slate-500 uppercase tracking-widest font-bold">Limpeza auto em 30 dias</p>
+                    <h3 class="font-black text-slate-900 text-lg">Lixeira do Sistema</h3>
+                    <p class="text-[10px] text-slate-600 uppercase tracking-widest font-extrabold mt-1">Limpeza auto em 30 dias</p>
                 </div>
             </div>
             
@@ -156,9 +155,9 @@
                 <!-- Javascript preenche a lixeira aqui -->
             </div>
             
-            <div class="flex justify-between items-center pt-3 border-t border-slate-100 mt-2">
-                <button onclick="document.getElementById('trash-modal').classList.add('hidden')" class="px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold text-sm rounded-lg transition-colors">Fechar</button>
-                <button id="btn-empty-trash" onclick="emptyTrash()" class="px-4 py-2.5 bg-red-50 text-red-500 hover:bg-red-100 font-bold text-sm rounded-lg transition-colors shadow-sm">Esvaziar Lixeira</button>
+            <div class="flex justify-between items-center pt-4 border-t border-slate-200 mt-2">
+                <button onclick="document.getElementById('trash-modal').classList.add('hidden')" class="px-5 py-2.5 bg-slate-200 hover:bg-slate-300 text-slate-800 font-extrabold text-sm rounded-xl transition-colors">Fechar</button>
+                <button id="btn-empty-trash" onclick="emptyTrash()" class="px-5 py-2.5 bg-red-100 text-red-700 hover:bg-red-200 font-extrabold text-sm rounded-xl transition-colors shadow-sm">Esvaziar Tudo</button>
             </div>
         </div>
     </div>
@@ -166,14 +165,14 @@
     <!-- MODAL DE CONTA E PLANO -->
     <div id="account-settings-modal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center z-50">
         <div class="bg-white border border-slate-200 rounded-2xl shadow-2xl p-7 w-[420px] flex flex-col gap-5">
-            <div class="flex items-center gap-4 border-b border-slate-100 pb-4">
+            <div class="flex items-center gap-4 border-b border-slate-200 pb-4">
                 <div class="w-14 h-14 bg-blue-100 rounded-full flex items-center justify-center text-blue-700 font-black text-2xl shadow-sm">TS</div>
                 <div>
                     <h3 class="font-black text-slate-900 text-lg">Ambiente de Testes</h3>
-                    <p class="text-xs text-slate-600 font-extrabold mt-0.5">BETA V1.0 - BMS Service</p>
+                    <p class="text-xs text-slate-600 font-extrabold mt-1">BETA V1.0 - BMS Service</p>
                 </div>
             </div>
-            <button id="btn-retroactive" onclick="triggerRetroactiveMD()" class="w-full px-4 py-3 bg-amber-500 hover:bg-amber-600 text-white font-bold rounded-xl transition-all shadow-md flex items-center justify-center gap-3 text-sm">
+            <button id="btn-retroactive" onclick="triggerRetroactiveMD()" class="w-full px-4 py-3 bg-amber-500 hover:bg-amber-600 text-white font-black rounded-xl transition-all shadow-md flex items-center justify-center gap-3 text-sm">
                 <i data-lucide="refresh-cw" class="w-5 h-5"></i> Gerar Markdown de PDFs Antigos
             </button>
             <p class="text-xs text-slate-600 text-center leading-relaxed font-bold">O motor de Visão Computacional varrerá o cofre para recriar Markdown em alta resolução.</p>
@@ -203,7 +202,7 @@
             </div>
             
             <div id="st-state-2" class="hidden flex flex-col items-center py-4">
-                <h3 class="font-black text-slate-800 text-xs mb-5 uppercase tracking-widest text-slate-500">Medindo...</h3>
+                <h3 class="font-black text-slate-800 text-sm mb-5 uppercase tracking-widest text-slate-500">Medindo...</h3>
                 <div class="relative w-56 h-28 overflow-hidden mb-2">
                     <svg viewBox="0 0 100 50" class="w-full h-full">
                         <path d="M 10 50 A 40 40 0 0 1 90 50" fill="none" stroke="currentColor" stroke-width="8" class="text-slate-200" stroke-linecap="round"></path>
@@ -233,7 +232,7 @@
     <header class="bg-white border-b border-slate-200 h-[64px] min-h-[64px] flex items-center justify-between px-5 z-20 shadow-sm shrink-0">
         
         <div class="flex items-center gap-3">
-            <button onclick="toggleSidebar()" class="p-2 text-slate-500 hover:text-blue-600 hover:bg-slate-100 rounded-lg transition-colors focus:outline-none" title="Esconder/Mostrar Menu Lateral">
+            <button onclick="toggleSidebar()" class="p-2 text-slate-500 hover:text-blue-600 hover:bg-slate-100 rounded-lg transition-colors focus:outline-none" title="Esconder/Mostrar Menu">
                 <i data-lucide="menu" class="w-6 h-6"></i>
             </button>
 
@@ -271,8 +270,8 @@
             <div class="w-px h-8 bg-slate-300 mx-1"></div>
             
             <div id="server-status-badge" class="flex items-center gap-2 bg-slate-100 px-3 py-2 rounded-lg border border-slate-200 shadow-sm transition-all duration-300">
-                <div id="server-status-dot" class="w-2 h-2 bg-slate-400 rounded-full"></div>
-                <span id="server-status-text" class="text-xs font-black tracking-wide uppercase text-slate-500 hidden sm:block">Checando...</span>
+                <div id="server-status-dot" class="w-2 h-2 bg-slate-500 rounded-full"></div>
+                <span id="server-status-text" class="text-[10px] font-black tracking-widest uppercase text-slate-600 hidden sm:block">Checando...</span>
             </div>
 
             <div class="w-px h-8 bg-slate-300 mx-1"></div>
@@ -302,7 +301,7 @@
     <!-- ========================================== -->
     <div class="flex flex-1 overflow-hidden relative" onclick="closeAllDropdownsMenu()">
         
-        <!-- COLUNA 1: GAVETA ESQUERDA (COMPACTADA E OTIMIZADA) -->
+        <!-- COLUNA 1: GAVETA ESQUERDA -->
         <aside id="sidebar-left" class="w-[280px] bg-brand-sidebar flex flex-col overflow-hidden py-4 px-3 relative shrink-0 transition-all duration-300 ease-in-out text-slate-300" onclick="clearTreeSelection(event)">
             
             <div class="flex items-center justify-between mb-4 px-2">
@@ -353,14 +352,14 @@
         </div>
 
         <!-- ========================================== -->
-        <!-- COLUNAS CENTRAIS: WORKSPACE (MÁXIMO ESPAÇO)-->
+        <!-- COLUNAS CENTRAIS: WORKSPACE (SEM ESPAÇOS VAZIOS) -->
         <!-- ========================================== -->
         <main id="center-panel" class="flex-1 flex flex-col min-w-[300px] overflow-hidden p-3 gap-3 bg-brand-light transition-all duration-300">
             
             <!-- MENUS DE PERSONALIZAÇÃO (PÍLULAS COMPACTAS) -->
             <div class="grid grid-cols-4 gap-3 w-full shrink-0">
                 
-                <div class="bg-white border border-slate-300 rounded-xl p-2.5 flex items-center shadow-sm relative cursor-pointer hover:border-blue-400 transition-colors" onclick="toggleCustomDropdown('dropdown-area', event)">
+                <div class="bg-white border border-slate-300 rounded-xl p-2 flex items-center shadow-sm relative cursor-pointer hover:border-blue-400 transition-colors" onclick="toggleCustomDropdown('dropdown-area', event)">
                     <div class="w-8 h-8 bg-blue-50 text-blue-600 rounded-lg flex items-center justify-center mr-3 shrink-0"><i data-lucide="scale" class="w-4 h-4"></i></div>
                     <div class="flex-1 min-w-0">
                         <p class="text-[9px] text-slate-500 font-black uppercase tracking-widest mb-0.5">Área Jurídica</p>
@@ -374,7 +373,7 @@
                     </div>
                 </div>
 
-                <div class="bg-white border border-slate-300 rounded-xl p-2.5 flex items-center shadow-sm relative cursor-pointer hover:border-purple-400 transition-colors" onclick="toggleCustomDropdown('dropdown-type', event)">
+                <div class="bg-white border border-slate-300 rounded-xl p-2 flex items-center shadow-sm relative cursor-pointer hover:border-purple-400 transition-colors" onclick="toggleCustomDropdown('dropdown-type', event)">
                     <div class="w-8 h-8 bg-purple-50 text-purple-600 rounded-lg flex items-center justify-center mr-3 shrink-0"><i data-lucide="file-text" class="w-4 h-4"></i></div>
                     <div class="flex-1 min-w-0">
                         <p class="text-[9px] text-slate-500 font-black uppercase tracking-widest mb-0.5">Peça</p>
@@ -388,7 +387,7 @@
                     </div>
                 </div>
 
-                <div class="bg-white border border-slate-300 rounded-xl p-2.5 flex items-center shadow-sm relative cursor-pointer hover:border-amber-400 transition-colors" onclick="toggleCustomDropdown('dropdown-phase', event)">
+                <div class="bg-white border border-slate-300 rounded-xl p-2 flex items-center shadow-sm relative cursor-pointer hover:border-amber-400 transition-colors" onclick="toggleCustomDropdown('dropdown-phase', event)">
                     <div class="w-8 h-8 bg-amber-50 text-amber-600 rounded-lg flex items-center justify-center mr-3 shrink-0"><i data-lucide="folder-git" class="w-4 h-4"></i></div>
                     <div class="flex-1 min-w-0">
                         <p class="text-[9px] text-slate-500 font-black uppercase tracking-widest mb-0.5">Fase</p>
@@ -401,7 +400,7 @@
                     </div>
                 </div>
 
-                <div class="bg-white border border-slate-300 rounded-xl p-2.5 flex items-center shadow-sm relative cursor-pointer hover:border-emerald-400 transition-colors" onclick="toggleCustomDropdown('dropdown-obj', event)">
+                <div class="bg-white border border-slate-300 rounded-xl p-2 flex items-center shadow-sm relative cursor-pointer hover:border-emerald-400 transition-colors" onclick="toggleCustomDropdown('dropdown-obj', event)">
                     <div class="w-8 h-8 bg-emerald-50 text-emerald-600 rounded-lg flex items-center justify-center mr-3 shrink-0"><i data-lucide="target" class="w-4 h-4"></i></div>
                     <div class="flex-1 min-w-0">
                         <p class="text-[9px] text-slate-500 font-black uppercase tracking-widest mb-0.5">Foco</p>
@@ -422,10 +421,10 @@
                 <div id="center-preview-container" onclick="selectMonitor('main')" class="flex-1 bg-white border border-slate-200 rounded-2xl shadow-md flex flex-col overflow-hidden h-full ring-2 ring-transparent relative transition-all duration-300 min-w-[320px]">
                     <div class="absolute top-0 left-1/2 -translate-x-1/2 px-4 py-1 bg-blue-600 text-white text-[10px] font-black uppercase rounded-b-lg shadow-md z-10 hidden" id="dot-active-main">Foco Ativo</div>
 
-                    <!-- Header Monitor 1 (BLINDADO CONTRA CORTES) -->
-                    <div class="flex flex-wrap items-center justify-between px-5 py-3.5 border-b border-slate-200 bg-white shrink-0 gap-3">
+                    <!-- HEADER BLINDADO CONTRA CORTES (COM FLEX-WRAP SE NECESSÁRIO E MIN-W) -->
+                    <div class="flex flex-wrap items-center justify-between px-5 py-3 border-b border-slate-200 bg-white shrink-0 gap-3">
                         
-                        <div class="flex items-center gap-3 flex-1 min-w-[200px]">
+                        <div class="flex items-center gap-3 min-w-[200px] flex-1">
                             <div class="flex items-center bg-slate-50 border border-slate-300 rounded-lg shrink-0 shadow-sm">
                                 <button onclick="goBack('main')" id="btn-back-main" class="p-1.5 text-slate-500 hover:text-blue-600 disabled:opacity-30 disabled:cursor-not-allowed" disabled><i data-lucide="chevron-left" class="w-4 h-4"></i></button>
                                 <button onclick="goForward('main')" id="btn-forward-main" class="p-1.5 text-slate-500 hover:text-blue-600 disabled:opacity-30 disabled:cursor-not-allowed" disabled><i data-lucide="chevron-right" class="w-4 h-4"></i></button>
@@ -435,35 +434,35 @@
                             <button id="btn-favorite-star" onclick="toggleActiveFileFavorite()" class="shrink-0 focus:outline-none transition-colors"><i data-lucide="star" class="w-5 h-5 text-slate-300 hover:text-amber-500"></i></button>
                         </div>
                         
-                        <div class="flex flex-wrap items-center gap-2.5 shrink-0">
-                            <button id="btn-reprocess-main" onclick="reprocessMD('main')" class="hidden px-4 py-2 bg-amber-500 hover:bg-amber-600 text-white rounded-lg shadow-md flex items-center gap-2 text-xs font-black transition-all" title="Reler PDF">
+                        <!-- BOTÕES FIXOS QUE NUNCA ENCOLHEM -->
+                        <div class="flex items-center gap-2.5 shrink-0">
+                            <button id="btn-reprocess-main" onclick="reprocessMD('main')" class="hidden px-4 py-1.5 bg-amber-500 hover:bg-amber-600 text-white rounded-lg shadow-md flex items-center gap-2 text-[11px] font-black transition-all" title="Reler PDF">
                                 <i data-lucide="refresh-cw" class="w-4 h-4"></i> <span class="hidden sm:inline">Reler PDF</span>
                             </button>
                             
                             <div class="flex bg-slate-50 border border-slate-300 p-1 rounded-lg text-xs font-black shadow-sm">
-                                <button id="btn-tab-main-formatted" onclick="switchTab('main', 'doc')" class="px-4 py-1.5 bg-white text-slate-900 rounded-md shadow-sm transition-colors">Visual</button>
-                                <button id="btn-tab-main-raw" onclick="switchTab('main', 'raw')" class="px-4 py-1.5 text-slate-500 hover:text-slate-800 transition-colors">MD</button>
+                                <button id="btn-tab-main-formatted" onclick="switchTab('main', 'doc')" class="px-4 py-1 bg-white text-slate-900 rounded-md shadow-sm transition-colors">Visual</button>
+                                <button id="btn-tab-main-raw" onclick="switchTab('main', 'raw')" class="px-4 py-1 text-slate-500 hover:text-slate-800 transition-colors">MD</button>
                             </div>
                             
-                            <div class="flex items-center gap-1 border-l border-slate-300 pl-2">
-                                <button onclick="downloadActiveFile()" class="p-2 text-slate-500 hover:bg-slate-100 hover:text-blue-600 rounded-lg transition-colors" title="Download"><i data-lucide="download" class="w-5 h-5"></i></button>
-                                <button onclick="printActiveFile()" class="p-2 text-slate-500 hover:bg-slate-100 hover:text-blue-600 rounded-lg transition-colors" title="Imprimir"><i data-lucide="printer" class="w-5 h-5"></i></button>
+                            <div class="flex items-center gap-1 border-l border-slate-300 pl-2 ml-1">
+                                <button onclick="downloadActiveFile()" class="p-1.5 text-slate-500 hover:bg-slate-100 hover:text-blue-600 rounded-lg transition-colors" title="Download"><i data-lucide="download" class="w-5 h-5"></i></button>
+                                <button onclick="printActiveFile()" class="p-1.5 text-slate-500 hover:bg-slate-100 hover:text-blue-600 rounded-lg transition-colors" title="Imprimir"><i data-lucide="printer" class="w-5 h-5"></i></button>
                                 
                                 <div class="relative flex items-center" id="expand-wrapper-main">
-                                    <button onclick="toggleCustomDropdown('dropdown-expand-main', event)" class="p-2 text-slate-500 hover:bg-slate-100 hover:text-blue-600 rounded-lg transition-colors" title="Ampliar"><i data-lucide="maximize" class="w-5 h-5"></i></button>
+                                    <button onclick="toggleCustomDropdown('dropdown-expand-main', event)" class="p-1.5 text-slate-500 hover:bg-slate-100 hover:text-blue-600 rounded-lg transition-colors" title="Ampliar"><i data-lucide="maximize" class="w-5 h-5"></i></button>
                                     <div id="dropdown-expand-main" class="hidden absolute top-[105%] right-0 mt-2 bg-white border border-slate-200 rounded-xl shadow-2xl py-2 w-48 z-50 text-xs font-extrabold text-slate-800 flex flex-col">
                                         <button onclick="fullscreenMonitor('main'); closeAllDropdownsMenu()" class="w-full text-left px-4 py-2.5 hover:bg-slate-100 flex items-center gap-3"><i data-lucide="monitor" class="w-4 h-4 text-slate-500"></i> Tela Cheia Total</button>
                                         <button onclick="toggleSplitMaximize('main'); closeAllDropdownsMenu()" class="w-full text-left px-4 py-2.5 hover:bg-slate-100 flex items-center gap-3"><i data-lucide="layout-template" class="w-4 h-4 text-slate-500"></i> Expandir Monitor</button>
                                     </div>
                                 </div>
-                                <button id="btn-restore-main" onclick="exitExpansion('main')" class="hidden p-2 text-blue-600 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors" title="Restaurar Visão Normal"><i data-lucide="minimize" class="w-5 h-5"></i></button>
+                                <button id="btn-restore-main" onclick="exitExpansion('main')" class="hidden p-1.5 text-blue-600 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors" title="Restaurar Visão Normal"><i data-lucide="minimize" class="w-5 h-5"></i></button>
                             </div>
                         </div>
                     </div>
 
-                    <!-- VIEWER COM LETRAS GRANDES -->
                     <div class="flex-1 flex overflow-hidden bg-slate-50 relative" id="view-doc-main-container">
-                        <div id="view-doc-main" class="w-full h-full bg-white border-none overflow-y-auto p-8 font-serif text-[16px] text-slate-800 leading-relaxed">
+                        <div id="view-doc-main" class="w-full h-full bg-white border-none overflow-y-auto p-8 font-serif text-[16px] text-slate-800 leading-relaxed shadow-sm">
                             <div class="text-center text-slate-500 font-bold my-20 font-sans text-base">Selecione na árvore à esquerda para exibir o documento.</div>
                         </div>
                         <div id="view-raw-main" class="hidden w-full h-full bg-white border-none overflow-y-auto p-6 font-mono text-sm whitespace-pre-wrap leading-relaxed text-slate-700 font-medium"></div>
@@ -475,12 +474,12 @@
                     <div class="w-1.5 h-12 bg-slate-300 group-hover:bg-white rounded-full transition-colors"></div>
                 </div>
 
-                <!-- MONITOR 2 (COMPARAÇÃO E MALHA) -->
+                <!-- MONITOR 2 (COMPARAÇÃO / MALHA) -->
                 <section id="sidebar-comparison" onclick="selectMonitor('comp')" class="w-[45%] bg-white border border-slate-200 rounded-2xl shadow-md flex flex-col overflow-hidden h-full shrink-0 relative min-w-[320px]">
                     <div class="absolute top-0 left-1/2 -translate-x-1/2 px-4 py-1 bg-blue-600 text-white text-[10px] font-black uppercase rounded-b-lg shadow-md z-10 hidden" id="dot-active-comp">Foco Ativo</div>
 
-                    <div class="px-5 py-3.5 border-b border-slate-200 bg-white flex flex-wrap items-center justify-between shrink-0 gap-3">
-                        <div class="flex items-center gap-3 min-w-0 flex-1">
+                    <div class="px-5 py-3 border-b border-slate-200 bg-white flex flex-wrap items-center justify-between shrink-0 gap-3">
+                        <div class="flex items-center gap-3 min-w-[150px] flex-1">
                             <div class="flex items-center bg-slate-50 border border-slate-300 rounded-lg shrink-0 shadow-sm">
                                 <button onclick="goBack('comp')" id="btn-back-comp" class="p-1.5 text-slate-400 hover:text-blue-600 disabled:opacity-30 disabled:cursor-not-allowed transition-colors" disabled><i data-lucide="chevron-left" class="w-4 h-4"></i></button>
                                 <button onclick="goForward('comp')" id="btn-forward-comp" class="p-1.5 text-slate-400 hover:text-blue-600 disabled:opacity-30 disabled:cursor-not-allowed transition-colors" disabled><i data-lucide="chevron-right" class="w-4 h-4"></i></button>
@@ -497,27 +496,27 @@
                         </div>
                     </div>
 
-                    <div id="pane-comparison-doc" class="flex-1 flex flex-col overflow-hidden bg-[#fafafa] h-full p-4">
+                    <div id="pane-comparison-doc" class="flex-1 flex flex-col overflow-hidden bg-[#fafafa] h-full p-3">
                         
                         <div class="bg-white border border-slate-200 rounded-xl p-2.5 mb-3 flex flex-wrap items-center justify-between shadow-sm gap-2">
-                            <span id="comp-note-title" class="text-xs font-black text-slate-600 truncate flex-1 px-2">Comparação</span>
-                            <div class="flex flex-wrap items-center gap-1.5 shrink-0">
-                                <button id="btn-reprocess-comp" onclick="reprocessMD('comp')" class="hidden px-3 py-1.5 bg-amber-500 hover:bg-amber-600 text-white rounded-lg text-[10px] font-bold shadow-sm flex items-center gap-1.5"><i data-lucide="refresh-cw" class="w-4 h-4"></i></button>
+                            <span id="comp-note-title" class="text-xs font-black text-slate-600 truncate flex-1 px-2 min-w-[100px]">Comparação</span>
+                            <div class="flex items-center gap-1.5 shrink-0">
+                                <button id="btn-reprocess-comp" onclick="reprocessMD('comp')" class="hidden px-3 py-1 bg-amber-500 hover:bg-amber-600 text-white rounded-lg text-[10px] font-bold shadow-sm flex items-center gap-1.5"><i data-lucide="refresh-cw" class="w-4 h-4"></i></button>
                                 
                                 <div class="flex bg-slate-50 border border-slate-200 p-1 rounded-lg text-[10px] font-bold mr-1">
-                                    <button id="btn-tab-comp-formatted" onclick="switchTab('comp', 'doc')" class="px-3 py-1 bg-white text-slate-800 rounded shadow-sm transition-colors">Visual</button>
-                                    <button id="btn-tab-comp-raw" onclick="switchTab('comp', 'raw')" class="px-3 py-1 text-slate-500 hover:text-slate-800 transition-colors">MD</button>
+                                    <button id="btn-tab-comp-formatted" onclick="switchTab('comp', 'doc')" class="px-3 py-0.5 bg-white text-slate-800 rounded shadow-sm transition-colors">Visual</button>
+                                    <button id="btn-tab-comp-raw" onclick="switchTab('comp', 'raw')" class="px-3 py-0.5 text-slate-500 hover:text-slate-800 transition-colors">MD</button>
                                 </div>
                                 
                                 <div class="relative flex items-center border-l border-slate-200 pl-1.5" id="expand-wrapper-comp">
-                                    <button onclick="toggleCustomDropdown('dropdown-expand-comp', event)" class="p-1.5 text-slate-500 hover:text-blue-600 hover:bg-slate-100 rounded-lg transition-colors"><i data-lucide="maximize" class="w-4 h-4"></i></button>
-                                    <div id="dropdown-expand-comp" class="hidden absolute top-[105%] right-0 mt-2 bg-white border border-slate-200 rounded-xl shadow-2xl py-2 w-48 z-50 text-[11px] font-extrabold text-slate-800 flex flex-col">
+                                    <button onclick="toggleCustomDropdown('dropdown-expand-comp', event)" class="p-1 text-slate-500 hover:text-blue-600 hover:bg-slate-100 rounded-lg transition-colors"><i data-lucide="maximize" class="w-4 h-4"></i></button>
+                                    <div id="dropdown-expand-comp" class="hidden absolute top-[105%] right-0 mt-2 bg-white border border-slate-200 rounded-xl shadow-2xl py-2 w-48 z-50 text-xs font-extrabold text-slate-800 flex flex-col">
                                         <button onclick="fullscreenMonitor('comp'); closeAllDropdownsMenu()" class="w-full text-left px-4 py-2.5 hover:bg-slate-100 flex items-center gap-3"><i data-lucide="monitor" class="w-4 h-4 text-slate-500"></i> Tela Cheia</button>
                                         <button onclick="toggleSplitMaximize('comp'); closeAllDropdownsMenu()" class="w-full text-left px-4 py-2.5 hover:bg-slate-100 flex items-center gap-3"><i data-lucide="layout-template" class="w-4 h-4 text-slate-500"></i> Expandir</button>
                                     </div>
                                 </div>
-                                <button id="btn-restore-comp" onclick="exitExpansion('comp')" class="hidden p-1.5 text-blue-600 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors"><i data-lucide="minimize" class="w-4 h-4"></i></button>
-                                <button onclick="clearComparisonDoc()" class="p-1.5 text-slate-400 hover:bg-red-50 hover:text-red-600 rounded-lg transition-colors ml-1"><i data-lucide="x" class="w-4 h-4"></i></button>
+                                <button id="btn-restore-comp" onclick="exitExpansion('comp')" class="hidden p-1 text-blue-600 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors"><i data-lucide="minimize" class="w-4 h-4"></i></button>
+                                <button onclick="clearComparisonDoc()" class="p-1 text-slate-400 hover:bg-red-50 hover:text-red-600 rounded-lg transition-colors ml-1"><i data-lucide="x" class="w-4 h-4"></i></button>
                             </div>
                         </div>
 
@@ -607,10 +606,9 @@
                 <button id="btn-remove-attachment" class="text-red-500 hover:text-red-700"><i data-lucide="x" class="w-4 h-4"></i></button>
             </div>
 
-            <!-- CHAT INPUT: MARGEM DIREITA APLICADA PARA NÃO ENCOSTAR -->
             <div class="p-5 border-t border-slate-100 bg-white shrink-0 shadow-[0_-10px_20px_rgba(0,0,0,0.02)]">
-                <div class="relative flex items-center bg-slate-50 rounded-full border border-slate-300 p-1.5 pr-2 shadow-inner focus-within:border-blue-500 focus-within:ring-2 focus-within:ring-blue-100 transition-all">
-                    <button id="btn-chat-attach" class="p-2 text-slate-400 hover:text-blue-600 pl-3"><i data-lucide="paperclip" class="w-5 h-5"></i></button>
+                <div class="relative flex items-center bg-slate-50 rounded-full border border-slate-300 p-1.5 shadow-inner focus-within:border-blue-500 focus-within:ring-2 focus-within:ring-blue-100 transition-all">
+                    <button id="btn-chat-attach" class="p-2 text-slate-400 hover:text-blue-600 pl-2"><i data-lucide="paperclip" class="w-5 h-5"></i></button>
                     <textarea id="chat-input" rows="1" placeholder="Pergunte..." class="flex-1 bg-transparent py-2.5 px-2 text-[13px] font-bold focus:outline-none text-slate-900 resize-none h-9 leading-tight placeholder:text-slate-400 placeholder:font-semibold"></textarea>
                     <button id="btn-send" class="w-10 h-10 flex items-center justify-center bg-slate-900 text-white rounded-full hover:bg-slate-800 shrink-0 shadow-md"><i data-lucide="send" class="w-4 h-4 ml-[-2px]"></i></button>
                 </div>
@@ -665,12 +663,21 @@
         
         let favoriteItems = {}; let collapsedFolders = {}; let trashItems = {};
 
+        // BLINDAGEM ANTI-NULL PARA O CACHE
         try {
-            favoriteItems = JSON.parse(localStorage.getItem("bms_favorites_map") || "{}");
-            collapsedFolders = JSON.parse(localStorage.getItem("bms_collapsed_folders") || "{}");
-            trashItems = JSON.parse(localStorage.getItem("bms_trash_map") || "{}");
+            let storedFavs = localStorage.getItem("bms_favorites_map");
+            favoriteItems = storedFavs && storedFavs !== "null" ? JSON.parse(storedFavs) : {};
+            
+            let storedCol = localStorage.getItem("bms_collapsed_folders");
+            collapsedFolders = storedCol && storedCol !== "null" ? JSON.parse(storedCol) : {};
+
+            let storedTrash = localStorage.getItem("bms_trash_map");
+            trashItems = storedTrash && storedTrash !== "null" ? JSON.parse(storedTrash) : {};
         } catch (e) {
-            localStorage.removeItem("bms_favorites_map"); localStorage.removeItem("bms_collapsed_folders"); localStorage.removeItem("bms_trash_map");
+            localStorage.removeItem("bms_favorites_map"); 
+            localStorage.removeItem("bms_collapsed_folders"); 
+            localStorage.removeItem("bms_trash_map");
+            favoriteItems = {}; collapsedFolders = {}; trashItems = {};
         }
 
         let activeMonitor = "main"; 
@@ -679,6 +686,7 @@
         let isNavigatingHistory = false; let isMainExpanded = false; let isCompExpanded = false;
 
         function checkAutoEmptyTrash() {
+            if(!trashItems) return;
             const now = Date.now(); const thirtyDays = 30 * 24 * 60 * 60 * 1000; let changed = false;
             for (let p in trashItems) {
                 if (now - trashItems[p] > thirtyDays) {
@@ -690,6 +698,7 @@
         }
 
         function isPathTrashed(path) {
+            if(!trashItems) return false;
             let parts = path.split('/'); let check = "";
             for(let i=0; i<parts.length; i++){
                 check += (i===0?"":"/") + parts[i];
@@ -817,9 +826,6 @@
             if (currentFilterType === 'favorites') changeFilter('all'); else changeFilter('favorites');
         };
 
-        // =========================================================================
-        // ATUALIZAÇÃO DA LÓGICA DE FAVORITAR 
-        // =========================================================================
         window.updateFavoriteStarUI = function() {
             const btnFav = document.getElementById("btn-favorite-star");
             if (!btnFav) return;
@@ -913,7 +919,7 @@
                 if (centerPanel) centerPanel.className = "flex-1 flex flex-col min-w-[300px] overflow-hidden p-0 gap-0 transition-all duration-300";
             } else {
                 if (header) header.classList.remove('hidden'); if (topMenus) topMenus.classList.remove('hidden');
-                if (centerPanel) centerPanel.className = "flex-1 flex flex-col min-w-[300px] overflow-hidden p-4 gap-4 bg-brand-light transition-all duration-300";
+                if (centerPanel) centerPanel.className = "flex-1 flex flex-col min-w-[300px] overflow-hidden p-3 gap-3 bg-brand-light transition-all duration-300";
             }
 
             const sbLeft = document.getElementById("sidebar-left"); const rsLeft = document.getElementById("resizer-left");
@@ -1040,7 +1046,7 @@
         document.addEventListener('mousemove', (e) => {
             if (!isResizingLeft && !isResizingCenter && !isResizingRight) return;
             if (isResizingLeft && sidebarLeft && !isSidebarHidden) { let w = e.clientX; if (w > 180 && w < window.innerWidth * 0.4) sidebarLeft.style.width = w + "px"; }
-            if (isResizingCenter && sidebarComparison) { let calculatedWidth = window.innerWidth - e.clientX - (sidebarRight ? sidebarRight.clientWidth : 320); if (calculatedWidth > 250 && calculatedWidth < window.innerWidth * 0.6) sidebarComparison.style.width = calculatedWidth + "px"; }
+            if (isResizingCenter && sidebarComparison) { let calculatedWidth = window.innerWidth - e.clientX - (sidebarRight ? sidebarRight.clientWidth : 280); if (calculatedWidth > 250 && calculatedWidth < window.innerWidth * 0.6) sidebarComparison.style.width = calculatedWidth + "px"; }
             if (isResizingRight && sidebarRight) { let w = window.innerWidth - e.clientX; if (w > 250 && w < window.innerWidth * 0.4) sidebarRight.style.width = w + "px"; }
         });
 
@@ -1191,7 +1197,7 @@
                 dEl.className = "w-full h-full bg-white border-none overflow-y-auto p-6 text-[15px] text-slate-800 leading-relaxed shadow-sm";
                 const parentContainer = document.getElementById("view-doc-comp-wrapper");
                 if (parentContainer) { parentContainer.classList.add("p-2"); parentContainer.classList.remove("p-0"); }
-                dEl.innerHTML = `<div class="text-center text-slate-500 font-bold my-20 font-sans text-sm">Painel inativo. Selecione um arquivo.</div>`;
+                dEl.innerHTML = `<div class="text-center text-slate-400 font-bold my-20 font-sans text-sm">Painel inativo. Selecione um arquivo.</div>`;
             }
             const rEl = document.getElementById("view-raw-comp"); if (rEl) rEl.innerText = "";
             try { buildNotesTree(); } catch(e) {}
